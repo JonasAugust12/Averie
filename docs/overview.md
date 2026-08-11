@@ -232,8 +232,11 @@ Demo stub (dev):
 
 ## 9. Tài liệu liên quan
 
-| File                               | Nội dung                            |
-| ---------------------------------- | ----------------------------------- |
-| [README.md](../README.md)          | Quick start, env, deploy            |
-| [superpowers.md](./superpowers.md) | Skill / workflow agent trong Cursor |
-| `.env.example`                     | Biến môi trường mẫu                 |
+| File                                               | Nội dung                                           |
+| -------------------------------------------------- | -------------------------------------------------- |
+| [README.md](../README.md)                          | Quick start, env, deploy                           |
+| [advanced-workflow.md](./advanced-workflow.md)     | OpenSpec + Superspec + Superpowers + UI/UX Pro Max |
+| [working-with-stitch.md](./working-with-stitch.md) | Stitch MCP → implement + iterate UI                |
+| [superpowers.md](./superpowers.md)                 | Skill / workflow agent trong Cursor                |
+| [AGENTS.md](../AGENTS.md)                          | Hướng dẫn ngắn cho AI agents                       |
+| `.env.example`                                     | Biến môi trường mẫu                                |

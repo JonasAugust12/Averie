@@ -1,0 +1,346 @@
+Design a modern, premium, luxury nail salon website for a nail salon in Massachusetts, USA.
+
+Use the uploaded logo and business card as the primary visual reference for the brand identity.
+
+BRAND & VISUAL DIRECTION
+- Brand: Avere Nails • Facials • Beauty
+- The visual identity should feel elegant, feminine, sophisticated, premium, and timeless.
+- Use a refined nude / beige / warm taupe color palette inspired directly by the uploaded logo and business card.
+- Primary background: warm ivory / soft cream.
+- Secondary surfaces: soft nude, beige, warm taupe.
+- Accent color: muted champagne / taupe.
+- Typography: sophisticated high-contrast serif typography for major headings, paired with a clean modern sans-serif for body text and navigation.
+- Use black / very dark brown typography for strong contrast.
+- Generous whitespace and large typography.
+- Subtle borders, thin lines, soft shadows, and restrained rounded corners.
+- Avoid excessive gradients, bright colors, strong pinks, purple, gold effects, glassmorphism, or flashy UI.
+- The website should feel like a contemporary luxury beauty brand in the US, not a generic nail salon template.
+
+IMPORTANT DESIGN PRINCIPLE
+The owner specifically wants the website to be clean and not visually overwhelming.
+
+Do NOT create:
+- A large photo gallery
+- Too many images
+- A homepage filled with service cards
+- The full service price list on the homepage
+- Excessive animations
+- Too many decorative elements
+- A crowded multi-section landing page
+
+Use only a small number of carefully selected, high-quality beauty/nail images as visual accents.
+
+The main purpose of the website is to introduce the salon and drive customers toward BOOK AN APPOINTMENT.
+
+WEBSITE STRUCTURE
+
+1. NAVIGATION
+Create a clean premium navigation bar.
+
+Left:
+- Avere logo
+
+Navigation:
+- Home
+- About
+- Services
+- Our Team
+- Contact
+
+Right:
+- prominent "Book an Appointment" button
+
+On mobile, use a clean hamburger menu and keep the booking CTA easily accessible.
+
+2. HERO SECTION
+Create a visually strong but minimal hero section.
+
+Use one high-quality editorial-style nail/beauty image or a refined split layout.
+
+Content:
+"Avere"
+"Nails • Facials • Beauty"
+
+Add a short premium tagline such as:
+"Refined beauty. Thoughtfully crafted."
+
+Primary CTA:
+"Book an Appointment"
+
+Secondary CTA:
+"Explore Services"
+
+The hero should immediately communicate that this is a premium beauty salon in the United States.
+
+Do not overload the hero with text or multiple images.
+
+3. ABOUT SECTION
+Create a short, elegant introduction to Avere.
+
+Use a minimal two-column layout:
+- One refined image
+- Short brand introduction
+
+Keep the copy concise and sophisticated.
+
+Example direction:
+"A refined beauty experience where modern nail care, facial treatments, and personalized service come together."
+
+Include a subtle "Learn More" link if needed.
+
+4. SERVICES PREVIEW
+Do NOT display the entire service menu or full pricing on the homepage.
+
+Instead, create a sophisticated overview of service categories.
+
+Example categories:
+- Manicure & Pedicure
+- Gel Polish
+- Nail Enhancements
+- Add-On Services
+- Waxing
+- Facials / Beauty
+
+Each category should be represented primarily through typography and minimal layout rather than large image cards.
+
+Include a clear CTA:
+"View All Services"
+
+The complete service list and pricing should exist on a dedicated Services page.
+
+5. FEATURE / BRAND MOMENT
+Add one elegant visual section between content areas.
+
+Use a large editorial image with minimal text.
+
+Possible text:
+"Beauty, with intention."
+
+This section should feel like a luxury beauty magazine/editorial layout rather than a typical salon website.
+
+6. OUR TEAM
+Create a simple team section.
+
+Show employees with:
+- Name
+- Role / position
+
+Use small or medium portrait images only if provided.
+
+Do not create a large team gallery.
+
+7. BOOKING CTA
+Create a strong full-width booking section.
+
+Headline:
+"Your next appointment starts here."
+
+Short supporting text.
+
+Primary button:
+"Book an Appointment"
+
+This should be one of the strongest visual CTAs on the website.
+
+8. LOCATION & CONTACT
+Create a clean contact section.
+
+Business information:
+Avere Nails • Facials • Beauty
+
+Phone:
+(781) 923-1955
+
+Email:
+knbeauty0912@gmail.com
+
+Address:
+132 Chief Justice Cushing Highway #25
+Cohasset, MA 02025
+
+Include:
+- Phone
+- Email
+- Address
+- Business hours
+- Google Maps / location CTA
+
+Keep this section minimal and easy to scan.
+
+9. FOOTER
+Minimal luxury footer.
+
+Include:
+- Avere logo
+- Navigation
+- Phone
+- Email
+- Address
+- Social media links
+- Book an Appointment CTA
+- Copyright
+
+BOOKING EXPERIENCE
+
+Booking is the most important functional feature of the website.
+
+Create a dedicated multi-step booking page with a clean, simple, premium interface.
+
+Booking flow:
+
+Step 1 — Select Service
+- Select a service category
+- Select a specific service
+- Show service name
+- Show short description
+- Show price
+- Show estimated duration
+
+Step 2 — Select Employee
+- Select preferred technician / employee
+- Show employee name
+- Optionally provide "Any available technician"
+
+Step 3 — Select Date
+- Calendar date picker
+- Disable salon closed days
+
+Step 4 — Select Time
+- Show available appointment time slots
+- Only show valid available slots based on:
+  - Salon working hours
+  - Employee availability
+  - Existing bookings
+  - Service duration
+
+Step 5 — Customer Information
+Fields:
+- First Name
+- Last Name
+- Phone Number
+- Email (optional)
+- Note / Special Request (optional)
+
+Step 6 — Review Appointment
+Display:
+- Service
+- Employee
+- Date
+- Time
+- Duration
+- Price
+- Customer information
+
+Primary CTA:
+"Confirm Appointment"
+
+Step 7 — Confirmation
+Show:
+"Your appointment has been requested successfully."
+
+Display:
+- Booking / reference number
+- Service
+- Employee
+- Date
+- Time
+- Contact information
+
+ADMIN DASHBOARD
+
+Also design a clean admin dashboard for the salon owner.
+
+The admin dashboard should be functional and minimal rather than visually decorative.
+
+Main sections:
+
+Dashboard
+- Today's appointments
+- Upcoming appointments
+- Pending bookings
+- Confirmed bookings
+- Completed bookings
+- Cancelled bookings
+
+Bookings
+- Booking list
+- Search customer
+- Filter by date
+- Filter by employee
+- Filter by service
+- View booking details
+- Confirm
+- Cancel
+- Mark as completed
+
+Services
+The salon owner should be able to dynamically manage the service menu.
+
+Service categories:
+- Manicure & Pedicure
+- Gel Polish
+- Nail Enhancements
+- Add On
+- Waxing
+- Other categories provided by the salon
+
+Each service contains:
+- Name
+- Description
+- Price
+- Estimated duration
+- Category
+- Active / inactive
+
+The owner should be able to add, edit, disable, and update services and prices without developer assistance.
+
+Employees
+- Add employee
+- Edit employee
+- Working schedule
+- Active / inactive
+
+Schedule
+- Working days
+- Opening time
+- Closing time
+- Appointment intervals
+- Days off / holidays
+
+RESPONSIVE DESIGN
+
+The website must be fully responsive and designed mobile-first.
+
+Pay special attention to mobile booking because many salon customers will likely book from their phones.
+
+Mobile design should:
+- Keep booking CTA highly visible
+- Use large touch-friendly controls
+- Make calendar and time selection easy
+- Avoid horizontal scrolling
+- Keep typography readable
+- Maintain the luxury aesthetic
+
+OVERALL DESIGN GOAL
+
+The final result should look like a real premium beauty business website in the United States in 2026.
+
+Think:
+- Luxury beauty brand
+- Modern editorial website
+- Minimalist
+- Warm neutral palette
+- Sophisticated typography
+- Premium photography
+- Strong whitespace
+- Excellent mobile UX
+- Simple booking experience
+
+Do NOT make it look like:
+- A generic nail salon template
+- A colorful beauty website
+- An image-heavy Instagram-style gallery
+- A crowded service menu
+- An overly decorative or outdated salon website
+
+Prioritize elegance, clarity, conversion to booking, and a premium American beauty-salon aesthetic.

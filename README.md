@@ -2,7 +2,9 @@
 
 Next.js (App Router) full-stack app — **frontend + serverless API** in one project, ready for **Vercel**. Stack mirrors `bkb-storage-ticket-app` on the client side.
 
-Tổng quan kiến trúc & rules: [`docs/overview.md`](./docs/overview.md).
+Tổng quan kiến trúc & rules: [`docs/overview.md`](./docs/overview.md).  
+Quy trình nâng cao (OpenSpec / Superspec): [`docs/advanced-workflow.md`](./docs/advanced-workflow.md).  
+Stitch → code + iterate UI: [`docs/working-with-stitch.md`](./docs/working-with-stitch.md).
 
 ## Stack
 

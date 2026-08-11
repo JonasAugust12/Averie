@@ -1,32 +1,51 @@
-schema: spec-driven
+schema: superspec
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Shown to AI when creating OpenSpec artifacts (superspec workflow).
+context: |
+    Project: Averie — Next.js 15 App Router full-stack on Vercel (serverless).
+    Package manager: pnpm
+    Stack: React 19, Tailwind CSS 4, Lucide, Zustand, TanStack Query, Axios,
+           react-hook-form, Zod, next-intl (vi/en), MongoDB + Mongoose,
+           Auth.js (next-auth v5 Credentials).
+    Path aliases: @actions, @services, @validations, @components, @hooks,
+                  @i18n, @libs, @messages, @models, @providers, @stores,
+                  @typings (NOT @types), @utils
+    Backend rules (must follow):
+      - GET (reads) → Route Handlers in src/app/api/*
+      - POST / PUT / PATCH / DELETE → Server Actions in src/actions/*
+      - External SVC / webhooks / public API → Route Handlers
+      - Unified response envelope: { status: number, message: string, data: T | null }
+      - Helpers: apiSuccess/apiError (API), apiSuccessResult/apiErrorResult (actions),
+                 unwrapApiResponse (client)
+    Auth: Auth.js JWT + Credentials; login/logout via Server Actions;
+          keep /api/auth/[...nextauth] for Auth.js protocol.
+    Layout: AppShell max-width 1280px; theme Primary #2B2623, Secondary #D4C5B9,
+            Tertiary #F5EFEA, Neutral #FDFCFB; fonts Playfair Display + Inter.
+    Docs: docs/overview.md (architecture), docs/superpowers.md, docs/advanced-workflow.md
+    Scripts: pnpm dev | build | lint | type-check | format
+    Commits: conventional (feat|fix|docs|style|refactor|perf|test|chore|revert)
+    UI work: prefer UI/UX Pro Max skill before implementing UI surfaces.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+rules:
+    proposal:
+        - Keep proposals under ~2 pages; focus on why / what, not implementation detail
+        - Always include Non-goals when scope could creep
+        - Respect Averie backend rules (GET=API, mutations=Server Actions)
+    tasks:
+        - Break tasks into chunks of max ~2 hours
+        - 'Mark each task with layer hint: [api] | [action] | [ui] | [auth] | [db]'
+    specs:
+        - Requirements MUST use SHALL/MUST and include at least one scenario
+    plan:
+        - Micro-steps suitable for TDD (2–5 minutes each)
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+operations:
+    apply:
+        guidance:
+            - Follow superspec apply: worktree + subagent-driven-development + TDD
+            - Do not invent POST/PUT/PATCH/DELETE Route Handlers for internal CRUD
+            - 'Keep ApiResponse envelope { status, message, data }'
+            - Run pnpm type-check (and lint when touching many files) before claiming done
+    archive:
+        guidance:
+            - Summarize outcomes; note any follow-ups left out of scope
