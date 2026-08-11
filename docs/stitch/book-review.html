@@ -1,0 +1,412 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Review Appointment</title>
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <!-- Material Icons -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <!-- Tailwind Config -->
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-primary': '#ffffff',
+                            'surface-variant': '#e3e2e1',
+                            secondary: '#685c53',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-tertiary-fixed-variant': '#494643',
+                            'inverse-on-surface': '#f1f0f0',
+                            'on-primary-fixed': '#1f1b18',
+                            'tertiary-fixed': '#e7e1dd',
+                            'surface-tint': '#645d59',
+                            'surface-container-lowest': '#ffffff',
+                            'secondary-container': '#f0e0d3',
+                            tertiary: '#141310',
+                            'surface-bright': '#faf9f8',
+                            'primary-fixed': '#ebe0db',
+                            'tertiary-container': '#292724',
+                            'surface-dim': '#dadad9',
+                            'on-secondary-fixed': '#221a13',
+                            surface: '#faf9f8',
+                            'primary-fixed-dim': '#cec5c0',
+                            'surface-container-low': '#f4f3f2',
+                            'error-container': '#ffdad6',
+                            'inverse-surface': '#2f3130',
+                            'on-error': '#ffffff',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'on-primary-container': '#958c88',
+                            'surface-container': '#eeeeed',
+                            'on-error-container': '#93000a',
+                            background: '#faf9f8',
+                            'primary-container': '#2b2623',
+                            'outline-variant': '#d0c4be',
+                            'on-secondary-container': '#6e6258',
+                            'on-surface-variant': '#4d4540',
+                            'secondary-fixed': '#f0e0d3',
+                            'on-surface': '#1a1c1c',
+                            'on-tertiary-container': '#928e89',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'on-tertiary': '#ffffff',
+                            error: '#ba1a1a',
+                            outline: '#7f7570',
+                            primary: '#16120f',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-secondary': '#ffffff',
+                            'surface-container-high': '#e9e8e7',
+                            'on-background': '#1a1c1c',
+                            'surface-container-highest': '#e3e2e1',
+                            'inverse-primary': '#cec5c0',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'container-max': '1280px',
+                            gutter: '24px',
+                            unit: '8px',
+                            'margin-desktop': '64px',
+                            'margin-mobile': '20px',
+                        },
+                        fontFamily: {
+                            'headline-md': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'label-sm': ['Inter'],
+                            'body-md': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'headline-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'headline-md': [
+                                '28px',
+                                {
+                                    lineHeight: '36px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'label-md': [
+                                '14px',
+                                {
+                                    lineHeight: '20px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '500',
+                                },
+                            ],
+                            'label-sm': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.1em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-md': [
+                                '16px',
+                                {
+                                    lineHeight: '24px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'body-lg': [
+                                '18px',
+                                {
+                                    lineHeight: '28px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                {
+                                    lineHeight: '72px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-lg-mobile': [
+                                '32px',
+                                {
+                                    lineHeight: '40px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-lg': [
+                                '40px',
+                                {
+                                    lineHeight: '48px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 300,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
+        </style>
+    </head>
+    <body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+        <!-- TopAppBar Component -->
+        <!-- Applying structural commands from JSON: flex justify-between items-center px-margin-desktop py-unit max-w-container-max mx-auto -->
+        <!-- Applying design commands from JSON: border-b border-outline-variant/30, bg-surface, w-full top-0 sticky -->
+        <header
+            class="w-full top-0 sticky bg-surface dark:bg-surface-container-low border-b border-outline-variant/30 dark:border-outline-variant/10 z-50"
+        >
+            <div
+                class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto"
+            >
+                <!-- Brand Logo -->
+                <a
+                    class="font-display-lg text-headline-md tracking-widest text-primary dark:text-on-surface uppercase uppercase"
+                    href="#"
+                    >Avere</a
+                >
+                <!-- Navigation Links (Hidden on mobile, flex on desktop) -->
+                <!-- Note: Since this is a transactional flow, we render them but none are active -->
+                <nav class="hidden md:flex gap-8 items-center font-body-md text-body-md">
+                    <a
+                        class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:opacity-70"
+                        href="#"
+                        >Services</a
+                    >
+                    <a
+                        class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:opacity-70"
+                        href="#"
+                        >Gallery</a
+                    >
+                    <a
+                        class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:opacity-70"
+                        href="#"
+                        >About</a
+                    >
+                    <a
+                        class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:opacity-70"
+                        href="#"
+                        >Locations</a
+                    >
+                </nav>
+                <!-- Trailing Action -->
+                <button
+                    class="hidden md:block px-6 py-3 bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:opacity-90 transition-opacity"
+                >
+                    Book Now
+                </button>
+                <!-- Mobile Menu Icon -->
+                <button class="md:hidden text-primary">
+                    <span class="material-symbols-outlined text-2xl" data-icon="menu">menu</span>
+                </button>
+            </div>
+        </header>
+        <!-- Main Content Area -->
+        <main
+            class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24"
+        >
+            <!-- Progress Indicator -->
+            <div class="w-full max-w-3xl mx-auto mb-16">
+                <div class="flex justify-between items-center mb-4">
+                    <span
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"
+                        >Step 6 of 7</span
+                    >
+                    <span
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"
+                        >Review</span
+                    >
+                </div>
+                <div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+                    <!-- Progress bar fill -->
+                    <div class="h-full bg-primary w-[85%] transition-all duration-500"></div>
+                </div>
+            </div>
+            <!-- Header Section -->
+            <div class="text-center mb-16">
+                <h1
+                    class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-4"
+                >
+                    Review Appointment
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto">
+                    Please confirm your appointment details before finalizing your booking.
+                </p>
+            </div>
+            <!-- Review Details Card -->
+            <div
+                class="w-full max-w-3xl mx-auto bg-surface-container-low rounded-lg p-8 md:p-12 mb-12"
+            >
+                <div class="flex flex-col gap-8">
+                    <!-- Service Row -->
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-outline-variant/30 gap-2"
+                    >
+                        <div>
+                            <h3
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1"
+                            >
+                                Service
+                            </h3>
+                            <p class="font-body-lg text-body-lg text-primary">
+                                MicroZone Treatments
+                            </p>
+                        </div>
+                        <div class="md:text-right">
+                            <p class="font-body-lg text-body-lg text-primary">$75</p>
+                        </div>
+                    </div>
+                    <!-- Technician Row -->
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-outline-variant/30 gap-4"
+                    >
+                        <div>
+                            <h3
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1"
+                            >
+                                Technician
+                            </h3>
+                            <div class="flex items-center gap-4 mt-2">
+                                <div
+                                    class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high shrink-0"
+                                >
+                                    <img
+                                        class="w-full h-full object-cover"
+                                        data-alt="A professional headshot of a male beauty technician named Michael in a softly lit, high-end salon environment. The lighting is warm and natural, creating a serene and premium atmosphere consistent with a luxury spa. He is wearing a clean, minimalist uniform. The color palette features neutral tones, soft whites, and subtle taupe accents."
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQmHCmqfEEiUsKfVWG3T_zBuOp9jBcwdaREiHrEAC-lZYATOou-BCMo8olrxkqPPrez_3wGPMrbojWLQ_jO8aEowI1rWIXAhjjPK2AMCDY8jwhYYH7Xjzavig6KpVyID4rib0-3fnULLx7N5CwlxmdxMGgWlgEAAYa8KSZbCz5SrRXG8L_MaCQA4Ti0hiakKmEj1QcQCHkyCmL4ENZLu3gX9i7hFvjzTeINwu0dcjgq5eh9x28x9pFGQ"
+                                    />
+                                </div>
+                                <p class="font-body-lg text-body-lg text-primary">Michael</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Date & Time Row -->
+                    <div
+                        class="flex flex-col md:flex-row justify-between pb-6 border-b border-outline-variant/30 gap-8"
+                    >
+                        <div class="flex-1">
+                            <h3
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1"
+                            >
+                                Date
+                            </h3>
+                            <p class="font-body-lg text-body-lg text-primary mt-1">
+                                Wednesday, October 14, 2026
+                            </p>
+                        </div>
+                        <div class="flex-1 md:text-right">
+                            <h3
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1"
+                            >
+                                Time
+                            </h3>
+                            <p class="font-body-lg text-body-lg text-primary mt-1">
+                                1:30 PM
+                                <span class="text-on-surface-variant text-body-md font-body-md"
+                                    >(20 Min)</span
+                                >
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Customer Row -->
+                    <div class="flex flex-col gap-2 pt-2">
+                        <h3
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1"
+                        >
+                            Customer Information
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
+                            <p class="font-body-md text-body-md text-primary">Jane Doe</p>
+                            <p class="font-body-md text-body-md text-primary md:text-right">
+                                (555) 123-4567
+                            </p>
+                            <p class="font-body-md text-body-md text-primary md:col-span-2">
+                                jane.doe@example.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Action Buttons -->
+            <div
+                class="w-full max-w-3xl mx-auto flex flex-col-reverse md:flex-row justify-between items-center gap-6"
+            >
+                <button
+                    class="w-full md:w-auto px-8 py-4 border border-outline-variant text-primary font-label-md text-label-md uppercase tracking-wider hover:bg-surface-container transition-colors text-center"
+                >
+                    Back
+                </button>
+                <button
+                    class="w-full md:w-auto px-10 py-4 bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:opacity-90 transition-opacity text-center flex items-center justify-center gap-2"
+                >
+                    Confirm Appointment
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward"
+                        >arrow_forward</span
+                    >
+                </button>
+            </div>
+        </main>
+        <!-- Footer Component -->
+        <!-- Applying structural commands from JSON: flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-unit w-full -->
+        <!-- Applying design commands from JSON: bg-surface-container-low, py-12 -->
+        <footer
+            class="w-full py-12 bg-surface-container-low dark:bg-surface-container-lowest mt-auto"
+        >
+            <div
+                class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-8 w-full max-w-container-max mx-auto"
+            >
+                <!-- Brand -->
+                <div class="font-display-lg text-headline-md text-primary dark:text-on-surface">
+                    Avere
+                </div>
+                <!-- Links -->
+                <div
+                    class="flex flex-wrap justify-center gap-6 md:gap-8 font-label-sm text-label-sm text-on-secondary-fixed-variant"
+                >
+                    <a class="hover:underline transition-all cursor-pointer" href="#"
+                        >Privacy Policy</a
+                    >
+                    <a class="hover:underline transition-all cursor-pointer" href="#"
+                        >Terms of Service</a
+                    >
+                    <a class="hover:underline transition-all cursor-pointer" href="#"
+                        >Sustainability</a
+                    >
+                    <a class="hover:underline transition-all cursor-pointer" href="#">Careers</a>
+                </div>
+                <!-- Copyright -->
+                <div
+                    class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim"
+                >
+                    © 2026 Avere Beauty. All Rights Reserved.
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

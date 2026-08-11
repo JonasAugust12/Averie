@@ -1,0 +1,522 @@
+<!doctype html>
+<html class="scroll-smooth" lang="en" style="">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere Nails • Facials • Beauty</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-tertiary-fixed-variant': '#494643',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-primary': '#ffffff',
+                            'on-surface': '#1a1c1c',
+                            'on-error-container': '#93000a',
+                            'primary-container': '#2b2623',
+                            'tertiary-container': '#292724',
+                            'on-background': '#1a1c1c',
+                            primary: '#16120f',
+                            surface: '#faf9f8',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-secondary-container': '#6e6258',
+                            'on-tertiary': '#ffffff',
+                            outline: '#7f7570',
+                            tertiary: '#141310',
+                            'on-error': '#ffffff',
+                            background: '#faf9f8',
+                            'error-container': '#ffdad6',
+                            secondary: '#685c53',
+                            'inverse-primary': '#cec5c0',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-primary-fixed': '#1f1b18',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'surface-dim': '#dadad9',
+                            'secondary-container': '#f0e0d3',
+                            'on-tertiary-container': '#928e89',
+                            'surface-container-low': '#f4f3f2',
+                            'on-secondary-fixed': '#221a13',
+                            'surface-bright': '#faf9f8',
+                            'surface-container-lowest': '#ffffff',
+                            'primary-fixed': '#ebe0db',
+                            'secondary-fixed': '#f0e0d3',
+                            'on-secondary': '#ffffff',
+                            'surface-tint': '#645d59',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-primary-container': '#958c88',
+                            'outline-variant': '#d0c4be',
+                            'surface-container': '#eeeeed',
+                            'inverse-on-surface': '#f1f0f0',
+                            'inverse-surface': '#2f3130',
+                            'tertiary-fixed': '#e7e1dd',
+                            error: '#ba1a1a',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'surface-variant': '#e3e2e1',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'surface-container-high': '#e9e8e7',
+                            'on-surface-variant': '#4d4540',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            unit: '8px',
+                            'margin-desktop': '64px',
+                            'margin-mobile': '20px',
+                            'container-max': '1280px',
+                            gutter: '24px',
+                        },
+                        fontFamily: {
+                            'label-sm': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                            'display-lg': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'body-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                            'label-md': ['Inter'],
+                        },
+                        fontSize: {
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
+        </style>
+    </head>
+    <body
+        class="bg-surface text-on-surface font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container"
+    >
+        <!-- TopNavBar -->
+        <nav
+            class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-6 max-w-container-max mx-auto transition-all duration-300"
+        >
+            <a
+                href="#"
+                class="block h-16 w-16 overflow-hidden rounded-full transition-opacity hover:opacity-80"
+            >
+                <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuADmRGIqO6kfO-y4M0zi2N1Zv088tqlgYpOq-n6cZ1w9b73n6eiGZ9neMvlmFkxVaGWJaGJGwK4x4LlB8EmLAt3XBOrUUtLXzhXviEjMH17CTYB-ESbQKpuGXzfP3-1PclJQJqvkxf3NTz8UOMJVHTJswjbpd3E2NwBhok0bTSSEmdsIzIxJnj9adVQVIGjuVu2JbJ7LaVohr60eX5JhrPP8r2QS1dBwdYRuNo5opdDiq42uITkPTrBQJ3q9Snf2JZ-X14"
+                    alt="Avere Logo"
+                    class="h-full w-full object-cover"
+                />
+            </a>
+            <div class="hidden md:flex gap-8 items-center">
+                <a
+                    class="text-secondary hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest"
+                    href="#"
+                    >Services</a
+                >
+                <a
+                    class="text-secondary hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest"
+                    href="#"
+                    >Gallery</a
+                >
+                <a
+                    class="text-secondary hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest"
+                    href="#"
+                    >About</a
+                >
+                <a
+                    class="text-secondary hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest"
+                    href="#"
+                    >Contact</a
+                >
+            </div>
+            <a
+                class="hidden md:inline-flex bg-primary text-on-primary px-8 py-3 rounded-full font-label-md text-label-md uppercase tracking-widest hover:opacity-80 transition-opacity cursor-pointer"
+                href="#booking"
+            >
+                Book Now
+            </a>
+            <button class="md:hidden text-primary">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </nav>
+        <main class="pt-[100px]">
+            <!-- Hero Section -->
+            <section
+                class="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
+            >
+                <div class="absolute inset-0 z-0 opacity-20">
+                    <div
+                        class="bg-cover bg-center w-full h-full"
+                        data-alt="Abstract soft focus warm beige waves and textures reflecting premium spa environment, minimalist light mode aesthetic"
+                        style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDE6zn6Vx1CNz2tpxoeMxFCw6in4oVVt0tHDH7ibomZBil3YumIzQi8DLIzkb5bBke6uYlIzSGCbRAKxHKoTQ22gD2mPMB4KwEkrD9wLnM3wHuv_BGC6MjZralGT9mNzreA1hRw6m-UotuE57sCpbpoad7hMNia049-O7sa2YOki_a2W5DbUXjvuREtTHpGtFSpXx4XRxWZgBq6FxHNSCzHT0vx09Ef_fLpUBfY-hzG-Pq8prVXvuvhpA');
+                        "
+                    ></div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-12 gap-gutter w-full relative z-10 items-center"
+                >
+                    <div class="md:col-span-6 flex flex-col items-start gap-6">
+                        <h1
+                            class="font-display-lg text-headline-lg-mobile md:text-display-lg text-primary"
+                        >
+                            Avere
+                            <span
+                                class="block text-headline-md md:text-headline-lg text-secondary mt-2 font-headline-md"
+                                >Nails • Facials • Beauty</span
+                            >
+                        </h1>
+                        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                            Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and
+                            meticulous care in Cohasset.
+                        </p>
+                        <a
+                            class="mt-8 bg-primary text-on-primary px-10 py-4 rounded-full font-label-md text-label-md uppercase tracking-widest hover:opacity-80 transition-opacity inline-flex items-center gap-2"
+                            href="#booking"
+                        >
+                            Book an Appointment
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                    </div>
+                    <div class="md:col-span-6 mt-12 md:mt-0 relative">
+                        <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden relative">
+                            <img
+                                alt="Premium nail and beauty care"
+                                class="object-cover w-full h-full"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp2JFBaFqL2s9520W7ZhET_ANE1cIIJkU9TS0DqwYssmoHzFx9go4d6q5EdNJsNoxrDrmVUkpRdCDJhJB70e6p7gxErNeedZt9NjMc-aXL2wBVsTNefLfPtKtBsqQ7dY-PK4f6a4op8v1u7-zcRD6X1pbLUjFk3w3-oNFUbMuLHQQPNO53FTFevuEFA8JfjWF1ja18mUr2dzoStejPHE0md5HpJOff57sOf75EG694TPB5xickoIInnA"
+                            />
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-surface/40 to-transparent"
+                            ></div>
+                        </div>
+                        <div
+                            class="absolute -bottom-8 -left-8 w-48 h-48 bg-secondary-container rounded-full -z-10 blur-3xl opacity-50"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+            <!-- About Section -->
+            <section
+                class="py-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
+            >
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+                    <div class="md:col-span-5 md:col-start-2 order-2 md:order-1">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden relative border-8 border-surface-container-low"
+                        >
+                            <img
+                                class="object-cover w-full h-full"
+                                data-alt="Close up of a serene facial treatment with soft white towels, soft warm light, minimalist editorial aesthetic"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqLNsO8vJlJkFpTDfJDACpcmztN9pM38o1NoG0WKH49KA0TgLCr5QQ1kVklKacq-LgCc_TGLdPVlL4Agyt63acDxJt6TlnYgsBC8VbKXWcBCiok_6Gy563wArsLhEvD-ghtRNQfr9boAnv5Db_KYkbmbLNwFtYZ8W5KMntcJfQ0P-0XGBka5lqWwZF-tcd0LE5GljqefxkIUR2f-MgcgzTNrTf70cq5YGmWO0zd-7K2xUUTbCRqh2jfg"
+                            />
+                        </div>
+                    </div>
+                    <div class="md:col-span-5 md:col-start-8 order-1 md:order-2 mb-12 md:mb-0">
+                        <span
+                            class="font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-4 block"
+                            >Our Philosophy</span
+                        >
+                        <h2 class="font-headline-md text-headline-md text-primary mb-6">
+                            Elevating the standard of self-care.
+                        </h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                            At Avere, we believe that beauty treatments should be a restorative
+                            ritual. Our curated selection of services, from precision manicures to
+                            Dermalogica facials, is designed to nourish both body and mind in an
+                            environment of quiet luxury.
+                        </p>
+                        <a
+                            class="inline-flex items-center gap-2 text-primary border-b border-primary pb-1 font-label-md text-label-md hover:text-secondary hover:border-secondary transition-colors"
+                            href="#"
+                        >
+                            Learn more about us
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <!-- Services Preview -->
+            <section class="py-32 bg-surface-container-low px-margin-mobile md:px-margin-desktop">
+                <div class="max-w-container-max mx-auto">
+                    <div class="text-center mb-20">
+                        <h2 class="font-headline-lg text-headline-lg text-primary mb-4">
+                            Curated Services
+                        </h2>
+                        <p
+                            class="font-body-md text-body-md text-on-surface-variant max-w-lg mx-auto"
+                        >
+                            Tailored treatments designed for lasting results and pure relaxation.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Service Card 1 -->
+                        <div class="group cursor-pointer">
+                            <div class="aspect-[4/3] overflow-hidden rounded-xl mb-6 relative">
+                                <img
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                                    data-alt="Minimalist nail salon setting with neutral tones, perfectly manicured hands, natural light"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHoLXjHuurdFWhaihoymlklVjAGrnSNoM47y-bZD7X-I3ZfRU8yHdu0OssC41a5Vijs2qPEWAlkNwpajnSA8SDjfGoAjKbUwSkEfzhWnWxsXj6oR5v2y3ETVfMgCnTKORKJy2FchJQsiJjmpC9aDJmPGK10G8Tjk74qpR5_IHVl5p9nN-KfxZO7pU_TV2R7vYGjICL9DMgQx601vNEV5HcSU6SkcVXqCWGd9OCJse5waX4zQg314tnQ"
+                                />
+                            </div>
+                            <h3 class="font-headline-md text-[24px] text-primary mb-2">
+                                Manicure &amp; Pedicure
+                            </h3>
+                            <p
+                                class="font-body-md text-body-md text-on-surface-variant line-clamp-2"
+                            >
+                                Signature treatments for healthy, resilient nails and ultimate
+                                relaxation.
+                            </p>
+                        </div>
+                        <!-- Service Card 2 -->
+                        <div class="group cursor-pointer">
+                            <div class="aspect-[4/3] overflow-hidden rounded-xl mb-6 relative">
+                                <img
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                                    data-alt="Luxurious facial treatment setup with high-end Dermalogica products on a sleek counter, soft lighting"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAeFGmlosZyi8L5e0iMU84Rd1oQpgsTYXssWklD3-j5k547oZtmfCgnfcIANRpPdP9WI7i4gFsIjbpIfxF3-ND2mKvEr4H56XszhOPyQLUpSP6kjB7FAhbisQBcwJ3McUS18ir-YaZskNXIq3yyscAMt5RMi0YoFY-TklZwwkuAWNthZ1BOzV-AiH1lui6o3ZzmH7s0w42KAutbF-_UKC2g-lJD6OtNK3AN6lfhasLMwQiYw5enxwbJg"
+                                />
+                            </div>
+                            <h3 class="font-headline-md text-[24px] text-primary mb-2">
+                                Dermalogica Facials
+                            </h3>
+                            <p
+                                class="font-body-md text-body-md text-on-surface-variant line-clamp-2"
+                            >
+                                Customized face mapping, MicroZone treatments, and full skin
+                                therapies.
+                            </p>
+                        </div>
+                        <!-- Service Card 3 -->
+                        <div class="group cursor-pointer">
+                            <div class="aspect-[4/3] overflow-hidden rounded-xl mb-6 relative">
+                                <img
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                                    data-alt="Abstract soft focus of essential oils and waxing equipment in a serene, clean environment"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYQxti_T67zlf-a5ioo6rJPWaflMrEd4YMS20ATUW-FxiQqcdQNbTp-s6AfHbtRMUfCKZeI-A-lg1922e_25JJ0gb3wT4hc9UlFl2ukh1-P83P6cBCgyDHDOAUOjyoeNEnZd-kfoJHwX74_W8D5OqBY3Ejc7AhbbU7n6v9O7DUyTbPbeL3hJO6bt-LF8hskL8dVGioORERbTIm8VVOz1tHpiJWE9EIc13zEGge8yPvEi-sujqdQOCp1g"
+                                />
+                            </div>
+                            <h3 class="font-headline-md text-[24px] text-primary mb-2">
+                                Enhancements &amp; Waxing
+                            </h3>
+                            <p
+                                class="font-body-md text-body-md text-on-surface-variant line-clamp-2"
+                            >
+                                Precision gel polish, acrylics, and gentle waxing services for
+                                flawless skin.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-16">
+                        <a
+                            class="inline-block border border-outline text-primary px-10 py-4 rounded-full font-label-md text-label-md uppercase tracking-widest hover:bg-surface-container transition-colors"
+                            href="#"
+                        >
+                            View All Services
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <!-- Brand Moment -->
+            <section class="relative h-[60vh] flex items-center justify-center">
+                <div class="absolute inset-0 z-0">
+                    <img
+                        class="object-cover w-full h-full"
+                        data-alt="Wide editorial shot of a pristine, high-end beauty salon interior with beige tones, large windows, and minimal decor"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXR4Tqg4hBFhtXdSEk_7dPRXrAjmi_mS65kSl6Jf13VkGgU_eKO7Eiy-jZCdl3LaxeJqxKbERk4D6FvBU89hvlSwhtwSWBGy6cQxXT_uS-L4d9H6wWlMChwHMsLCZua170XSr0jZEOna4NPfWAv8nnCLrqYVgvLEKEamaKZBkMmVKc2k7BOlF8fvK4SLyxmLz-5t58_G1wfRu5xtTcwgapw_RrSRLGL3GWRY-ZuwUoRFsVmyaGu1qd9A"
+                    />
+                    <div class="absolute inset-0 bg-primary/20 backdrop-blur-[2px]"></div>
+                </div>
+                <div class="relative z-10 text-center px-6">
+                    <h2 class="font-display-lg text-display-lg text-on-primary">
+                        Beauty, with intention.
+                    </h2>
+                </div>
+            </section>
+            <!-- Booking CTA -->
+            <section class="py-32 px-margin-mobile md:px-margin-desktop bg-surface" id="booking">
+                <div class="max-w-3xl mx-auto text-center">
+                    <span class="material-symbols-outlined text-4xl text-secondary mb-6 block"
+                        >event_available</span
+                    >
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-6">
+                        Your next appointment starts here.
+                    </h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mb-12">
+                        Gift certificates available. Appointments and walk-ins welcome.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a
+                            class="bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md uppercase tracking-widest hover:opacity-80 transition-opacity inline-flex items-center justify-center gap-2"
+                            href="tel:7819231955"
+                        >
+                            Call (781) 923-1955
+                        </a>
+                        <a
+                            class="border border-outline text-primary px-8 py-4 rounded-full font-label-md text-label-md uppercase tracking-widest hover:bg-surface-container transition-colors inline-flex items-center justify-center gap-2"
+                            href="#"
+                        >
+                            Book Online
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <!-- Location & Contact -->
+            <section
+                class="py-24 bg-surface-container-low px-margin-mobile md:px-margin-desktop border-t border-outline-variant/30"
+            >
+                <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div>
+                        <h3
+                            class="font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-6"
+                        >
+                            Location
+                        </h3>
+                        <p class="font-body-md text-body-md text-primary mb-2">
+                            132 Chief Justice Cushing Highway #25
+                        </p>
+                        <p class="font-body-md text-body-md text-primary mb-6">
+                            Cohasset, MA 02025
+                        </p>
+                        <a
+                            class="text-secondary hover:text-primary transition-colors text-sm underline underline-offset-4"
+                            href="#"
+                            >Get Directions</a
+                        >
+                    </div>
+                    <div>
+                        <h3
+                            class="font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-6"
+                        >
+                            Hours
+                        </h3>
+                        <ul class="font-body-md text-body-md text-primary space-y-2">
+                            <li class="flex justify-between max-w-[200px]">
+                                <span class="">Mon - Fri:</span> <span class="">9am - 7pm</span>
+                            </li>
+                            <li class="flex justify-between max-w-[200px]">
+                                <span class="">Sat:</span> <span class="">9am - 6pm</span>
+                            </li>
+                            <li class="flex justify-between max-w-[200px]">
+                                <span class="">Sun:</span> <span class="">10am - 5pm</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3
+                            class="font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-6"
+                        >
+                            Contact
+                        </h3>
+                        <p class="font-body-md text-body-md text-primary mb-2">
+                            Phone: (781) 923-1955
+                        </p>
+                        <p class="font-body-md text-body-md text-primary mb-6">
+                            Email: knbeauty0912@gmail.com
+                        </p>
+                        <div class="flex gap-4">
+                            <a
+                                class="text-secondary hover:text-primary transition-colors"
+                                href="https://facebook.com/averiespa"
+                            >
+                                Facebook
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Footer -->
+        <footer
+            class="w-full bg-surface-container dark:bg-primary-container px-margin-mobile md:px-margin-desktop py-20 border-t border-surface-container-high dark:border-primary-container/50"
+        >
+            <div
+                class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center"
+            >
+                <div class="md:col-span-4 mb-8 md:mb-0">
+                    <span
+                        class="font-display-lg text-headline-lg text-primary dark:text-primary-fixed-dim"
+                        >AVERE</span
+                    >
+                </div>
+                <div class="md:col-span-8 flex flex-wrap gap-6 justify-start md:justify-end">
+                    <a
+                        class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase"
+                        href="#"
+                        >Privacy Policy</a
+                    >
+                    <a
+                        class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase"
+                        href="#"
+                        >Terms of Service</a
+                    >
+                    <a
+                        class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase"
+                        href="#"
+                        >Sustainability</a
+                    >
+                    <a
+                        class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase"
+                        href="#"
+                        >Careers</a
+                    >
+                    <a
+                        class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase"
+                        href="#"
+                        >Press</a
+                    >
+                </div>
+                <div
+                    class="md:col-span-12 mt-12 pt-8 border-t border-outline-variant/20 text-center md:text-left"
+                >
+                    <p
+                        class="text-on-surface dark:text-on-primary-container font-label-sm text-label-sm uppercase"
+                    >
+                        © 2026 AVERE LUXURY NAILS. ALL RIGHTS RESERVED.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

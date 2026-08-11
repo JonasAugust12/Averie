@@ -1,0 +1,728 @@
+<!doctype html>
+
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere | Admin Dashboard - Master Schedule</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-secondary': '#ffffff',
+                            'primary-fixed-dim': '#cec5c0',
+                            error: '#ba1a1a',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'surface-variant': '#e3e2e1',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'on-background': '#1a1c1c',
+                            'surface-bright': '#faf9f8',
+                            surface: '#faf9f8',
+                            'on-tertiary-container': '#928e89',
+                            'error-container': '#ffdad6',
+                            'surface-container-lowest': '#ffffff',
+                            'secondary-fixed': '#f0e0d3',
+                            'inverse-on-surface': '#f1f0f0',
+                            'on-secondary-container': '#6e6258',
+                            'primary-container': '#2b2623',
+                            'surface-container-high': '#e9e8e7',
+                            'tertiary-container': '#292724',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'on-error-container': '#93000a',
+                            'secondary-container': '#f0e0d3',
+                            'on-primary-container': '#958c88',
+                            'inverse-primary': '#cec5c0',
+                            'inverse-surface': '#2f3130',
+                            'on-tertiary': '#ffffff',
+                            'outline-variant': '#d0c4be',
+                            'surface-container-low': '#f4f3f2',
+                            'on-surface': '#1a1c1c',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'on-secondary-fixed': '#221a13',
+                            'surface-dim': '#dadad9',
+                            'on-primary': '#ffffff',
+                            'on-primary-fixed': '#1f1b18',
+                            primary: '#16120f',
+                            'surface-container': '#eeeeed',
+                            'surface-tint': '#645d59',
+                            'on-error': '#ffffff',
+                            'tertiary-fixed': '#e7e1dd',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-tertiary-fixed': '#1d1b18',
+                            background: '#faf9f8',
+                            'primary-fixed': '#ebe0db',
+                            'on-surface-variant': '#4d4540',
+                            outline: '#7f7570',
+                            secondary: '#685c53',
+                            tertiary: '#141310',
+                            'on-tertiary-fixed-variant': '#494643',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'container-max': '1280px',
+                            gutter: '24px',
+                            unit: '8px',
+                            'margin-mobile': '20px',
+                            'margin-desktop': '64px',
+                        },
+                        fontFamily: {
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'body-md': ['Inter'],
+                            'label-md': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'display-lg': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                            'body-lg': ['Inter'],
+                        },
+                        fontSize: {
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                background-color: theme('colors.background');
+                color: theme('colors.on-background');
+            }
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 300,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
+            .material-symbols-outlined.fill {
+                font-variation-settings: 'FILL' 1;
+            }
+
+            /* Subtle scrollbar */
+            ::-webkit-scrollbar {
+                width: 4px;
+                height: 4px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: theme('colors.surface-variant');
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: theme('colors.outline-variant');
+            }
+        </style>
+    </head>
+    <body class="font-body-md text-body-md antialiased overflow-x-hidden">
+        <!-- SideNavBar (Shared Component) -->
+        <nav
+            class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface dark:bg-surface-dim border-r border-outline-variant dark:border-outline py-8 px-4 z-50 transition-colors duration-200 ease-in-out"
+        >
+            <div class="mb-12 px-4 flex items-center gap-4">
+                <div
+                    class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex items-center justify-center shrink-0"
+                >
+                    <img
+                        alt="Admin Profile Photo"
+                        class="w-full h-full object-cover"
+                        data-alt="A sophisticated, monochromatic logo icon for a luxury beauty brand named Avere. The design uses very thin, elegant serif lines against a soft nude background, emitting a minimalist and premium salon vibe."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfpbW5HTBo3p8QFkd6afFKM5m2Qsvr7H7BUfMzxh2uo-gW6msdWcYk5dNyJ-13b7IKgaW2sbC844uLmq6uM4ZoOhsBq6yqRy5vA1VSt0jhR1Qc5_KcvetM3OoZeb4ynhJxS79Y2Gop92GxRuZAFVwXVII7g7w8A8KKZAOWiEJOXeHxz50PSG_8KqRJ5rBuEUy2DkSxbt0wiM9OBs2TkIuIwF1CZALUQJMFVeT7fyUG77T5owLu_22ZHQ"
+                    />
+                </div>
+                <div>
+                    <h1
+                        class="font-headline-md text-headline-md text-primary dark:text-primary-fixed uppercase tracking-widest text-[20px] leading-tight"
+                    >
+                        Avere
+                    </h1>
+                    <p
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest text-[10px]"
+                    >
+                        Admin Dashboard
+                    </p>
+                </div>
+            </div>
+            <ul class="flex-1 space-y-2">
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined" data-icon="dashboard"
+                            >dashboard</span
+                        >
+                        <span class="font-label-md text-label-md">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined" data-icon="calendar_today"
+                            >calendar_today</span
+                        >
+                        <span class="font-label-md text-label-md">Bookings</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined" data-icon="brush">brush</span>
+                        <span class="font-label-md text-label-md">Services</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined" data-icon="group">group</span>
+                        <span class="font-label-md text-label-md">Staff</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed font-bold bg-secondary-container dark:bg-secondary-container transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined fill" data-icon="event_note"
+                            >event_note</span
+                        >
+                        <span class="font-label-md text-label-md">Schedule</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="mt-auto">
+                <a
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    <span class="font-label-md text-label-md">Settings</span>
+                </a>
+            </div>
+        </nav>
+        <!-- TopAppBar (Shared Component) -->
+        <header
+            class="hidden md:flex justify-between items-center px-margin-desktop py-4 bg-surface-bright dark:bg-surface border-b border-outline-variant dark:border-outline docked full-width top-0 sticky ml-64 z-40 transition-colors duration-200 ease-in-out"
+        >
+            <div class="flex items-center gap-4">
+                <h2 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">
+                    Master Schedule
+                </h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="relative hidden lg:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                        data-icon="search"
+                        >search</span
+                    >
+                    <input
+                        class="pl-10 pr-4 py-2 bg-surface-container-low border-none focus:ring-1 focus:ring-outline-variant rounded-full font-body-md text-body-md text-on-surface w-64 placeholder:text-on-surface-variant/50 transition-all"
+                        placeholder="Search bookings..."
+                        type="text"
+                    />
+                </div>
+                <button
+                    class="text-on-surface-variant hover:opacity-80 transition-opacity duration-200 ease-in-out"
+                >
+                    <span class="material-symbols-outlined" data-icon="notifications"
+                        >notifications</span
+                    >
+                </button>
+                <button
+                    class="text-on-surface-variant hover:opacity-80 transition-opacity duration-200 ease-in-out"
+                >
+                    <span class="material-symbols-outlined" data-icon="account_circle"
+                        >account_circle</span
+                    >
+                </button>
+            </div>
+        </header>
+        <!-- Main Content Canvas -->
+        <main
+            class="md:ml-64 pt-8 pb-24 px-margin-mobile md:px-margin-desktop min-h-screen flex flex-col gap-8"
+        >
+            <!-- Controls & Header -->
+            <div
+                class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
+            >
+                <!-- Date Navigation -->
+                <div
+                    class="flex items-center gap-4 bg-surface-container-low p-2 rounded-full border border-outline-variant/30"
+                >
+                    <button
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface"
+                    >
+                        <span class="material-symbols-outlined" data-icon="chevron_left"
+                            >chevron_left</span
+                        >
+                    </button>
+                    <div class="flex flex-col items-center min-w-[140px]">
+                        <span
+                            class="font-label-md text-label-md text-on-surface uppercase tracking-widest"
+                            >Oct 24 - 30</span
+                        >
+                        <span class="font-label-sm text-label-sm text-on-surface-variant"
+                            >2026</span
+                        >
+                    </div>
+                    <button
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface"
+                    >
+                        <span class="material-symbols-outlined" data-icon="chevron_right"
+                            >chevron_right</span
+                        >
+                    </button>
+                    <div class="w-px h-6 bg-outline-variant mx-2"></div>
+                    <button
+                        class="px-4 py-2 font-label-sm text-label-sm text-on-surface hover:text-primary transition-colors"
+                    >
+                        TODAY
+                    </button>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center gap-4 w-full lg:w-auto">
+                    <div class="flex items-center gap-4 mr-4 hidden sm:flex text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-primary-container"></span
+                            ><span
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase"
+                                >Confirmed</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-secondary"></span
+                            ><span
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase"
+                                >In Progress</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-outline-variant"></span
+                            ><span
+                                class="font-label-sm text-label-sm text-on-surface-variant uppercase"
+                                >Pending</span
+                            >
+                        </div>
+                    </div>
+                    <button
+                        class="flex-1 lg:flex-none bg-primary-container text-on-primary-container px-6 py-3 rounded-none font-label-md text-label-md hover:bg-tertiary-container transition-colors flex items-center justify-center gap-2"
+                    >
+                        <span class="material-symbols-outlined" data-icon="add">add</span>
+                        NEW BOOKING
+                    </button>
+                </div>
+            </div>
+            <!-- Master Schedule Calendar Grid -->
+            <div
+                class="bg-surface-bright border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col flex-1 min-h-[700px]"
+            >
+                <!-- Calendar Header (Staff Columns) -->
+                <div
+                    class="grid grid-cols-[80px_1fr_1fr_1fr_1fr] border-b border-outline-variant bg-surface-container-lowest sticky top-0 z-10"
+                >
+                    <div
+                        class="p-4 flex items-end justify-center border-r border-outline-variant/50"
+                    >
+                        <span class="font-label-sm text-label-sm text-on-surface-variant"
+                            >TIME</span
+                        >
+                    </div>
+                    <!-- Staff 1 -->
+                    <div
+                        class="p-4 flex flex-col items-center justify-center border-r border-outline-variant/50 gap-2"
+                    >
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+                            <img
+                                class="w-full h-full object-cover"
+                                data-alt="A professional headshot of a stylish female salon stylist named Elena. She has short dark hair, wearing a minimalist black apron over a white silk shirt. The background is a soft, blurred studio setting with premium lighting, creating a trustworthy and high-end aesthetic."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuANCqQ8DMNip-YsMYxpAEt3AhHZtb_CzO1cSuzyCtAfZbz9iP-U1JJYpO5us8GcS2Z41vnZqAG2GdngFa1Ask14NCdu4Y0mpnu-vFu09llCFOTt9et2HR580TYkDENXjbT9yPj9g7FVB3gFGkn9PBJi0fG-cAx_vf6RPuA9Be2l4u1E3_j2KnxtnIK169L8bz_K85Ao-OOYN3MQMQPJM2WH3jNooytjj8wTz1Xs7JJ74EfqQtchfiWp6g"
+                            />
+                        </div>
+                        <div class="text-center">
+                            <div class="font-label-md text-label-md text-on-surface">Elena R.</div>
+                            <div
+                                class="font-label-sm text-label-sm text-on-surface-variant font-normal"
+                            >
+                                Hair Stylist
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Staff 2 -->
+                    <div
+                        class="p-4 flex flex-col items-center justify-center border-r border-outline-variant/50 gap-2"
+                    >
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+                            <img
+                                class="w-full h-full object-cover"
+                                data-alt="A professional headshot of a male esthetician named Marcus. He has a neat beard, wearing a pristine white uniform tunic. The lighting is bright and clean, emphasizing hygiene and luxury skincare expertise. The background is a subtle, neutral soft nude tone."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-muWAssDtsx100739mA_5P_L1PcShzWJEUtxww7MF0eaMdQz64ehhoy61uqTL7yynCy-4Ive_JL8I_OK5EMwwJvPsfL6bv3frXGVcvnoZ4apq3eA5WPn1ZksH4-4mrJBWA7-VvMfk4sb0fPZRMz3vO9xd8PxkeRVkimqBqVRz5dmzX2G2boqeF5D8qjkTjewLsvxAGZFtQc5ZOPr3Sd_FCR2QKSIbZUKl7sdgCospgFigvGHyw7S8Aw"
+                            />
+                        </div>
+                        <div class="text-center">
+                            <div class="font-label-md text-label-md text-on-surface">Marcus T.</div>
+                            <div
+                                class="font-label-sm text-label-sm text-on-surface-variant font-normal"
+                            >
+                                Esthetician
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Staff 3 -->
+                    <div
+                        class="p-4 flex flex-col items-center justify-center border-r border-outline-variant/50 gap-2"
+                    >
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+                            <img
+                                class="w-full h-full object-cover"
+                                data-alt="A stylish, premium headshot of a female nail technician named Chloe. She is smiling subtly, wearing a chic beige linen top. The lighting is soft and flattering, typical of a high-end editorial beauty portrait. The aesthetic is warm and welcoming."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm1gcMZwIRoMJJ1tHIOc3_vUt333HgBK0Dip3KR44ycmxzRamfaBE2EDhR0VTH01YNp_3ZVfd1TqtIcxD2zNRIt8DWApWuSMGX-QB6SnkLyLsghXBltbqfmQP1mYcw_TddNGdp-P9B9vsorYi7C5cV88KVA7Nvc2KNBbZQKD65D2BejiBzqdb8FsPQ5PqcDWMEBrU3aWnwQfR1eWpNH3BMVKMpSp7CCNSH1Yc8OzfxV5_eeKY7-tEYgw"
+                            />
+                        </div>
+                        <div class="text-center">
+                            <div class="font-label-md text-label-md text-on-surface">Chloe S.</div>
+                            <div
+                                class="font-label-sm text-label-sm text-on-surface-variant font-normal"
+                            >
+                                Nail Tech
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Staff 4 -->
+                    <div class="p-4 flex flex-col items-center justify-center gap-2">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+                            <img
+                                class="w-full h-full object-cover"
+                                data-alt="A professional portrait of a senior hair colorist named Sarah. She has stylishly colored hair, wearing professional black attire. The mood is confident and creative. The background is a clean, bright studio space reflecting a modern luxury salon environment."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKk-NIdZHRqVEv8d1_ibZ82xhUuShcOHzschWk6KuyYwhTfcrOYYWBn6KXHXGemUF-lVo43fK6yKsSz9Gj-N0q_1PDQupt3xBtDIf0CsToiWDpdJfKPZwlLS_2HyVwyKmfStXttc_XNu4zBIx_EPTQYEzlZty7_T3ciDFjdUWqvLDIfL4E50BlHG7NKMhWI7bL1aNVC8ung85d0B7-ks5FHGwS4FAeeLzqOMQxOiL19dS4QbYyX_7w4Q"
+                            />
+                        </div>
+                        <div class="text-center">
+                            <div class="font-label-md text-label-md text-on-surface">Sarah M.</div>
+                            <div
+                                class="font-label-sm text-label-sm text-on-surface-variant font-normal"
+                            >
+                                Colorist
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Calendar Body (Grid) -->
+                <div class="flex-1 overflow-y-auto relative bg-surface-bright">
+                    <!-- Background Grid Lines -->
+                    <div
+                        class="absolute inset-0 grid grid-cols-[80px_1fr_1fr_1fr_1fr] pointer-events-none"
+                    >
+                        <div class="border-r border-outline-variant/50"></div>
+                        <div class="border-r border-outline-variant/50"></div>
+                        <div class="border-r border-outline-variant/50"></div>
+                        <div class="border-r border-outline-variant/50"></div>
+                        <div></div>
+                    </div>
+                    <!-- Time Rows & Events Container -->
+                    <div class="relative h-[960px]">
+                        <!-- Assuming 8 hours, 120px per hour -->
+                        <!-- Time Labels -->
+                        <div
+                            class="absolute left-0 top-0 w-[80px] h-full flex flex-col pointer-events-none"
+                        >
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >9:00 AM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >10:00 AM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >11:00 AM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >12:00 PM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >1:00 PM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >2:00 PM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >3:00 PM</span
+                                >
+                            </div>
+                            <div
+                                class="h-[120px] border-b border-outline-variant/20 flex items-start justify-center pt-2"
+                            >
+                                <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                    >4:00 PM</span
+                                >
+                            </div>
+                        </div>
+                        <!-- Horizontal Grid Lines -->
+                        <div
+                            class="absolute left-[80px] right-0 top-0 h-full flex flex-col pointer-events-none z-0"
+                        >
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                            <div
+                                class="h-[60px] border-b border-outline-variant/10 border-dashed"
+                            ></div>
+                            <div class="h-[60px] border-b border-outline-variant/30"></div>
+                        </div>
+                        <!-- Current Time Indicator -->
+                        <div
+                            class="absolute left-[80px] right-0 top-[280px] h-px bg-error z-20 pointer-events-none flex items-center"
+                        >
+                            <div class="w-2 h-2 rounded-full bg-error -ml-1"></div>
+                        </div>
+                        <!-- EVENTS CONTAINER (Grid Layout matching columns) -->
+                        <div
+                            class="absolute left-[80px] right-0 top-0 h-full grid grid-cols-4 z-10 p-1 gap-1"
+                        >
+                            <!-- Col 1: Elena -->
+                            <div class="relative">
+                                <!-- Event 1 (Confirmed) -->
+                                <div
+                                    class="absolute top-[30px] h-[90px] left-1 right-1 bg-primary-container text-on-primary-container p-3 rounded-md shadow-sm overflow-hidden border border-primary/20 hover:ring-2 ring-primary transition-all cursor-pointer group"
+                                >
+                                    <div
+                                        class="font-label-sm text-label-sm mb-1 uppercase tracking-wider flex justify-between items-center opacity-80"
+                                    >
+                                        <span>9:15 - 10:00</span>
+                                    </div>
+                                    <div class="font-label-md text-label-md font-semibold truncate">
+                                        Signature Blowout
+                                    </div>
+                                    <div class="font-body-md text-[13px] opacity-75 truncate">
+                                        Olivia P.
+                                    </div>
+                                </div>
+                                <!-- Event 2 (In Progress) -->
+                                <div
+                                    class="absolute top-[240px] h-[180px] left-1 right-1 bg-secondary text-on-secondary p-3 rounded-md shadow-sm overflow-hidden border border-secondary/30 hover:ring-2 ring-secondary transition-all cursor-pointer"
+                                >
+                                    <div
+                                        class="font-label-sm text-label-sm mb-1 uppercase tracking-wider flex justify-between items-center opacity-80"
+                                    >
+                                        <span>11:00 - 12:30</span>
+                                        <span
+                                            class="w-1.5 h-1.5 rounded-full bg-on-secondary animate-pulse"
+                                        ></span>
+                                    </div>
+                                    <div class="font-label-md text-label-md font-semibold truncate">
+                                        Balayage Maintenance
+                                    </div>
+                                    <div class="font-body-md text-[13px] opacity-75 truncate">
+                                        Jessica W.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Col 2: Marcus -->
+                            <div class="relative">
+                                <!-- Blocked Time -->
+                                <div
+                                    class="absolute top-0 h-[120px] left-1 right-1 bg-surface-container-high/50 repeating-linear-gradient p-3 rounded-md flex items-center justify-center"
+                                >
+                                    <span
+                                        class="font-label-sm text-label-sm text-on-surface-variant/70 uppercase"
+                                        >Unavailable</span
+                                    >
+                                </div>
+                                <!-- Event 3 (Pending) -->
+                                <div
+                                    class="absolute top-[180px] h-[120px] left-1 right-1 bg-surface-container-lowest border-2 border-outline-variant/60 text-on-surface p-3 rounded-md shadow-sm overflow-hidden hover:border-outline transition-all cursor-pointer"
+                                >
+                                    <div
+                                        class="font-label-sm text-label-sm mb-1 uppercase tracking-wider text-on-surface-variant flex justify-between items-center"
+                                    >
+                                        <span>10:30 - 11:30</span>
+                                        <span class="material-symbols-outlined text-[14px]"
+                                            >schedule</span
+                                        >
+                                    </div>
+                                    <div class="font-label-md text-label-md font-semibold truncate">
+                                        Custom Facial
+                                    </div>
+                                    <div
+                                        class="font-body-md text-[13px] text-on-surface-variant truncate"
+                                    >
+                                        Amanda C. • Req. Online
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Col 3: Chloe -->
+                            <div class="relative">
+                                <!-- Event 4 (Confirmed) -->
+                                <div
+                                    class="absolute top-[60px] h-[60px] left-1 right-1 bg-primary-container text-on-primary-container p-2 rounded-md shadow-sm overflow-hidden border border-primary/20 hover:ring-2 ring-primary transition-all cursor-pointer"
+                                >
+                                    <div
+                                        class="font-label-sm text-[10px] mb-0.5 uppercase tracking-wider opacity-80"
+                                    >
+                                        9:30 - 10:00
+                                    </div>
+                                    <div class="font-label-md text-[13px] font-semibold truncate">
+                                        Gel Manicure
+                                    </div>
+                                </div>
+                                <!-- Event 5 (Confirmed) -->
+                                <div
+                                    class="absolute top-[150px] h-[90px] left-1 right-1 bg-primary-container text-on-primary-container p-3 rounded-md shadow-sm overflow-hidden border border-primary/20 hover:ring-2 ring-primary transition-all cursor-pointer"
+                                >
+                                    <div
+                                        class="font-label-sm text-label-sm mb-1 uppercase tracking-wider opacity-80"
+                                    >
+                                        10:15 - 11:00
+                                    </div>
+                                    <div class="font-label-md text-label-md font-semibold truncate">
+                                        Spa Pedicure
+                                    </div>
+                                    <div class="font-body-md text-[13px] opacity-75 truncate">
+                                        Rachel G.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Col 4: Sarah -->
+                            <div class="relative">
+                                <!-- Event 6 (Confirmed - Long duration) -->
+                                <div
+                                    class="absolute top-[120px] h-[240px] left-1 right-1 bg-primary-container text-on-primary-container p-3 rounded-md shadow-sm overflow-hidden border border-primary/20 hover:ring-2 ring-primary transition-all cursor-pointer"
+                                >
+                                    <div
+                                        class="font-label-sm text-label-sm mb-1 uppercase tracking-wider opacity-80"
+                                    >
+                                        10:00 - 12:00
+                                    </div>
+                                    <div class="font-label-md text-label-md font-semibold mb-1">
+                                        Full Highlights &amp; Tone
+                                    </div>
+                                    <div class="font-body-md text-[13px] opacity-75 mb-2">
+                                        Natalie B.
+                                    </div>
+                                    <div class="mt-auto flex gap-1">
+                                        <span
+                                            class="inline-block px-2 py-0.5 bg-surface/20 rounded text-[10px] uppercase tracking-wider"
+                                            >Color</span
+                                        >
+                                        <span
+                                            class="inline-block px-2 py-0.5 bg-surface/20 rounded text-[10px] uppercase tracking-wider"
+                                            >Tone</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <style>
+            .repeating-linear-gradient {
+                background-image: repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    theme('colors.surface-variant') 10px,
+                    theme('colors.surface-variant') 11px
+                );
+            }
+        </style>
+    </body>
+</html>

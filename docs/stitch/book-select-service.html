@@ -1,0 +1,461 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Select Service</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-tertiary-fixed-variant': '#494643',
+                            'surface-container-low': '#f4f3f2',
+                            'on-tertiary': '#ffffff',
+                            surface: '#faf9f8',
+                            'on-tertiary-container': '#928e89',
+                            secondary: '#685c53',
+                            'on-surface-variant': '#4d4540',
+                            background: '#faf9f8',
+                            'secondary-fixed': '#f0e0d3',
+                            'primary-container': '#2b2623',
+                            'inverse-on-surface': '#f1f0f0',
+                            'secondary-container': '#f0e0d3',
+                            'error-container': '#ffdad6',
+                            'surface-container-high': '#e9e8e7',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-surface': '#1a1c1c',
+                            'on-error-container': '#93000a',
+                            primary: '#16120f',
+                            'on-secondary': '#ffffff',
+                            error: '#ba1a1a',
+                            'tertiary-container': '#292724',
+                            'on-error': '#ffffff',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-primary-fixed': '#1f1b18',
+                            'surface-dim': '#dadad9',
+                            'inverse-surface': '#2f3130',
+                            'on-background': '#1a1c1c',
+                            outline: '#7f7570',
+                            'on-primary-container': '#958c88',
+                            'surface-container': '#eeeeed',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'surface-container-lowest': '#ffffff',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'surface-variant': '#e3e2e1',
+                            tertiary: '#141310',
+                            'surface-bright': '#faf9f8',
+                            'on-secondary-container': '#6e6258',
+                            'tertiary-fixed': '#e7e1dd',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'surface-tint': '#645d59',
+                            'primary-fixed': '#ebe0db',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-primary': '#ffffff',
+                            'on-secondary-fixed': '#221a13',
+                            'inverse-primary': '#cec5c0',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'outline-variant': '#d0c4be',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            gutter: '24px',
+                            'margin-desktop': '64px',
+                            unit: '8px',
+                            'container-max': '1280px',
+                            'margin-mobile': '20px',
+                        },
+                        fontFamily: {
+                            'body-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="bg-background text-on-surface antialiased flex flex-col min-h-screen">
+        <!-- TopNavBar (Nav suppressed for transactional flow, keeping brand anchor) -->
+        <header
+            class="w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-surface-variant/30 sticky top-0 z-50 py-6 px-margin-mobile md:px-margin-desktop"
+        >
+            <div class="max-w-container-max mx-auto flex justify-between items-center">
+                <a class="font-display-lg text-headline-md tracking-tighter text-primary" href="#"
+                    >AVERE</a
+                >
+                <button
+                    class="text-secondary hover:text-primary transition-colors flex items-center gap-2"
+                >
+                    <span class="font-label-md text-label-md uppercase tracking-widest"
+                        >Cancel</span
+                    >
+                    <span class="material-symbols-outlined text-[20px]" data-icon="close"
+                        >close</span
+                    >
+                </button>
+            </div>
+        </header>
+        <main
+            class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24"
+        >
+            <!-- Progress Indicator -->
+            <div class="mb-16">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <span
+                            class="font-label-sm text-label-sm text-secondary uppercase tracking-widest block mb-2"
+                            >Step 1 of 7</span
+                        >
+                        <h1
+                            class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary"
+                        >
+                            Select Service
+                        </h1>
+                    </div>
+                </div>
+                <div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+                    <div
+                        class="h-full bg-primary w-[14%] rounded-full transition-all duration-500 ease-in-out"
+                    ></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+                <!-- Service Selection Area -->
+                <div class="md:col-span-8 flex flex-col gap-12">
+                    <!-- Category: Manicure & Pedicure -->
+                    <section>
+                        <div class="flex items-center gap-4 mb-8">
+                            <h2 class="font-headline-md text-headline-md text-primary">
+                                Manicure &amp; Pedicure
+                            </h2>
+                            <div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Service Item -->
+                            <div
+                                class="group border border-outline-variant/50 hover:border-outline rounded-lg p-6 bg-surface-container-lowest cursor-pointer transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div class="flex justify-between items-start gap-4 relative z-10">
+                                    <div>
+                                        <h3
+                                            class="font-body-lg text-body-lg text-primary mb-1 group-hover:text-tertiary transition-colors"
+                                        >
+                                            Signature Manicure
+                                        </h3>
+                                        <p
+                                            class="font-body-md text-body-md text-secondary mb-2 line-clamp-2"
+                                        >
+                                            A classic treatment to clean, shape, and polish your
+                                            nails to perfection.
+                                        </p>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="font-label-md text-label-md text-secondary flex items-center gap-1"
+                                                ><span class="material-symbols-outlined text-[16px]"
+                                                    >schedule</span
+                                                >
+                                                45 Min</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="font-body-lg text-body-lg text-primary whitespace-nowrap"
+                                            >$25</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-secondary-fixed/0 group-hover:bg-secondary-fixed/5 transition-colors z-0"
+                                ></div>
+                            </div>
+                            <!-- Service Item -->
+                            <div
+                                class="group border border-outline-variant/50 hover:border-outline rounded-lg p-6 bg-surface-container-lowest cursor-pointer transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div class="flex justify-between items-start gap-4 relative z-10">
+                                    <div>
+                                        <h3
+                                            class="font-body-lg text-body-lg text-primary mb-1 group-hover:text-tertiary transition-colors"
+                                        >
+                                            Signature Pedicure
+                                        </h3>
+                                        <p
+                                            class="font-body-md text-body-md text-secondary mb-2 line-clamp-2"
+                                        >
+                                            Relaxing soak, exfoliation, and expert nail care for
+                                            beautiful feet.
+                                        </p>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="font-label-md text-label-md text-secondary flex items-center gap-1"
+                                                ><span class="material-symbols-outlined text-[16px]"
+                                                    >schedule</span
+                                                >
+                                                60 Min</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="font-body-lg text-body-lg text-primary whitespace-nowrap"
+                                            >$45</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-secondary-fixed/0 group-hover:bg-secondary-fixed/5 transition-colors z-0"
+                                ></div>
+                            </div>
+                            <!-- Service Item -->
+                            <div
+                                class="group border border-outline-variant/50 hover:border-outline rounded-lg p-6 bg-surface-container-lowest cursor-pointer transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div class="flex justify-between items-start gap-4 relative z-10">
+                                    <div>
+                                        <h3
+                                            class="font-body-lg text-body-lg text-primary mb-1 group-hover:text-tertiary transition-colors"
+                                        >
+                                            The Dessert Manicure
+                                        </h3>
+                                        <p
+                                            class="font-body-md text-body-md text-secondary mb-2 line-clamp-2"
+                                        >
+                                            An indulgent treatment with aromatic scrubs and deep
+                                            hydration.
+                                        </p>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="font-label-md text-label-md text-secondary flex items-center gap-1"
+                                                ><span class="material-symbols-outlined text-[16px]"
+                                                    >schedule</span
+                                                >
+                                                55 Min</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="font-body-lg text-body-lg text-primary whitespace-nowrap"
+                                            >$35</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-secondary-fixed/0 group-hover:bg-secondary-fixed/5 transition-colors z-0"
+                                ></div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Category: Dermalogica Facials -->
+                    <section>
+                        <div class="flex items-center gap-4 mb-8">
+                            <h2 class="font-headline-md text-headline-md text-primary">
+                                Dermalogica Facials
+                            </h2>
+                            <div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Service Item (Free) -->
+                            <div
+                                class="group border border-outline-variant/50 hover:border-outline rounded-lg p-6 bg-surface-container-lowest cursor-pointer transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div class="flex justify-between items-start gap-4 relative z-10">
+                                    <div>
+                                        <h3
+                                            class="font-body-lg text-body-lg text-primary mb-1 group-hover:text-tertiary transition-colors"
+                                        >
+                                            Face Mapping
+                                        </h3>
+                                        <p
+                                            class="font-body-md text-body-md text-secondary mb-2 line-clamp-2"
+                                        >
+                                            A comprehensive skin analysis to determine your
+                                            personalized treatment plan.
+                                        </p>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="font-label-md text-label-md text-secondary flex items-center gap-1"
+                                                ><span class="material-symbols-outlined text-[16px]"
+                                                    >schedule</span
+                                                >
+                                                15 Min</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="font-body-lg text-body-lg text-secondary whitespace-nowrap uppercase text-sm tracking-wider"
+                                            >Free</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-secondary-fixed/0 group-hover:bg-secondary-fixed/5 transition-colors z-0"
+                                ></div>
+                            </div>
+                            <!-- Service Item -->
+                            <div
+                                class="group border border-primary bg-secondary-fixed/10 rounded-lg p-6 cursor-pointer transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div class="flex justify-between items-start gap-4 relative z-10">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h3 class="font-body-lg text-body-lg text-primary">
+                                                MicroZone Treatments
+                                            </h3>
+                                            <span
+                                                class="material-symbols-outlined text-primary text-[20px]"
+                                                data-icon="check_circle"
+                                                data-weight="fill"
+                                                >check_circle</span
+                                            >
+                                        </div>
+                                        <p
+                                            class="font-body-md text-body-md text-secondary mb-2 line-clamp-2"
+                                        >
+                                            Targeted 20-minute solutions for immediate skin
+                                            concerns.
+                                        </p>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="font-label-md text-label-md text-secondary flex items-center gap-1"
+                                                ><span class="material-symbols-outlined text-[16px]"
+                                                    >schedule</span
+                                                >
+                                                20 Min</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="font-body-lg text-body-lg text-primary whitespace-nowrap"
+                                            >$75</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-secondary-fixed/20 transition-colors z-0 pointer-events-none"
+                                ></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- Booking Summary Sticky Sidebar -->
+                <div class="md:col-span-4 hidden md:block">
+                    <div
+                        class="sticky top-32 border border-outline-variant/30 rounded-xl p-8 bg-surface-container-lowest"
+                    >
+                        <h3
+                            class="font-headline-md text-headline-md text-primary border-b border-outline-variant/30 pb-4 mb-6"
+                        >
+                            Your Booking
+                        </h3>
+                        <div class="mb-8">
+                            <p class="font-body-md text-body-md text-secondary text-center italic">
+                                Select a service to begin.
+                            </p>
+                            <!-- Selected Service Placeholder (Example state) -->
+                            <div
+                                class="mt-4 flex justify-between items-start border-b border-dashed border-outline-variant/50 pb-4"
+                            >
+                                <div>
+                                    <span class="font-label-md text-label-md text-primary block"
+                                        >MicroZone Treatments</span
+                                    >
+                                    <span
+                                        class="font-body-md text-body-md text-secondary text-sm block"
+                                        >20 Min</span
+                                    >
+                                </div>
+                                <span class="font-body-md text-body-md text-primary">$75</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex justify-between items-center mb-8 border-t border-outline-variant/30 pt-4"
+                        >
+                            <span
+                                class="font-label-md text-label-md uppercase tracking-widest text-secondary"
+                                >Total</span
+                            >
+                            <span class="font-headline-md text-headline-md text-primary">$75</span>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-on-primary py-4 px-8 font-label-md text-label-md uppercase tracking-widest hover:bg-tertiary transition-colors rounded-DEFAULT"
+                        >
+                            Continue to Date &amp; Time
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile Bottom Action Bar -->
+            <div
+                class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/30 p-4 pb-6 z-40 shadow-[0_-4px_24px_rgba(43,38,35,0.05)]"
+            >
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <span
+                            class="font-label-sm text-label-sm uppercase tracking-widest text-secondary block"
+                            >1 Service</span
+                        >
+                        <span class="font-headline-md text-headline-md text-primary">$75</span>
+                    </div>
+                    <button
+                        class="bg-primary text-on-primary py-3 px-6 font-label-md text-label-md uppercase tracking-widest hover:bg-tertiary transition-colors rounded-DEFAULT"
+                    >
+                        Next Step
+                    </button>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

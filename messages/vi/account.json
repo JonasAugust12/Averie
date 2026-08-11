@@ -1,0 +1,21 @@
+{
+    "clientTitle": "Đăng nhập",
+    "clientSubtitle": "Luxury Nail Studio",
+    "clientEyebrow": "Chào mừng trở lại",
+    "createAccount": "Tạo tài khoản",
+    "noAccount": "Chưa có tài khoản?",
+    "forgot": "Quên?",
+    "adminTitle": "Quản trị tiệm",
+    "adminSubtitle": "Chỉ dành cho người được ủy quyền",
+    "adminAccess": "Truy cập Admin",
+    "rememberMe": "Ghi nhớ tôi",
+    "securityNote": "Cổng mock bảo mật — không phải đăng nhập thật.",
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "clientHint": "Mọi email/mật khẩu đều qua được mock login khách.",
+    "adminHint": "Dùng admin@avere.local / password",
+    "invalidAdmin": "Sai thông tin admin giả",
+    "backHome": "Về trang chủ",
+    "brand": "AVERE"
+}

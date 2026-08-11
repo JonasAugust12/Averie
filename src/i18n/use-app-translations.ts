@@ -22,3 +22,19 @@ export function useSuccessTranslations() {
 export function usePageTranslations() {
     return useAppTranslations('pages');
 }
+
+export function useSalonTranslations() {
+    return useAppTranslations('salon');
+}
+
+export function useBookingTranslations() {
+    return useAppTranslations('booking');
+}
+
+export function useAccountTranslations() {
+    return useAppTranslations('account');
+}
+
+export function useAdminTranslations() {
+    return useAppTranslations('admin');
+}

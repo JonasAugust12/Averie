@@ -1,5 +1,6 @@
+import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
-import { DEFAULT_LOCALE, LOCALES, type AppLocale } from '@i18n/config';
+import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, type AppLocale } from '@i18n/config';
 import { messages } from '@i18n/messages';
 
 function resolveLocale(locale: string | undefined): AppLocale {
@@ -9,9 +10,9 @@ function resolveLocale(locale: string | undefined): AppLocale {
     return DEFAULT_LOCALE;
 }
 
-export default getRequestConfig(async ({ requestLocale }) => {
-    const requested = await requestLocale;
-    const locale = resolveLocale(requested);
+export default getRequestConfig(async () => {
+    const store = await cookies();
+    const locale = resolveLocale(store.get(LOCALE_COOKIE)?.value);
 
     return {
         locale,

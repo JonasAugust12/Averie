@@ -66,6 +66,7 @@
 
     --breakpoint-app: 80rem; /* 1280px */
     --container-app: 80rem;
+    --max-width-app: 80rem;
 }
 
 * {
@@ -91,4 +92,13 @@ h4 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.02em;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }

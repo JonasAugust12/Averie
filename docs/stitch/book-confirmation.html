@@ -1,0 +1,310 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Booking Confirmation</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@100..900&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-primary': '#ffffff',
+                            'surface-variant': '#e3e2e1',
+                            secondary: '#685c53',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-tertiary-fixed-variant': '#494643',
+                            'inverse-on-surface': '#f1f0f0',
+                            'on-primary-fixed': '#1f1b18',
+                            'tertiary-fixed': '#e7e1dd',
+                            'surface-tint': '#645d59',
+                            'surface-container-lowest': '#ffffff',
+                            'secondary-container': '#f0e0d3',
+                            tertiary: '#141310',
+                            'surface-bright': '#faf9f8',
+                            'primary-fixed': '#ebe0db',
+                            'tertiary-container': '#292724',
+                            'surface-dim': '#dadad9',
+                            'on-secondary-fixed': '#221a13',
+                            surface: '#faf9f8',
+                            'primary-fixed-dim': '#cec5c0',
+                            'surface-container-low': '#f4f3f2',
+                            'error-container': '#ffdad6',
+                            'inverse-surface': '#2f3130',
+                            'on-error': '#ffffff',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'on-primary-container': '#958c88',
+                            'surface-container': '#eeeeed',
+                            'on-error-container': '#93000a',
+                            background: '#faf9f8',
+                            'primary-container': '#2b2623',
+                            'outline-variant': '#d0c4be',
+                            'on-secondary-container': '#6e6258',
+                            'on-surface-variant': '#4d4540',
+                            'secondary-fixed': '#f0e0d3',
+                            'on-surface': '#1a1c1c',
+                            'on-tertiary-container': '#928e89',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'on-tertiary': '#ffffff',
+                            error: '#ba1a1a',
+                            outline: '#7f7570',
+                            primary: '#16120f',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-secondary': '#ffffff',
+                            'surface-container-high': '#e9e8e7',
+                            'on-background': '#1a1c1c',
+                            'surface-container-highest': '#e3e2e1',
+                            'inverse-primary': '#cec5c0',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'container-max': '1280px',
+                            gutter: '24px',
+                            unit: '8px',
+                            'margin-desktop': '64px',
+                            'margin-mobile': '20px',
+                        },
+                        fontFamily: {
+                            'headline-md': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'label-sm': ['Inter'],
+                            'body-md': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'headline-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .fade-in {
+                animation: fadeIn 0.8s ease-out forwards;
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            .delay-100 {
+                animation-delay: 100ms;
+            }
+            .delay-200 {
+                animation-delay: 200ms;
+            }
+            .delay-300 {
+                animation-delay: 300ms;
+            }
+            .delay-400 {
+                animation-delay: 400ms;
+            }
+            @keyframes fadeIn {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased selection:bg-secondary-container selection:text-on-secondary-container"
+    >
+        <!-- Progress Bar Context -->
+        <div
+            class="w-full bg-surface-container-low py-4 px-margin-mobile md:px-margin-desktop sticky top-0 z-50"
+        >
+            <div class="max-w-container-max mx-auto flex justify-between items-center">
+                <span
+                    class="font-display-lg text-headline-md tracking-widest text-primary uppercase"
+                    >Avere</span
+                >
+                <div class="flex items-center gap-4">
+                    <span
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase hidden md:inline-block"
+                        >Step 7 of 7: Complete</span
+                    >
+                    <div class="w-32 md:w-64 h-1 bg-surface-variant rounded-full overflow-hidden">
+                        <div
+                            class="h-full bg-primary w-full rounded-full transition-all duration-1000 ease-out"
+                        ></div>
+                    </div>
+                </div>
+                <!-- Empty div to balance flex justify-between if needed, or close button -->
+                <button
+                    aria-label="Close"
+                    class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 0"
+                        >close</span
+                    >
+                </button>
+            </div>
+        </div>
+        <!-- Main Canvas -->
+        <main
+            class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-16 md:py-32 relative"
+        >
+            <!-- Ambient Background Element -->
+            <div
+                class="absolute inset-0 overflow-hidden pointer-events-none -z-10 flex justify-center items-center opacity-30"
+            >
+                <div
+                    class="w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] rounded-full bg-surface-container blur-[100px]"
+                ></div>
+            </div>
+            <div class="max-w-2xl w-full flex flex-col items-center text-center fade-in">
+                <!-- Success Icon -->
+                <div
+                    class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-surface-container-low border border-outline-variant/50 flex items-center justify-center mb-8 shadow-sm"
+                >
+                    <span
+                        class="material-symbols-outlined text-4xl md:text-5xl text-primary"
+                        style="font-variation-settings: 'FILL' 1"
+                        >check_circle</span
+                    >
+                </div>
+                <!-- Headlines -->
+                <h1
+                    class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4"
+                >
+                    Appointment Requested Successfully
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-lg">
+                    Your booking request has been received. You will receive a confirmation email
+                    shortly.
+                </p>
+            </div>
+            <!-- Details Card - Minimalist / Glassy / Tonal -->
+            <div
+                class="w-full max-w-2xl bg-surface rounded-xl border border-outline-variant/30 p-8 md:p-12 mb-12 relative overflow-hidden fade-in delay-100"
+            >
+                <!-- Tonal shift background element inside card -->
+                <div
+                    class="absolute -top-24 -right-24 w-64 h-64 bg-secondary-container/20 rounded-full blur-[60px] pointer-events-none"
+                ></div>
+                <h2
+                    class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-8 border-b border-outline-variant/20 pb-4"
+                >
+                    Booking Details
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                    <div class="flex flex-col">
+                        <span
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1"
+                            >Reference</span
+                        >
+                        <span class="font-body-md text-body-md text-on-surface font-medium"
+                            >#AV-2026-0814</span
+                        >
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1"
+                            >Service</span
+                        >
+                        <span class="font-body-md text-body-md text-on-surface font-medium"
+                            >MicroZone Treatments</span
+                        >
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1"
+                            >Technician</span
+                        >
+                        <span class="font-body-md text-body-md text-on-surface font-medium"
+                            >Michael</span
+                        >
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1"
+                            >Date &amp; Time</span
+                        >
+                        <span class="font-body-md text-body-md text-on-surface font-medium"
+                            >Wed, Oct 14 at 1:30 PM</span
+                        >
+                    </div>
+                    <div
+                        class="flex flex-col md:col-span-2 mt-4 pt-6 border-t border-outline-variant/20"
+                    >
+                        <span
+                            class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-2"
+                            >Location</span
+                        >
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="material-symbols-outlined text-on-surface-variant mt-0.5"
+                                style="font-variation-settings: 'FILL' 0"
+                                >location_on</span
+                            >
+                            <span class="font-body-md text-body-md text-on-surface"
+                                >132 Chief Justice Cushing Highway #25<br />Cohasset, MA</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex flex-col md:flex-row gap-4 w-full max-w-lg fade-in delay-200">
+                <button
+                    class="flex-1 bg-primary-container text-on-primary bg-primary hover:bg-tertiary-container transition-colors duration-300 py-4 px-8 rounded-lg font-label-md text-label-md flex justify-center items-center gap-2 cursor-pointer active:scale-[0.98]"
+                >
+                    <span
+                        class="material-symbols-outlined text-[18px]"
+                        style="font-variation-settings: 'FILL' 0"
+                        >calendar_add_on</span
+                    >
+                    Add to Calendar
+                </button>
+                <button
+                    class="flex-1 bg-transparent text-primary border border-outline-variant hover:border-primary hover:bg-surface-container-lowest transition-all duration-300 py-4 px-8 rounded-lg font-label-md text-label-md flex justify-center items-center cursor-pointer active:scale-[0.98]"
+                >
+                    Return to Home
+                </button>
+            </div>
+        </main>
+        <!-- Footer - Excluded shell elements as per prompt "Linear/Transactional... hide the shell", but a minimal semantic footer is okay if required by JSON, though standard Navs are suppressed. Since instructions say "exclude navigation shell", we omit TopAppBar/BottomNav but we can keep the semantic Footer from JSON if we view it as canvas bottom. However, for a clean completion screen, we omit global footer to focus on the return action. -->
+    </body>
+</html>

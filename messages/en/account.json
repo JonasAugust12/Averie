@@ -1,0 +1,21 @@
+{
+    "clientTitle": "Sign In",
+    "clientSubtitle": "Luxury Nail Studio",
+    "clientEyebrow": "Welcome back",
+    "createAccount": "Create Account",
+    "noAccount": "Don't have an account?",
+    "forgot": "Forgot?",
+    "adminTitle": "Salon Management",
+    "adminSubtitle": "Authorized Access Only",
+    "adminAccess": "Admin Access",
+    "rememberMe": "Remember me",
+    "securityNote": "Secure mock gate — not real authentication.",
+    "email": "Email Address",
+    "password": "Password",
+    "submit": "Sign In",
+    "clientHint": "Any email/password passes client mock login.",
+    "adminHint": "Use admin@avere.local / password",
+    "invalidAdmin": "Invalid mock admin credentials",
+    "backHome": "Back to home",
+    "brand": "AVERE"
+}

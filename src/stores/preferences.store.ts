@@ -16,7 +16,7 @@ type PreferencesStore = PreferencesState & PreferencesActions;
 export const usePreferencesStore = create<PreferencesStore>()(
     persist(
         (set) => ({
-            language: 'vi',
+            language: 'en',
             theme: 'light',
 
             setLanguage: (language) => set({ language }),

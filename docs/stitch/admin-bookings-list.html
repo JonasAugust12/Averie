@@ -1,0 +1,507 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Bookings Management</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-error': '#ffffff',
+                            'on-tertiary-container': '#928e89',
+                            'inverse-surface': '#2f3130',
+                            'on-tertiary-fixed-variant': '#494643',
+                            'error-container': '#ffdad6',
+                            'inverse-on-surface': '#f1f0f0',
+                            'surface-container-lowest': '#ffffff',
+                            tertiary: '#141310',
+                            'surface-container-low': '#f4f3f2',
+                            primary: '#16120f',
+                            'secondary-container': '#f0e0d3',
+                            outline: '#7f7570',
+                            'on-surface-variant': '#4d4540',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'on-background': '#1a1c1c',
+                            'surface-container-high': '#e9e8e7',
+                            'on-tertiary': '#ffffff',
+                            surface: '#faf9f8',
+                            'on-primary-fixed-variant': '#4c4642',
+                            error: '#ba1a1a',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-secondary-fixed': '#221a13',
+                            'on-surface': '#1a1c1c',
+                            'on-secondary': '#ffffff',
+                            'on-primary-fixed': '#1f1b18',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-secondary-container': '#6e6258',
+                            'on-primary-container': '#958c88',
+                            'surface-dim': '#dadad9',
+                            'secondary-fixed': '#f0e0d3',
+                            'tertiary-fixed': '#e7e1dd',
+                            'outline-variant': '#d0c4be',
+                            'on-primary': '#ffffff',
+                            'surface-tint': '#645d59',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-error-container': '#93000a',
+                            'surface-container': '#eeeeed',
+                            secondary: '#685c53',
+                            'primary-fixed': '#ebe0db',
+                            'primary-container': '#2b2623',
+                            background: '#faf9f8',
+                            'tertiary-container': '#292724',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'surface-bright': '#faf9f8',
+                            'surface-variant': '#e3e2e1',
+                            'inverse-primary': '#cec5c0',
+                            'on-tertiary-fixed': '#1d1b18',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'margin-mobile': '20px',
+                            unit: '8px',
+                            gutter: '24px',
+                            'container-max': '1280px',
+                            'margin-desktop': '64px',
+                        },
+                        fontFamily: {
+                            'headline-md': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .ambient-shadow {
+                box-shadow: 0 4px 24px rgba(43, 38, 35, 0.04);
+            }
+        </style>
+    </head>
+    <body class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+        <!-- Top Navigation Placeholder (Since JSON specified TopAppBar but this is an admin context, we adapt a simplified version) -->
+        <header
+            class="w-full top-0 sticky z-50 bg-surface border-b border-outline-variant/30 flex justify-between items-center px-margin-desktop py-unit max-w-container-max mx-auto h-20"
+        >
+            <div class="font-display-lg text-headline-md tracking-widest text-primary uppercase">
+                AVERE
+            </div>
+            <div class="flex items-center gap-gutter">
+                <span class="material-symbols-outlined text-on-surface-variant cursor-pointer"
+                    >notifications</span
+                >
+                <div
+                    class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-label-sm text-on-secondary-container"
+                >
+                    AD
+                </div>
+            </div>
+        </header>
+        <div class="flex flex-1 max-w-container-max mx-auto w-full">
+            <!-- Sidebar Navigation -->
+            <aside
+                class="w-64 hidden md:flex flex-col border-r border-outline-variant/30 py-8 px-6 bg-surface-container-lowest gap-8 sticky top-20 h-[calc(100vh-5rem)]"
+            >
+                <nav class="flex flex-col gap-4">
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container-low text-primary font-label-md font-bold"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        Bookings
+                    </a>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">people</span>
+                        Clients
+                    </a>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">spa</span>
+                        Services
+                    </a>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">badge</span>
+                        Staff
+                    </a>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </a>
+                </nav>
+            </aside>
+            <!-- Main Content Canvas -->
+            <main class="flex-1 py-12 px-margin-mobile md:px-margin-desktop w-full overflow-y-auto">
+                <!-- Page Header -->
+                <div
+                    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6"
+                >
+                    <div>
+                        <h1
+                            class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2"
+                        >
+                            Bookings
+                        </h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            Manage and review all scheduled appointments.
+                        </p>
+                    </div>
+                    <button
+                        class="bg-primary-container text-on-primary font-label-sm px-6 py-3 rounded-DEFAULT hover:opacity-90 transition-opacity flex items-center gap-2"
+                    >
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        NEW BOOKING
+                    </button>
+                </div>
+                <!-- Filters & Search Bar -->
+                <div
+                    class="bg-surface-container-lowest p-6 rounded-xl ambient-shadow mb-8 flex flex-col lg:flex-row gap-6 border border-outline-variant/50"
+                >
+                    <div class="flex-1">
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+                                >search</span
+                            >
+                            <input
+                                class="w-full pl-10 pr-4 py-3 border-b border-outline-variant bg-transparent font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
+                                placeholder="Search clients by name or phone..."
+                                type="text"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low border border-outline-variant/30 text-on-surface font-label-md py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary"
+                            >
+                                <option>All Dates</option>
+                                <option>Today</option>
+                                <option>Tomorrow</option>
+                                <option>This Week</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]"
+                                >expand_more</span
+                            >
+                        </div>
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low border border-outline-variant/30 text-on-surface font-label-md py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary"
+                            >
+                                <option>All Staff</option>
+                                <option>Sarah J.</option>
+                                <option>Michael T.</option>
+                                <option>Emma W.</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]"
+                                >expand_more</span
+                            >
+                        </div>
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low border border-outline-variant/30 text-on-surface font-label-md py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary"
+                            >
+                                <option>All Services</option>
+                                <option>Facials</option>
+                                <option>Massage</option>
+                                <option>Nails</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]"
+                                >expand_more</span
+                            >
+                        </div>
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low border border-outline-variant/30 text-on-surface font-label-md py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary"
+                            >
+                                <option>All Statuses</option>
+                                <option>Confirmed</option>
+                                <option>Pending</option>
+                                <option>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]"
+                                >expand_more</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <!-- Bookings List (Editorial / Clean Table approach) -->
+                <div
+                    class="bg-surface-container-lowest rounded-xl ambient-shadow border border-outline-variant/50 overflow-hidden"
+                >
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="border-b border-outline-variant/30 text-on-surface-variant font-label-sm uppercase tracking-widest bg-surface-container-low/50"
+                                >
+                                    <th class="p-6 font-semibold w-48">Date &amp; Time</th>
+                                    <th class="p-6 font-semibold">Client</th>
+                                    <th class="p-6 font-semibold">Service</th>
+                                    <th class="p-6 font-semibold">Technician</th>
+                                    <th class="p-6 font-semibold">Status</th>
+                                    <th class="p-6 font-semibold text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-body-md divide-y divide-outline-variant/20">
+                                <!-- Row 1 -->
+                                <tr
+                                    class="hover:bg-surface-container-low/30 transition-colors group"
+                                >
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Oct 24, 2026</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            10:00 AM - 11:30 AM
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Eleanor Vance</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            +1 (555) 019-2834
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary">Signature Radiance Facial</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            90 min
+                                        </div>
+                                    </td>
+                                    <td class="p-6 text-on-surface-variant">Sarah J.</td>
+                                    <td class="p-6">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide bg-surface-container-high text-primary uppercase"
+                                        >
+                                            Confirmed
+                                        </span>
+                                    </td>
+                                    <td class="p-6 text-right">
+                                        <button
+                                            class="text-secondary hover:text-primary transition-colors font-label-md underline underline-offset-4 decoration-outline-variant hover:decoration-primary"
+                                        >
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr
+                                    class="hover:bg-surface-container-low/30 transition-colors group"
+                                >
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Oct 24, 2026</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            1:00 PM - 2:00 PM
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Marcus Sterling</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            +1 (555) 832-1109
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary">Deep Tissue Massage</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            60 min
+                                        </div>
+                                    </td>
+                                    <td class="p-6 text-on-surface-variant">Michael T.</td>
+                                    <td class="p-6">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide bg-secondary-container text-on-secondary-container uppercase"
+                                        >
+                                            Pending
+                                        </span>
+                                    </td>
+                                    <td class="p-6 text-right">
+                                        <button
+                                            class="text-secondary hover:text-primary transition-colors font-label-md underline underline-offset-4 decoration-outline-variant hover:decoration-primary"
+                                        >
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr
+                                    class="hover:bg-surface-container-low/30 transition-colors group opacity-75"
+                                >
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Oct 23, 2026</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            3:30 PM - 4:15 PM
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Sophia Chen</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            +1 (555) 443-9090
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary">Gel Manicure &amp; Pedicure</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            45 min
+                                        </div>
+                                    </td>
+                                    <td class="p-6 text-on-surface-variant">Emma W.</td>
+                                    <td class="p-6">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide bg-surface-dim text-on-surface-variant uppercase"
+                                        >
+                                            Completed
+                                        </span>
+                                    </td>
+                                    <td class="p-6 text-right">
+                                        <button
+                                            class="text-secondary hover:text-primary transition-colors font-label-md underline underline-offset-4 decoration-outline-variant hover:decoration-primary"
+                                        >
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr
+                                    class="hover:bg-surface-container-low/30 transition-colors group opacity-60"
+                                >
+                                    <td class="p-6">
+                                        <div
+                                            class="text-primary font-medium line-through decoration-outline-variant/50"
+                                        >
+                                            Oct 23, 2026
+                                        </div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            5:00 PM - 6:00 PM
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary font-medium">Isabella Rossi</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            +1 (555) 221-7845
+                                        </div>
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="text-primary">Botanical Body Wrap</div>
+                                        <div class="text-on-surface-variant text-sm mt-1">
+                                            60 min
+                                        </div>
+                                    </td>
+                                    <td class="p-6 text-on-surface-variant">Sarah J.</td>
+                                    <td class="p-6">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border border-error-container text-error uppercase bg-error-container/20"
+                                        >
+                                            Cancelled
+                                        </span>
+                                    </td>
+                                    <td class="p-6 text-right">
+                                        <button
+                                            class="text-secondary hover:text-primary transition-colors font-label-md underline underline-offset-4 decoration-outline-variant hover:decoration-primary"
+                                        >
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div
+                        class="border-t border-outline-variant/30 p-6 flex justify-between items-center bg-surface-container-lowest"
+                    >
+                        <span class="font-body-md text-sm text-on-surface-variant"
+                            >Showing 1 to 4 of 42 bookings</span
+                        >
+                        <div class="flex gap-2">
+                            <button
+                                class="w-10 h-10 flex items-center justify-center border border-outline-variant/50 rounded-DEFAULT text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-50"
+                                disabled=""
+                            >
+                                <span class="material-symbols-outlined text-[20px]"
+                                    >chevron_left</span
+                                >
+                            </button>
+                            <button
+                                class="w-10 h-10 flex items-center justify-center border border-outline-variant/50 rounded-DEFAULT text-on-surface hover:bg-surface-container-low transition-colors"
+                            >
+                                <span class="material-symbols-outlined text-[20px]"
+                                    >chevron_right</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

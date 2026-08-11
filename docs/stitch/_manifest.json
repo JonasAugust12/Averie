@@ -1,0 +1,92 @@
+[
+    {
+        "screenId": "22c574d860ee47388cbdea0dee49b59d",
+        "file": "book-select-service.html",
+        "title": "Avere | Book Appointment - Select Service"
+    },
+    {
+        "screenId": "8f188e9819be47d5a28ad180a6277e08",
+        "file": "book-select-employee.html",
+        "title": "Avere | Book Appointment - Select Employee"
+    },
+    {
+        "screenId": "d167d5a1ef774a77b64159e0d9d01b80",
+        "file": "book-select-date.html",
+        "title": "Avere | Book Appointment - Select Date"
+    },
+    {
+        "screenId": "9721ec9cdd1e4a6a9a6a720ab6c0ccb6",
+        "file": "book-select-time.html",
+        "title": "Avere | Book Appointment - Select Time"
+    },
+    {
+        "screenId": "009dfed04b7f4d34864cd073d712f29f",
+        "file": "book-customer-info.html",
+        "title": "Avere | Book Appointment - Customer Information"
+    },
+    {
+        "screenId": "33644b0056b940ebaa372d16580949e0",
+        "file": "book-review.html",
+        "title": "Avere | Book Appointment - Review Details"
+    },
+    {
+        "screenId": "571b290ee21d4f458d662340ec45ac00",
+        "file": "book-confirmation.html",
+        "title": "Avere | Book Appointment - Confirmation"
+    },
+    {
+        "screenId": "088ee3a29aa44062b97fb442d85ab7f1",
+        "file": "client-login.html",
+        "title": "Avere | Client Login"
+    },
+    {
+        "screenId": "ec232374ed214ab2b79bdbb93c964867",
+        "file": "admin-login.html",
+        "title": "Avere | Admin Login"
+    },
+    {
+        "screenId": "c3a7398302454649b313cb28ffedda1e",
+        "file": "admin-overview.html",
+        "title": "Avere | Admin Dashboard - Overview"
+    },
+    {
+        "screenId": "2f98dae2fc0447e6baee07d1dec7358b",
+        "file": "admin-bookings-list.html",
+        "title": "Avere | Admin Dashboard - Bookings List"
+    },
+    {
+        "screenId": "3477e208e49244838c22fe6e0489399e",
+        "file": "admin-booking-detail.html",
+        "title": "Avere | Admin Dashboard - Booking Details"
+    },
+    {
+        "screenId": "7ef3bdd0f35f41d8ba0ef9a368475871",
+        "file": "admin-services.html",
+        "title": "Avere | Admin Dashboard - Service Management"
+    },
+    {
+        "screenId": "7c31d6e6e641444c8982bbfff5af8c75",
+        "file": "admin-staff.html",
+        "title": "Avere | Admin Dashboard - Staff Management"
+    },
+    {
+        "screenId": "8ec146a01f534971b7c8abc0f9ee3ab6",
+        "file": "admin-staff-schedule.html",
+        "title": "Avere | Admin Dashboard - Staff Schedule Details"
+    },
+    {
+        "screenId": "aff129a7f8ef491b99637a367ee9d852",
+        "file": "admin-master-schedule.html",
+        "title": "Avere | Admin Dashboard - Master Schedule"
+    },
+    {
+        "screenId": "09ef2e32815d4204a6630d846d93c6e7",
+        "file": "admin-shifts.html",
+        "title": "Avere | Admin Dashboard - Shift Management"
+    },
+    {
+        "screenId": "76bee72745724938a62bc024777e14c5",
+        "file": "admin-schedule-settings.html",
+        "title": "Avere | Admin Dashboard - Schedule Settings"
+    }
+]

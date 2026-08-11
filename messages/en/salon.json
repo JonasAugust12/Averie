@@ -1,0 +1,74 @@
+{
+    "brand": "Avere",
+    "tagline": "Nails • Facials • Beauty",
+    "nav": {
+        "services": "Services",
+        "gallery": "Gallery",
+        "about": "About",
+        "contact": "Contact",
+        "book": "Book Now"
+    },
+    "hero": {
+        "title": "Avere",
+        "subtitle": "Nails • Facials • Beauty",
+        "body": "Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and meticulous care in Cohasset.",
+        "cta": "Book an Appointment"
+    },
+    "philosophy": {
+        "eyebrow": "Our Philosophy",
+        "title": "Elevating the standard of self-care.",
+        "body": "At Avere, we believe that beauty treatments should be a restorative ritual. Our curated selection of services, from precision manicures to Dermalogica facials, is designed to nourish both body and mind in an environment of quiet luxury.",
+        "cta": "Learn more about us"
+    },
+    "curated": {
+        "title": "Curated Services",
+        "subtitle": "Tailored treatments designed for lasting results and pure relaxation.",
+        "viewAll": "View All Services",
+        "items": {
+            "mani": {
+                "title": "Manicure & Pedicure",
+                "body": "Signature treatments for healthy, resilient nails and ultimate relaxation."
+            },
+            "facial": {
+                "title": "Dermalogica Facials",
+                "body": "Customized face mapping, MicroZone treatments, and full skin therapies."
+            },
+            "wax": {
+                "title": "Enhancements & Waxing",
+                "body": "Precision gel polish, acrylics, and gentle waxing services for flawless skin."
+            }
+        }
+    },
+    "brandMoment": "Beauty, with intention.",
+    "bookingCta": {
+        "title": "Your next appointment starts here.",
+        "body": "Gift certificates available. Appointments and walk-ins welcome.",
+        "call": "Call (781) 923-1955",
+        "book": "Book Online"
+    },
+    "contact": {
+        "location": "Location",
+        "addressLine1": "132 Chief Justice Cushing Highway #25",
+        "addressLine2": "Cohasset, MA 02025",
+        "directions": "Get Directions",
+        "hours": "Hours",
+        "monFri": "Mon - Fri:",
+        "monFriHours": "9am - 7pm",
+        "sat": "Sat:",
+        "satHours": "9am - 6pm",
+        "sun": "Sun:",
+        "sunHours": "10am - 5pm",
+        "contact": "Contact",
+        "phone": "Phone: (781) 923-1955",
+        "email": "Email: knbeauty0912@gmail.com",
+        "facebook": "Facebook"
+    },
+    "footer": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "sustainability": "Sustainability",
+        "careers": "Careers",
+        "press": "Press",
+        "rights": "© 2026 Avere Luxury Nails. All rights reserved."
+    }
+}

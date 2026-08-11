@@ -1,25 +1,32 @@
 import type { Metadata } from 'next';
+import { getLocale } from 'next-intl/server';
 import './globals.css';
 import { fontsVariables } from './fonts';
 import { QueryProvider } from '@providers/QueryProvider';
 import { I18nProvider } from '@providers/I18nProvider';
 import { AuthProvider } from '@providers/AuthProvider';
-import { AppShell } from '@components/layout';
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export const metadata: Metadata = {
-    title: 'Averie',
-    description: 'Averie — Next.js serverless app on Vercel',
+    metadataBase: new URL(siteUrl),
+    title: {
+        default: 'Avere — Nails • Facials • Beauty',
+        template: '%s | Avere',
+    },
+    description:
+        'Avere luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    const locale = await getLocale();
+
     return (
-        <html lang="vi">
+        <html lang={locale}>
             <body className={`${fontsVariables.join(' ')} antialiased`} suppressHydrationWarning>
                 <AuthProvider>
                     <I18nProvider>
-                        <QueryProvider>
-                            <AppShell>{children}</AppShell>
-                        </QueryProvider>
+                        <QueryProvider>{children}</QueryProvider>
                     </I18nProvider>
                 </AuthProvider>
             </body>

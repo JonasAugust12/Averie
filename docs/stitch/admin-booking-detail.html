@@ -1,0 +1,466 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Booking Detail - Avere Admin</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-error': '#ffffff',
+                            'on-tertiary-container': '#928e89',
+                            'inverse-surface': '#2f3130',
+                            'on-tertiary-fixed-variant': '#494643',
+                            'error-container': '#ffdad6',
+                            'inverse-on-surface': '#f1f0f0',
+                            'surface-container-lowest': '#ffffff',
+                            tertiary: '#141310',
+                            'surface-container-low': '#f4f3f2',
+                            primary: '#16120f',
+                            'secondary-container': '#f0e0d3',
+                            outline: '#7f7570',
+                            'on-surface-variant': '#4d4540',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'on-background': '#1a1c1c',
+                            'surface-container-high': '#e9e8e7',
+                            'on-tertiary': '#ffffff',
+                            surface: '#faf9f8',
+                            'on-primary-fixed-variant': '#4c4642',
+                            error: '#ba1a1a',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-secondary-fixed': '#221a13',
+                            'on-surface': '#1a1c1c',
+                            'on-secondary': '#ffffff',
+                            'on-primary-fixed': '#1f1b18',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-secondary-container': '#6e6258',
+                            'on-primary-container': '#958c88',
+                            'surface-dim': '#dadad9',
+                            'secondary-fixed': '#f0e0d3',
+                            'tertiary-fixed': '#e7e1dd',
+                            'outline-variant': '#d0c4be',
+                            'on-primary': '#ffffff',
+                            'surface-tint': '#645d59',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-error-container': '#93000a',
+                            'surface-container': '#eeeeed',
+                            secondary: '#685c53',
+                            'primary-fixed': '#ebe0db',
+                            'primary-container': '#2b2623',
+                            background: '#faf9f8',
+                            'tertiary-container': '#292724',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'surface-bright': '#faf9f8',
+                            'surface-variant': '#e3e2e1',
+                            'inverse-primary': '#cec5c0',
+                            'on-tertiary-fixed': '#1d1b18',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'margin-mobile': '20px',
+                            unit: '8px',
+                            gutter: '24px',
+                            'container-max': '1280px',
+                            'margin-desktop': '64px',
+                        },
+                        fontFamily: {
+                            'headline-md': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
+            .material-symbols-outlined.fill {
+                font-variation-settings: 'FILL' 1;
+            }
+
+            /* Subtle ambient shadow for cards */
+            .ambient-shadow {
+                box-shadow: 0 4px 24px -4px rgba(43, 38, 35, 0.05);
+            }
+        </style>
+    </head>
+    <body
+        class="bg-background text-on-background min-h-screen antialiased flex flex-col font-body-md"
+    >
+        <!-- Top Navigation from Shared Components - Suppressed as this is a focused task/detail view -->
+        <main
+            class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24 flex flex-col gap-12"
+        >
+            <!-- Header & Actions -->
+            <header
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+            >
+                <div class="flex items-center gap-4">
+                    <button
+                        class="p-2 -ml-2 rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant group flex items-center justify-center"
+                    >
+                        <span
+                            class="material-symbols-outlined text-2xl group-hover:-translate-x-1 transition-transform"
+                            data-icon="arrow_back"
+                            >arrow_back</span
+                        >
+                    </button>
+                    <div>
+                        <h1
+                            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary"
+                        >
+                            Booking #8924
+                        </h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                            Booked on Oct 24, 2026
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <button
+                        class="px-6 py-3 border border-outline-variant text-primary font-label-md text-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors"
+                    >
+                        Reschedule
+                    </button>
+                    <button
+                        class="px-6 py-3 bg-primary text-on-primary font-label-md text-label-md uppercase tracking-widest hover:bg-primary-container transition-colors"
+                    >
+                        Edit Booking
+                    </button>
+                    <div class="relative group ml-auto md:ml-0">
+                        <button
+                            class="p-3 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors flex items-center justify-center"
+                        >
+                            <span class="material-symbols-outlined" data-icon="more_vert"
+                                >more_vert</span
+                            >
+                        </button>
+                        <!-- Simple Dropdown Mockup (Hidden by default, shown on group hover for demo) -->
+                        <div
+                            class="absolute right-0 mt-2 w-48 bg-surface border border-outline-variant ambient-shadow z-10 hidden group-hover:block"
+                        >
+                            <ul class="py-2 font-body-md text-body-md">
+                                <li>
+                                    <a
+                                        class="block px-4 py-2 hover:bg-surface-variant text-primary"
+                                        href="#"
+                                        >Print Invoice</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        class="block px-4 py-2 hover:bg-surface-variant text-error"
+                                        href="#"
+                                        >Cancel Appointment</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+                <!-- Left Column: Details -->
+                <div class="lg:col-span-8 flex flex-col gap-8">
+                    <!-- Status & Timing Card -->
+                    <section
+                        class="bg-surface-container-low p-8 border border-outline-variant/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+                    >
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-3xl"
+                                    data-icon="calendar_today"
+                                    >calendar_today</span
+                                >
+                            </div>
+                            <div>
+                                <p
+                                    class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-1"
+                                >
+                                    Date &amp; Time
+                                </p>
+                                <h2 class="font-headline-md text-headline-md text-primary">
+                                    Oct 28, 2026
+                                </h2>
+                                <p class="font-body-md text-body-md text-primary mt-1">
+                                    10:00 AM — 11:30 AM
+                                    <span class="text-on-surface-variant">(90 min)</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start md:items-end gap-2">
+                            <label
+                                class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest"
+                                >Status</label
+                            >
+                            <div class="relative">
+                                <select
+                                    class="appearance-none bg-surface border border-outline-variant text-primary font-label-md text-label-md uppercase tracking-widest px-4 py-2 pr-10 focus:outline-none focus:border-primary focus:ring-0 rounded-none cursor-pointer"
+                                >
+                                    <option selected="" value="confirmed">Confirmed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="no_show">No Show</option>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-primary"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        data-icon="expand_more"
+                                        >expand_more</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Client Information -->
+                    <section class="border border-outline-variant/50 p-8 bg-surface">
+                        <h3
+                            class="font-headline-md text-headline-md text-primary mb-6 pb-4 border-b border-outline-variant/30"
+                        >
+                            Client Details
+                        </h3>
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <img
+                                class="w-24 h-24 rounded-full object-cover border border-outline-variant/30"
+                                data-alt="A close-up portrait of a sophisticated woman with glowing skin, neutral makeup, and hair pulled back, sitting in a softly lit premium spa environment. The lighting is warm and natural, emphasizing a serene, high-end beauty aesthetic."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvhAZjmqOYe0ovPZm_osY3LnxSMmn_ZHPhzCtyDb9x92n-eDqamS1UybqM7fXoQ21NmxPTR-P3MHmO4PCP4dfgGU7oRKjOWdbsq-oVZeMjBTE2ZnE9w4oS9_3fcxkOqRQ8ZquJc8sgZzvSwsm0zzf-R8slxHlPgceE8OGg1g-pURosW9mIXlIp79kVbj6HFlRwTCYgIolMJvXn3FS-XWeeSMk8J_UFQ8uHi0SdYLEALNSo3hjPquPzAQ"
+                            />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 w-full">
+                                <div>
+                                    <p
+                                        class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-1"
+                                    >
+                                        Name
+                                    </p>
+                                    <p class="font-body-lg text-body-lg text-primary">
+                                        Eleanor Vance
+                                    </p>
+                                    <p
+                                        class="font-body-sm text-sm text-on-surface-variant mt-1 flex items-center gap-1"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            data-icon="star"
+                                            data-weight="fill"
+                                            >star</span
+                                        >
+                                        VIP Client (5+ visits)
+                                    </p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-1"
+                                    >
+                                        Contact
+                                    </p>
+                                    <p
+                                        class="font-body-md text-body-md text-primary flex items-center gap-2 mb-2"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-on-surface-variant text-lg"
+                                            data-icon="phone_iphone"
+                                            >phone_iphone</span
+                                        >
+                                        +1 (555) 019-2834
+                                    </p>
+                                    <p
+                                        class="font-body-md text-body-md text-primary flex items-center gap-2"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-on-surface-variant text-lg"
+                                            data-icon="mail"
+                                            >mail</span
+                                        >
+                                        eleanor.v@example.com
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Service Details -->
+                    <section class="border border-outline-variant/50 p-8 bg-surface">
+                        <h3
+                            class="font-headline-md text-headline-md text-primary mb-6 pb-4 border-b border-outline-variant/30"
+                        >
+                            Service
+                        </h3>
+                        <div
+                            class="flex justify-between items-start border-b border-outline-variant/20 pb-6 mb-6"
+                        >
+                            <div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h4 class="font-body-lg text-body-lg text-primary">
+                                        Signature Radiance Facial
+                                    </h4>
+                                    <span
+                                        class="px-2 py-1 bg-secondary-container text-on-secondary-container font-label-sm text-[10px] uppercase tracking-widest rounded-sm"
+                                        >Facials</span
+                                    >
+                                </div>
+                                <p
+                                    class="font-body-md text-body-md text-on-surface-variant max-w-lg"
+                                >
+                                    A deeply hydrating treatment combining oxygen therapy, LED
+                                    light, and our proprietary botanical serum for an instant glow.
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-body-lg text-body-lg text-primary">$185.00</p>
+                                <p class="font-body-sm text-sm text-on-surface-variant mt-1">
+                                    90 min
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <p
+                                class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-3"
+                            >
+                                Service Notes &amp; Requests
+                            </p>
+                            <div class="bg-surface-container-low p-4 border-l-2 border-primary">
+                                <p class="font-body-md text-body-md text-primary italic">
+                                    "I have slight sensitivity around my cheeks today. Also, prefer
+                                    unscented products if possible."
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- Right Column: Sidebar -->
+                <div class="lg:col-span-4 flex flex-col gap-8">
+                    <!-- Assigned Technician -->
+                    <section class="bg-surface-container-low border border-outline-variant/50 p-6">
+                        <h3
+                            class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-6"
+                        >
+                            Assigned Technician
+                        </h3>
+                        <div class="flex items-center gap-4">
+                            <img
+                                class="w-14 h-14 rounded-full object-cover"
+                                data-alt="A professional headshot of a beauty technician in a minimalist white uniform. The background is a soft beige, and lighting is bright and clean, reflecting a high-end salon aesthetic."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOwCCPVkR7BimMBniIDTJt3Gd-x4o7knxUadzFpRbCSmkcH_aq6BvvcIty0w5CgAg1N0WnsqaXNu1e7XoMQx6Vc8EVCvJuMYXyhh5Hmy-AVNhKA53eYML2_zp7k6ct4ksmYp4ynB769KGSfXYRSReArhnFYU5ccjQTk7FAiYCWcDf9sINdyfL2LoCpjimDeZ-t3XuiKJrguLv1UUDiA2-VVWPZbuLQh2DucCdExnPdGiw-RIe2b9LzEQ"
+                            />
+                            <div>
+                                <p class="font-body-lg text-body-lg text-primary">Julianne Moore</p>
+                                <p class="font-body-sm text-sm text-on-surface-variant mt-1">
+                                    Master Esthetician
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full mt-6 py-2 border border-outline-variant text-primary font-label-sm text-label-sm uppercase tracking-widest hover:bg-surface-variant transition-colors flex items-center justify-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm" data-icon="swap_horiz"
+                                >swap_horiz</span
+                            >
+                            Reassign
+                        </button>
+                    </section>
+                    <!-- Payment Summary -->
+                    <section class="border border-outline-variant/50 p-6 bg-surface">
+                        <h3
+                            class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest mb-6 border-b border-outline-variant/30 pb-4"
+                        >
+                            Payment Summary
+                        </h3>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-body-md text-body-md text-on-surface-variant"
+                                >Subtotal</span
+                            >
+                            <span class="font-body-md text-body-md text-primary">$185.00</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-body-md text-body-md text-on-surface-variant"
+                                >Tax</span
+                            >
+                            <span class="font-body-md text-body-md text-primary">$16.65</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-body-md text-body-md text-on-surface-variant"
+                                >Deposit Paid</span
+                            >
+                            <span class="font-body-md text-body-md text-secondary">-$50.00</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center border-t border-outline-variant/30 pt-4"
+                        >
+                            <span class="font-body-lg text-body-lg text-primary">Balance Due</span>
+                            <span class="font-headline-md text-headline-md text-primary"
+                                >$151.65</span
+                            >
+                        </div>
+                        <div
+                            class="mt-6 flex items-center gap-2 text-secondary bg-secondary-container/50 p-3 text-sm font-body-sm"
+                        >
+                            <span class="material-symbols-outlined text-base" data-icon="info"
+                                >info</span
+                            >
+                            <span>Deposit collected on Oct 10 via Card ending in 4242.</span>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

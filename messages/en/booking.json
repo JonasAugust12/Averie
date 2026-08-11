@@ -1,0 +1,76 @@
+{
+    "cancel": "Cancel",
+    "brand": "AVERE",
+    "stepOf": "Step {current} of {total}",
+    "yourBooking": "Your Booking",
+    "selectToBegin": "Select a service to begin.",
+    "total": "Total",
+    "continue": "Continue",
+    "nextStep": "Next Step",
+    "back": "Back",
+    "backToServices": "Back to Services",
+    "selected": "Selected:",
+    "select": "Select",
+    "anyTechnician": "Any Available Technician",
+    "anyTechnicianHint": "We'll match the first open artist.",
+    "duration": "{min} Min",
+    "periods": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening",
+        "empty": "No times available in this period."
+    },
+    "steps": {
+        "service": "Select Service",
+        "employee": "Select Technician",
+        "date": "Select Date",
+        "time": "Select Time",
+        "customer": "Customer Information",
+        "review": "Review Details",
+        "confirmation": "You're all set",
+        "complete": "Step 7 Complete"
+    },
+    "cta": {
+        "toEmployee": "Next Step",
+        "toDate": "Continue",
+        "toTime": "Continue",
+        "toCustomer": "Continue",
+        "toReview": "Review Appointment",
+        "confirm": "Confirm Appointment",
+        "backHome": "Return Home",
+        "bookAnother": "Book Another",
+        "addToCalendar": "Add to Calendar"
+    },
+    "customer": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "phone": "Phone number",
+        "email": "Email (optional)",
+        "note": "Note / special request"
+    },
+    "review": {
+        "service": "Service",
+        "employee": "Technician",
+        "date": "Date",
+        "time": "Time",
+        "duration": "Duration",
+        "price": "Price",
+        "customer": "Customer",
+        "location": "Location"
+    },
+    "confirmation": {
+        "title": "Your appointment has been requested successfully.",
+        "subtitle": "We've reserved your place. A confirmation note is shown below (mock only).",
+        "reference": "Reference",
+        "mockNote": "Mock booking only — not saved to a server."
+    },
+    "categories": {
+        "manicurePedicure": "Manicure & Pedicure",
+        "gelPolish": "Gel Polish",
+        "nailEnhancements": "Nail Enhancements",
+        "addOns": "Add-ons",
+        "waxing": "Waxing",
+        "facials": "Facials / Beauty"
+    },
+    "closedDay": "Salon Closed"
+}

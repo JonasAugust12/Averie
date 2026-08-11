@@ -1,0 +1,64 @@
+{
+    "brand": "AVERE",
+    "title": "Quản lý tiệm",
+    "signOut": "Đăng xuất",
+    "newBooking": "Đặt lịch mới",
+    "manageSchedule": "Quản lý lịch",
+    "nav": {
+        "dashboard": "Tổng quan",
+        "bookings": "Lịch hẹn",
+        "services": "Dịch vụ",
+        "employees": "Nhân viên",
+        "schedule": "Lịch làm",
+        "shifts": "Ca làm",
+        "settings": "Cài đặt"
+    },
+    "overview": {
+        "heading": "Tổng quan hôm nay",
+        "schedule": "Lịch hôm nay",
+        "appointments": "Lịch hẹn",
+        "pending": "Chờ duyệt",
+        "revenue": "Doanh thu",
+        "activeTechs": "Tech đang làm",
+        "time": "Giờ",
+        "client": "Khách",
+        "service": "Dịch vụ",
+        "technician": "Kỹ thuật viên",
+        "status": "Trạng thái"
+    },
+    "status": {
+        "pending": "Chờ",
+        "confirmed": "Đã xác nhận",
+        "in_progress": "Đang làm",
+        "completed": "Hoàn tất",
+        "cancelled": "Đã hủy"
+    },
+    "bookings": {
+        "title": "Danh sách lịch hẹn",
+        "search": "Tìm khách",
+        "detail": "Chi tiết lịch hẹn",
+        "notFound": "Không tìm thấy lịch hẹn"
+    },
+    "services": {
+        "title": "Quản lý dịch vụ",
+        "add": "Thêm dịch vụ",
+        "name": "Tên",
+        "price": "Giá",
+        "duration": "Thời lượng",
+        "category": "Danh mục",
+        "save": "Lưu"
+    },
+    "staff": {
+        "title": "Quản lý nhân viên",
+        "schedule": "Lịch nhân viên",
+        "role": "Vai trò"
+    },
+    "schedule": {
+        "title": "Lịch tổng",
+        "shifts": "Quản lý ca",
+        "settings": "Cài đặt lịch",
+        "open": "Giờ mở",
+        "close": "Giờ đóng",
+        "interval": "Khoảng (phút)"
+    }
+}

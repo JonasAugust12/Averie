@@ -1,0 +1,352 @@
+<!doctype html>
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Select Technician</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-tertiary-fixed-variant': '#494643',
+                            'surface-container-low': '#f4f3f2',
+                            'on-tertiary': '#ffffff',
+                            surface: '#faf9f8',
+                            'on-tertiary-container': '#928e89',
+                            secondary: '#685c53',
+                            'on-surface-variant': '#4d4540',
+                            background: '#faf9f8',
+                            'secondary-fixed': '#f0e0d3',
+                            'primary-container': '#2b2623',
+                            'inverse-on-surface': '#f1f0f0',
+                            'secondary-container': '#f0e0d3',
+                            'error-container': '#ffdad6',
+                            'surface-container-high': '#e9e8e7',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-surface': '#1a1c1c',
+                            'on-error-container': '#93000a',
+                            primary: '#16120f',
+                            'on-secondary': '#ffffff',
+                            error: '#ba1a1a',
+                            'tertiary-container': '#292724',
+                            'on-error': '#ffffff',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-primary-fixed': '#1f1b18',
+                            'surface-dim': '#dadad9',
+                            'inverse-surface': '#2f3130',
+                            'on-background': '#1a1c1c',
+                            outline: '#7f7570',
+                            'on-primary-container': '#958c88',
+                            'surface-container': '#eeeeed',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'surface-container-lowest': '#ffffff',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'surface-variant': '#e3e2e1',
+                            tertiary: '#141310',
+                            'surface-bright': '#faf9f8',
+                            'on-secondary-container': '#6e6258',
+                            'tertiary-fixed': '#e7e1dd',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'surface-tint': '#645d59',
+                            'primary-fixed': '#ebe0db',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-primary': '#ffffff',
+                            'on-secondary-fixed': '#221a13',
+                            'inverse-primary': '#cec5c0',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'outline-variant': '#d0c4be',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            gutter: '24px',
+                            'margin-desktop': '64px',
+                            unit: '8px',
+                            'container-max': '1280px',
+                            'margin-mobile': '20px',
+                        },
+                        fontFamily: {
+                            'body-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'body-lg': [
+                                '18px',
+                                {
+                                    lineHeight: '28px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'body-md': [
+                                '16px',
+                                {
+                                    lineHeight: '24px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                {
+                                    lineHeight: '72px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'label-md': [
+                                '14px',
+                                {
+                                    lineHeight: '20px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '500',
+                                },
+                            ],
+                            'headline-lg-mobile': [
+                                '32px',
+                                {
+                                    lineHeight: '40px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-md': [
+                                '28px',
+                                {
+                                    lineHeight: '36px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'label-sm': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.1em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'headline-lg': [
+                                '40px',
+                                {
+                                    lineHeight: '48px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body
+        class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md"
+    >
+        <!-- TopNavBar (Transactional Intent - Suppressed regular navigation links, showing close action) -->
+        <header
+            class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 px-margin-mobile md:px-margin-desktop py-6 flex justify-between items-center max-w-container-max mx-auto"
+        >
+            <a
+                class="font-display-lg text-headline-md tracking-tighter text-primary dark:text-primary-fixed-dim"
+                href="#"
+            >
+                AVERE
+            </a>
+            <a
+                class="flex items-center text-secondary hover:text-primary transition-colors duration-300 font-label-md text-label-md tracking-widest uppercase gap-2 cursor-pointer transition-all duration-200 hover:opacity-80 transition-opacity"
+                href="#"
+            >
+                <span>Cancel</span>
+                <span class="material-symbols-outlined" data-icon="close" data-weight="regular"
+                    >close</span
+                >
+            </a>
+        </header>
+        <main
+            class="flex-grow pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full"
+        >
+            <!-- Progress Indicator -->
+            <div class="mb-12 max-w-3xl mx-auto w-full text-center">
+                <p
+                    class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4"
+                >
+                    Step 2 of 7
+                </p>
+                <div class="flex gap-2 justify-center mb-8">
+                    <div class="h-1 w-8 bg-primary rounded-full"></div>
+                    <div class="h-1 w-8 bg-primary rounded-full"></div>
+                    <div class="h-1 w-8 bg-surface-variant rounded-full"></div>
+                    <div class="h-1 w-8 bg-surface-variant rounded-full"></div>
+                    <div class="h-1 w-8 bg-surface-variant rounded-full"></div>
+                    <div class="h-1 w-8 bg-surface-variant rounded-full"></div>
+                    <div class="h-1 w-8 bg-surface-variant rounded-full"></div>
+                </div>
+                <h1
+                    class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4"
+                >
+                    Select Technician
+                </h1>
+                <p class="font-body-md text-body-md text-secondary">
+                    Choose a specific specialist for your service, or select the first available
+                    professional to see more time options.
+                </p>
+            </div>
+            <div
+                class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter"
+            >
+                <!-- Any Available Technician Option (Highly Prominent) -->
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 mb-8 group cursor-pointer">
+                    <div
+                        class="border border-outline-variant rounded p-8 md:p-12 bg-surface-container-low hover:bg-surface-container transition-colors duration-300 flex flex-col md:flex-row items-center justify-between gap-8 group-hover:border-primary"
+                    >
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-4xl text-on-secondary-fixed"
+                                    data-icon="schedule"
+                                    data-weight="regular"
+                                    >schedule</span
+                                >
+                            </div>
+                            <div>
+                                <h2 class="font-headline-md text-headline-md text-primary mb-2">
+                                    Any Available Technician
+                                </h2>
+                                <p class="font-body-md text-body-md text-secondary">
+                                    Maximum flexibility. See all available time slots across our
+                                    entire team of luxury specialists.
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            class="bg-primary text-on-primary font-label-md text-label-md uppercase px-8 py-4 rounded hover:bg-tertiary transition-colors shrink-0"
+                        >
+                            Select
+                        </button>
+                    </div>
+                </div>
+                <!-- Technician 1 -->
+                <div
+                    class="border border-outline-variant rounded p-8 flex flex-col items-center text-center cursor-pointer hover:border-primary hover:bg-surface-container-low transition-colors duration-300 group"
+                >
+                    <div
+                        class="w-32 h-32 rounded-full mb-6 overflow-hidden bg-surface-variant border border-surface-container-high"
+                    >
+                        <img
+                            class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                            data-alt="A professional portrait of a female spa technician with dark hair tied back neatly. She is smiling softly in a serene, high-key white aesthetic environment with soft natural lighting, reflecting a premium luxury spa setting."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfH25XMJMjPkvwwqhAbpKzPg0x29zNW5j3X0JSN53sxH9YIqNNr5ISUAFhb7GK6If_kxY57nOLReRF_p1-IW10ZU0sTrxwib9h7m4NlN1QUbgP8h1LPpRvTxEZfQ-NmxZNpXotNQfby84kqU0PZkQz_N0X-T2tn17obV-8dtDgYjKAPRrPrKeJKFW6xQ_1WSRdvQpLN7_uds8d5eBQUZjupvN6PoCNlf9UP6zfpJ5CgJvjKBBKVnCPbA"
+                        />
+                    </div>
+                    <h3 class="font-headline-md text-headline-md text-primary mb-2">Sarah</h3>
+                    <p class="font-body-md text-body-md text-secondary mb-6">Senior Nail Artist</p>
+                    <button
+                        class="border border-outline text-primary font-label-md text-label-md uppercase px-6 py-3 rounded hover:bg-primary hover:text-on-primary transition-colors w-full mt-auto"
+                    >
+                        Select Sarah
+                    </button>
+                </div>
+                <!-- Technician 2 -->
+                <div
+                    class="border border-outline-variant rounded p-8 flex flex-col items-center text-center cursor-pointer hover:border-primary hover:bg-surface-container-low transition-colors duration-300 group"
+                >
+                    <div
+                        class="w-32 h-32 rounded-full mb-6 overflow-hidden bg-surface-variant border border-surface-container-high"
+                    >
+                        <img
+                            class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                            data-alt="A professional portrait of a male spa technician with a neatly trimmed beard. He looks calm and professional in a bright, minimalist studio setting with soft diffused lighting and a neutral background."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBomFKcrsMHV3Q2laohkRODkqtceeRrRGX8N-PRkEAVsoxU00_-NUqFlc2DTPOcySb-bJYvhquMH7R0kovzGcY5s2O-VH88vEfi-khRGe-CjWMKBDhmMgkaiK3z4Bd-ejvmSKG-iO1tImp56VMfOo9EA1PoIQ3YRd4HiFk-l8MNNeEtPTvaZS9lZMQOxOXhF2SpHWVqiqikI44j91982lWQyCj9DFnWv5QoUMwAk1M6HH2P8WMUP7w8_A"
+                        />
+                    </div>
+                    <h3 class="font-headline-md text-headline-md text-primary mb-2">Michael</h3>
+                    <p class="font-body-md text-body-md text-secondary mb-6">Lead Esthetician</p>
+                    <button
+                        class="border border-outline text-primary font-label-md text-label-md uppercase px-6 py-3 rounded hover:bg-primary hover:text-on-primary transition-colors w-full mt-auto"
+                    >
+                        Select Michael
+                    </button>
+                </div>
+                <!-- Technician 3 -->
+                <div
+                    class="border border-outline-variant rounded p-8 flex flex-col items-center text-center cursor-pointer hover:border-primary hover:bg-surface-container-low transition-colors duration-300 group"
+                >
+                    <div
+                        class="w-32 h-32 rounded-full mb-6 overflow-hidden bg-surface-variant border border-surface-container-high"
+                    >
+                        <img
+                            class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                            data-alt="A professional portrait of a female spa technician with blonde hair. She has a welcoming expression, positioned in a luxurious, bright aesthetic environment with elegant soft lighting typical of a high-end beauty salon."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG-j8D4UZ2DpfVrRztKnmYLa8c2tqPvTT3BSde2agyqh2z7X2soAeeMb3r2WVTlT9HiJdeB-yH-ppJjMDoRNCVmHhjQ3LmeR4SpJsbs7iu1lCImEKyGbNV4Ltbo1R1h4dc3AzEyH1_mKfoMpAClKZtAN72rxz1jkg53j58nM4BeO4xu9XZ-jy0f7sX9PZImyCcULge5ovNr7mlmqD3hWHB2UCpN-bar36e87eRm4APJFMYl8R30R5Ijg"
+                        />
+                    </div>
+                    <h3 class="font-headline-md text-headline-md text-primary mb-2">Elena</h3>
+                    <p class="font-body-md text-body-md text-secondary mb-6">Master Technician</p>
+                    <button
+                        class="border border-outline text-primary font-label-md text-label-md uppercase px-6 py-3 rounded hover:bg-primary hover:text-on-primary transition-colors w-full mt-auto"
+                    >
+                        Select Elena
+                    </button>
+                </div>
+            </div>
+            <!-- Navigation Buttons -->
+            <div
+                class="max-w-4xl mx-auto mt-16 pt-8 border-t border-outline-variant/30 flex justify-between items-center"
+            >
+                <button
+                    class="flex items-center gap-2 text-secondary hover:text-primary font-label-md text-label-md uppercase tracking-widest transition-colors"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        data-icon="arrow_back"
+                        data-weight="regular"
+                        >arrow_back</span
+                    >
+                    Back to Services
+                </button>
+            </div>
+        </main>
+        <!-- Footer (Suppressed for purely transactional view, but keeping basic copyright as requested by JSON structure if needed, minimal version) -->
+        <footer
+            class="w-full bg-surface-container dark:bg-primary-container px-margin-mobile md:px-margin-desktop py-8 border-t border-surface-container-high dark:border-primary-container/50"
+        >
+            <div
+                class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left"
+            >
+                <div
+                    class="font-display-lg text-headline-md text-primary dark:text-primary-fixed-dim mb-4 md:mb-0"
+                >
+                    AVERE
+                </div>
+                <div
+                    class="font-label-sm text-label-sm uppercase text-secondary dark:text-on-secondary-container"
+                >
+                    © 2026 AVERE LUXURY NAILS. ALL RIGHTS RESERVED.
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

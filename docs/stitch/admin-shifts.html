@@ -1,0 +1,702 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Staff Shift &amp; Time Management</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-secondary-container': '#6e6258',
+                            'tertiary-fixed': '#e7e1dd',
+                            'surface-container-lowest': '#ffffff',
+                            'inverse-primary': '#cec5c0',
+                            'on-surface-variant': '#4d4540',
+                            'on-tertiary': '#ffffff',
+                            'outline-variant': '#d0c4be',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'surface-bright': '#faf9f8',
+                            'on-error': '#ffffff',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-tertiary-fixed-variant': '#494643',
+                            surface: '#faf9f8',
+                            outline: '#7f7570',
+                            'inverse-on-surface': '#f1f0f0',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            error: '#ba1a1a',
+                            'primary-fixed': '#ebe0db',
+                            'on-primary-fixed': '#1f1b18',
+                            'surface-container': '#eeeeed',
+                            background: '#faf9f8',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'on-tertiary-container': '#928e89',
+                            primary: '#16120f',
+                            'surface-tint': '#645d59',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'tertiary-container': '#292724',
+                            'error-container': '#ffdad6',
+                            'primary-container': '#2b2623',
+                            'on-background': '#1a1c1c',
+                            'surface-container-high': '#e9e8e7',
+                            'on-error-container': '#93000a',
+                            'on-primary-container': '#958c88',
+                            'inverse-surface': '#2f3130',
+                            tertiary: '#141310',
+                            'surface-variant': '#e3e2e1',
+                            'secondary-fixed': '#f0e0d3',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#221a13',
+                            'surface-container-highest': '#e3e2e1',
+                            'secondary-container': '#f0e0d3',
+                            'on-primary': '#ffffff',
+                            'surface-dim': '#dadad9',
+                            'on-surface': '#1a1c1c',
+                            'surface-container-low': '#f4f3f2',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            secondary: '#685c53',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            gutter: '24px',
+                            'container-max': '1280px',
+                            unit: '8px',
+                            'margin-desktop': '64px',
+                            'margin-mobile': '20px',
+                        },
+                        fontFamily: {
+                            'label-sm': ['Inter'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'body-md': ['Inter'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'body-lg': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                        },
+                        fontSize: {
+                            'label-sm': [
+                                '12px',
+                                { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' },
+                            ],
+                            'label-md': [
+                                '14px',
+                                { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' },
+                            ],
+                            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                            'headline-lg-mobile': [
+                                '32px',
+                                { lineHeight: '40px', fontWeight: '400' },
+                            ],
+                            'headline-md': ['28px', { lineHeight: '36px', fontWeight: '400' }],
+                            'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                            'headline-lg': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .toggle-checkbox:checked {
+                right: 0;
+                border-color: #68bdab;
+            }
+            .toggle-checkbox:checked + .toggle-label {
+                background-color: #2b2623;
+            }
+        </style>
+    </head>
+    <body class="bg-background text-on-background font-body-md antialiased flex">
+        <!-- SideNavBar (from JSON) -->
+        <nav
+            class="bg-surface dark:bg-surface-dim h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-8 px-4 z-50"
+        >
+            <div class="mb-10 px-4">
+                <h1
+                    class="font-headline-md text-headline-md text-primary dark:text-primary-fixed uppercase tracking-widest"
+                >
+                    Avere
+                </h1>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">
+                    Admin Dashboard
+                </p>
+            </div>
+            <ul class="flex-1 space-y-2">
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >dashboard</span
+                        >Dashboard</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >calendar_today</span
+                        >Bookings</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >brush</span
+                        >Services</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >group</span
+                        >Staff</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed font-bold bg-secondary-container dark:bg-secondary-container transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 1"
+                            >event_note</span
+                        >Schedule</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200 ease-in-out font-label-md text-label-md"
+                        href="#"
+                        ><span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >settings</span
+                        >Settings</a
+                    >
+                </li>
+            </ul>
+            <div class="mt-auto px-4 pt-6 border-t border-outline-variant">
+                <div class="flex items-center gap-3">
+                    <img
+                        class="w-10 h-10 rounded-full object-cover border border-outline-variant"
+                        data-alt="A sophisticated headshot of a salon administrator in a minimalist modern office setting, bright natural lighting, neutral colors, shallow depth of field, premium corporate lifestyle photography."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB78-b3JT4LGewMjpC-zGpO8pWJLb2Ue4X23cEnAfpkpT3ShLUR3BjL8aAyrd-YPb0A83e0Znsw9wqUz8bH6ll2lYEkwIMXdcEyqHa86xERFcW6zaLBBMkKm0WHdr7dQlb7NXOGEt5KTsq8dxBstUUtvO_NS7p0QWRfPBLDRviYOzmsoEYtcNxhDjHUt1Em22bDwYvMmd9OZFZEuMBp34wDbhLCweL69tdOe73wo1kMMJztNwDHlrBq5Q"
+                    />
+                    <div>
+                        <p class="font-label-md text-label-md text-on-surface font-semibold">
+                            Admin Profile
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Main Content Canvas -->
+        <main class="ml-64 flex-1 min-h-screen bg-background">
+            <!-- TopAppBar (from JSON) -->
+            <header
+                class="bg-surface-bright dark:bg-surface docked full-width top-0 sticky border-b border-outline-variant dark:border-outline flex justify-between items-center px-margin-desktop py-4 z-40"
+            >
+                <h2
+                    class="font-headline-md text-headline-md text-primary dark:text-primary-fixed hidden"
+                >
+                    Avere
+                </h2>
+                <!-- Hidden on desktop as sidenav has it, but part of component structure -->
+                <div class="flex-1 max-w-md ml-auto relative">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-on-surface-variant"
+                        >search</span
+                    >
+                    <input
+                        class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 font-body-md text-body-md focus:outline-none focus:border-outline text-on-surface placeholder:text-on-surface-variant transition-colors duration-200 ease-in-out"
+                        placeholder="Search schedule..."
+                        type="text"
+                    />
+                </div>
+                <div class="flex items-center gap-4 ml-6">
+                    <button
+                        class="text-on-surface-variant hover:opacity-80 transition-opacity duration-200 ease-in-out"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >notifications</span
+                        >
+                    </button>
+                    <button
+                        class="text-on-surface-variant hover:opacity-80 transition-opacity duration-200 ease-in-out"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >account_circle</span
+                        >
+                    </button>
+                </div>
+            </header>
+            <!-- Page Content -->
+            <div class="p-margin-desktop max-w-container-max mx-auto space-y-16">
+                <!-- Page Header -->
+                <section class="max-w-3xl">
+                    <h1 class="font-headline-lg text-headline-lg text-primary mb-4">
+                        Shift &amp; Availability Management
+                    </h1>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">
+                        Define operational hours and granular time slots for services. Ensure your
+                        team's availability aligns perfectly with client demand.
+                    </p>
+                </section>
+                <!-- Grid Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+                    <!-- Left Column: Settings & Staff -->
+                    <div class="lg:col-span-4 space-y-8">
+                        <!-- Time Slot Increments Card -->
+                        <div class="bg-surface-bright rounded-xl p-8 border border-outline-variant">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="material-symbols-outlined text-on-surface-variant"
+                                    >schedule</span
+                                >
+                                <h3 class="font-headline-md text-headline-md text-primary">
+                                    Time Increments
+                                </h3>
+                            </div>
+                            <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                                Set the base unit of time for booking slots.
+                            </p>
+                            <div class="space-y-3">
+                                <label
+                                    class="flex items-center justify-between p-4 border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors group"
+                                >
+                                    <span class="font-label-md text-label-md text-on-surface"
+                                        >15 Minutes</span
+                                    >
+                                    <input
+                                        class="form-radio text-primary-container focus:ring-primary-container w-5 h-5 border-outline-variant"
+                                        name="increment"
+                                        type="radio"
+                                    />
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-4 border-2 border-outline rounded-lg cursor-pointer bg-surface-container-low transition-colors group relative overflow-hidden"
+                                >
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface font-semibold"
+                                        >30 Minutes</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-radio text-primary-container focus:ring-primary-container w-5 h-5 border-outline-variant"
+                                        name="increment"
+                                        type="radio"
+                                    />
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-4 border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors group"
+                                >
+                                    <span class="font-label-md text-label-md text-on-surface"
+                                        >45 Minutes</span
+                                    >
+                                    <input
+                                        class="form-radio text-primary-container focus:ring-primary-container w-5 h-5 border-outline-variant"
+                                        name="increment"
+                                        type="radio"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Staff Assignment Card -->
+                        <div class="bg-surface-bright rounded-xl p-8 border border-outline-variant">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="material-symbols-outlined text-on-surface-variant"
+                                    >person_add</span
+                                >
+                                <h3 class="font-headline-md text-headline-md text-primary">
+                                    Assign Staff
+                                </h3>
+                            </div>
+                            <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                                Select staff members to apply these shift configurations.
+                            </p>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center justify-between pb-4 border-b border-outline-variant last:border-0 last:pb-0"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <img
+                                            class="w-10 h-10 rounded-full object-cover"
+                                            data-alt="A portrait of a professional aesthetician in a sleek modern spa environment, wearing a minimalist black uniform, soft serene lighting, elegant and premium atmosphere."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOOtd0Bkh0dG2Vqb1NV9tOkCGVELuHaLg3w5FCSoJf8_on8cFMxRlOls3rnAhV3a5jb1UOXZHhKzkXR4UNY0aoDdMBPvoVqEOr2JD5_vWYr2MMdXnrkstnn8-5Mtt_Gxf9ooNJihy_xvSKuFUNpvNxytACb4MQ6A8CGa2-7KB2PEtJA40rsDqr_uaMko-03hGrLlf6vbZVAU3dAnrvz9jJexzr80081-WbaOlnp3_7XB826BMCfzRHSg"
+                                        />
+                                        <span class="font-label-md text-label-md text-on-surface"
+                                            >Elena Rostova</span
+                                        >
+                                    </div>
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant focus:ring-primary-container w-5 h-5"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between pb-4 border-b border-outline-variant last:border-0 last:pb-0"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <img
+                                            class="w-10 h-10 rounded-full object-cover"
+                                            data-alt="A portrait of a male massage therapist in a luxury wellness center, clean and minimal styling, warm inviting neutral tones, professional lifestyle photography."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3N2cpCSka686RR8oNHBtnMH9olLyfkfpACw42cm3YKSmdxnIh4OlCvxq6135uZ6_Lsyd9oSwvZjSppns2Pn_lUm-VEj2ms-OeDxMMfKvwcVstU8VH97ncr8Ob-zwfWogVmeNTBUK4v3pn66Q-Vuc67ilY0XVX3H6akdVbBe5VEQKZXQq2_lXfSjsn4AZQwVieo_Wvjnrk0Q39FjF4A8Su3IfImrVPDDtqjHIVmv64-3j8jQ4WAOkKrw"
+                                        />
+                                        <span class="font-label-md text-label-md text-on-surface"
+                                            >Marcus Vance</span
+                                        >
+                                    </div>
+                                    <input
+                                        class="form-checkbox text-primary-container rounded border-outline-variant focus:ring-primary-container w-5 h-5"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between pb-4 border-b border-outline-variant last:border-0 last:pb-0"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant border border-outline-variant"
+                                        >
+                                            SY
+                                        </div>
+                                        <span class="font-label-md text-label-md text-on-surface"
+                                            >Sophia Yoon</span
+                                        >
+                                    </div>
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant focus:ring-primary-container w-5 h-5"
+                                        type="checkbox"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column: Shift Configuration -->
+                    <div class="lg:col-span-8 space-y-6">
+                        <!-- Shift Block: Morning -->
+                        <div
+                            class="bg-surface-container-low rounded-xl p-8 border border-outline-variant"
+                        >
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3
+                                        class="font-headline-md text-headline-md text-primary flex items-center gap-2"
+                                    >
+                                        <span class="material-symbols-outlined text-secondary"
+                                            >wb_twilight</span
+                                        >
+                                        Morning Shift
+                                    </h3>
+                                    <p
+                                        class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1"
+                                    >
+                                        7:30 AM - 12:00 PM
+                                    </p>
+                                </div>
+                                <!-- Toggle switch -->
+                                <div
+                                    class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in"
+                                >
+                                    <input
+                                        checked=""
+                                        class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-outline-variant z-10"
+                                        id="toggle-morning"
+                                        name="toggle"
+                                        type="checkbox"
+                                    />
+                                    <label
+                                        class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer"
+                                        for="toggle-morning"
+                                    ></label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <!-- Slots -->
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >7:30 AM</span
+                                    >
+                                    <input
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >8:00 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >8:30 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >9:00 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >9:30 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >10:00 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright opacity-50"
+                                >
+                                    <span
+                                        class="font-label-sm text-label-sm text-on-surface line-through"
+                                        >10:30 AM</span
+                                    >
+                                    <input
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        disabled=""
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >11:00 AM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Shift Block: Afternoon -->
+                        <div
+                            class="bg-surface-container-low rounded-xl p-8 border border-outline-variant"
+                        >
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3
+                                        class="font-headline-md text-headline-md text-primary flex items-center gap-2"
+                                    >
+                                        <span class="material-symbols-outlined text-secondary"
+                                            >light_mode</span
+                                        >
+                                        Afternoon Shift
+                                    </h3>
+                                    <p
+                                        class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1"
+                                    >
+                                        12:00 PM - 5:00 PM
+                                    </p>
+                                </div>
+                                <!-- Toggle switch -->
+                                <div
+                                    class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in"
+                                >
+                                    <input
+                                        checked=""
+                                        class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-outline-variant z-10"
+                                        id="toggle-afternoon"
+                                        name="toggle"
+                                        type="checkbox"
+                                    />
+                                    <label
+                                        class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer"
+                                        for="toggle-afternoon"
+                                    ></label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >12:00 PM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >12:30 PM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >1:00 PM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 border border-outline-variant rounded bg-surface-bright"
+                                >
+                                    <span class="font-label-sm text-label-sm text-on-surface"
+                                        >1:30 PM</span
+                                    >
+                                    <input
+                                        checked=""
+                                        class="form-checkbox text-primary-container rounded border-outline-variant w-4 h-4"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <!-- More slots hidden for brevity, demonstrating grid -->
+                            </div>
+                        </div>
+                        <!-- Shift Block: Evening -->
+                        <div
+                            class="bg-surface-bright rounded-xl p-8 border border-outline-variant opacity-60"
+                        >
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3
+                                        class="font-headline-md text-headline-md text-on-surface-variant flex items-center gap-2"
+                                    >
+                                        <span class="material-symbols-outlined">nights_stay</span>
+                                        Evening Shift
+                                    </h3>
+                                    <p
+                                        class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1"
+                                    >
+                                        5:00 PM - 9:00 PM
+                                    </p>
+                                </div>
+                                <!-- Toggle switch -->
+                                <div
+                                    class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in"
+                                >
+                                    <input
+                                        class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-outline-variant z-10"
+                                        id="toggle-evening"
+                                        name="toggle"
+                                        type="checkbox"
+                                    />
+                                    <label
+                                        class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer"
+                                        for="toggle-evening"
+                                    ></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action Bar -->
+                <div class="flex justify-end pt-8 border-t border-outline-variant mt-16">
+                    <div class="flex gap-4">
+                        <button
+                            class="px-8 py-3 rounded-lg border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            class="px-8 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:opacity-90 transition-opacity"
+                        >
+                            Save Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

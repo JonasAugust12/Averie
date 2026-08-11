@@ -1,0 +1,696 @@
+<!doctype html>
+
+<html class="light" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Avere - Business Hours &amp; Schedule</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            outline: '#7f7570',
+                            'surface-tint': '#645d59',
+                            'tertiary-container': '#292724',
+                            'on-primary-fixed': '#1f1b18',
+                            'secondary-fixed': '#f0e0d3',
+                            'on-primary-container': '#958c88',
+                            'on-secondary-fixed-variant': '#4f453c',
+                            'on-tertiary-fixed-variant': '#494643',
+                            'on-background': '#1a1c1c',
+                            'surface-variant': '#e3e2e1',
+                            'on-error-container': '#93000a',
+                            primary: '#16120f',
+                            'on-tertiary-fixed': '#1d1b18',
+                            'on-tertiary': '#ffffff',
+                            'surface-container-low': '#f4f3f2',
+                            'tertiary-fixed': '#e7e1dd',
+                            'surface-container-highest': '#e3e2e1',
+                            'on-tertiary-container': '#928e89',
+                            'secondary-container': '#f0e0d3',
+                            'surface-container-high': '#e9e8e7',
+                            tertiary: '#141310',
+                            'secondary-fixed-dim': '#d3c4b8',
+                            'on-surface-variant': '#4d4540',
+                            'primary-fixed-dim': '#cec5c0',
+                            'on-surface': '#1a1c1c',
+                            'outline-variant': '#d0c4be',
+                            'primary-container': '#2b2623',
+                            background: '#faf9f8',
+                            'surface-container': '#eeeeed',
+                            'on-error': '#ffffff',
+                            'surface-container-lowest': '#ffffff',
+                            'tertiary-fixed-dim': '#cbc6c1',
+                            'inverse-on-surface': '#f1f0f0',
+                            secondary: '#685c53',
+                            'inverse-primary': '#cec5c0',
+                            'on-primary-fixed-variant': '#4c4642',
+                            'inverse-surface': '#2f3130',
+                            'surface-bright': '#faf9f8',
+                            'on-secondary-container': '#6e6258',
+                            'error-container': '#ffdad6',
+                            'primary-fixed': '#ebe0db',
+                            'surface-dim': '#dadad9',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#221a13',
+                            'on-primary': '#ffffff',
+                            error: '#ba1a1a',
+                            surface: '#faf9f8',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.125rem',
+                            lg: '0.25rem',
+                            xl: '0.5rem',
+                            full: '0.75rem',
+                        },
+                        spacing: {
+                            'margin-desktop': '64px',
+                            'margin-mobile': '20px',
+                            gutter: '24px',
+                            'container-max': '1280px',
+                            unit: '8px',
+                        },
+                        fontFamily: {
+                            'body-lg': ['Inter'],
+                            'headline-lg': ['Playfair Display'],
+                            'headline-md': ['Playfair Display'],
+                            'body-md': ['Inter'],
+                            'headline-lg-mobile': ['Playfair Display'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Playfair Display'],
+                            'label-sm': ['Inter'],
+                        },
+                        fontSize: {
+                            'body-lg': [
+                                '18px',
+                                {
+                                    lineHeight: '28px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-lg': [
+                                '40px',
+                                {
+                                    lineHeight: '48px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-md': [
+                                '28px',
+                                {
+                                    lineHeight: '36px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'body-md': [
+                                '16px',
+                                {
+                                    lineHeight: '24px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'headline-lg-mobile': [
+                                '32px',
+                                {
+                                    lineHeight: '40px',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'label-md': [
+                                '14px',
+                                {
+                                    lineHeight: '20px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '500',
+                                },
+                            ],
+                            'display-lg': [
+                                '64px',
+                                {
+                                    lineHeight: '72px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '400',
+                                },
+                            ],
+                            'label-sm': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.1em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            /* Custom Toggle Switch Styles */
+            .toggle-checkbox:checked {
+                right: 0;
+                border-color: #16120f; /* primary */
+            }
+            .toggle-checkbox:checked + .toggle-label {
+                background-color: #16120f; /* primary */
+            }
+            .toggle-checkbox {
+                right: 0;
+                z-index: 1;
+                border-color: #d0c4be; /* outline-variant */
+                transition: all 0.3s;
+            }
+            .toggle-label {
+                background-color: #d0c4be; /* outline-variant */
+                transition: all 0.3s;
+            }
+        </style>
+    </head>
+    <body
+        class="bg-background text-on-background font-body-md min-h-screen flex selection:bg-secondary-container selection:text-on-secondary-container"
+    >
+        <!-- SideNavBar (Hidden on Mobile) -->
+        <nav
+            class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface dark:bg-surface-dim border-r border-outline-variant dark:border-outline flex-col py-8 px-4 z-50"
+        >
+            <div class="mb-12 flex items-center justify-between">
+                <div>
+                    <h1
+                        class="font-headline-md text-headline-md text-primary dark:text-primary-fixed uppercase tracking-widest"
+                    >
+                        Avere
+                    </h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                        Admin Dashboard
+                    </p>
+                </div>
+                <img
+                    alt="Admin Profile Photo"
+                    class="w-10 h-10 rounded-full object-cover border border-outline-variant"
+                    data-alt="A small, circular avatar portrait of a professional salon administrator. Black and white aesthetic, high contrast, clean background, conveying minimalist elegance and sophisticated management in a high-end beauty spa environment."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl5yETGMu0Mg8n1LzHK5HGTD6B-uIghhAGUtiFc1VFe75sZyYOw0-jfOqMPm8pRc8AqkhK7VhnFiuYA-xEfu9LdjPKdlIepap921eBWy9FtaQiTW6YXb5KilrJwUNhQn4Ab7En95sgMDbBHX_YUhubWqpsNtN-bzGYfpPWhKi9Kft2fgbHfhXVLRvZ4DwbDhMFlB33TXgAwF8Jq8uQ6JKsVVQmbHChD5pgL0rtQ_hZJrEodDoOlA-deQ"
+                />
+            </div>
+            <ul class="flex flex-col gap-2 flex-grow font-body-md text-body-md">
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >dashboard</span
+                        >
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >calendar_today</span
+                        >
+                        Bookings
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >brush</span
+                        >
+                        Services
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >group</span
+                        >
+                        Staff
+                    </a>
+                </li>
+                <li>
+                    <!-- Active Item -->
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-primary font-bold bg-secondary-container transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 1"
+                            >event_note</span
+                        >
+                        Schedule
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out"
+                        href="#"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-variation-settings: 'FILL' 0"
+                            >settings</span
+                        >
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Main Content Area -->
+        <main class="w-full md:ml-64 flex-1">
+            <!-- Mobile Top Nav Bar -->
+            <header
+                class="md:hidden flex items-center justify-between px-margin-mobile py-4 border-b border-outline-variant bg-surface sticky top-0 z-40"
+            >
+                <h1
+                    class="font-headline-md text-headline-md text-primary uppercase tracking-widest"
+                >
+                    Avere
+                </h1>
+                <button class="text-on-surface p-2">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </header>
+            <div
+                class="px-margin-mobile md:px-margin-desktop py-12 md:py-16 max-w-container-max mx-auto space-y-16"
+            >
+                <!-- Page Header -->
+                <header>
+                    <h2
+                        class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2"
+                    >
+                        Business Hours &amp; Schedule
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">
+                        Configure your salon's operational days, times, and booking intervals.
+                    </p>
+                </header>
+                <form class="space-y-12">
+                    <!-- Working Days Section (Bento Grid Style) -->
+                    <section>
+                        <div class="mb-6">
+                            <h3 class="font-headline-md text-headline-md text-primary">
+                                Working Days
+                            </h3>
+                            <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                                Select the days your business is open.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                            <!-- Monday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Monday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_mon"
+                                            name="toggle_mon"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_mon"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Tuesday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Tuesday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_tue"
+                                            name="toggle_tue"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_tue"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Wednesday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Wednesday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_wed"
+                                            name="toggle_wed"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_wed"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Thursday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Thursday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_thu"
+                                            name="toggle_thu"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_thu"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Friday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Friday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_fri"
+                                            name="toggle_fri"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_fri"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Saturday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 hover:bg-surface-container-low transition-colors"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Saturday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0"
+                                            id="toggle_sat"
+                                            name="toggle_sat"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer"
+                                            for="toggle_sat"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-on-surface-variant"
+                                    >Open</span
+                                >
+                            </div>
+                            <!-- Sunday -->
+                            <div
+                                class="bg-surface-container-lowest border border-outline-variant rounded p-6 flex flex-col justify-between h-32 opacity-75"
+                            >
+                                <div class="flex justify-between items-center">
+                                    <span
+                                        class="font-label-md text-label-md text-on-surface uppercase"
+                                        >Sunday</span
+                                    >
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+                                    >
+                                        <input
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer top-0 bottom-0 m-auto right-0 border-outline-variant"
+                                            id="toggle_sun"
+                                            name="toggle_sun"
+                                            type="checkbox"
+                                        />
+                                        <label
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-outline-variant cursor-pointer"
+                                            for="toggle_sun"
+                                        ></label>
+                                    </div>
+                                </div>
+                                <span class="font-body-md text-body-md text-outline">Closed</span>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Operational Hours & Intervals (Asymmetric Layout) -->
+                    <section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+                        <!-- Hours -->
+                        <div class="lg:col-span-7 bg-surface-container-low p-8 rounded-xl">
+                            <div class="mb-8">
+                                <h3 class="font-headline-md text-headline-md text-primary">
+                                    Operational Hours
+                                </h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                                    Set standard opening and closing times for your active days.
+                                </p>
+                            </div>
+                            <div
+                                class="flex flex-col sm:flex-row gap-6 items-start sm:items-center"
+                            >
+                                <div class="flex-1 w-full">
+                                    <label
+                                        class="block font-label-sm text-label-sm text-on-surface-variant uppercase mb-2"
+                                        for="open_time"
+                                        >Opening Time</label
+                                    >
+                                    <div class="relative">
+                                        <select
+                                            class="w-full bg-surface-container-lowest border-b border-outline-variant focus:border-primary focus:ring-0 py-3 pl-4 pr-10 text-body-md font-body-md rounded-t bg-transparent appearance-none"
+                                            id="open_time"
+                                        >
+                                            <option value="08:00">08:00 AM</option>
+                                            <option selected="" value="09:00">09:00 AM</option>
+                                            <option value="10:00">10:00 AM</option>
+                                        </select>
+                                        <span
+                                            class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none"
+                                            >schedule</span
+                                        >
+                                    </div>
+                                </div>
+                                <span class="hidden sm:block font-body-lg text-outline mx-2 mt-6"
+                                    >—</span
+                                >
+                                <div class="flex-1 w-full">
+                                    <label
+                                        class="block font-label-sm text-label-sm text-on-surface-variant uppercase mb-2"
+                                        for="close_time"
+                                        >Closing Time</label
+                                    >
+                                    <div class="relative">
+                                        <select
+                                            class="w-full bg-surface-container-lowest border-b border-outline-variant focus:border-primary focus:ring-0 py-3 pl-4 pr-10 text-body-md font-body-md rounded-t bg-transparent appearance-none"
+                                            id="close_time"
+                                        >
+                                            <option value="17:00">05:00 PM</option>
+                                            <option value="18:00">06:00 PM</option>
+                                            <option selected="" value="19:00">07:00 PM</option>
+                                            <option value="20:00">08:00 PM</option>
+                                        </select>
+                                        <span
+                                            class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none"
+                                            >schedule</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Intervals -->
+                        <div
+                            class="lg:col-span-5 border border-outline-variant p-8 rounded-xl bg-surface-container-lowest flex flex-col justify-center"
+                        >
+                            <div class="mb-6">
+                                <h3 class="font-headline-md text-headline-md text-primary">
+                                    Time Slot Intervals
+                                </h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                                    Determine the length of booking increments.
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <label class="cursor-pointer">
+                                    <input
+                                        class="peer sr-only"
+                                        name="interval"
+                                        type="radio"
+                                        value="15"
+                                    />
+                                    <div
+                                        class="text-center py-4 rounded border border-outline-variant peer-checked:border-primary peer-checked:bg-primary-container peer-checked:text-on-primary-container text-on-surface font-body-md transition-all"
+                                    >
+                                        15 min
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input
+                                        checked=""
+                                        class="peer sr-only"
+                                        name="interval"
+                                        type="radio"
+                                        value="30"
+                                    />
+                                    <div
+                                        class="text-center py-4 rounded border border-outline-variant peer-checked:border-primary peer-checked:bg-primary-container peer-checked:text-on-primary-container text-on-surface font-body-md transition-all"
+                                    >
+                                        30 min
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input
+                                        class="peer sr-only"
+                                        name="interval"
+                                        type="radio"
+                                        value="60"
+                                    />
+                                    <div
+                                        class="text-center py-4 rounded border border-outline-variant peer-checked:border-primary peer-checked:bg-primary-container peer-checked:text-on-primary-container text-on-surface font-body-md transition-all"
+                                    >
+                                        60 min
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Actions -->
+                    <div class="pt-8 flex justify-end">
+                        <button
+                            class="bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider py-4 px-12 rounded hover:bg-surface-tint transition-colors duration-300"
+                            type="button"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <script>
+            // Simple script to toggle checked state visuals for the custom toggles
+            document.querySelectorAll('.toggle-checkbox').forEach((toggle) => {
+                toggle.addEventListener('change', function () {
+                    const parent = this.closest('div.bg-surface-container-lowest');
+                    const statusText = parent.querySelector('span:last-child');
+                    const label = parent.querySelector('.toggle-label');
+
+                    if (this.checked) {
+                        parent.classList.remove('opacity-75');
+                        statusText.textContent = 'Open';
+                        statusText.classList.remove('text-outline');
+                        statusText.classList.add('text-on-surface-variant');
+                        label.classList.remove('bg-outline-variant');
+                        label.classList.add('bg-primary');
+                        this.classList.remove('border-outline-variant');
+                    } else {
+                        parent.classList.add('opacity-75');
+                        statusText.textContent = 'Closed';
+                        statusText.classList.remove('text-on-surface-variant');
+                        statusText.classList.add('text-outline');
+                        label.classList.remove('bg-primary');
+                        label.classList.add('bg-outline-variant');
+                        this.classList.add('border-outline-variant');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

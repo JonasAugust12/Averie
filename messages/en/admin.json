@@ -1,0 +1,64 @@
+{
+    "brand": "AVERE",
+    "title": "Salon management",
+    "signOut": "Sign out",
+    "newBooking": "New booking",
+    "manageSchedule": "Manage schedule",
+    "nav": {
+        "dashboard": "Dashboard",
+        "bookings": "Bookings",
+        "services": "Services",
+        "employees": "Employees",
+        "schedule": "Schedule",
+        "shifts": "Shifts",
+        "settings": "Settings"
+    },
+    "overview": {
+        "heading": "Today's overview",
+        "schedule": "Today's schedule",
+        "appointments": "Appointments",
+        "pending": "Pending",
+        "revenue": "Revenue",
+        "activeTechs": "Active techs",
+        "time": "Time",
+        "client": "Client",
+        "service": "Service",
+        "technician": "Technician",
+        "status": "Status"
+    },
+    "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+    },
+    "bookings": {
+        "title": "Bookings",
+        "search": "Search customer",
+        "detail": "Booking details",
+        "notFound": "Booking not found"
+    },
+    "services": {
+        "title": "Service management",
+        "add": "Add service",
+        "name": "Name",
+        "price": "Price",
+        "duration": "Duration",
+        "category": "Category",
+        "save": "Save"
+    },
+    "staff": {
+        "title": "Staff management",
+        "schedule": "Staff schedule",
+        "role": "Role"
+    },
+    "schedule": {
+        "title": "Master schedule",
+        "shifts": "Shift management",
+        "settings": "Schedule settings",
+        "open": "Opening time",
+        "close": "Closing time",
+        "interval": "Interval (min)"
+    }
+}

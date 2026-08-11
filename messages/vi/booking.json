@@ -1,0 +1,76 @@
+{
+    "cancel": "Hủy",
+    "brand": "AVERE",
+    "stepOf": "Bước {current}/{total}",
+    "yourBooking": "Lịch của bạn",
+    "selectToBegin": "Chọn một dịch vụ để bắt đầu.",
+    "total": "Tổng",
+    "continue": "Tiếp tục",
+    "nextStep": "Bước tiếp",
+    "back": "Quay lại",
+    "backToServices": "Về chọn dịch vụ",
+    "selected": "Đã chọn:",
+    "select": "Chọn",
+    "anyTechnician": "Bất kỳ kỹ thuật viên nào",
+    "anyTechnicianHint": "Chúng tôi sẽ xếp nghệ sĩ trống lịch sớm nhất.",
+    "duration": "{min} phút",
+    "periods": {
+        "morning": "Sáng",
+        "afternoon": "Chiều",
+        "evening": "Tối",
+        "empty": "Không còn khung giờ trong buổi này."
+    },
+    "steps": {
+        "service": "Chọn dịch vụ",
+        "employee": "Chọn kỹ thuật viên",
+        "date": "Chọn ngày",
+        "time": "Chọn giờ",
+        "customer": "Thông tin khách",
+        "review": "Xem lại chi tiết",
+        "confirmation": "Đã hoàn tất",
+        "complete": "Hoàn tất bước 7"
+    },
+    "cta": {
+        "toEmployee": "Bước tiếp",
+        "toDate": "Tiếp tục",
+        "toTime": "Tiếp tục",
+        "toCustomer": "Tiếp tục",
+        "toReview": "Xem lại lịch hẹn",
+        "confirm": "Xác nhận đặt lịch",
+        "backHome": "Về trang chủ",
+        "bookAnother": "Đặt thêm lịch",
+        "addToCalendar": "Thêm vào lịch"
+    },
+    "customer": {
+        "firstName": "Tên",
+        "lastName": "Họ",
+        "phone": "Số điện thoại",
+        "email": "Email (tuỳ chọn)",
+        "note": "Ghi chú / yêu cầu đặc biệt"
+    },
+    "review": {
+        "service": "Dịch vụ",
+        "employee": "Kỹ thuật viên",
+        "date": "Ngày",
+        "time": "Giờ",
+        "duration": "Thời lượng",
+        "price": "Giá",
+        "customer": "Khách hàng",
+        "location": "Địa điểm"
+    },
+    "confirmation": {
+        "title": "Yêu cầu đặt lịch của bạn đã được gửi thành công.",
+        "subtitle": "Chỗ của bạn đã được giữ. Chi tiết tham chiếu hiển thị bên dưới (chỉ mock).",
+        "reference": "Mã tham chiếu",
+        "mockNote": "Chỉ là booking giả — chưa lưu máy chủ."
+    },
+    "categories": {
+        "manicurePedicure": "Manicure & Pedicure",
+        "gelPolish": "Sơn gel",
+        "nailEnhancements": "Nối / đắp móng",
+        "addOns": "Dịch vụ thêm",
+        "waxing": "Waxing",
+        "facials": "Facial / Beauty"
+    },
+    "closedDay": "Salon đóng cửa"
+}
