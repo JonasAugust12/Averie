@@ -1,0 +1,94 @@
+@import 'tailwindcss';
+
+/*
+  Averie design system — warm neutrals
+  Primary #2B2623 · Secondary #D4C5B9 · Tertiary #F5EFEA · Neutral #FDFCFB
+*/
+@theme {
+    --color-primary: #2b2623;
+    --color-primary-50: #f7f6f5;
+    --color-primary-100: #ebe8e6;
+    --color-primary-200: #d4cfca;
+    --color-primary-300: #b5ada6;
+    --color-primary-400: #8f857c;
+    --color-primary-500: #6b625a;
+    --color-primary-600: #4a433e;
+    --color-primary-700: #2b2623;
+    --color-primary-800: #1f1b19;
+    --color-primary-900: #151210;
+
+    --color-secondary: #d4c5b9;
+    --color-secondary-50: #faf7f5;
+    --color-secondary-100: #f2ebe5;
+    --color-secondary-200: #e6d9ce;
+    --color-secondary-300: #d4c5b9;
+    --color-secondary-400: #c0ad9d;
+    --color-secondary-500: #a8927f;
+    --color-secondary-600: #8d7766;
+    --color-secondary-700: #726053;
+    --color-secondary-800: #5c4e44;
+    --color-secondary-900: #4c4139;
+
+    --color-tertiary: #f5efea;
+    --color-tertiary-50: #fdfbf9;
+    --color-tertiary-100: #f5efea;
+    --color-tertiary-200: #ebe1d8;
+    --color-tertiary-300: #dccfc2;
+    --color-tertiary-400: #c9b8a7;
+    --color-tertiary-500: #b39f8b;
+    --color-tertiary-600: #968370;
+    --color-tertiary-700: #7a6a5b;
+    --color-tertiary-800: #645749;
+    --color-tertiary-900: #53493d;
+
+    --color-neutral: #fdfcfb;
+    --color-neutral-50: #fdfcfb;
+    --color-neutral-100: #f8f6f4;
+    --color-neutral-200: #efece9;
+    --color-neutral-300: #e2ddd8;
+    --color-neutral-400: #c9c2bb;
+    --color-neutral-500: #a79e95;
+    --color-neutral-600: #857b72;
+    --color-neutral-700: #6b625a;
+    --color-neutral-800: #524c46;
+    --color-neutral-900: #3f3a36;
+
+    --color-background: #fdfcfb;
+    --color-foreground: #2b2623;
+    --color-surface: #f5efea;
+    --color-muted: #8d7766;
+    --color-border: #d4c5b9;
+    --color-success: #3f6f4e;
+    --color-danger: #a33b2d;
+
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+
+    --breakpoint-app: 80rem; /* 1280px */
+    --container-app: 80rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}

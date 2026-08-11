@@ -1,0 +1,2 @@
+export PATH="/usr/local/bin:$PATH"
+(pnpm lint || npx pnpm lint) && (pnpm format:check || npx pnpm format:check)

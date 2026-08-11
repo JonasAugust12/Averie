@@ -1,0 +1,2 @@
+export PATH="/usr/local/bin:$PATH"
+pnpm exec commitlint --edit $1 || npx commitlint --edit $1

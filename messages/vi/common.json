@@ -1,0 +1,17 @@
+{
+    "actions": {
+        "confirm": "Xác nhận",
+        "cancel": "Hủy",
+        "close": "Đóng",
+        "save": "Lưu",
+        "delete": "Xóa",
+        "retry": "Thử lại"
+    },
+    "status": {
+        "loading": "Đang xử lý...",
+        "comingSoon": "Tính năng sắp ra mắt"
+    },
+    "fallback": {
+        "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại."
+    }
+}

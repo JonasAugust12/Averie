@@ -1,0 +1,2 @@
+export PATH="/usr/local/bin:$PATH"
+pnpm lint-staged || npx --no-install lint-staged

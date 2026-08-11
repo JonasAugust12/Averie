@@ -1,0 +1,6 @@
+{
+    "generic": "Something went wrong. Please try again.",
+    "network": "Unable to reach the server.",
+    "notFound": "Data not found.",
+    "unauthorized": "You need to sign in to continue."
+}

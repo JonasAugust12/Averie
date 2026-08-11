@@ -1,0 +1,17 @@
+{
+    "actions": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "close": "Close",
+        "save": "Save",
+        "delete": "Delete",
+        "retry": "Retry"
+    },
+    "status": {
+        "loading": "Processing...",
+        "comingSoon": "Coming soon"
+    },
+    "fallback": {
+        "unknown": "An unexpected error occurred. Please try again."
+    }
+}
