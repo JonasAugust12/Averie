@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 /**
- * Browser → same-origin Next.js Route Handlers (`/api/*`).
- * No separate backend server needed on Vercel.
+ * Client HTTP for GET Route Handlers (`/api/*`).
+ * Response envelope: { status, message, data }.
+ *
+ * Mutations (POST/PUT/PATCH/DELETE) → Server Actions via `@actions/*`.
  */
 export const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_APP_URL ?? '',

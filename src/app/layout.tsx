@@ -3,6 +3,7 @@ import './globals.css';
 import { fontsVariables } from './fonts';
 import { QueryProvider } from '@providers/QueryProvider';
 import { I18nProvider } from '@providers/I18nProvider';
+import { AuthProvider } from '@providers/AuthProvider';
 import { AppShell } from '@components/layout';
 
 export const metadata: Metadata = {
@@ -14,11 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="vi">
             <body className={`${fontsVariables.join(' ')} antialiased`} suppressHydrationWarning>
-                <I18nProvider>
-                    <QueryProvider>
-                        <AppShell>{children}</AppShell>
-                    </QueryProvider>
-                </I18nProvider>
+                <AuthProvider>
+                    <I18nProvider>
+                        <QueryProvider>
+                            <AppShell>{children}</AppShell>
+                        </QueryProvider>
+                    </I18nProvider>
+                </AuthProvider>
             </body>
         </html>
     );

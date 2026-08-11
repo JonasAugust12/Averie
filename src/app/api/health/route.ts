@@ -1,31 +1,27 @@
-import { NextResponse } from 'next/server';
 import { connectToDatabase, getMongoReadyState } from '@libs/mongodb';
-import type { HealthResponse } from '@typings/todo.type';
+import { apiError, apiSuccess } from '../_lib/http';
+import type { HealthData } from '@typings/health.type';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+/**
+ * GET health — example read-only Route Handler.
+ */
 export async function GET() {
     try {
         await connectToDatabase();
         const mongo = getMongoReadyState();
 
-        const body: HealthResponse = {
-            status: mongo === 'connected' ? 'ok' : 'degraded',
+        const data: HealthData = {
+            health: mongo === 'connected' ? 'ok' : 'degraded',
             mongo,
             timestamp: new Date().toISOString(),
         };
 
-        return NextResponse.json(body);
+        return apiSuccess(data, 'OK');
     } catch (error) {
-        console.error('[HEALTH]', error);
-
-        const body: HealthResponse = {
-            status: 'error',
-            mongo: 'disconnected',
-            timestamp: new Date().toISOString(),
-        };
-
-        return NextResponse.json(body, { status: 503 });
+        console.error('[GET /api/health]', error);
+        return apiError('Service unavailable', 503);
     }
 }

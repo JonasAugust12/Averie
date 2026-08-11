@@ -2,33 +2,38 @@
 
 Next.js (App Router) full-stack app — **frontend + serverless API** in one project, ready for **Vercel**. Stack mirrors `bkb-storage-ticket-app` on the client side.
 
+Tổng quan kiến trúc & rules: [`docs/overview.md`](./docs/overview.md).
+
 ## Stack
 
-| Layer        | Tech                                                  |
-| ------------ | ----------------------------------------------------- |
-| Framework    | Next.js 15 (App Router)                               |
-| UI           | React 19, Tailwind CSS 4, Lucide                      |
-| State / data | Zustand, TanStack Query, Axios                        |
-| i18n         | next-intl (`vi` / `en`)                               |
-| Backend      | Route Handlers (`src/app/api/*`) on Vercel serverless |
-| DB           | MongoDB Atlas via Mongoose (cached connection)        |
+| Layer        | Tech                                                 |
+| ------------ | ---------------------------------------------------- |
+| Framework    | Next.js 15 (App Router)                              |
+| UI           | React 19, Tailwind CSS 4, Lucide                     |
+| State / data | Zustand, TanStack Query, Axios, react-hook-form, Zod |
+| i18n         | next-intl (`vi` / `en`)                              |
+| CRUD         | Server Actions (`src/actions/*`)                     |
+| External SVC | Route Handlers (`src/app/api/*`)                     |
+| Auth         | Auth.js (`next-auth` v5) — Credentials local stub    |
 
 ## Path aliases
 
-| Alias           | Folder                                         |
-| --------------- | ---------------------------------------------- |
-| `@services/*`   | `src/services/*` (client TanStack/Axios)       |
-| `@components/*` | `src/components/*`                             |
-| `@hooks/*`      | `src/hooks/*`                                  |
-| `@i18n/*`       | `src/i18n/*`                                   |
-| `@libs/*`       | `src/libs/*`                                   |
-| `@messages/*`   | `messages/*`                                   |
-| `@models/*`     | `src/models/*`                                 |
-| `@providers/*`  | `src/providers/*`                              |
-| `@stores/*`     | `src/stores/*`                                 |
-| `@typings/*`    | `src/types/*` (`@types` bị TypeScript reserve) |
-| `@utils/*`      | `src/utils/*`                                  |
-| `@/*`           | `src/*` (fallback)                             |
+| Alias            | Folder                                         |
+| ---------------- | ---------------------------------------------- |
+| `@actions/*`     | `src/actions/*` (Server Actions — CRUD)        |
+| `@services/*`    | `src/services/*` (client TanStack hooks)       |
+| `@validations/*` | `src/validations/*` (Zod schemas)              |
+| `@components/*`  | `src/components/*`                             |
+| `@hooks/*`       | `src/hooks/*`                                  |
+| `@i18n/*`        | `src/i18n/*`                                   |
+| `@libs/*`        | `src/libs/*`                                   |
+| `@messages/*`    | `messages/*`                                   |
+| `@models/*`      | `src/models/*`                                 |
+| `@providers/*`   | `src/providers/*`                              |
+| `@stores/*`      | `src/stores/*`                                 |
+| `@typings/*`     | `src/types/*` (`@types` bị TypeScript reserve) |
+| `@utils/*`       | `src/utils/*`                                  |
+| `@/*`            | `src/*` (fallback)                             |
 
 Example: `import { Button } from '@components/common'`
 
@@ -43,24 +48,80 @@ Example: `import { Button } from '@components/common'`
 
 ```text
 src/
-  app/                 # Pages + Route Handlers
-    api/               # Serverless backend (/api/*) — giữ tên `api` theo Next.js
+  actions/             # Server Actions — internal CRUD
+    todo.action.ts
+  app/
+    api/               # Route Handlers — external SVC / webhooks / health
       health/          # GET /api/health
-      todos/           # GET/POST /api/todos, PATCH/DELETE /api/todos/:id
-  services/            # Client services (TanStack Query + Axios → /api/*)
-  components/          # UI components (layout/AppShell, common/Button, ...)
-  i18n/                # next-intl config + messages wiring
+  services/            # Client TanStack hooks → actions hoặc axios(/api)
+  validations/         # Zod schemas (share FE form + Server Action)
+  components/
+  i18n/
   libs/
-    api-client.ts      # Axios instance
-    mongodb.ts         # Cached Mongoose connection (serverless-safe)
+    action.util.ts     # ActionResult helpers + unwrap
+    api-client.ts      # Axios (external /api)
+    mongodb.ts
     query-client.ts
-  models/              # Mongoose models
-  providers/           # QueryProvider, I18nProvider
-  stores/              # Zustand stores
+  models/
+  providers/
+  stores/
   types/
   utils/
-messages/              # vi + en translation JSON
+messages/
 ```
+
+## Backend convention
+
+| Operation                            | Pattern        | Folder          |
+| ------------------------------------ | -------------- | --------------- |
+| **GET** (reads)                      | Route Handlers | `src/app/api/*` |
+| **POST / PUT / PATCH / DELETE**      | Server Actions | `src/actions/*` |
+| External SVC / webhooks / public API | Route Handlers | `src/app/api/*` |
+
+### Unified response envelope
+
+Mọi API (và Server Action) trả về cùng shape:
+
+```json
+{
+    "status": 200,
+    "message": "OK",
+    "data": {}
+}
+```
+
+- `status` — HTTP code (200, 201, 400, 404, 500…)
+- `message` — mô tả ngắn
+- `data` — payload hoặc `null` khi lỗi
+
+Helpers:
+
+- Route Handlers: `apiSuccess` / `apiError` trong `src/app/api/_lib/http.ts`
+- Server Actions: `apiSuccessResult` / `apiErrorResult` trong `src/libs/action.util.ts`
+- Client unwrap: `unwrapApiResponse()`
+
+Flow GET: `UI → @services → Axios → GET /api/* → MongoDB / external`  
+Flow mutate: `UI → @services → Server Action → MongoDB`
+
+## Auth (Auth.js v5)
+
+Scaffold Credentials (local) — chưa nối DB.
+
+| File                                      | Role                                    |
+| ----------------------------------------- | --------------------------------------- |
+| `src/libs/auth.config.ts`                 | Providers + JWT/session callbacks       |
+| `src/libs/auth.ts`                        | `handlers`, `auth`, `signIn`, `signOut` |
+| `src/app/api/auth/[...nextauth]/route.ts` | Auth.js HTTP endpoints (bắt buộc)       |
+| `src/actions/auth.action.ts`              | `loginAction` / `logoutAction`          |
+| `src/services/auth.service.ts`            | Client hooks                            |
+| `src/providers/AuthProvider.tsx`          | `SessionProvider`                       |
+
+Demo stub:
+
+- email: `demo@averie.local`
+- password: `password`
+
+Thêm `AUTH_SECRET` vào `.env.local` trước khi chạy.
 
 ## Tooling (giống bkb)
 

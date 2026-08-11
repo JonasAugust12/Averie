@@ -60,7 +60,7 @@ export default function HomePage() {
                         <div className="space-y-1 font-sans text-sm">
                             <p className="flex items-center gap-2 text-success">
                                 <CheckCircle2 className="h-4 w-4" />
-                                {health?.status ?? 'unknown'}
+                                {health?.health ?? 'unknown'}
                             </p>
                             <p className="text-muted">
                                 MongoDB:{' '}
@@ -76,9 +76,9 @@ export default function HomePage() {
                         <h2 className="font-display text-lg font-medium">{t('home.stackTitle')}</h2>
                     </div>
                     <ul className="space-y-1 font-sans text-sm text-muted">
-                        <li>Next.js App Router + Route Handlers</li>
-                        <li>Zustand · TanStack Query · Axios</li>
-                        <li>Tailwind CSS · Lucide · next-intl</li>
+                        <li>GET → Route Handler · Mutations → Server Actions</li>
+                        <li>API envelope: status · message · data</li>
+                        <li>Zustand · TanStack Query · Axios · RHF · Zod</li>
                         <li>MongoDB (Mongoose) on Vercel serverless</li>
                     </ul>
                 </article>
