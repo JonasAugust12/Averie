@@ -4,9 +4,8 @@ import type {
     SalonService,
     SalonStaff,
     ScheduleSettings,
-    StaffShift,
-    TimeSlot,
 } from '@typings/salon.type';
+import { defaultPeriodSlots } from '@utils/schedule.util';
 
 export const SERVICE_CATEGORIES = [
     { id: 'manicure-pedicure', labelKey: 'categories.manicurePedicure' },
@@ -99,52 +98,85 @@ export const mockServices: SalonService[] = [
         durationMin: 60,
         active: true,
     },
+    {
+        id: 'svc-paraffin',
+        categoryId: 'add-ons',
+        name: 'Paraffin Treatment',
+        description: 'Warm wax soak for ultra-soft skin finish.',
+        price: 15,
+        durationMin: 15,
+        active: false,
+    },
+    {
+        id: 'svc-lip-wax',
+        categoryId: 'waxing',
+        name: 'Lip Wax',
+        description: 'Quick and gentle upper lip wax.',
+        price: 12,
+        durationMin: 10,
+        active: false,
+    },
 ];
 
 export const mockStaff: SalonStaff[] = [
-    { id: 'st-mia', name: 'Mia Tran', role: 'Lead Nail Artist', active: true, initials: 'MT' },
+    {
+        id: 'st-mia',
+        name: 'Mia Tran',
+        role: 'Lead Nail Artist',
+        active: true,
+        initials: 'MT',
+        phone: '(781) 555-0101',
+        email: 'mia@averie.local',
+        specialties: ['Gel Polish', 'Nail Art'],
+        joinDate: '2024-03-15',
+        color: '#0ea5e9',
+    },
     {
         id: 'st-elena',
         name: 'Elena Brooks',
         role: 'Senior Esthetician',
         active: true,
         initials: 'EB',
+        phone: '(781) 555-0102',
+        email: 'elena@averie.local',
+        specialties: ['Facials', 'MicroZone'],
+        joinDate: '2023-08-01',
+        color: '#10b981',
     },
-    { id: 'st-jordan', name: 'Jordan Lee', role: 'Nail Technician', active: true, initials: 'JL' },
+    {
+        id: 'st-jordan',
+        name: 'Jordan Lee',
+        role: 'Nail Technician',
+        active: true,
+        initials: 'JL',
+        phone: '(781) 555-0103',
+        email: 'jordan@averie.local',
+        specialties: ['Manicure', 'Pedicure'],
+        joinDate: '2025-01-10',
+        color: '#f59e0b',
+    },
     {
         id: 'st-sofia',
         name: 'Sofia Nguyen',
         role: 'Waxing Specialist',
         active: true,
         initials: 'SN',
+        phone: '(781) 555-0104',
+        email: 'sofia@averie.local',
+        specialties: ['Brow Wax', 'Lip Wax'],
+        joinDate: '2024-11-20',
+        color: '#8b5cf6',
     },
 ];
 
 export const mockScheduleSettings: ScheduleSettings = {
-    openTime: '09:00',
-    closeTime: '19:00',
-    intervalMin: 30,
-    closedWeekdays: [0],
-    daysOff: ['2026-12-25', '2026-01-01'],
+    workingWeekdays: [1, 2, 3, 4, 5, 6],
+    periodSlots: defaultPeriodSlots(),
+    dayOffs: [
+        { id: 'do-1', date: '2026-12-25', scope: 'full' },
+        { id: 'do-2', date: '2026-01-01', scope: 'full' },
+    ],
 };
-
-export const mockSlots: TimeSlot[] = [
-    { id: 't-0900', time: '09:00 AM', available: true },
-    { id: 't-0930', time: '09:30 AM', available: true },
-    { id: 't-1000', time: '10:00 AM', available: false },
-    { id: 't-1030', time: '10:30 AM', available: true },
-    { id: 't-1100', time: '11:00 AM', available: true },
-    { id: 't-1130', time: '11:30 AM', available: true },
-    { id: 't-1300', time: '01:00 PM', available: true },
-    { id: 't-1330', time: '01:30 PM', available: false },
-    { id: 't-1400', time: '02:00 PM', available: true },
-    { id: 't-1430', time: '02:30 PM', available: true },
-    { id: 't-1500', time: '03:00 PM', available: true },
-    { id: 't-1530', time: '03:30 PM', available: true },
-    { id: 't-1600', time: '04:00 PM', available: true },
-    { id: 't-1630', time: '04:30 PM', available: false },
-    { id: 't-1700', time: '05:00 PM', available: true },
-];
 
 export let mockBookings: SalonBooking[] = [
     {
@@ -163,6 +195,7 @@ export let mockBookings: SalonBooking[] = [
             email: 'sarah@example.com',
         },
         status: 'confirmed',
+        createdAt: '2026-08-10T09:15:00Z',
     },
     {
         id: 'bk-002',
@@ -178,7 +211,8 @@ export let mockBookings: SalonBooking[] = [
             lastName: 'Shah',
             phone: '(781) 555-0199',
         },
-        status: 'in_progress',
+        status: 'confirmed',
+        createdAt: '2026-08-11T14:30:00Z',
     },
     {
         id: 'bk-003',
@@ -196,6 +230,7 @@ export let mockBookings: SalonBooking[] = [
             note: 'Preferred soft pink polish',
         },
         status: 'pending',
+        createdAt: '2026-08-12T08:00:00Z',
     },
     {
         id: 'bk-004',
@@ -212,6 +247,7 @@ export let mockBookings: SalonBooking[] = [
             phone: '(781) 555-0177',
         },
         status: 'confirmed',
+        createdAt: '2026-08-12T10:45:00Z',
     },
 ];
 
@@ -226,13 +262,6 @@ export const mockKpis: AdminKpi = {
     activeTechsHint: '2 on break',
 };
 
-export const mockShifts: StaffShift[] = [
-    { id: 'sh-1', staffId: 'st-mia', day: 'Mon', start: '09:00', end: '17:00' },
-    { id: 'sh-2', staffId: 'st-elena', day: 'Mon', start: '10:00', end: '18:00' },
-    { id: 'sh-3', staffId: 'st-jordan', day: 'Tue', start: '09:00', end: '17:00' },
-    { id: 'sh-4', staffId: 'st-sofia', day: 'Wed', start: '11:00', end: '19:00' },
-];
-
 export function upsertMockBooking(booking: SalonBooking) {
     mockBookings = [booking, ...mockBookings.filter((b) => b.id !== booking.id)];
     return booking;
@@ -243,4 +272,26 @@ export function updateMockService(service: SalonService) {
     if (idx >= 0) mockServices[idx] = service;
     else mockServices.push(service);
     return service;
+}
+
+export function deleteMockService(id: string) {
+    const idx = mockServices.findIndex((s) => s.id === id);
+    if (idx >= 0) mockServices.splice(idx, 1);
+}
+
+export function updateMockStaff(staff: SalonStaff) {
+    const idx = mockStaff.findIndex((s) => s.id === staff.id);
+    if (idx >= 0) mockStaff[idx] = staff;
+    else mockStaff.push(staff);
+    return staff;
+}
+
+export function deleteMockStaff(id: string) {
+    const idx = mockStaff.findIndex((s) => s.id === id);
+    if (idx >= 0) mockStaff.splice(idx, 1);
+}
+
+export function updateMockScheduleSettings(settings: ScheduleSettings) {
+    Object.assign(mockScheduleSettings, settings);
+    return mockScheduleSettings;
 }

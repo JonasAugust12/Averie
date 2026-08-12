@@ -1,5 +1,5 @@
 {
-    "brand": "Avere",
+    "brand": "Averie",
     "tagline": "Nail • Facial • Làm đẹp",
     "nav": {
         "services": "Dịch vụ",
@@ -9,7 +9,7 @@
         "book": "Đặt lịch"
     },
     "hero": {
-        "title": "Avere",
+        "title": "Averie",
         "subtitle": "Nail • Facial • Làm đẹp",
         "body": "Vẻ đẹp tinh tế. Được chăm chút kỹ lưỡng. Trải nghiệm không gian yên tĩnh và chăm sóc tỉ mỉ tại Cohasset.",
         "cta": "Đặt lịch hẹn"
@@ -17,7 +17,7 @@
     "philosophy": {
         "eyebrow": "Triết lý",
         "title": "Nâng tầm chuẩn mực chăm sóc bản thân.",
-        "body": "Tại Avere, chúng tôi tin liệu trình làm đẹp là nghi thức phục hồi. Từ manicure chính xác đến facial Dermalogica, mọi dịch vụ đều nuôi dưỡng cơ thể và tinh thần trong không gian sang trọng dịu dàng.",
+        "body": "Tại Averie, chúng tôi tin liệu trình làm đẹp là nghi thức phục hồi. Từ manicure chính xác đến facial Dermalogica, mọi dịch vụ đều nuôi dưỡng cơ thể và tinh thần trong không gian sang trọng dịu dàng.",
         "cta": "Tìm hiểu thêm về chúng tôi"
     },
     "curated": {
@@ -69,6 +69,27 @@
         "sustainability": "Bền vững",
         "careers": "Tuyển dụng",
         "press": "Báo chí",
-        "rights": "© 2026 Avere Luxury Nails. Đã đăng ký bản quyền."
+        "rights": "© 2026 Averie Luxury Nails. Đã đăng ký bản quyền."
+    },
+    "testimonials": {
+        "title": "Khách Hàng Nói Về Chúng Tôi",
+        "subtitle": "Những câu chuyện làm đẹp, sự chăm sóc và sự hài lòng thuần khiết từ cộng đồng Averie.",
+        "reviews": {
+            "rev1": {
+                "author": "Sarah Jenkins",
+                "role": "Khách hàng thân thiết",
+                "text": "Sự chú ý đến từng chi tiết ở đây là vô song. Cảm giác như một thánh đường sang trọng, móng của tôi chưa bao giờ trông thanh lịch hay bền lâu hơn thế."
+            },
+            "rev2": {
+                "author": "Elena Rostova",
+                "role": "Khách hàng thường xuyên",
+                "text": "Tôi đã đến để làm facial và manicure. Trải nghiệm thực sự tuyệt vời. Thiết kế sang trọng, hương thơm tinh tế và kỹ thuật viên chuyên nghiệp."
+            },
+            "rev3": {
+                "author": "Amanda Miller",
+                "role": "Chuyên gia địa phương",
+                "text": "Averie mang lại trải nghiệm sang trọng tĩnh lặng hoàn hảo. Sạch sẽ, tối giản và được thực hiện đẹp mắt. Đặt lịch trực tuyến cực kỳ mượt mà!"
+            }
+        }
     }
 }

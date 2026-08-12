@@ -17,14 +17,20 @@ export interface SalonStaff {
     role: string;
     active: boolean;
     initials: string;
+    phone?: string;
+    email?: string;
+    specialties?: string[];
+    joinDate?: string;
+    color?: string;
 }
 
-export type BookingStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+export type BookingStatus = 'pending' | 'confirmed' | 'rejected' | 'cancelled';
 
 export interface SalonBooking {
     id: string;
     reference: string;
     serviceId: string;
+    serviceIds?: string[];
     staffId: string | 'any';
     date: string;
     time: string;
@@ -38,6 +44,7 @@ export interface SalonBooking {
         note?: string;
     };
     status: BookingStatus;
+    createdAt?: string;
 }
 
 export interface TimeSlot {
@@ -46,12 +53,27 @@ export interface TimeSlot {
     available: boolean;
 }
 
+export type DayPeriod = 'morning' | 'afternoon' | 'evening';
+
+export type DayOffScope = 'full' | DayPeriod;
+
+export interface PeriodSlots {
+    morning: string[];
+    afternoon: string[];
+    evening: string[];
+}
+
+export interface DayOffEntry {
+    id: string;
+    date: string;
+    scope: DayOffScope;
+}
+
 export interface ScheduleSettings {
-    openTime: string;
-    closeTime: string;
-    intervalMin: number;
-    closedWeekdays: number[];
-    daysOff: string[];
+    /** Weekdays the salon is open (0 = Sun … 6 = Sat) */
+    workingWeekdays: number[];
+    periodSlots: PeriodSlots;
+    dayOffs: DayOffEntry[];
 }
 
 export interface AdminKpi {
@@ -63,12 +85,4 @@ export interface AdminKpi {
     revenueHint: string;
     activeTechs: number;
     activeTechsHint: string;
-}
-
-export interface StaffShift {
-    id: string;
-    staffId: string;
-    day: string;
-    start: string;
-    end: string;
 }

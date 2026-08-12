@@ -3,7 +3,7 @@ import { ClientLoginView } from '@components/account/ClientLoginView';
 
 export const metadata: Metadata = {
     title: 'Client sign in',
-    description: 'Sign in to your Avere client account.',
+    description: 'Sign in to your Averie client account.',
     alternates: {
         canonical: '/login',
     },

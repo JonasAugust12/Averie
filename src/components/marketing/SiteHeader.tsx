@@ -38,7 +38,7 @@ export function SiteHeader() {
                         <a
                             key={item.key}
                             href={item.href}
-                            className="font-sans text-sm font-medium tracking-widest text-muted uppercase transition-colors hover:text-primary"
+                            className="font-sans text-xs font-semibold tracking-[0.2em] text-muted uppercase transition-colors hover:text-primary nav-link-underline pb-1"
                         >
                             {t(`nav.${item.key}`)}
                         </a>
@@ -49,13 +49,13 @@ export function SiteHeader() {
                     <LanguageSwitcher />
                     <Link
                         href="/book"
-                        className="hidden cursor-pointer rounded-full bg-primary px-8 py-3 font-sans text-sm font-medium tracking-widest text-neutral uppercase transition-opacity hover:opacity-80 md:inline-flex"
+                        className="hidden cursor-pointer rounded-full bg-primary px-8 py-3.5 font-sans text-xs font-semibold tracking-[0.2em] text-neutral uppercase transition-all duration-300 hover:bg-muted hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(43,38,35,0.15)] md:inline-flex"
                     >
                         {t('nav.book')}
                     </Link>
                     <button
                         type="button"
-                        className="cursor-pointer text-primary md:hidden"
+                        className="cursor-pointer text-primary md:hidden p-1 hover:opacity-85 transition-opacity"
                         aria-label="Menu"
                         onClick={() => setOpen((v) => !v)}
                     >

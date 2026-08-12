@@ -7,6 +7,7 @@ import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { formatDisplayDate } from '@utils/format.util';
+import { isDateFullyClosed } from '@utils/schedule.util';
 import { cn } from '@utils/cn.util';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -25,8 +26,6 @@ export function DateStep() {
     const { data: settings, isLoading } = useScheduleSettings();
     const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
 
-    const closedWeekdays = settings?.closedWeekdays ?? [];
-    const daysOff = new Set(settings?.daysOff ?? []);
     const today = useMemo(() => {
         const now = new Date();
         now.setHours(12, 0, 0, 0);
@@ -50,12 +49,12 @@ export function DateStep() {
             const d = new Date(cursor.getFullYear(), cursor.getMonth(), day, 12, 0, 0, 0);
             const iso = isoDate(d);
             const past = d < today;
-            const closed = closedWeekdays.includes(d.getDay()) || daysOff.has(iso);
+            const closed = settings ? isDateFullyClosed(iso, settings) : false;
             list.push({ iso, day, inMonth: true, disabled: past || closed });
         }
 
         return list;
-    }, [cursor, closedWeekdays, daysOff, today]);
+    }, [cursor, settings, today]);
 
     if (isLoading) {
         return (

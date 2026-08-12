@@ -12,7 +12,7 @@ export function SiteFooter() {
             <div className="grid items-center gap-8 md:grid-cols-12">
                 <div className="md:col-span-4">
                     <span className="font-display text-3xl tracking-wide text-primary md:text-4xl">
-                        AVERE
+                        AVERIE
                     </span>
                 </div>
                 <div className="flex flex-wrap gap-6 md:col-span-8 md:justify-end">

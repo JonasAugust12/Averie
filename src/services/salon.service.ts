@@ -4,13 +4,16 @@ import {
     mockKpis,
     mockScheduleSettings,
     mockServices,
-    mockShifts,
-    mockSlots,
     mockStaff,
     upsertMockBooking,
     updateMockService,
+    deleteMockService,
+    updateMockStaff,
+    deleteMockStaff,
+    updateMockScheduleSettings,
 } from '@/mocks/salon/data';
-import type { SalonBooking, SalonService } from '@typings/salon.type';
+import { getAvailableSlotsForDate } from '@utils/schedule.util';
+import type { SalonBooking, SalonService, SalonStaff, ScheduleSettings } from '@typings/salon.type';
 
 const delay = (ms = 180) => new Promise((r) => setTimeout(r, ms));
 
@@ -20,6 +23,17 @@ export function useSalonServices() {
         queryFn: async () => {
             await delay();
             return mockServices.filter((s) => s.active);
+        },
+    });
+}
+
+/** Admin-only: returns ALL services, including inactive ones */
+export function useAllSalonServices() {
+    return useQuery({
+        queryKey: ['salon', 'services', 'all'],
+        queryFn: async () => {
+            await delay();
+            return [...mockServices];
         },
     });
 }
@@ -34,13 +48,26 @@ export function useSalonStaff() {
     });
 }
 
-export function useSalonSlots() {
+/** Admin-only: returns ALL staff, including inactive ones */
+export function useAllSalonStaff() {
     return useQuery({
-        queryKey: ['salon', 'slots'],
+        queryKey: ['salon', 'staff', 'all'],
         queryFn: async () => {
             await delay();
-            return mockSlots;
+            return [...mockStaff];
         },
+    });
+}
+
+export function useAvailableSlots(date: string | null) {
+    return useQuery({
+        queryKey: ['salon', 'slots', date],
+        queryFn: async () => {
+            await delay();
+            if (!date) return [];
+            return getAvailableSlotsForDate(date, mockScheduleSettings, mockBookings);
+        },
+        enabled: Boolean(date),
     });
 }
 
@@ -80,17 +107,7 @@ export function useScheduleSettings() {
         queryKey: ['salon', 'schedule-settings'],
         queryFn: async () => {
             await delay();
-            return mockScheduleSettings;
-        },
-    });
-}
-
-export function useStaffShifts() {
-    return useQuery({
-        queryKey: ['salon', 'shifts'],
-        queryFn: async () => {
-            await delay();
-            return mockShifts;
+            return { ...mockScheduleSettings };
         },
     });
 }
@@ -104,6 +121,7 @@ export function useSaveMockBooking() {
         },
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: ['salon', 'bookings'] });
+            await qc.invalidateQueries({ queryKey: ['salon', 'slots'] });
         },
     });
 }
@@ -117,6 +135,59 @@ export function useSaveMockService() {
         },
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: ['salon', 'services'] });
+        },
+    });
+}
+
+export function useDeleteMockService() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            await delay(150);
+            deleteMockService(id);
+        },
+        onSuccess: async () => {
+            await qc.invalidateQueries({ queryKey: ['salon', 'services'] });
+        },
+    });
+}
+
+export function useSaveMockStaff() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (staff: SalonStaff) => {
+            await delay(200);
+            return updateMockStaff(staff);
+        },
+        onSuccess: async () => {
+            await qc.invalidateQueries({ queryKey: ['salon', 'staff'] });
+        },
+    });
+}
+
+export function useDeleteMockStaff() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            await delay(150);
+            deleteMockStaff(id);
+        },
+        onSuccess: async () => {
+            await qc.invalidateQueries({ queryKey: ['salon', 'staff'] });
+        },
+    });
+}
+
+export function useSaveScheduleSettings() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (settings: ScheduleSettings) => {
+            await delay(200);
+            return updateMockScheduleSettings(settings);
+        },
+        onSuccess: async () => {
+            await qc.invalidateQueries({ queryKey: ['salon', 'schedule-settings'] });
+            await qc.invalidateQueries({ queryKey: ['salon', 'slots'] });
         },
     });
 }

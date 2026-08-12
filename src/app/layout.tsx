@@ -11,11 +11,11 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-        default: 'Avere — Nails • Facials • Beauty',
-        template: '%s | Avere',
+        default: 'Averie — Nails • Facials • Beauty',
+        template: '%s | Averie',
     },
     description:
-        'Avere luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+        'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

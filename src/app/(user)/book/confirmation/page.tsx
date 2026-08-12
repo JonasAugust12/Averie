@@ -3,7 +3,7 @@ import { ConfirmationPageView } from '@components/booking/ConfirmationPageView';
 
 export const metadata: Metadata = {
     title: 'Booking confirmation',
-    description: 'Your Avere appointment request confirmation.',
+    description: 'Your Averie appointment request confirmation.',
     alternates: {
         canonical: '/book/confirmation',
     },

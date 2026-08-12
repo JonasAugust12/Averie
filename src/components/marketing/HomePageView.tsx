@@ -8,6 +8,7 @@ import { ServicesPreview } from './ServicesPreview';
 import { BrandMoment } from './BrandMoment';
 import { BookingCtaSection } from './BookingCtaSection';
 import { ContactSection } from './ContactSection';
+import { TestimonialsSection } from './TestimonialsSection';
 import { AppShell } from '@components/layout';
 
 export function HomePageView() {
@@ -18,6 +19,7 @@ export function HomePageView() {
                 <HeroSection />
                 <PhilosophySection />
                 <ServicesPreview />
+                <TestimonialsSection />
                 <BrandMoment />
                 <BookingCtaSection />
                 <ContactSection />

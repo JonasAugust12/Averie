@@ -1,10 +1,9 @@
 'use client';
 
-import { ArrowLeft, Loader2, Users } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 import { useSalonStaff } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
-import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
 
 export function EmployeeStep() {
@@ -14,14 +13,21 @@ export function EmployeeStep() {
 
     if (isLoading) {
         return (
-            <p className="flex items-center gap-2 font-sans text-sm text-muted">
+            <div className="flex items-center gap-3 font-sans text-sm text-muted">
                 <Loader2 className="h-4 w-4 animate-spin" />
-            </p>
+                <span className="tracking-widest uppercase text-xs">Loading…</span>
+            </div>
         );
     }
 
     return (
-        <div className="w-full space-y-8">
+        <div className="w-full space-y-10">
+            <p className="font-sans text-sm text-muted leading-relaxed max-w-md">
+                Select your preferred technician, or let us match you with whoever is best suited to
+                your services.
+            </p>
+
+            {/* Any Technician */}
             <button
                 type="button"
                 onClick={() => {
@@ -29,57 +35,85 @@ export function EmployeeStep() {
                     setStep(3);
                 }}
                 className={cn(
-                    'flex w-full cursor-pointer flex-col items-stretch gap-4 rounded-lg border p-6 text-left transition-colors sm:flex-row sm:items-center sm:justify-between',
+                    'group w-full cursor-pointer rounded-2xl border p-6 text-left transition-all duration-300 hover:shadow-sm',
                     staffId === 'any'
-                        ? 'border-primary bg-tertiary/60'
-                        : 'border-border/70 bg-neutral hover:border-secondary-400',
+                        ? 'border-primary bg-primary/5 shadow-sm'
+                        : 'border-border/70 bg-background hover:border-secondary-400 hover:bg-neutral/30',
                 )}
             >
-                <div className="flex items-center gap-4">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary-200 text-primary">
-                        <Users className="h-6 w-6" aria-hidden />
-                    </span>
-                    <div>
-                        <p className="font-display text-lg text-primary">{t('anyTechnician')}</p>
-                        <p className="font-sans text-sm text-muted">{t('anyTechnicianHint')}</p>
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-5">
+                        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-border/60 bg-tertiary/60 text-primary">
+                            <Sparkles className="h-5 w-5" aria-hidden />
+                        </span>
+                        <div>
+                            <p className="font-display text-lg text-primary tracking-wide">
+                                {t('anyTechnician')}
+                            </p>
+                            <p className="mt-0.5 font-sans text-sm text-muted">
+                                {t('anyTechnicianHint')}
+                            </p>
+                        </div>
                     </div>
+                    <div
+                        className={cn(
+                            'h-4 w-4 shrink-0 rounded-full border-2 transition-all duration-300',
+                            staffId === 'any' ? 'border-primary bg-primary' : 'border-border/60',
+                        )}
+                    />
                 </div>
-                <span className="inline-flex items-center justify-center rounded-sm bg-primary px-8 py-3 font-sans text-xs tracking-widest text-neutral uppercase">
-                    {t('select')}
-                </span>
             </button>
 
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {(staff ?? []).map((member) => {
+            {/* Staff grid */}
+            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {(staff ?? []).map((member, i) => {
                     const selected = staffId === member.id;
                     return (
-                        <li key={member.id}>
-                            <div
+                        <li
+                            key={member.id}
+                            style={{ animationDelay: `${i * 80}ms` }}
+                            className="animate-fade-in-up"
+                        >
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setStaffId(member.id);
+                                    setStep(3);
+                                }}
                                 className={cn(
-                                    'flex h-full flex-col rounded-lg border p-6 text-center transition-colors',
+                                    'group flex h-full w-full cursor-pointer flex-col items-center rounded-2xl border p-8 text-center transition-all duration-300 hover:shadow-sm',
                                     selected
-                                        ? 'border-primary bg-tertiary/60'
-                                        : 'border-border/70 bg-neutral',
+                                        ? 'border-primary bg-primary/5 shadow-sm'
+                                        : 'border-border/70 bg-white/70 backdrop-blur-sm hover:border-secondary-400 hover:bg-white/90',
                                 )}
                             >
-                                <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-secondary-200 font-sans text-lg font-medium text-primary grayscale transition-[filter] hover:grayscale-0">
+                                {/* Avatar — larger for visibility */}
+                                <span
+                                    className={cn(
+                                        'flex h-24 w-24 items-center justify-center rounded-full font-sans text-2xl font-bold transition-all duration-500',
+                                        selected
+                                            ? 'bg-primary text-neutral scale-105 shadow-md shadow-primary/20'
+                                            : 'bg-secondary-100 text-primary group-hover:bg-secondary-200',
+                                    )}
+                                >
                                     {member.initials}
                                 </span>
-                                <h3 className="mt-4 font-display text-lg text-primary">
+                                <h3 className="mt-5 font-display text-xl text-primary tracking-wide">
                                     {member.name}
                                 </h3>
                                 <p className="mt-1 font-sans text-sm text-muted">{member.role}</p>
-                                <Button
-                                    variant="outlined"
-                                    className="mt-auto w-full rounded-sm tracking-widest uppercase"
-                                    onClick={() => {
-                                        setStaffId(member.id);
-                                        setStep(3);
-                                    }}
+                                {/* Selected badge or CTA */}
+                                <div
+                                    className={cn(
+                                        'mt-6 rounded-full px-6 py-2.5 font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300',
+                                        selected
+                                            ? 'bg-primary text-neutral'
+                                            : 'border border-border/60 text-muted group-hover:border-primary group-hover:text-primary',
+                                    )}
                                 >
-                                    {t('select')}
-                                </Button>
-                            </div>
+                                    {selected ? '✓ Selected' : 'Select'}
+                                </div>
+                            </button>
                         </li>
                     );
                 })}
@@ -88,9 +122,11 @@ export function EmployeeStep() {
             <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="inline-flex cursor-pointer items-center gap-2 font-sans text-xs tracking-widest text-muted uppercase transition-colors hover:text-primary"
+                className="group inline-flex cursor-pointer items-center gap-2 font-sans text-xs tracking-widest text-muted uppercase transition-colors hover:text-primary"
             >
-                <ArrowLeft className="h-4 w-4" aria-hidden />
+                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-border/60 text-muted transition-all group-hover:border-primary group-hover:text-primary">
+                    ←
+                </span>
                 {t('backToServices')}
             </button>
         </div>

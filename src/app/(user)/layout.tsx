@@ -5,26 +5,26 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-        default: 'Avere — Nails • Facials • Beauty',
-        template: '%s | Avere',
+        default: 'Averie — Nails • Facials • Beauty',
+        template: '%s | Averie',
     },
     description:
-        'Avere luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
-    applicationName: 'Avere',
+        'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+    applicationName: 'Averie',
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        siteName: 'Avere',
-        title: 'Avere — Nails • Facials • Beauty',
+        siteName: 'Averie',
+        title: 'Averie — Nails • Facials • Beauty',
         description:
-            'Avere luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
         url: siteUrl,
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Avere — Nails • Facials • Beauty',
+        title: 'Averie — Nails • Facials • Beauty',
         description:
-            'Avere luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
     },
     robots: {
         index: true,

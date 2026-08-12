@@ -1,95 +1,248 @@
 'use client';
 
-import { Check, Clock, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import {
+    Check,
+    ChevronDown,
+    Clock,
+    Loader2,
+    Sparkles,
+    Flower2,
+    Gem,
+    Star,
+    Feather,
+    Smile,
+} from 'lucide-react';
 import { useSalonServices } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
-import { Button } from '@components/common';
 import { formatUsd } from '@utils/format.util';
 import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
 
+/** Icon + gradient colour per category (warm neutrals for quiet luxury) */
+const CAT_META: Record<string, { icon: React.ElementType; gradient: string; accent: string }> = {
+    'manicure-pedicure': {
+        icon: Sparkles,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+    'gel-polish': {
+        icon: Star,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+    'nail-enhancements': {
+        icon: Gem,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+    'add-ons': {
+        icon: Feather,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+    waxing: {
+        icon: Flower2,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+    facials: {
+        icon: Smile,
+        gradient: 'from-secondary-50 to-tertiary-100/50',
+        accent: 'text-primary/75',
+    },
+};
+
 export function ServiceStep() {
     const t = useBookingTranslations();
-    const { serviceId, setServiceId, setStep } = useBookingStore();
+    const { serviceIds, toggleServiceId } = useBookingStore();
     const { data: services, isLoading } = useSalonServices();
+
+    const [openCats, setOpenCats] = useState<Record<string, boolean>>(
+        Object.fromEntries(SERVICE_CATEGORIES.map((c) => [c.id, true])),
+    );
 
     const grouped = SERVICE_CATEGORIES.map((cat) => ({
         ...cat,
         label: t(cat.labelKey),
         items: (services ?? []).filter((s) => s.categoryId === cat.id),
+        meta: CAT_META[cat.id] ?? {
+            icon: Sparkles,
+            gradient: 'from-neutral-50 to-stone-50',
+            accent: 'text-stone-400',
+        },
     })).filter((g) => g.items.length > 0);
+
+    function toggleCat(id: string) {
+        setOpenCats((prev) => ({ ...prev, [id]: !prev[id] }));
+    }
 
     if (isLoading) {
         return (
-            <p className="flex items-center gap-2 font-sans text-sm text-muted">
-                <Loader2 className="h-4 w-4 animate-spin" />
-            </p>
+            <div className="flex items-center gap-3 py-12 font-sans text-base text-muted">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Loading services…</span>
+            </div>
         );
     }
 
-    return (
-        <div className="space-y-10">
-            {grouped.map((group) => (
-                <section key={group.id}>
-                    <h2 className="mb-4 font-display text-xl text-primary">{group.label}</h2>
-                    <ul className="space-y-3">
-                        {group.items.map((svc) => {
-                            const selected = serviceId === svc.id;
-                            return (
-                                <li key={svc.id}>
-                                    <button
-                                        type="button"
-                                        onClick={() => setServiceId(svc.id)}
-                                        className={cn(
-                                            'group w-full cursor-pointer rounded-lg border p-5 text-left transition-colors md:p-6',
-                                            selected
-                                                ? 'border-primary bg-tertiary/60'
-                                                : 'border-border/70 bg-neutral hover:border-secondary-400',
-                                        )}
-                                    >
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="min-w-0 flex-1">
-                                                <div className="flex items-center gap-2">
-                                                    <p className="font-sans text-base text-primary transition-colors group-hover:text-secondary-700">
-                                                        {svc.name}
-                                                    </p>
-                                                    {selected ? (
-                                                        <Check
-                                                            className="h-4 w-4 shrink-0 text-primary"
-                                                            aria-hidden
-                                                        />
-                                                    ) : null}
-                                                </div>
-                                                <p className="mt-1 font-sans text-sm text-muted">
-                                                    {svc.description}
-                                                </p>
-                                                <p className="mt-3 flex items-center gap-1.5 font-sans text-xs tracking-wide text-muted uppercase">
-                                                    <Clock className="h-3.5 w-3.5" aria-hidden />
-                                                    {t('duration', { min: svc.durationMin })}
-                                                </p>
-                                            </div>
-                                            <p className="shrink-0 font-display text-lg text-primary">
-                                                {formatUsd(svc.price)}
-                                            </p>
-                                        </div>
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </section>
-            ))}
+    const totalSelected = serviceIds.length;
 
-            <div className="sticky bottom-0 -mx-4 border-t border-border/50 bg-background/95 px-4 py-4 backdrop-blur-sm sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-                <Button
-                    className="w-full rounded-sm tracking-widest uppercase sm:w-auto"
-                    disabled={!serviceId}
-                    onClick={() => setStep(2)}
-                >
-                    {t('cta.toEmployee')}
-                </Button>
-            </div>
+    return (
+        <div className="space-y-4">
+            {/* Intro */}
+            <p className="font-sans text-base text-muted leading-relaxed">
+                Choose one or more services — we will tailor your appointment to your complete
+                selection.
+            </p>
+
+            {/* Selection indicator */}
+            {totalSelected > 0 && (
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-5 py-2.5 font-sans text-base font-medium text-primary">
+                    <Check className="h-4 w-4" />
+                    {totalSelected} service{totalSelected > 1 ? 's' : ''} selected
+                </div>
+            )}
+
+            {/* Category accordion sections */}
+            {grouped.map((group, gi) => {
+                const isOpen = openCats[group.id] !== false;
+                const catSelectedCount = group.items.filter((s) =>
+                    serviceIds.includes(s.id),
+                ).length;
+                const { icon: Icon, gradient, accent } = group.meta;
+
+                return (
+                    <section
+                        key={group.id}
+                        style={{ animationDelay: `${gi * 60}ms` }}
+                        className="animate-fade-in-up overflow-hidden rounded-2xl border border-border/50 bg-white/70 backdrop-blur-sm shadow-md shadow-black/5"
+                    >
+                        {/* Category header — gradient + icon */}
+                        <button
+                            type="button"
+                            onClick={() => toggleCat(group.id)}
+                            className={cn(
+                                'flex w-full cursor-pointer items-center justify-between bg-linear-to-r px-5 py-5 text-left transition-opacity hover:opacity-90',
+                                gradient,
+                            )}
+                            aria-expanded={isOpen}
+                        >
+                            <div className="flex items-center gap-3">
+                                {/* Category icon */}
+                                <span
+                                    className={cn(
+                                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm',
+                                        accent,
+                                    )}
+                                >
+                                    <Icon className="h-5 w-5" />
+                                </span>
+                                {/* Serif display label */}
+                                <div>
+                                    <h2 className="font-display text-2xl text-primary leading-none">
+                                        {group.label}
+                                    </h2>
+                                    <p className="mt-0.5 font-sans text-xs text-muted">
+                                        {group.items.length} service
+                                        {group.items.length !== 1 ? 's' : ''}
+                                    </p>
+                                </div>
+                                {catSelectedCount > 0 && (
+                                    <span className="rounded-full bg-primary px-3 py-1 font-sans text-sm font-bold text-neutral">
+                                        {catSelectedCount} selected
+                                    </span>
+                                )}
+                            </div>
+                            <ChevronDown
+                                className={cn(
+                                    'h-5 w-5 text-muted transition-transform duration-300',
+                                    isOpen ? 'rotate-180' : 'rotate-0',
+                                )}
+                            />
+                        </button>
+
+                        {/* Collapsible service list */}
+                        <div
+                            className={cn(
+                                'overflow-hidden transition-all duration-400 ease-in-out',
+                                isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0',
+                            )}
+                        >
+                            <ul className="divide-y divide-border/30 border-t border-border/30">
+                                {group.items.map((svc) => {
+                                    const selected = serviceIds.includes(svc.id);
+                                    return (
+                                        <li key={svc.id}>
+                                            <button
+                                                type="button"
+                                                onClick={() => toggleServiceId(svc.id)}
+                                                className={cn(
+                                                    'group w-full cursor-pointer px-5 py-5 text-left transition-colors',
+                                                    selected
+                                                        ? 'bg-primary/5'
+                                                        : 'hover:bg-tertiary/20',
+                                                )}
+                                            >
+                                                <div className="flex items-start gap-4">
+                                                    {/* Large accessible checkbox */}
+                                                    <div
+                                                        className={cn(
+                                                            'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-300',
+                                                            selected
+                                                                ? 'border-primary bg-primary text-neutral'
+                                                                : 'border-border bg-white group-hover:border-secondary-400',
+                                                        )}
+                                                    >
+                                                        {selected && (
+                                                            <Check
+                                                                className="h-4 w-4"
+                                                                strokeWidth={3}
+                                                            />
+                                                        )}
+                                                    </div>
+
+                                                    {/* Content */}
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="flex items-start justify-between gap-4">
+                                                            <p
+                                                                className={cn(
+                                                                    'font-display text-xl leading-snug transition-colors',
+                                                                    selected
+                                                                        ? 'text-primary'
+                                                                        : 'text-primary/80 group-hover:text-primary',
+                                                                )}
+                                                            >
+                                                                {svc.name}
+                                                            </p>
+                                                            {/* Price — large and display serif */}
+                                                            <div className="shrink-0 text-right">
+                                                                <p className="font-display text-2xl font-medium text-primary leading-none">
+                                                                    {formatUsd(svc.price)}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <p className="mt-1.5 font-sans text-sm text-muted leading-relaxed">
+                                                            {svc.description}
+                                                        </p>
+                                                        <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-tertiary/60 px-3 py-1 font-sans text-xs text-muted">
+                                                            <Clock className="h-3 w-3" />
+                                                            {t('duration', {
+                                                                min: svc.durationMin,
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </section>
+                );
+            })}
         </div>
     );
 }

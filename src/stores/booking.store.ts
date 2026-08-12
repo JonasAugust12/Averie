@@ -6,14 +6,14 @@ export type BookingStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface BookingState {
     step: BookingStep;
-    serviceId: string | null;
+    serviceIds: string[];
     staffId: string | 'any' | null;
     date: string | null;
     time: string | null;
     customer: BookingCustomerInput | null;
     reference: string | null;
     setStep: (step: BookingStep) => void;
-    setServiceId: (id: string | null) => void;
+    toggleServiceId: (id: string) => void;
     setStaffId: (id: string | 'any' | null) => void;
     setDate: (date: string | null) => void;
     setTime: (time: string | null) => void;
@@ -24,7 +24,7 @@ interface BookingState {
 
 const initial = {
     step: 1 as BookingStep,
-    serviceId: null,
+    serviceIds: [] as string[],
     staffId: null,
     date: null,
     time: null,
@@ -37,7 +37,14 @@ export const useBookingStore = create<BookingState>()(
         (set) => ({
             ...initial,
             setStep: (step) => set({ step }),
-            setServiceId: (serviceId) => set({ serviceId }),
+            toggleServiceId: (id) =>
+                set((state) => {
+                    const exists = state.serviceIds.includes(id);
+                    const nextIds = exists
+                        ? state.serviceIds.filter((x) => x !== id)
+                        : [...state.serviceIds, id];
+                    return { serviceIds: nextIds };
+                }),
             setStaffId: (staffId) => set({ staffId }),
             setDate: (date) => set({ date }),
             setTime: (time) => set({ time }),
@@ -45,11 +52,11 @@ export const useBookingStore = create<BookingState>()(
             setReference: (reference) => set({ reference }),
             reset: () => set({ ...initial }),
         }),
-        { name: 'avere-booking-draft' },
+        { name: 'averie-booking-draft' },
     ),
 );
 
-export const ADMIN_MOCK_KEY = 'avere-admin-mock';
+export const ADMIN_MOCK_KEY = 'averie-admin-mock';
 
 export function isAdminMockAuthed() {
     if (typeof window === 'undefined') return false;

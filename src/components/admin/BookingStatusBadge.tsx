@@ -4,8 +4,7 @@ import { Badge } from '@components/ui';
 const toneMap: Record<BookingStatus, 'neutral' | 'peach' | 'taupe' | 'outline'> = {
     pending: 'peach',
     confirmed: 'neutral',
-    in_progress: 'taupe',
-    completed: 'outline',
+    rejected: 'outline',
     cancelled: 'outline',
 };
 

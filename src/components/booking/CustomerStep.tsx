@@ -8,8 +8,8 @@ import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
 
-const fieldClass =
-    'w-full border-0 border-b border-border bg-transparent px-0 py-3 font-sans text-sm text-primary outline-none transition-colors placeholder:text-muted/60 focus:border-primary';
+const fieldBase =
+    'w-full border-0 border-b border-border/60 bg-transparent px-0 py-3 font-sans text-sm text-primary outline-none transition-all placeholder:text-muted/50 focus:border-primary';
 
 export function CustomerStep() {
     const t = useBookingTranslations();
@@ -36,57 +36,71 @@ export function CustomerStep() {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid gap-6 sm:grid-cols-2">
-                <Field label={t('customer.firstName')} error={errors.firstName?.message}>
+        <div className="mx-auto w-full max-w-xl">
+            <p className="mb-8 font-sans text-sm text-muted leading-relaxed">
+                Almost done — just a few details so we can confirm your appointment.
+            </p>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                <div className="grid gap-8 sm:grid-cols-2">
+                    <Field label={t('customer.firstName')} error={errors.firstName?.message}>
+                        <input
+                            className={fieldBase}
+                            autoComplete="given-name"
+                            placeholder="First name"
+                            {...register('firstName')}
+                        />
+                    </Field>
+                    <Field label={t('customer.lastName')} error={errors.lastName?.message}>
+                        <input
+                            className={fieldBase}
+                            autoComplete="family-name"
+                            placeholder="Last name"
+                            {...register('lastName')}
+                        />
+                    </Field>
+                </div>
+                <Field label={t('customer.phone')} error={errors.phone?.message}>
                     <input
-                        className={fieldClass}
-                        autoComplete="given-name"
-                        {...register('firstName')}
+                        className={fieldBase}
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="(555) 000-0000"
+                        {...register('phone')}
                     />
                 </Field>
-                <Field label={t('customer.lastName')} error={errors.lastName?.message}>
+                <Field label={t('customer.email')} error={errors.email?.message}>
                     <input
-                        className={fieldClass}
-                        autoComplete="family-name"
-                        {...register('lastName')}
+                        className={fieldBase}
+                        type="email"
+                        autoComplete="email"
+                        placeholder="hello@example.com"
+                        {...register('email')}
                     />
                 </Field>
-            </div>
-            <Field label={t('customer.phone')} error={errors.phone?.message}>
-                <input
-                    className={fieldClass}
-                    type="tel"
-                    autoComplete="tel"
-                    {...register('phone')}
-                />
-            </Field>
-            <Field label={t('customer.email')} error={errors.email?.message}>
-                <input
-                    className={fieldClass}
-                    type="email"
-                    autoComplete="email"
-                    {...register('email')}
-                />
-            </Field>
-            <Field label={t('customer.note')}>
-                <textarea {...register('note')} rows={3} className={cn(fieldClass, 'resize-y')} />
-            </Field>
+                <Field label={t('customer.note')}>
+                    <textarea
+                        {...register('note')}
+                        rows={3}
+                        placeholder="Preferred polish color, sensitivities, anything we should know…"
+                        className={cn(fieldBase, 'resize-y leading-relaxed')}
+                    />
+                </Field>
 
-            <div className="sticky bottom-0 flex flex-wrap gap-3 border-t border-border/50 bg-background/95 py-4 backdrop-blur-sm">
-                <Button
-                    type="button"
-                    variant="outlined"
-                    className="tracking-widest uppercase"
-                    onClick={() => setStep(4)}
-                >
-                    {t('back')}
-                </Button>
-                <Button type="submit" className="rounded-full tracking-widest uppercase">
-                    {t('cta.toReview')}
-                </Button>
-            </div>
-        </form>
+                <div className="sticky bottom-0 -mx-4 flex flex-wrap gap-3 border-t border-border/20 bg-background/95 px-4 py-4 backdrop-blur-sm sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+                    <Button
+                        type="button"
+                        variant="outlined"
+                        className="rounded-full tracking-widest uppercase px-8"
+                        onClick={() => setStep(4)}
+                    >
+                        {t('back')}
+                    </Button>
+                    <Button type="submit" className="rounded-full tracking-widest uppercase px-10">
+                        {t('cta.toReview')}
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
 }
 
@@ -101,11 +115,11 @@ function Field({
 }) {
     return (
         <div>
-            <label className="mb-1 block font-sans text-xs tracking-widest text-muted uppercase">
+            <label className="mb-1 block font-sans text-xs tracking-[0.18em] text-muted uppercase">
                 {label}
             </label>
             {children}
-            {error ? <p className="mt-1 font-sans text-xs text-danger">{error}</p> : null}
+            {error ? <p className="mt-1.5 font-sans text-xs text-danger">{error}</p> : null}
         </div>
     );
 }
