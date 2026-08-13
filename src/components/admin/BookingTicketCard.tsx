@@ -75,7 +75,7 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
             {/* Left strip vertical logo header */}
             <div className="w-full md:w-20 bg-[#221F1C] flex items-center justify-center py-4 px-3.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EAE4D9]/20 self-stretch shrink-0">
                 <Image
-                    src="/icons/logo.png"
+                    src="/icons/logo.svg"
                     alt="Averie Logo"
                     width={64}
                     height={64}

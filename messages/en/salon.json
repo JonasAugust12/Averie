@@ -8,88 +8,140 @@
         "contact": "Contact",
         "book": "Book Now"
     },
-    "hero": {
-        "title": "Averie",
-        "subtitle": "Nails • Facials • Beauty",
-        "body": "Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and meticulous care in Cohasset.",
-        "cta": "Book an Appointment"
-    },
-    "philosophy": {
-        "eyebrow": "Our Philosophy",
-        "title": "Elevating the standard of self-care.",
-        "body": "At Averie, we believe that beauty treatments should be a restorative ritual. Our curated selection of services, from precision manicures to Dermalogica facials, is designed to nourish both body and mind in an environment of quiet luxury.",
-        "cta": "Learn more about us"
-    },
-    "curated": {
-        "title": "Curated Services",
-        "subtitle": "Tailored treatments designed for lasting results and pure relaxation.",
-        "viewAll": "View All Services",
-        "items": {
-            "mani": {
-                "title": "Manicure & Pedicure",
-                "body": "Signature treatments for healthy, resilient nails and ultimate relaxation."
-            },
-            "facial": {
-                "title": "Dermalogica Facials",
-                "body": "Customized face mapping, MicroZone treatments, and full skin therapies."
-            },
-            "wax": {
-                "title": "Enhancements & Waxing",
-                "body": "Precision gel polish, acrylics, and gentle waxing services for flawless skin."
+    "landing": {
+        "header": {
+            "about": "About",
+            "menu": "Menu",
+            "blog": "Blog",
+            "contact": "Contact",
+            "book": "Book Now"
+        },
+        "hero": {
+            "eyebrow": "Nails • Facials • Beauty",
+            "title": "Averie",
+            "body": "Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and meticulous care in Cohasset.",
+            "cta": "Book an Appointment"
+        },
+        "philosophy": {
+            "eyebrow": "Our Philosophy",
+            "title": "Elevating the standard of self-care.",
+            "body": "At Averie, we believe that beauty treatments should be a restorative ritual. Our curated selection of services, from precision manicures to Dermalogica facials, is designed to nourish both body and mind in an environment of quiet luxury.",
+            "cta": "Explore"
+        },
+        "services": {
+            "eyebrow": "Averie Offerings",
+            "title": "Curated services",
+            "subtitle": "Tailored treatments designed for lasting results and pure relaxation.",
+            "book": "Book Service →",
+            "items": {
+                "mani": {
+                    "title": "Manicure & Pedicure",
+                    "body": "Signature treatments for healthy, resilient nails and ultimate relaxation."
+                },
+                "facial": {
+                    "title": "Dermalogica Facials",
+                    "body": "Customized face mapping, MicroZone treatments, and full skin therapies."
+                },
+                "wax": {
+                    "title": "Enhancements & Waxing",
+                    "body": "Precision gel polish, acrylics, and gentle waxing services for flawless skin."
+                }
             }
-        }
-    },
-    "brandMoment": "Beauty, with intention.",
-    "bookingCta": {
-        "title": "Your next appointment starts here.",
-        "body": "Gift certificates available. Appointments and walk-ins welcome.",
-        "call": "Call (781) 923-1955",
-        "book": "Book Online"
-    },
-    "contact": {
-        "location": "Location",
-        "addressLine1": "132 Chief Justice Cushing Highway #25",
-        "addressLine2": "Cohasset, MA 02025",
-        "directions": "Get Directions",
-        "hours": "Hours",
-        "monFri": "Mon - Fri:",
-        "monFriHours": "9am - 7pm",
-        "sat": "Sat:",
-        "satHours": "9am - 6pm",
-        "sun": "Sun:",
-        "sunHours": "10am - 5pm",
-        "contact": "Contact",
-        "phone": "Phone: (781) 923-1955",
-        "email": "Email: knbeauty0912@gmail.com",
-        "facebook": "Facebook"
-    },
-    "footer": {
-        "privacy": "Privacy Policy",
-        "terms": "Terms of Service",
-        "sustainability": "Sustainability",
-        "careers": "Careers",
-        "press": "Press",
-        "rights": "© 2026 Averie Luxury Nails. All rights reserved."
-    },
-    "testimonials": {
-        "title": "What Our Clients Say",
-        "subtitle": "Stories of beauty, care, and pure satisfaction from the Averie community.",
-        "reviews": {
-            "rev1": {
-                "author": "Sarah Jenkins",
-                "role": "Loyal Client",
-                "text": "The attention to detail here is unmatched. It feels like a high-end sanctuary, and my nails have never looked more elegant or lasted longer. Highly recommend!"
-            },
-            "rev2": {
-                "author": "Elena Rostova",
-                "role": "Regular Client",
-                "text": "I came for a facial and a manicure. The experience was absolutely heavenly. The luxury design, refined scent, and professional technicians made my day."
-            },
-            "rev3": {
-                "author": "Amanda Miller",
-                "role": "Local Specialist",
-                "text": "Averie delivers the perfect quiet luxury experience. It's clean, minimalist, and beautifully executed. Booking online is ultra-smooth!"
+        },
+        "pricing": {
+            "title": "Treatments & Prices",
+            "cta": "View treatments",
+            "rows": {
+                "mani": {
+                    "name": "Manicure & Pedicure",
+                    "desc": "Pamper your hands and feet with expert care",
+                    "price": "from $25.00"
+                },
+                "gel": {
+                    "name": "Gel Polish",
+                    "desc": "Enjoy long-lasting shine and flawless color",
+                    "price": "from $35.00"
+                },
+                "enhance": {
+                    "name": "Nail Enhancements",
+                    "desc": "Create beautiful, strong, and stylish nails",
+                    "price": "from $50.00"
+                },
+                "wax": {
+                    "name": "Waxing",
+                    "desc": "Achieve smooth, silky skin with gentle waxing",
+                    "price": "from $10.00"
+                },
+                "facial": {
+                    "name": "Dermalogica Facials",
+                    "desc": "Refresh and rejuvenate your skin with professional care",
+                    "price": "from $75.00"
+                }
             }
+        },
+        "products": {
+            "title": "Our Nail Products",
+            "featuredEyebrow": "Nail Hand Care",
+            "featuredTitle": "Fill With Polish",
+            "featuredCta": "Explore",
+            "limited": "Limited products",
+            "nailCare": "Nail care",
+            "trending": "Trending Nail Colors",
+            "tools": "Nail care tools"
+        },
+        "testimonials": {
+            "title": "What our clients say",
+            "reviews": {
+                "rev1": {
+                    "author": "Sarah Jenkins",
+                    "initials": "SJ",
+                    "text": "The attention to detail here is unmatched. It feels like a high-end sanctuary, and my nails have never looked more elegant or lasted longer. Highly recommend!"
+                },
+                "rev2": {
+                    "author": "Elena Rostova",
+                    "initials": "ER",
+                    "text": "I came for a facial and a manicure. The experience was absolutely heavenly. The luxury design, refined scent, and professional technicians made my day."
+                },
+                "rev3": {
+                    "author": "Amanda Miller",
+                    "initials": "AM",
+                    "text": "Averie delivers the perfect quiet luxury experience. It's clean, minimalist, and beautifully executed. Booking online is ultra-smooth!"
+                }
+            }
+        },
+        "hours": {
+            "title": "Working hour",
+            "monFri": "Monday - Friday",
+            "monFriHours": "9:00 AM - 7:00 PM",
+            "sat": "Saturday",
+            "satHours": "9:00 AM - 6:00 PM",
+            "sun": "Sunday",
+            "sunHours": "10:00 AM - 5:00 PM"
+        },
+        "cta": {
+            "title": "Your next appointment starts here",
+            "body": "Gift certificates available. Appointments and walk-ins welcome.",
+            "book": "Book now",
+            "call": "Call"
+        },
+        "footer": {
+            "menu": "Menu",
+            "service": "Service",
+            "social": "Social",
+            "about": "About",
+            "portfolio": "Portfolio",
+            "services": "Services",
+            "contact": "Contact",
+            "phone": "781-923-1955",
+            "addressLine1": "132 Chief Justice Cushing Highway #25",
+            "addressLine2": "Cohasset, MA 02025",
+            "mani": "Manicure",
+            "facial": "Facials",
+            "wax": "Waxing",
+            "products": "Products",
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Use",
+            "rights": "Copyright © 2026 Averie. All rights reserved."
         }
     }
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { HomePageView } from '@components/marketing/HomePageView';
+import { LandingPageView } from '@components/marketing/landing';
 
 export const metadata: Metadata = {
     title: 'Averie — Nails • Facials • Beauty',
@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-    return <HomePageView />;
+    return <LandingPageView />;
 }

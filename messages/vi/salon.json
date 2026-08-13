@@ -8,88 +8,140 @@
         "contact": "Liên hệ",
         "book": "Đặt lịch"
     },
-    "hero": {
-        "title": "Averie",
-        "subtitle": "Nail • Facial • Làm đẹp",
-        "body": "Vẻ đẹp tinh tế. Được chăm chút kỹ lưỡng. Trải nghiệm không gian yên tĩnh và chăm sóc tỉ mỉ tại Cohasset.",
-        "cta": "Đặt lịch hẹn"
-    },
-    "philosophy": {
-        "eyebrow": "Triết lý",
-        "title": "Nâng tầm chuẩn mực chăm sóc bản thân.",
-        "body": "Tại Averie, chúng tôi tin liệu trình làm đẹp là nghi thức phục hồi. Từ manicure chính xác đến facial Dermalogica, mọi dịch vụ đều nuôi dưỡng cơ thể và tinh thần trong không gian sang trọng dịu dàng.",
-        "cta": "Tìm hiểu thêm về chúng tôi"
-    },
-    "curated": {
-        "title": "Dịch vụ tuyển chọn",
-        "subtitle": "Liệu trình cá nhân hoá cho kết quả bền và thư giãn thuần khiết.",
-        "viewAll": "Xem tất cả dịch vụ",
-        "items": {
-            "mani": {
-                "title": "Manicure & Pedicure",
-                "body": "Liệu trình signature cho móng khoẻ và thư giãn tối đa."
-            },
-            "facial": {
-                "title": "Dermalogica Facials",
-                "body": "Face mapping cá nhân hoá, MicroZone và liệu trình da đầy đủ."
-            },
-            "wax": {
-                "title": "Nối móng & Waxing",
-                "body": "Gel, acrylic và waxing nhẹ nhàng cho làn da mịn màng."
+    "landing": {
+        "header": {
+            "about": "Giới thiệu",
+            "menu": "Menu",
+            "blog": "Blog",
+            "contact": "Liên hệ",
+            "book": "Đặt lịch"
+        },
+        "hero": {
+            "eyebrow": "Nail • Facial • Làm đẹp",
+            "title": "Averie",
+            "body": "Vẻ đẹp tinh tế. Được chăm chút kỹ lưỡng. Trải nghiệm không gian yên tĩnh và chăm sóc tỉ mỉ tại Cohasset.",
+            "cta": "Đặt lịch hẹn"
+        },
+        "philosophy": {
+            "eyebrow": "Triết lý của chúng tôi",
+            "title": "Nâng tầm chuẩn mực chăm sóc bản thân.",
+            "body": "Tại Averie, chúng tôi tin liệu trình làm đẹp là nghi thức phục hồi. Từ manicure chính xác đến facial Dermalogica, mọi dịch vụ đều nuôi dưỡng cơ thể và tinh thần trong không gian sang trọng dịu dàng.",
+            "cta": "Khám phá"
+        },
+        "services": {
+            "eyebrow": "Dịch vụ Averie",
+            "title": "Dịch vụ tuyển chọn",
+            "subtitle": "Liệu trình cá nhân hoá cho kết quả bền và thư giãn thuần khiết.",
+            "book": "Đặt dịch vụ →",
+            "items": {
+                "mani": {
+                    "title": "Manicure & Pedicure",
+                    "body": "Liệu trình signature cho móng khoẻ và thư giãn tối đa."
+                },
+                "facial": {
+                    "title": "Dermalogica Facials",
+                    "body": "Face mapping cá nhân hoá, MicroZone và liệu trình da đầy đủ."
+                },
+                "wax": {
+                    "title": "Nối móng & Waxing",
+                    "body": "Gel, acrylic và waxing nhẹ nhàng cho làn da mịn màng."
+                }
             }
-        }
-    },
-    "brandMoment": "Vẻ đẹp, với dụng ý.",
-    "bookingCta": {
-        "title": "Cuộc hẹn tiếp theo bắt đầu tại đây.",
-        "body": "Có sẵn gift certificate. Nhận đặt lịch và walk-in.",
-        "call": "Gọi (781) 923-1955",
-        "book": "Đặt lịch online"
-    },
-    "contact": {
-        "location": "Địa chỉ",
-        "addressLine1": "132 Chief Justice Cushing Highway #25",
-        "addressLine2": "Cohasset, MA 02025",
-        "directions": "Chỉ đường",
-        "hours": "Giờ mở cửa",
-        "monFri": "T2 - T6:",
-        "monFriHours": "9am - 7pm",
-        "sat": "T7:",
-        "satHours": "9am - 6pm",
-        "sun": "CN:",
-        "sunHours": "10am - 5pm",
-        "contact": "Liên hệ",
-        "phone": "Điện thoại: (781) 923-1955",
-        "email": "Email: knbeauty0912@gmail.com",
-        "facebook": "Facebook"
-    },
-    "footer": {
-        "privacy": "Chính sách bảo mật",
-        "terms": "Điều khoản sử dụng",
-        "sustainability": "Bền vững",
-        "careers": "Tuyển dụng",
-        "press": "Báo chí",
-        "rights": "© 2026 Averie Luxury Nails. Đã đăng ký bản quyền."
-    },
-    "testimonials": {
-        "title": "Khách Hàng Nói Về Chúng Tôi",
-        "subtitle": "Những câu chuyện làm đẹp, sự chăm sóc và sự hài lòng thuần khiết từ cộng đồng Averie.",
-        "reviews": {
-            "rev1": {
-                "author": "Sarah Jenkins",
-                "role": "Khách hàng thân thiết",
-                "text": "Sự chú ý đến từng chi tiết ở đây là vô song. Cảm giác như một thánh đường sang trọng, móng của tôi chưa bao giờ trông thanh lịch hay bền lâu hơn thế."
-            },
-            "rev2": {
-                "author": "Elena Rostova",
-                "role": "Khách hàng thường xuyên",
-                "text": "Tôi đã đến để làm facial và manicure. Trải nghiệm thực sự tuyệt vời. Thiết kế sang trọng, hương thơm tinh tế và kỹ thuật viên chuyên nghiệp."
-            },
-            "rev3": {
-                "author": "Amanda Miller",
-                "role": "Chuyên gia địa phương",
-                "text": "Averie mang lại trải nghiệm sang trọng tĩnh lặng hoàn hảo. Sạch sẽ, tối giản và được thực hiện đẹp mắt. Đặt lịch trực tuyến cực kỳ mượt mà!"
+        },
+        "pricing": {
+            "title": "Liệu trình & Giá",
+            "cta": "Xem liệu trình",
+            "rows": {
+                "mani": {
+                    "name": "Manicure & Pedicure",
+                    "desc": "Chăm sóc tay chân chuyên nghiệp, dịu dàng",
+                    "price": "từ $25.00"
+                },
+                "gel": {
+                    "name": "Gel Polish",
+                    "desc": "Màu bền lâu, bề mặt bóng mịn",
+                    "price": "từ $35.00"
+                },
+                "enhance": {
+                    "name": "Nối móng",
+                    "desc": "Móng chắc, đẹp và đúng phong cách",
+                    "price": "từ $50.00"
+                },
+                "wax": {
+                    "name": "Waxing",
+                    "desc": "Da mịn với waxing nhẹ nhàng",
+                    "price": "từ $10.00"
+                },
+                "facial": {
+                    "name": "Dermalogica Facials",
+                    "desc": "Làm mới và phục hồi da chuyên nghiệp",
+                    "price": "từ $75.00"
+                }
             }
+        },
+        "products": {
+            "title": "Sản phẩm nail",
+            "featuredEyebrow": "Chăm sóc tay",
+            "featuredTitle": "Sơn móng chuyên nghiệp",
+            "featuredCta": "Khám phá",
+            "limited": "Sản phẩm giới hạn",
+            "nailCare": "Chăm sóc móng",
+            "trending": "Màu nail đang thịnh",
+            "tools": "Dụng cụ chăm sóc móng"
+        },
+        "testimonials": {
+            "title": "Khách hàng nói gì",
+            "reviews": {
+                "rev1": {
+                    "author": "Sarah Jenkins",
+                    "initials": "SJ",
+                    "text": "Sự chú ý đến từng chi tiết ở đây là vô song. Cảm giác như một thánh đường sang trọng, móng của tôi chưa bao giờ trông thanh lịch hay bền lâu hơn thế."
+                },
+                "rev2": {
+                    "author": "Elena Rostova",
+                    "initials": "ER",
+                    "text": "Tôi đã đến để làm facial và manicure. Trải nghiệm thực sự tuyệt vời. Thiết kế sang trọng, hương thơm tinh tế và kỹ thuật viên chuyên nghiệp."
+                },
+                "rev3": {
+                    "author": "Amanda Miller",
+                    "initials": "AM",
+                    "text": "Averie mang lại trải nghiệm sang trọng tĩnh lặng hoàn hảo. Sạch sẽ, tối giản và được thực hiện đẹp mắt. Đặt lịch trực tuyến cực kỳ mượt mà!"
+                }
+            }
+        },
+        "hours": {
+            "title": "Giờ làm việc",
+            "monFri": "Thứ Hai - Thứ Sáu",
+            "monFriHours": "9:00 AM - 7:00 PM",
+            "sat": "Thứ Bảy",
+            "satHours": "9:00 AM - 6:00 PM",
+            "sun": "Chủ Nhật",
+            "sunHours": "10:00 AM - 5:00 PM"
+        },
+        "cta": {
+            "title": "Cuộc hẹn tiếp theo bắt đầu tại đây",
+            "body": "Có sẵn gift certificate. Nhận đặt lịch và walk-in.",
+            "book": "Đặt lịch",
+            "call": "Gọi"
+        },
+        "footer": {
+            "menu": "Menu",
+            "service": "Dịch vụ",
+            "social": "Mạng xã hội",
+            "about": "Giới thiệu",
+            "portfolio": "Bộ sưu tập",
+            "services": "Dịch vụ",
+            "contact": "Liên hệ",
+            "phone": "781-923-1955",
+            "addressLine1": "132 Chief Justice Cushing Highway #25",
+            "addressLine2": "Cohasset, MA 02025",
+            "mani": "Manicure",
+            "facial": "Facial",
+            "wax": "Waxing",
+            "products": "Sản phẩm",
+            "privacy": "Chính sách bảo mật",
+            "terms": "Điều khoản sử dụng",
+            "rights": "Copyright © 2026 Averie. Đã đăng ký bản quyền."
         }
     }
 }

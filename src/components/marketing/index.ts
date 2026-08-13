@@ -1,9 +1,1 @@
-export { SiteHeader } from './SiteHeader';
-export { SiteFooter } from './SiteFooter';
-export { HeroSection } from './HeroSection';
-export { PhilosophySection } from './PhilosophySection';
-export { ServicesPreview } from './ServicesPreview';
-export { BrandMoment } from './BrandMoment';
-export { BookingCtaSection } from './BookingCtaSection';
-export { ContactSection } from './ContactSection';
-export { HomePageView } from './HomePageView';
+export { LandingPageView } from './landing';

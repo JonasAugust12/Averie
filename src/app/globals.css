@@ -53,20 +53,37 @@
     --color-neutral-800: #524c46;
     --color-neutral-900: #3f3a36;
 
-    --color-background: #fdfcfb;
-    --color-foreground: #2b2623;
-    --color-surface: #f5efea;
+    --color-background: #f8f7f3;
+    --color-foreground: #3a3027;
+    --color-surface: #f8f7f3;
     --color-muted: #8d7766;
     --color-border: #d4c5b9;
     --color-success: #3f6f4e;
     --color-danger: #a33b2d;
+    --color-nude: #c0957f;
+    --color-third: #3a3027;
+    --color-cream: #f8f7f3;
+    --color-body: #767676;
 
-    --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
-    --font-display: var(--font-italiana), ui-serif, Georgia, serif;
+    --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+
+    --text-2xs: 0.625rem;
+    --text-2xs--line-height: 1.2;
+    --text-hero: 5rem;
+    --text-hero--line-height: 1;
+    --text-title: 2.5rem;
+    --text-title--line-height: 1.2;
+    --text-section: 3rem;
+    --text-section--line-height: 1.15;
+    --leading-body: 1.5625rem;
+    --radius-card: 1.25rem;
+    --duration-2000: 2s;
 
     --breakpoint-app: 80rem; /* 1280px */
     --container-app: 80rem;
     --max-width-app: 80rem;
+    --max-width-landing: 90rem;
 }
 
 * {
@@ -74,7 +91,7 @@
 }
 
 html {
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 body {
@@ -91,7 +108,19 @@ h3,
 h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up,
+    .animate-fade-in,
+    .animate-scale-in,
+    .animate-ambient-pulse,
+    .animate-slow-zoom {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 @keyframes marquee {
@@ -117,6 +146,11 @@ h4 {
 .animate-fade-in-up {
     opacity: 0;
     animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-landing-fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animation-delay-100 {
