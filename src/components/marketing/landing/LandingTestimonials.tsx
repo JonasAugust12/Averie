@@ -4,8 +4,13 @@ import Image from 'next/image';
 import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { FadeIn } from './FadeIn';
-import { landingBleedLeft, landingBody, landingOrnamentDesktopOnly, landingTitle } from './styles';
+import { FadeIn } from '@components/marketing/landing';
+import {
+    landingBleedLeft,
+    landingBody,
+    landingOrnamentDesktopOnly,
+    landingTitle,
+} from '@components/marketing/landing/styles';
 
 const reviews = ['rev1', 'rev2', 'rev3'] as const;
 

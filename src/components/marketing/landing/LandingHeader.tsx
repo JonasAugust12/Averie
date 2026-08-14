@@ -7,7 +7,6 @@ import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
 import { cn } from '@utils/cn.util';
-import { PillLink } from './FadeIn';
 
 const nav = [
     { href: '#philosophy', key: 'about' as const },
@@ -41,13 +40,13 @@ export function LandingHeader() {
                         />
                     </Link>
 
-                    {/* Desktop Navigation (Unchanged) */}
-                    <div className="absolute left-[40%] md:left-[41%] xl:left-[42%] hidden -translate-x-1/2 items-center gap-4 lg:gap-6 xl:gap-8 md:flex">
+                    {/* Desktop Navigation */}
+                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3.5 lg:gap-6 xl:gap-8 md:flex">
                         {nav.map((item) => (
                             <a
                                 key={item.key}
                                 href={item.href}
-                                className="nav-link-underline pb-1 font-sans text-base font-medium text-secondary-600 transition-colors hover:text-nude"
+                                className="nav-link-underline pb-1 font-sans text-sm lg:text-base font-medium text-secondary-600 transition-colors hover:text-nude whitespace-nowrap"
                             >
                                 {t(`landing.header.${item.key}`)}
                             </a>
@@ -56,9 +55,12 @@ export function LandingHeader() {
 
                     <div className="relative z-10 flex items-center gap-2 sm:gap-3">
                         <LanguageSwitcher variant="pill" />
-                        <PillLink href="/book" className="hidden min-w-37.75 px-6 md:inline-flex">
+                        <Link
+                            href="/book"
+                            className="hidden md:inline-flex h-9.5 lg:h-10.5 items-center justify-center rounded-full bg-third px-4 lg:px-6 font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-xs transition-all duration-300 hover:bg-primary-800 hover:-translate-y-0.5 whitespace-nowrap"
+                        >
                             {t('landing.header.book')}
-                        </PillLink>
+                        </Link>
                         <button
                             type="button"
                             className="flex size-10 items-center justify-center rounded-full bg-white/70 text-third border border-stone-200/50 shadow-2xs transition-colors hover:bg-white active:scale-95 md:hidden"

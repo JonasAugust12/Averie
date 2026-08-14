@@ -3,8 +3,12 @@
 import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
-import { FadeIn, PillLink } from './FadeIn';
-import { landingDesktopOnly, landingMobileOnly, landingTitle } from './styles';
+import { FadeIn, PillLink } from '@components/marketing/landing';
+import {
+    landingDesktopOnly,
+    landingMobileOnly,
+    landingTitle,
+} from '@components/marketing/landing/styles';
 
 const rows = ['mani', 'gel', 'enhance', 'wax', 'facial'] as const;
 

@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { landingBleedSecondary600, landingBleedWhite } from './styles';
+import { landingBleedSecondary600, landingBleedWhite } from '@components/marketing/landing/styles';
 
 const menu = [
     { href: '#philosophy', key: 'about' as const },

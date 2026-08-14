@@ -4,8 +4,12 @@ import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { FadeIn } from './FadeIn';
-import { landingBleedWhite, landingOrnamentDesktopOnly, landingTitle } from './styles';
+import { FadeIn } from '@components/marketing/landing';
+import {
+    landingBleedWhite,
+    landingOrnamentDesktopOnly,
+    landingTitle,
+} from '@components/marketing/landing/styles';
 
 const tiles = [
     { key: 'limited' as const, image: '/salon/figma/product-limited.png' },

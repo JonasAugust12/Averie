@@ -4,8 +4,13 @@ import Image from 'next/image';
 import { Phone, Calendar } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { FadeIn, PillLink } from './FadeIn';
-import { landingBleedRight, landingBody, landingOrnamentDesktopOnly, landingTitle } from './styles';
+import { FadeIn, PillLink } from '@components/marketing/landing';
+import {
+    landingBleedRight,
+    landingBody,
+    landingOrnamentDesktopOnly,
+    landingTitle,
+} from '@components/marketing/landing/styles';
 
 function HoursSparkleRule() {
     return (
