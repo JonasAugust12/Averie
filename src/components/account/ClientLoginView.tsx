@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Eye, EyeOff, Sparkles, AlertCircle } from 'lucide-react';
+import { Mail, Eye, EyeOff, Sparkles, AlertCircle, KeyRound } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { salonLoginSchema, type SalonLoginInput } from '@validations/booking.schema';
@@ -79,11 +79,10 @@ export function ClientLoginView() {
 
                         <Field label={t('password')} error={errors.password?.message}>
                             <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden transition-all duration-300 focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
-                                <div className="absolute left-4 h-5 w-5 flex items-center justify-center text-stone-500">
-                                    <span className="font-sans text-xs font-bold tracking-widest">
-                                        🔑
-                                    </span>
-                                </div>
+                                <KeyRound
+                                    className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none"
+                                    aria-hidden
+                                />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="current-password"
