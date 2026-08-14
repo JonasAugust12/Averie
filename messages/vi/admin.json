@@ -1,5 +1,6 @@
 {
     "brand": "AVERIE",
+    "facility": "Cơ sở quản trị",
     "title": "Quản lý tiệm",
     "signOut": "Đăng xuất",
     "newBooking": "Đặt lịch mới",
@@ -34,17 +35,38 @@
         "currentPeriodHighlight": "Hiện tại",
         "previousPeriodHighlight": "Kỳ trước",
         "revenueNote": "Ghi chú: Số liệu doanh thu biểu thị được tính toán dựa trên tổng trị giá của các lịch đặt dịch vụ trong kỳ (ước lượng doanh thu từ booking).",
+        "chartDays": {
+            "mon": "Thứ 2",
+            "tue": "Thứ 3",
+            "wed": "Thứ 4",
+            "thu": "Thứ 5",
+            "fri": "Thứ 6",
+            "sat": "Thứ 7",
+            "sun": "CN"
+        },
+        "chartWeeks": {
+            "w1": "Tuần 1",
+            "w2": "Tuần 2",
+            "w3": "Tuần 3",
+            "w4": "Tuần 4"
+        },
+        "chartQuarters": {
+            "q1": "Quý 1",
+            "q2": "Quý 2",
+            "q3": "Quý 3",
+            "q4": "Quý 4"
+        },
         "categoryChartTitle": "Tỉ lệ dịch vụ",
         "categoryChartSubtitle": "Phổ biến dịch vụ được đặt trong kỳ lọc",
         "countBookings": "lượt",
-        "categoryManicure": "Làm Móng Tay & Chân",
-        "categoryGel": "Sơn Gel",
-        "categoryEnhancements": "Đắp Móng Giả & Nối",
-        "categoryAddons": "Vẽ Nghệ Thuật & Charm",
-        "categoryWaxing": "Waxing & Triệt Lông",
-        "categoryFacials": "Chăm Sóc Da Mặt",
-        "categoryOthers": "Dịch vụ lẻ",
-        "categoryDistributionTip": "Mảng dịch vụ Làm Móng Tay & Chân vẫn dẫn đầu. Có thể cấu hình thêm các ưu đãi chéo vào khung giờ vắng để cân bằng nhu cầu kỹ thuật viên.",
+        "categoryManicure": "Manicure & Pedicure",
+        "categoryGel": "Gel Polish",
+        "categoryEnhancements": "Nail Enhancements",
+        "categoryAddons": "Nail Art & Charms",
+        "categoryWaxing": "Waxing & Hair Removal",
+        "categoryFacials": "Dermalogica Facials",
+        "categoryOthers": "Other Service",
+        "categoryDistributionTip": "Manicure & Pedicure services remain leading. You can configure cross-promotions during off-peak hours to balance technician demands.",
         "staffLeaderboardTitle": "Bảng Xếp Hạng Nhân Viên",
         "staffLeaderboardSubtitle": "Xếp hạng năng suất làm việc của kỹ thuật viên",
         "staffHeaderStaff": "Nhân viên",
@@ -75,13 +97,16 @@
         "filterYear": "Năm nay",
         "filterAll": "Tất cả thời gian",
         "buttonRefresh": "Làm mới",
-        "buttonRefreshing": "Đang làm mới..."
+        "buttonRefreshing": "Đang làm mới...",
+        "ownerQuickTip": "Mẹo nhanh: Bấm 'Xem tất cả' để xem kỹ thông tin khách hàng, duyệt lịch hẹn đang chờ hoặc thay đổi ngày giờ."
     },
     "status": {
+        "upcoming": "Sắp tới",
+        "completed": "Kết thúc",
+        "cancelled": "Đã hủy",
+        "confirmed": "Đã xác nhận",
         "pending": "Chờ duyệt",
-        "confirmed": "Xác nhận",
-        "rejected": "Từ chối",
-        "cancelled": "Đã hủy"
+        "rejected": "Từ chối"
     },
     "bookings": {
         "title": "Quản lý lịch hẹn",
@@ -99,12 +124,12 @@
             "rejectTitle": "Từ chối lịch hẹn",
             "cancel": "Hủy lịch",
             "cancelTitle": "Hủy lịch đã xác nhận",
-            "restoreTitle": "Khôi phục chờ duyệt"
+            "restore": "Khôi phục",
+            "restoreTitle": "Khôi phục lịch hẹn"
         },
         "stats": {
-            "pending": "Chờ duyệt",
-            "confirmed": "Đã xác nhận",
-            "rejected": "Từ chối",
+            "upcoming": "Sắp tới",
+            "completed": "Kết thúc",
             "cancelled": "Đã hủy"
         },
         "table": {
@@ -167,6 +192,7 @@
         "show": "Hiện nhân viên",
         "hidden": "Ẩn",
         "search": "Tìm theo tên, vai trò hoặc email...",
+        "searchTip": "Gõ tên hoặc vai trò để lọc danh sách nhân viên.",
         "emptyState": "Không tìm thấy nhân viên nào.",
         "confirmDeleteTitle": "Xác nhận xóa",
         "confirmDeleteDesc": "Bạn có chắc muốn xóa nhân viên",
@@ -198,6 +224,8 @@
         "save": "Lưu cài đặt",
         "workingDays": "Ngày làm việc",
         "workingDaysHint": "Bật các ngày tiệm nhận đặt lịch (vd: T2–T7 bật, CN tắt)",
+        "allowStaffSelection": "Yêu cầu kỹ thuật viên",
+        "allowStaffSelectionHint": "Cho phép khách hàng lựa chọn kỹ thuật viên khi đặt lịch. Nếu tắt, tất cả lịch hẹn sẽ tự động điều phối cho kỹ thuật viên phù hợp.",
         "periodSlots": "Khung giờ theo buổi",
         "periodSlotsHint": "Các mốc giờ hiện khi khách đặt lịch — áp dụng toàn app",
         "periods": {
@@ -264,6 +292,91 @@
         "show": "Hiện dịch vụ",
         "hidden": "Ẩn",
         "search": "Tìm kiếm dịch vụ...",
+        "searchTip": "Nhập tên hoặc mô tả để tìm kiếm dịch vụ nhanh chóng.",
         "emptyCategory": "Chưa có dịch vụ nào trong danh mục này."
+    },
+    "staffPortal": {
+        "title": "Cổng Lịch Làm Nhân Viên",
+        "subtitle": "Tra cứu nhanh lịch hẹn của bạn bằng số điện thoại",
+        "searchPlaceholder": "Nhập số điện thoại của bạn...",
+        "lookupButton": "Tra cứu lịch",
+        "notFound": "Không tìm thấy nhân viên nào với số điện thoại này.",
+        "inputHint": "Định dạng gợi ý: 090xxxxxxx",
+        "backButton": "Tra cứu số khác",
+        "backToHome": "Về trang chính",
+        "scheduleFor": "Lịch làm việc của {name}",
+        "phoneLabel": "Số điện thoại",
+        "roleLabel": "Vai trò",
+        "specialtiesLabel": "Chuyên môn",
+        "colorLabel": "Màu hiển thị"
+    },
+    "booking": {
+        "back": "Quay lại",
+        "next": "Tiếp theo",
+        "cancel": "Hủy",
+        "confirm": "Xác nhận đặt lịch",
+        "creating": "Đang tạo lịch\u2026",
+        "confirmTitle": "Đặt lịch thành công",
+        "confirmSubtitle": "Lịch hẹn đã được tạo và lên lịch thành công",
+        "adminFlowHint": "Quy trình đặt lịch nhanh dành cho quản trị viên",
+        "service": {
+            "searchPlaceholder": "Tìm kiếm dịch vụ theo tên hoặc mô tả\u2026",
+            "allLabel": "Tất cả",
+            "loading": "Đang tải dịch vụ\u2026",
+            "notFound": "Không tìm thấy dịch vụ",
+            "notFoundHint": "Thử điều chỉnh từ khóa hoặc bộ lọc"
+        },
+        "staff": {
+            "subtitle": "Chọn kỹ thuật viên hoặc chọn bất kỳ",
+            "autoAssign": "Tự động phân bổ kỹ thuật viên rảnh",
+            "loading": "Đang tải nhân viên\u2026",
+            "selected": "Đã chọn",
+            "select": "Chọn"
+        },
+        "date": {
+            "today": "Hôm nay",
+            "tomorrow": "Ngày mai",
+            "selectedDate": "Ngày đã chọn:"
+        },
+        "time": {
+            "availableFor": "Khung giờ trống ngày",
+            "changeDate": "Đổi ngày",
+            "loading": "Đang tải khung giờ\u2026",
+            "noSlots": "Không có khung giờ trong buổi này"
+        },
+        "customer": {
+            "subtitle": "Nhập thông tin khách hàng để gán cho lịch hẹn",
+            "firstName": "Tên",
+            "lastName": "Họ",
+            "phone": "Số điện thoại",
+            "email": "Địa chỉ Email",
+            "note": "Ghi chú quản trị / Yêu cầu đặc biệt",
+            "phonePlaceholder": "0901 234 567",
+            "emailPlaceholder": "khach.hang@example.com",
+            "notePlaceholder": "Khách walk-in, yêu cầu mẫu nail art hoặc màu sơn cụ thể\u2026",
+            "errorFirstName": "Vui lòng nhập tên khách hàng",
+            "errorPhone": "Vui lòng nhập số điện thoại",
+            "errorPhoneInvalid": "Số điện thoại không hợp lệ"
+        },
+        "review": {
+            "servicesTitle": "Dịch vụ đã chọn",
+            "specialist": "Kỹ thuật viên",
+            "anySpecialist": "Kỹ thuật viên bất kỳ",
+            "dateTime": "Ngày & Giờ",
+            "at": "lúc",
+            "customer": "Khách hàng",
+            "totalDue": "Tổng cộng",
+            "estimated": "Ước tính {min} phút"
+        },
+        "success": {
+            "title": "Lịch hẹn đã được đặt!",
+            "ref": "Mã:",
+            "customer": "Khách hàng:",
+            "when": "Thời gian:",
+            "services": "Dịch vụ:",
+            "total": "Thành tiền:",
+            "close": "Đóng",
+            "newBooking": "Đặt lịch mới"
+        }
     }
 }

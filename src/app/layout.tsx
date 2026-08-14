@@ -16,6 +16,30 @@ export const metadata: Metadata = {
     },
     description:
         'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+    openGraph: {
+        title: 'Averie — Nails • Facials • Beauty',
+        description:
+            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+        url: '/',
+        siteName: 'Averie Salon',
+        images: [
+            {
+                url: '/salon/logo.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Averie Luxury Salon',
+            },
+        ],
+        locale: 'en_US',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Averie — Nails • Facials • Beauty',
+        description:
+            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
+        images: ['/salon/logo.jpg'],
+    },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

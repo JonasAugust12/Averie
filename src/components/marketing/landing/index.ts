@@ -8,3 +8,5 @@ export { LandingProducts } from './LandingProducts';
 export { LandingTestimonials } from './LandingTestimonials';
 export { LandingHoursCta } from './LandingHoursCta';
 export { LandingFooter } from './LandingFooter';
+export { FadeIn, PillLink } from './FadeIn';
+export { LandingSearchBooking } from './LandingSearchBooking';

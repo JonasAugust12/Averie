@@ -1,15 +1,18 @@
 'use client';
 
 import { AppShell } from '@components/layout';
-import { LandingHeader } from './LandingHeader';
-import { LandingHero } from './LandingHero';
-import { LandingPhilosophy } from './LandingPhilosophy';
-import { LandingServices } from './LandingServices';
-import { LandingPricing } from './LandingPricing';
-import { LandingProducts } from './LandingProducts';
-import { LandingTestimonials } from './LandingTestimonials';
-import { LandingHoursCta } from './LandingHoursCta';
-import { LandingFooter } from './LandingFooter';
+import {
+    LandingHeader,
+    LandingHero,
+    LandingPhilosophy,
+    LandingServices,
+    LandingPricing,
+    LandingProducts,
+    LandingTestimonials,
+    LandingSearchBooking,
+    LandingHoursCta,
+    LandingFooter,
+} from '@components/marketing/landing';
 
 export function LandingPageView() {
     return (
@@ -22,6 +25,7 @@ export function LandingPageView() {
                 <LandingPricing />
                 <LandingProducts />
                 <LandingTestimonials />
+                <LandingSearchBooking />
                 <LandingHoursCta />
             </main>
             <LandingFooter />

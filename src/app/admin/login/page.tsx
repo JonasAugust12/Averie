@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Eye, EyeOff, Shield, Mail, AlertCircle } from 'lucide-react';
@@ -53,63 +54,70 @@ export default function AdminLoginPage() {
 
             {/* Inner Content Wrapper */}
             <div className="relative z-10 w-full max-w-md animate-in fade-in zoom-in duration-500">
-                <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 md:p-10">
+                <div className="bg-white/50 backdrop-blur-xl rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] p-8 border border-white/60 ring-1 ring-black/5 md:p-10">
                     <header className="mb-8 text-center">
-                        {/* Interactive Rotating Logo Badge (BKB pattern) */}
-                        <div className="mx-auto h-14 w-14 bg-primary rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-primary/25 transform rotate-3 hover:rotate-0 transition-transform duration-300 cursor-default group">
+                        {/* Interactive Rotating Logo Badge */}
+                        <div className="mx-auto h-14 w-14 bg-stone-900 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-stone-900/25 transform rotate-3 hover:rotate-0 transition-transform duration-300 cursor-default group">
                             <Shield className="h-6 w-6 text-neutral-100 transition-transform duration-500 group-hover:scale-110" />
                         </div>
-                        <h2 className="font-display text-4xl tracking-[0.15em] text-primary uppercase">
-                            {t('brand')}
-                        </h2>
-                        <p className="mt-2.5 font-sans text-[10px] font-bold tracking-[0.2em] text-muted uppercase">
+                        <div className="flex justify-center mb-2">
+                            <Image
+                                src="/salon/figma/logo.svg"
+                                alt="Averie Logo"
+                                width={150}
+                                height={48}
+                                className="h-11 w-auto object-contain"
+                                priority
+                            />
+                        </div>
+                        <p className="mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase">
                             {t('adminSubtitle')}
                         </p>
                     </header>
 
-                    <h1 className="mb-6 text-center font-display text-xl tracking-wide text-primary">
+                    <h1 className="mb-6 text-center font-display text-2xl font-bold tracking-wide text-stone-950">
                         {t('adminTitle')}
                     </h1>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <Field label={t('email')} error={errors.email?.message}>
-                            <div className="relative flex items-center bg-neutral-50/50 border border-secondary-200/50 rounded-2xl transition-all duration-300 focus-within:bg-white focus-within:border-secondary focus-within:shadow-[0_4px_16px_rgba(212,197,185,0.15)]">
+                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl transition-all duration-300 focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
                                 <Mail
-                                    className="absolute left-4 h-4.5 w-4.5 text-secondary-400 pointer-events-none"
+                                    className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none"
                                     aria-hidden
                                 />
                                 <input
                                     type="email"
                                     placeholder="admin@averie.local"
-                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-sm text-primary outline-none placeholder:text-muted/40"
+                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400"
                                     {...register('email')}
                                 />
                             </div>
                         </Field>
 
                         <Field label={t('password')} error={errors.password?.message}>
-                            <div className="relative flex items-center bg-neutral-50/50 border border-secondary-200/50 rounded-2xl transition-all duration-300 focus-within:bg-white focus-within:border-secondary focus-within:shadow-[0_4px_16px_rgba(212,197,185,0.15)]">
-                                <div className="absolute left-4 h-4.5 w-4.5 flex items-center justify-center text-secondary-400">
-                                    <span className="font-sans text-[10px] font-bold tracking-widest">
+                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl transition-all duration-300 focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                                <div className="absolute left-4 h-5 w-5 flex items-center justify-center text-stone-500">
+                                    <span className="font-sans text-xs font-bold tracking-widest">
                                         🔑
                                     </span>
                                 </div>
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     placeholder="••••••••"
-                                    className="w-full bg-transparent px-4 py-3.5 pl-12 pr-12 font-sans text-sm text-primary outline-none placeholder:text-muted/40"
+                                    className="w-full bg-transparent px-4 py-3.5 pl-12 pr-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400"
                                     {...register('password')}
                                 />
                                 <button
                                     type="button"
-                                    className="absolute right-4 cursor-pointer text-secondary-400 transition-colors duration-200 hover:text-primary"
+                                    className="absolute right-4 cursor-pointer text-stone-500 transition-colors duration-200 hover:text-stone-950"
                                     onClick={() => setShowPassword((v) => !v)}
                                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
                                     {showPassword ? (
-                                        <EyeOff className="h-4.5 w-4.5" />
+                                        <EyeOff className="h-5 w-5" />
                                     ) : (
-                                        <Eye className="h-4.5 w-4.5" />
+                                        <Eye className="h-5 w-5" />
                                     )}
                                 </button>
                             </div>
@@ -121,50 +129,45 @@ export default function AdminLoginPage() {
                                 type="checkbox"
                                 checked={remember}
                                 onChange={(e) => setRemember(e.target.checked)}
-                                className="h-4.5 w-4.5 rounded-md border-secondary-300 text-secondary focus:ring-secondary accent-secondary cursor-pointer"
+                                className="h-5 w-5 rounded-md border-stone-400 text-stone-900 focus:ring-stone-800 accent-stone-900 cursor-pointer"
                             />
                             <label
                                 htmlFor="remember-me"
-                                className="font-sans text-xs tracking-wide text-muted select-none cursor-pointer hover:text-primary transition-colors"
+                                className="font-sans text-sm font-semibold tracking-wide text-stone-800 select-none cursor-pointer hover:text-stone-950 transition-colors"
                             >
                                 {t('rememberMe')}
                             </label>
                         </div>
 
-                        <p className="font-sans text-[11px] leading-relaxed text-muted/70">
+                        <p className="font-sans text-xs leading-relaxed text-stone-700 font-medium">
                             {t('adminHint')}
                         </p>
 
                         {authError ? (
                             <div className="flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium">
-                                <AlertCircle className="h-3.5 w-3.5 mr-1 text-rose-700 shrink-0" />
+                                <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
                                 <span>{authError}</span>
                             </div>
                         ) : null}
 
                         <Button
                             type="submit"
-                            className="w-full rounded-2xl py-3.5 tracking-[0.2em] text-xs font-semibold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.15)] hover:-translate-y-0.5 transition-all duration-300"
+                            className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] hover:-translate-y-0.5 transition-all duration-300 bg-stone-900 text-white"
                         >
                             {t('adminAccess')}
                         </Button>
                     </form>
-
-                    <p className="mt-6 flex items-center justify-center gap-2 font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                        <Shield className="h-4 w-4 text-secondary-400" aria-hidden />
-                        {t('securityNote')}
-                    </p>
                 </div>
 
                 {/* Footer Copyright block */}
-                <p className="text-center mt-6 text-white/80 text-xs font-medium tracking-wider drop-shadow-sm uppercase">
+                <p className="text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase">
                     &copy; {new Date().getFullYear()} {t('brand')} Admin Portal. All rights
                     reserved.
                 </p>
 
                 <Link
                     href="/"
-                    className="mt-6 block text-center font-sans text-xs tracking-[0.15em] font-semibold text-white/80 hover:text-white uppercase transition-colors"
+                    className="mt-6 block text-center font-sans text-xs tracking-[0.15em] font-bold text-white/90 hover:text-white uppercase transition-colors"
                 >
                     {t('backHome')}
                 </Link>
@@ -181,14 +184,14 @@ interface FieldProps {
 
 function Field({ label, error, children }: FieldProps) {
     return (
-        <div className="space-y-1 text-left">
-            <label className="block font-sans text-[10px] font-bold tracking-[0.2em] text-muted uppercase">
+        <div className="space-y-1.5 text-left">
+            <label className="block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase">
                 {label}
             </label>
             {children}
             {error ? (
                 <div className="flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium">
-                    <AlertCircle className="h-3.5 w-3.5 mr-1 text-rose-700 shrink-0" />
+                    <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
                     <span>{error}</span>
                 </div>
             ) : null}

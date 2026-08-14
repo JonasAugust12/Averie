@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { Loader2, Moon, Plus, Sun, Sunset, Trash2 } from 'lucide-react';
 import { useScheduleSettings, useSaveScheduleSettings } from '@services/salon.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { Button } from '@components/common/Button';
+import { useUIStore } from '@stores/ui.store';
+import { Button } from '@components/common';
 import { Input } from '@components/ui';
 import { cn } from '@utils/cn.util';
 import {
@@ -24,6 +25,7 @@ const PERIOD_META: { key: DayPeriod; icon: typeof Sun }[] = [
 export default function ScheduleSettingsPage() {
     const t = useAdminTranslations();
     const { data: settings, isLoading } = useScheduleSettings();
+    const { showConfirm, hideConfirm, setConfirmLoading } = useUIStore();
     const saveSettings = useSaveScheduleSettings();
     const [form, setForm] = useState<ScheduleSettings | null>(null);
     const [newSlot, setNewSlot] = useState<Record<DayPeriod, string>>({
@@ -119,7 +121,25 @@ export default function ScheduleSettingsPage() {
 
     async function handleSave() {
         if (!form) return;
-        await saveSettings.mutateAsync(form);
+        showConfirm({
+            title: t('schedule.confirmSaveTitle') || 'Lưu cài đặt',
+            message:
+                t('schedule.confirmSaveMsg') || 'Bạn có chắc chắn muốn lưu những thay đổi này?',
+            confirmText: t('schedule.confirmSaveBtn') || 'Lưu',
+            cancelText: t('schedule.confirmCancelBtn') || 'Hủy',
+            type: 'info',
+            onConfirm: async () => {
+                setConfirmLoading(true);
+                try {
+                    await saveSettings.mutateAsync(form);
+                    hideConfirm();
+                } catch (e) {
+                    console.error(e);
+                } finally {
+                    setConfirmLoading(false);
+                }
+            },
+        });
     }
 
     return (
@@ -141,6 +161,46 @@ export default function ScheduleSettingsPage() {
                     )}
                 </Button>
             </div>
+
+            {/* Customer Technician Selection Toggle */}
+            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm hover:shadow-xs transition-all duration-300">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <h2 className="font-display text-lg font-bold text-stone-900">
+                            {t('schedule.allowStaffSelection')}
+                        </h2>
+                        <p className="font-sans text-xs text-stone-400 max-w-xl">
+                            {t('schedule.allowStaffSelectionHint')}
+                        </p>
+                    </div>
+                    {/* Toggle Switch */}
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setForm((prev) => {
+                                if (!prev) return prev;
+                                return {
+                                    ...prev,
+                                    allowStaffSelection: !prev.allowStaffSelection,
+                                };
+                            })
+                        }
+                        className={cn(
+                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden hover:scale-105 active:scale-95',
+                            form.allowStaffSelection ? 'bg-stone-800' : 'bg-stone-200',
+                        )}
+                        role="switch"
+                        aria-checked={form.allowStaffSelection}
+                    >
+                        <span
+                            className={cn(
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
+                                form.allowStaffSelection ? 'translate-x-6' : 'translate-x-0.5',
+                            )}
+                        />
+                    </button>
+                </div>
+            </section>
 
             {/* Working days */}
             <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm">

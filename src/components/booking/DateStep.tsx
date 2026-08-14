@@ -24,6 +24,7 @@ export function DateStep() {
     const t = useBookingTranslations();
     const { date, setDate, setStep } = useBookingStore();
     const { data: settings, isLoading } = useScheduleSettings();
+    const allowStaffSelection = settings?.allowStaffSelection ?? true;
     const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
 
     const today = useMemo(() => {
@@ -93,7 +94,7 @@ export function DateStep() {
                     </button>
                 </div>
 
-                <div className="mb-2 grid grid-cols-7 gap-1 text-center font-sans text-xs tracking-wide text-muted uppercase">
+                <div className="mb-3 grid grid-cols-7 gap-1 text-center font-sans text-sm font-semibold tracking-wide text-stone-600 uppercase">
                     {WEEKDAYS.map((d) => (
                         <span key={d}>{d}</span>
                     ))}
@@ -112,11 +113,14 @@ export function DateStep() {
                                 disabled={cell.disabled}
                                 onClick={() => setDate(cell.iso)}
                                 className={cn(
-                                    'relative aspect-square cursor-pointer rounded-full font-sans text-sm transition-colors',
+                                    'relative aspect-square cursor-pointer rounded-full font-sans text-base font-bold transition-all duration-200',
                                     cell.disabled &&
-                                        'cursor-not-allowed text-muted/40 line-through',
-                                    !cell.disabled && !selected && 'text-primary hover:bg-tertiary',
-                                    selected && 'bg-primary text-neutral shadow-md',
+                                        'cursor-not-allowed text-stone-300 line-through',
+                                    !cell.disabled &&
+                                        !selected &&
+                                        'text-primary hover:bg-tertiary hover:scale-105',
+                                    selected &&
+                                        'bg-primary text-neutral shadow-md scale-105 ring-2 ring-primary ring-offset-2',
                                 )}
                             >
                                 {cell.day}
@@ -125,23 +129,30 @@ export function DateStep() {
                     })}
                 </div>
 
-                <p className="mt-4 font-sans text-xs text-muted">{t('closedDay')}</p>
+                <p className="mt-5 font-sans text-sm font-medium text-stone-500">
+                    {t('closedDay')}
+                </p>
             </div>
 
-            <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-border/50 bg-background/95 py-4 backdrop-blur-sm">
+            <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 bg-background/95 py-5 backdrop-blur-sm">
                 <button
                     type="button"
-                    onClick={() => setStep(2)}
-                    className="cursor-pointer border-b border-transparent font-sans text-xs tracking-widest text-primary uppercase transition-colors hover:border-primary"
+                    onClick={() => setStep(allowStaffSelection ? 2 : 1)}
+                    className="group inline-flex cursor-pointer items-center gap-3 rounded-full border border-stone-300 bg-background px-4 py-2 font-sans text-sm font-semibold tracking-wider text-stone-700 uppercase transition-all hover:border-primary hover:text-primary hover:bg-tertiary/40 hover:scale-105 active:scale-95 duration-200 shadow-xs"
                 >
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-stone-100 group-hover:bg-primary/10">
+                        ←
+                    </span>
                     {t('back')}
                 </button>
-                <p className="font-sans text-sm text-muted">
+                <p className="font-sans text-base text-stone-700 font-medium">
                     {t('selected')}{' '}
-                    <span className="text-primary">{date ? formatDisplayDate(date) : '—'}</span>
+                    <span className="font-semibold text-primary">
+                        {date ? formatDisplayDate(date) : '—'}
+                    </span>
                 </p>
                 <Button
-                    className="rounded-none tracking-widest uppercase"
+                    className="rounded-full px-8 py-3.5 tracking-widest uppercase shadow-md hover:scale-105 active:scale-95 transition-all duration-200 hover:shadow-lg"
                     disabled={!date}
                     onClick={() => setStep(4)}
                 >

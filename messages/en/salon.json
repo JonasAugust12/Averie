@@ -13,6 +13,7 @@
             "about": "About",
             "menu": "Menu",
             "blog": "Blog",
+            "search": "Find Appointment",
             "contact": "Contact",
             "book": "Book Now"
         },
@@ -124,6 +125,19 @@
             "book": "Book now",
             "call": "Call"
         },
+        "searchBooking": {
+            "title": "Find Your Appointment",
+            "subtitle": "Enter your phone number to check your upcoming appointments.",
+            "label": "Phone Number",
+            "placeholder": "e.g., 781-923-1955",
+            "button": "Search Appointments",
+            "noResults": "No appointments found matching this phone number.",
+            "date": "Date",
+            "time": "Time",
+            "staff": "Technician",
+            "status": "Status",
+            "guide": "To modify or cancel your booking, please call our hotline at 781-923-1955."
+        },
         "footer": {
             "menu": "Menu",
             "service": "Service",
@@ -133,7 +147,7 @@
             "services": "Services",
             "contact": "Contact",
             "phone": "781-923-1955",
-            "addressLine1": "132 Chief Justice Cushing Highway #25",
+            "addressLine1": "132 Chief Justice Cushing Hwy",
             "addressLine2": "Cohasset, MA 02025",
             "mani": "Manicure",
             "facial": "Facials",
@@ -141,7 +155,8 @@
             "products": "Products",
             "privacy": "Privacy Policy",
             "terms": "Terms of Use",
-            "rights": "Copyright © 2026 Averie. All rights reserved."
+            "rights": "Copyright © 2026 Averie. All rights reserved.",
+            "location": "Our Location"
         }
     }
 }

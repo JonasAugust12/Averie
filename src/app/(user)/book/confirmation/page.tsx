@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ConfirmationPageView } from '@components/booking/ConfirmationPageView';
+import { ConfirmationPageView } from '@components/booking';
 
 export const metadata: Metadata = {
     title: 'Booking confirmation',

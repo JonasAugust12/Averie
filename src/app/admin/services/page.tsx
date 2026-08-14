@@ -8,11 +8,10 @@ import {
     useDeleteMockService,
 } from '@services/salon.service';
 import { useAdminTranslations, useBookingTranslations } from '@i18n/use-app-translations';
-import { Input } from '@components/ui';
-import { Button } from '@components/common/Button';
+import { Button } from '@components/common';
+import { useUIStore } from '@stores/ui.store';
 import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
-import { ServiceFormModal } from '@components/admin/services/ServiceFormModal';
-import { ServiceCategorySection } from '@components/admin/services/ServiceCategorySection';
+import { ServiceFormModal, ServiceCategorySection } from '@components/admin/services';
 import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
 
 export default function AdminServicesPage() {
@@ -22,11 +21,11 @@ export default function AdminServicesPage() {
     const { data: services, isLoading } = useAllSalonServices();
     const saveService = useSaveMockService();
     const deleteService = useDeleteMockService();
+    const { showConfirm, hideConfirm } = useUIStore();
 
     const [query, setQuery] = useState('');
     const [editing, setEditing] = useState<SalonService | null | 'new'>(null);
     const [defaultCategoryId, setDefaultCategoryId] = useState<ServiceCategoryId | undefined>();
-    const [pendingDelete, setPendingDelete] = useState<SalonService | null>(null);
 
     // Group by category, filtered by search
     const grouped = useMemo(() => {
@@ -67,10 +66,18 @@ export default function AdminServicesPage() {
         await saveService.mutateAsync({ ...svc, active: !svc.active });
     }
 
-    async function confirmDelete() {
-        if (!pendingDelete) return;
-        await deleteService.mutateAsync(pendingDelete.id);
-        setPendingDelete(null);
+    function handleDelete(svc: SalonService) {
+        showConfirm({
+            title: t('services.confirmDeleteTitle') || 'Xóa dịch vụ',
+            message: `${t('services.confirmDeleteDesc') || 'Bạn có chắc muốn xóa'} "${svc.name}"?`,
+            confirmText: t('services.delete') || 'Xóa',
+            cancelText: t('services.cancel') || 'Hủy',
+            type: 'danger',
+            onConfirm: async () => {
+                await deleteService.mutateAsync(svc.id);
+                hideConfirm();
+            },
+        });
     }
 
     if (isLoading) {
@@ -99,22 +106,30 @@ export default function AdminServicesPage() {
                 </div>
                 <Button
                     onClick={() => openAdd()}
-                    className="shrink-0 flex items-center gap-2 tracking-wide"
+                    className="shrink-0 flex items-center gap-2 tracking-wide hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out shadow-xs"
                 >
                     <Plus className="h-4 w-4" />
                     {t('services.add')}
                 </Button>
             </div>
 
-            {/* Search bar */}
-            <div className="relative max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                <Input
-                    placeholder={t('services.search')}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="pl-9 bg-white border-neutral-200 placeholder:text-neutral-400"
-                />
+            {/* Search/Filter Bar */}
+            <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-stone-200/60 p-4 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div className="relative w-full md:max-w-xl">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 font-bold" />
+                    <input
+                        type="text"
+                        placeholder={t('services.search') || 'Search by service...'}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        className="pl-10 pr-4 py-2.5 w-full bg-stone-50/50 hover:bg-stone-50 focus:bg-white rounded-xl border border-stone-200/80 focus:border-stone-300 focus:ring-2 focus:ring-stone-100 transition-all font-sans text-sm outline-none placeholder:text-stone-400 text-stone-800"
+                    />
+                </div>
+                <div className="text-xs font-semibold text-stone-500 hidden md:block pr-2">
+                    💡{' '}
+                    {t('services.searchTip') ||
+                        'Type a service name or description to filter instantly.'}
+                </div>
             </div>
 
             {/* Category sections */}
@@ -128,7 +143,7 @@ export default function AdminServicesPage() {
                         onAdd={openAdd}
                         onEdit={openEdit}
                         onToggle={handleToggle}
-                        onDelete={setPendingDelete}
+                        onDelete={handleDelete}
                     />
                 ))}
             </div>
@@ -142,49 +157,6 @@ export default function AdminServicesPage() {
                     onClose={() => setEditing(null)}
                     isSaving={saveService.isPending}
                 />
-            )}
-
-            {/* Delete confirmation dialog */}
-            {pendingDelete && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm"
-                    onClick={(e) => e.target === e.currentTarget && setPendingDelete(null)}
-                >
-                    <div className="w-full max-w-sm bg-white rounded-2xl border border-neutral-100 shadow-2xl p-6 space-y-4 animate-in zoom-in-95 duration-200">
-                        <div>
-                            <h3 className="font-display text-lg font-semibold text-stone-900">
-                                {t('services.confirmDeleteTitle')}
-                            </h3>
-                            <p className="font-sans text-sm text-stone-500 mt-1">
-                                {t('services.confirmDeleteDesc')}{' '}
-                                <span className="font-semibold text-stone-800">
-                                    &quot;{pendingDelete.name}&quot;
-                                </span>
-                                ?
-                            </p>
-                        </div>
-                        <div className="flex gap-2 justify-end">
-                            <Button
-                                variant="outlined"
-                                onClick={() => setPendingDelete(null)}
-                                className="border-neutral-200"
-                            >
-                                {t('services.cancel')}
-                            </Button>
-                            <Button
-                                onClick={confirmDelete}
-                                disabled={deleteService.isPending}
-                                className="bg-red-600 hover:bg-red-700 border-red-600"
-                            >
-                                {deleteService.isPending ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                    t('services.delete')
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
             )}
         </div>
     );

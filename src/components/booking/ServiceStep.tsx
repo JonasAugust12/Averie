@@ -92,7 +92,7 @@ export function ServiceStep() {
     return (
         <div className="space-y-4">
             {/* Intro */}
-            <p className="font-sans text-base text-muted leading-relaxed">
+            <p className="font-sans text-[17px] text-stone-700 font-medium leading-relaxed">
                 Choose one or more services — we will tailor your appointment to your complete
                 selection.
             </p>
@@ -141,16 +141,16 @@ export function ServiceStep() {
                                 </span>
                                 {/* Serif display label */}
                                 <div>
-                                    <h2 className="font-display text-2xl text-primary leading-none">
+                                    <h2 className="font-display text-2xl font-semibold text-primary leading-none">
                                         {group.label}
                                     </h2>
-                                    <p className="mt-0.5 font-sans text-xs text-muted">
+                                    <p className="mt-1 font-sans text-sm font-medium text-stone-600">
                                         {group.items.length} service
                                         {group.items.length !== 1 ? 's' : ''}
                                     </p>
                                 </div>
                                 {catSelectedCount > 0 && (
-                                    <span className="rounded-full bg-primary px-3 py-1 font-sans text-sm font-bold text-neutral">
+                                    <span className="rounded-full bg-primary px-3.5 py-1.5 font-sans text-sm font-bold text-neutral shadow-sm">
                                         {catSelectedCount} selected
                                     </span>
                                 )}
@@ -179,10 +179,10 @@ export function ServiceStep() {
                                                 type="button"
                                                 onClick={() => toggleServiceId(svc.id)}
                                                 className={cn(
-                                                    'group w-full cursor-pointer px-5 py-5 text-left transition-colors',
+                                                    'group w-full cursor-pointer px-5 py-5 text-left transition-all border-l-4',
                                                     selected
-                                                        ? 'bg-primary/5'
-                                                        : 'hover:bg-tertiary/20',
+                                                        ? 'bg-primary/10 border-primary shadow-sm'
+                                                        : 'border-transparent hover:bg-tertiary/20',
                                                 )}
                                             >
                                                 <div className="flex items-start gap-4">
@@ -192,13 +192,13 @@ export function ServiceStep() {
                                                             'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-300',
                                                             selected
                                                                 ? 'border-primary bg-primary text-neutral'
-                                                                : 'border-border bg-white group-hover:border-secondary-400',
+                                                                : 'border-stone-400 bg-white group-hover:border-secondary-500 shadow-sm',
                                                         )}
                                                     >
                                                         {selected && (
                                                             <Check
-                                                                className="h-4 w-4"
-                                                                strokeWidth={3}
+                                                                className="h-4.5 w-4.5"
+                                                                strokeWidth={3.5}
                                                             />
                                                         )}
                                                     </div>
@@ -208,26 +208,26 @@ export function ServiceStep() {
                                                         <div className="flex items-start justify-between gap-4">
                                                             <p
                                                                 className={cn(
-                                                                    'font-display text-xl leading-snug transition-colors',
+                                                                    'font-display text-xl font-bold leading-snug transition-colors',
                                                                     selected
                                                                         ? 'text-primary'
-                                                                        : 'text-primary/80 group-hover:text-primary',
+                                                                        : 'text-primary/95 group-hover:text-primary',
                                                                 )}
                                                             >
                                                                 {svc.name}
                                                             </p>
                                                             {/* Price — large and display serif */}
                                                             <div className="shrink-0 text-right">
-                                                                <p className="font-display text-2xl font-medium text-primary leading-none">
+                                                                <p className="font-display text-2xl font-bold text-primary leading-none">
                                                                     {formatUsd(svc.price)}
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <p className="mt-1.5 font-sans text-sm text-muted leading-relaxed">
+                                                        <p className="mt-2 font-sans text-[15px] text-stone-700/90 leading-relaxed font-normal">
                                                             {svc.description}
                                                         </p>
-                                                        <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-tertiary/60 px-3 py-1 font-sans text-xs text-muted">
-                                                            <Clock className="h-3 w-3" />
+                                                        <div className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-secondary-100/60 px-3.5 py-1.5 font-sans text-sm font-semibold text-primary/80 border border-primary/5">
+                                                            <Clock className="h-4 w-4 text-primary/75" />
                                                             {t('duration', {
                                                                 min: svc.durationMin,
                                                             })}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import {
     BookingChrome,
     BookingSummary,
@@ -11,14 +12,38 @@ import {
     TimeStep,
 } from '@components/booking';
 import { useBookingStore } from '@stores/booking.store';
+import { useScheduleSettings } from '@services/salon.service';
 import { cn } from '@utils/cn.util';
 
 /** Sidebar "Your Booking" appears on service, time, and customer steps. */
 const SIDEBAR_STEPS = new Set([1, 4, 5]);
 
 export function BookPageView() {
-    const step = useBookingStore((s) => s.step);
+    const { step, serviceIds, staffId, date, time, customer, setStep } = useBookingStore();
+    const resetBookingFlow = useBookingStore((s) => s.resetBookingFlow);
+    const { data: settings } = useScheduleSettings();
+    const allowStaffSelection = settings?.allowStaffSelection ?? true;
     const showSidebar = SIDEBAR_STEPS.has(step);
+
+    useEffect(() => {
+        // Reset step to 1 and clear selected services/date/time whenever entering booking page
+        resetBookingFlow();
+    }, [resetBookingFlow]);
+
+    // Strict Step Guard: redirect user back if previous step requirements are missing
+    useEffect(() => {
+        if (step > 1 && serviceIds.length === 0) {
+            setStep(1);
+        } else if (step > 2 && allowStaffSelection && !staffId) {
+            setStep(2);
+        } else if (step > 3 && !date) {
+            setStep(3);
+        } else if (step > 4 && !time) {
+            setStep(4);
+        } else if (step > 5 && (!customer || !customer.firstName || !customer.phone)) {
+            setStep(5);
+        }
+    }, [step, serviceIds, staffId, date, time, customer, allowStaffSelection, setStep]);
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -32,7 +57,7 @@ export function BookPageView() {
 
             <div
                 className={cn(
-                    'relative mx-auto w-full max-w-app px-4 py-10 sm:px-6 md:py-16 lg:px-8',
+                    'relative mx-auto w-full max-w-app px-4 pt-6 pb-28 sm:px-6 sm:pt-10 sm:pb-32 lg:px-8 lg:py-16',
                     !showSidebar && 'flex flex-col items-center',
                 )}
             >
@@ -44,7 +69,7 @@ export function BookPageView() {
                 >
                     <div className={cn('min-w-0', showSidebar && 'lg:col-span-7 xl:col-span-8')}>
                         {step === 1 && <ServiceStep />}
-                        {step === 2 && <EmployeeStep />}
+                        {step === 2 && (allowStaffSelection ? <EmployeeStep /> : null)}
                         {step === 3 && <DateStep />}
                         {step === 4 && <TimeStep />}
                         {step === 5 && <CustomerStep />}

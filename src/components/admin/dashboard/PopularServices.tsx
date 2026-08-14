@@ -59,44 +59,46 @@ export function PopularServices({ bookings, services }: PopularServicesProps) {
                         <Star className="h-5 w-5" />
                     </div>
                     <div>
-                        <h3 className="font-display text-base text-neutral-900 font-semibold">
+                        <h3 className="font-display text-lg md:text-[19px] text-stone-900 font-semibold">
                             {t('overview.popularServicesTitle')}
                         </h3>
-                        <p className="font-sans text-[11px] text-neutral-500">
+                        <p className="font-sans text-[13px] text-stone-500 font-medium mt-0.5">
                             {t('overview.popularServicesSubtitle')}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-border/40 bg-neutral/20">
-                <table className="w-full font-sans text-xs sm:text-sm">
-                    <thead className="border-b border-border/40 bg-white/50 text-left text-neutral-600">
+            <div className="overflow-hidden rounded-xl border border-stone-200/50 bg-white shadow-xs">
+                <table className="w-full font-sans text-sm">
+                    <thead className="border-b border-stone-200/65 bg-stone-50/50 text-left text-neutral-700">
                         <tr>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-stone-600">
                                 {t('overview.servicesHeaderService')}
                             </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider text-center">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-center text-stone-600">
                                 {t('overview.servicesHeaderCount')}
                             </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider text-right">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-right text-stone-600">
                                 {t('overview.servicesHeaderRevenue')}
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/30">
+                    <tbody className="divide-y divide-stone-200/45">
                         {popularList.map((service) => (
-                            <tr key={service.id} className="hover:bg-white/20 transition-colors">
+                            <tr key={service.id} className="hover:bg-tertiary/20 transition-colors">
                                 <td className="px-3.5 py-2.5">
-                                    <p className="font-semibold text-neutral-800">{service.name}</p>
-                                    <p className="text-[10px] text-neutral-500">
+                                    <p className="font-semibold text-[14.5px] text-primary-900">
+                                        {service.name}
+                                    </p>
+                                    <p className="text-[11.5px] text-stone-500 font-medium mt-0.5">
                                         {service.category}
                                     </p>
                                 </td>
-                                <td className="px-3.5 py-2.5 text-center font-medium text-neutral-800">
+                                <td className="px-3.5 py-2.5 text-center font-medium text-[13.5px] text-stone-700">
                                     {service.count} {t('overview.countBookings')}
                                 </td>
-                                <td className="px-3.5 py-2.5 text-right font-medium text-neutral-800">
+                                <td className="px-3.5 py-2.5 text-right font-semibold text-[13.5px] text-stone-800">
                                     {formatUsd(service.revenue)}
                                 </td>
                             </tr>

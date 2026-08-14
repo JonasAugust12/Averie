@@ -19,16 +19,18 @@ export function KpiCard({ label, value, hint, icon: Icon, color = 'primary' }: K
     };
 
     return (
-        <article className="rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-4">
+        <article className="rounded-2xl border border-stone-200/50 bg-white p-5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md flex items-start gap-4">
             <div className={`p-3 rounded-xl ${colorClasses[color]} shrink-0`}>
                 <Icon className="h-5 w-5" />
             </div>
-            <div className="space-y-1">
-                <p className="font-sans text-[10px] font-bold tracking-widest text-neutral-700 uppercase">
+            <div className="space-y-1.5">
+                <p className="font-sans text-xs font-semibold tracking-wider text-stone-500 uppercase">
                     {label}
                 </p>
-                <p className="font-display text-2xl font-bold text-neutral-900">{value}</p>
-                <p className="font-sans text-xs text-neutral-800 font-bold">{hint}</p>
+                <p className="font-display text-2.5xl font-bold text-stone-900">{value}</p>
+                <p className="font-sans text-[13px] text-stone-500 font-medium leading-tight">
+                    {hint}
+                </p>
             </div>
         </article>
     );

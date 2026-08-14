@@ -1,0 +1,144 @@
+'use client';
+
+import { Check, Plus, Loader2, Sparkles } from 'lucide-react';
+import { useBookingTranslations } from '@i18n/use-app-translations';
+import { useAdminTranslations } from '@i18n/use-app-translations';
+import { cn } from '@utils/cn.util';
+import type { SalonStaff } from '@typings/salon.type';
+
+interface BookingStaffStepProps {
+    staff: SalonStaff[] | undefined;
+    isLoading: boolean;
+    staffId: string;
+    onSelectStaff: (id: string) => void;
+}
+
+export function BookingStaffStep({
+    staff,
+    isLoading,
+    staffId,
+    onSelectStaff,
+}: BookingStaffStepProps) {
+    const tBook = useBookingTranslations();
+    const tAdmin = useAdminTranslations();
+
+    return (
+        <div className="space-y-4">
+            <p className="font-sans text-sm text-stone-600 font-medium">
+                {tAdmin('booking.staff.subtitle')}
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {/* Any Technician */}
+                <div
+                    onClick={() => onSelectStaff('any')}
+                    className={cn(
+                        'flex flex-col items-center justify-between p-5 rounded-2xl border-2 text-center transition-all cursor-pointer',
+                        staffId === 'any'
+                            ? 'border-stone-900 bg-stone-900/5 shadow-sm'
+                            : 'border-stone-200/80 bg-white hover:border-stone-400',
+                    )}
+                >
+                    <div className="flex flex-col items-center">
+                        <div
+                            className={cn(
+                                'h-14 w-14 rounded-full flex items-center justify-center mb-3 transition-transform',
+                                staffId === 'any'
+                                    ? 'bg-stone-900 text-white scale-105'
+                                    : 'bg-stone-100 text-stone-700',
+                            )}
+                        >
+                            <Sparkles className="h-6 w-6" />
+                        </div>
+                        <h4 className="font-display text-base font-bold text-stone-900">
+                            {tBook('anyTechnician')}
+                        </h4>
+                        <p className="font-sans text-xs text-stone-500 mt-1">
+                            {tAdmin('booking.staff.autoAssign')}
+                        </p>
+                    </div>
+                    <div
+                        className={cn(
+                            'mt-4 w-full py-1.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1',
+                            staffId === 'any'
+                                ? 'bg-stone-900 text-white'
+                                : 'border border-stone-300 text-stone-600',
+                        )}
+                    >
+                        {staffId === 'any' ? (
+                            <>
+                                <Check className="h-3 w-3" /> {tAdmin('booking.staff.selected')}
+                            </>
+                        ) : (
+                            <>
+                                <Plus className="h-3 w-3" /> {tAdmin('booking.staff.select')}
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {isLoading ? (
+                    <div className="col-span-2 flex items-center justify-center py-10 text-stone-400">
+                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                        <span>{tAdmin('booking.staff.loading')}</span>
+                    </div>
+                ) : (
+                    (staff ?? [])
+                        .filter((s) => s.active)
+                        .map((member) => {
+                            const isSelected = staffId === member.id;
+                            return (
+                                <div
+                                    key={member.id}
+                                    onClick={() => onSelectStaff(member.id)}
+                                    className={cn(
+                                        'flex flex-col items-center justify-between p-5 rounded-2xl border-2 text-center transition-all cursor-pointer',
+                                        isSelected
+                                            ? 'border-stone-900 bg-stone-900/5 shadow-sm'
+                                            : 'border-stone-200/80 bg-white hover:border-stone-400',
+                                    )}
+                                >
+                                    <div className="flex flex-col items-center">
+                                        <div
+                                            className="h-14 w-14 rounded-full flex items-center justify-center text-lg font-black text-white mb-3 shadow-sm"
+                                            style={{
+                                                backgroundColor: member.color || '#44403c',
+                                            }}
+                                        >
+                                            {member.initials}
+                                        </div>
+                                        <h4 className="font-display text-base font-bold text-stone-900">
+                                            {member.name}
+                                        </h4>
+                                        <p className="font-sans text-xs font-semibold text-stone-500 mt-0.5">
+                                            {member.role}
+                                        </p>
+                                    </div>
+                                    <div
+                                        className={cn(
+                                            'mt-4 w-full py-1.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1',
+                                            isSelected
+                                                ? 'bg-stone-900 text-white'
+                                                : 'border border-stone-300 text-stone-600',
+                                        )}
+                                    >
+                                        {isSelected ? (
+                                            <>
+                                                <Check className="h-3 w-3" />{' '}
+                                                {tAdmin('booking.staff.selected')}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Plus className="h-3 w-3" />{' '}
+                                                {tAdmin('booking.staff.select')}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })
+                )}
+            </div>
+        </div>
+    );
+}

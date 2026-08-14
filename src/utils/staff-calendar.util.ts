@@ -1,10 +1,9 @@
 import type { SalonBooking, SalonService, SalonStaff } from '@typings/salon.type';
 
 const STATUS_COLORS: Record<SalonBooking['status'], string> = {
-    pending: '#f59e0b',
-    confirmed: '#0ea5e9',
-    rejected: '#ef4444',
-    cancelled: '#94a3b8',
+    upcoming: '#10b981',
+    completed: '#78716c',
+    cancelled: '#ef4444',
 };
 
 export function parseSalonTime(date: string, time: string): Date {
@@ -41,10 +40,11 @@ export function bookingToCalendarEvent(
     booking: SalonBooking,
     serviceName: string,
     subtitle: string,
+    staffColor?: string,
 ): BookingCalendarEvent {
     const start = parseSalonTime(booking.date, booking.time);
     const end = addMinutes(start, booking.durationMin);
-    const color = STATUS_COLORS[booking.status];
+    const color = staffColor || STATUS_COLORS[booking.status];
 
     return {
         id: `booking-${booking.id}`,
@@ -65,7 +65,7 @@ export function bookingToCalendarEvent(
 }
 
 function activeBookings(bookings: SalonBooking[]) {
-    return bookings.filter((b) => b.status !== 'rejected' && b.status !== 'cancelled');
+    return bookings.filter((b) => b.status !== 'cancelled');
 }
 
 export function buildAllBookingsCalendarEvents(
@@ -75,12 +75,14 @@ export function buildAllBookingsCalendarEvents(
 ): BookingCalendarEvent[] {
     const serviceMap = new Map(services.map((s) => [s.id, s.name]));
     const staffMap = new Map(staffList.map((s) => [s.id, s.name]));
+    const staffColorMap = new Map(staffList.map((s) => [s.id, s.color]));
 
     return activeBookings(bookings).map((b) => {
         const customerName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
         const serviceName = serviceMap.get(b.serviceId) ?? b.serviceId;
         const staffName = b.staffId === 'any' ? 'Any' : (staffMap.get(b.staffId) ?? b.staffId);
-        return bookingToCalendarEvent(b, serviceName, `${customerName} (${staffName})`);
+        const staffColor = b.staffId === 'any' ? undefined : staffColorMap.get(b.staffId);
+        return bookingToCalendarEvent(b, serviceName, `${customerName} (${staffName})`, staffColor);
     });
 }
 
@@ -88,6 +90,7 @@ export function buildStaffBookingsCalendarEvents(
     bookings: SalonBooking[],
     services: SalonService[],
     staffId: string,
+    staffColor?: string,
 ): BookingCalendarEvent[] {
     const serviceMap = new Map(services.map((s) => [s.id, s.name]));
     const staffBookings = activeBookings(bookings).filter((b) => b.staffId === staffId);
@@ -95,7 +98,7 @@ export function buildStaffBookingsCalendarEvents(
     return staffBookings.map((b) => {
         const customerName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
         const serviceName = serviceMap.get(b.serviceId) ?? b.serviceId;
-        return bookingToCalendarEvent(b, serviceName, customerName);
+        return bookingToCalendarEvent(b, serviceName, customerName, staffColor);
     });
 }
 

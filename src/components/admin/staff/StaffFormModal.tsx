@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Input } from '@components/ui';
-import { Button } from '@components/common/Button';
+import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
 import {
     STAFF_COLOR_OPTIONS,

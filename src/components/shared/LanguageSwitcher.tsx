@@ -49,7 +49,7 @@ export function LanguageSwitcher({
             className={cn(
                 'group relative flex cursor-pointer items-center overflow-hidden transition-all duration-300 ease-out active:scale-95',
                 isPill
-                    ? 'h-12.5 min-w-37.75 justify-center gap-2 rounded-full border border-third bg-white px-5 hover:border-nude'
+                    ? 'h-9 w-9 justify-center rounded-full border border-third bg-white hover:border-nude flex items-center sm:h-12.5 sm:w-auto sm:min-w-37.75 sm:px-5 sm:gap-2'
                     : 'h-9 gap-1 rounded px-1.5 sm:gap-2 sm:border sm:border-border sm:bg-tertiary/60 sm:px-3 sm:hover:border-primary/40 sm:hover:shadow-md sm:hover:shadow-primary/10',
                 isPending && 'pointer-events-none opacity-70',
                 className,

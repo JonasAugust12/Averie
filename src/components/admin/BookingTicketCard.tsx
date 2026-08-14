@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import Image from 'next/image';
 import { User, Phone, Mail, Scissors } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
+import Image from 'next/image';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 import type { SalonBooking } from '@typings/salon.type';
 
@@ -75,13 +75,11 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
             {/* Left strip vertical logo header */}
             <div className="w-full md:w-20 bg-[#221F1C] flex items-center justify-center py-4 px-3.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EAE4D9]/20 self-stretch shrink-0">
                 <Image
-                    src="/icons/logo.svg"
+                    src="/icons/logo_round.png"
                     alt="Averie Logo"
-                    width={64}
-                    height={64}
-                    className="h-9 md:h-auto w-auto md:w-full max-w-16 object-contain opacity-90 hover:opacity-100 transition-opacity"
-                    style={{ filter: 'brightness(0) invert(1)' }}
-                    unoptimized
+                    width={48}
+                    height={48}
+                    className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover opacity-95 hover:opacity-100 transition-opacity shadow-sm"
                 />
             </div>
 

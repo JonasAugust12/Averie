@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import { Check, Ban, CalendarX, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarX, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { BookingStatusBadge, BookingTicketCard } from '@components/admin';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
@@ -113,29 +113,10 @@ export function BookingTableRow({
                         className="flex items-center justify-center gap-2"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {b.status === 'pending' && (
-                            <>
-                                <button
-                                    onClick={(e) => onUpdateStatus(b, 'confirmed', e)}
-                                    className="border border-green-200 bg-green-50/50 hover:bg-green-100 hover:scale-110 transition-all duration-300 ease-in-out h-9 w-9 rounded-lg flex items-center justify-center shadow-xs"
-                                    title={t('bookings.actions.approve')}
-                                >
-                                    <Check className="h-4 w-4 text-green-600" strokeWidth={2.5} />
-                                </button>
-                                <button
-                                    onClick={(e) => onUpdateStatus(b, 'rejected', e)}
-                                    className="border border-red-200 bg-red-50/50 hover:bg-red-100 hover:scale-110 transition-all duration-300 ease-in-out h-9 w-9 rounded-lg flex items-center justify-center shadow-xs"
-                                    title={t('bookings.actions.rejectTitle')}
-                                >
-                                    <Ban className="h-4 w-4 text-red-500" strokeWidth={2.5} />
-                                </button>
-                            </>
-                        )}
-
-                        {b.status === 'confirmed' && (
+                        {b.status === 'upcoming' && (
                             <button
                                 onClick={(e) => onUpdateStatus(b, 'cancelled', e)}
-                                className="border border-orange-200 bg-orange-50/50 hover:bg-orange-100 hover:scale-105 transition-all duration-300 ease-in-out h-9 rounded-lg px-3 flex items-center gap-1.5 text-[11px] font-semibold text-orange-700 shadow-xs"
+                                className="border border-red-200 bg-red-50/50 hover:bg-red-100 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out h-9 rounded-lg px-4 flex items-center gap-1.5 text-xs font-semibold text-red-700 shadow-xs"
                                 title={t('bookings.actions.cancelTitle')}
                             >
                                 <CalendarX className="h-4 w-4" strokeWidth={2} />
@@ -143,23 +124,14 @@ export function BookingTableRow({
                             </button>
                         )}
 
-                        {b.status === 'rejected' && (
-                            <button
-                                onClick={(e) => onUpdateStatus(b, 'pending', e)}
-                                className="border border-amber-200 bg-amber-50/50 hover:bg-amber-100 hover:scale-110 transition-all duration-300 ease-in-out h-9 w-9 rounded-lg flex items-center justify-center shadow-xs"
-                                title={t('bookings.actions.restoreTitle')}
-                            >
-                                <RotateCcw className="h-3.5 w-3.5 text-amber-700" />
-                            </button>
-                        )}
-
                         {b.status === 'cancelled' && (
                             <button
-                                onClick={(e) => onUpdateStatus(b, 'pending', e)}
-                                className="border border-stone-200 bg-stone-50/50 hover:bg-stone-100 hover:scale-110 transition-all duration-300 ease-in-out h-9 w-9 rounded-lg flex items-center justify-center shadow-xs"
+                                onClick={(e) => onUpdateStatus(b, 'upcoming', e)}
+                                className="border border-stone-200 bg-stone-50/50 hover:bg-stone-100 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out h-9 rounded-lg px-4 flex items-center gap-1.5 text-xs font-semibold text-stone-700 shadow-xs"
                                 title={t('bookings.actions.restoreTitle')}
                             >
-                                <RotateCcw className="h-3.5 w-3.5 text-stone-600" />
+                                <RotateCcw className="h-3.5 w-3.5 text-stone-605" />
+                                {t('bookings.actions.restore') || 'Restore'}
                             </button>
                         )}
                     </div>

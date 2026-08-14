@@ -4,6 +4,7 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { useSalonStaff } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
+import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
 
 export function EmployeeStep() {
@@ -21,57 +22,67 @@ export function EmployeeStep() {
     }
 
     return (
-        <div className="w-full space-y-10">
-            <p className="font-sans text-sm text-muted leading-relaxed max-w-md">
+        <div className="w-full space-y-6 sm:space-y-10">
+            <p className="font-sans text-[15px] sm:text-[16px] text-stone-700 font-medium leading-relaxed max-w-md">
                 Select your preferred technician, or let us match you with whoever is best suited to
                 your services.
             </p>
 
-            {/* Any Technician */}
-            <button
-                type="button"
-                onClick={() => {
-                    setStaffId('any');
-                    setStep(3);
-                }}
-                className={cn(
-                    'group w-full cursor-pointer rounded-2xl border p-6 text-left transition-all duration-300 hover:shadow-sm',
-                    staffId === 'any'
-                        ? 'border-primary bg-primary/5 shadow-sm'
-                        : 'border-border/70 bg-background hover:border-secondary-400 hover:bg-neutral/30',
-                )}
-            >
-                <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-5">
-                        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-border/60 bg-tertiary/60 text-primary">
-                            <Sparkles className="h-5 w-5" aria-hidden />
-                        </span>
-                        <div>
-                            <p className="font-display text-lg text-primary tracking-wide">
+            {/* Staff grid (2 columns on mobile, 3 on desktop) */}
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-3 sm:gap-5">
+                {/* 1. Any Technician Option */}
+                <li className="animate-fade-in-up">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setStaffId('any');
+                            setStep(3);
+                        }}
+                        className={cn(
+                            'group flex h-full w-full cursor-pointer flex-col items-center justify-between rounded-2xl border-2 p-4 sm:p-6 text-center transition-all duration-300 hover:shadow-md',
+                            staffId === 'any'
+                                ? 'border-primary bg-primary/10 shadow-sm'
+                                : 'border-stone-300 bg-white/70 backdrop-blur-sm hover:border-secondary-400 hover:bg-white/90',
+                        )}
+                    >
+                        <div className="flex flex-col items-center">
+                            <span
+                                className={cn(
+                                    'flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full transition-all duration-500 shadow-xs',
+                                    staffId === 'any'
+                                        ? 'bg-primary text-neutral scale-105 shadow-md shadow-primary/25'
+                                        : 'bg-tertiary/70 text-primary group-hover:bg-tertiary',
+                                )}
+                            >
+                                <Sparkles className="h-7 w-7 sm:h-9 sm:w-9" aria-hidden />
+                            </span>
+                            <h3 className="mt-3 sm:mt-4 font-display text-base sm:text-xl font-bold text-primary tracking-wide leading-tight">
                                 {t('anyTechnician')}
-                            </p>
-                            <p className="mt-0.5 font-sans text-sm text-muted">
+                            </h3>
+                            <p className="mt-1 font-sans text-xs sm:text-sm font-semibold text-stone-600 line-clamp-2">
                                 {t('anyTechnicianHint')}
                             </p>
                         </div>
-                    </div>
-                    <div
-                        className={cn(
-                            'h-4 w-4 shrink-0 rounded-full border-2 transition-all duration-300',
-                            staffId === 'any' ? 'border-primary bg-primary' : 'border-border/60',
-                        )}
-                    />
-                </div>
-            </button>
+                        <div
+                            className={cn(
+                                'mt-4 w-full rounded-full py-2 text-center font-sans text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-300 shadow-xs',
+                                staffId === 'any'
+                                    ? 'bg-primary text-neutral'
+                                    : 'border border-stone-400 text-stone-700 group-hover:border-primary group-hover:text-primary',
+                            )}
+                        >
+                            {staffId === 'any' ? '✓ Selected' : 'Select'}
+                        </div>
+                    </button>
+                </li>
 
-            {/* Staff grid */}
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {/* 2. Staff Members */}
                 {(staff ?? []).map((member, i) => {
                     const selected = staffId === member.id;
                     return (
                         <li
                             key={member.id}
-                            style={{ animationDelay: `${i * 80}ms` }}
+                            style={{ animationDelay: `${(i + 1) * 60}ms` }}
                             className="animate-fade-in-up"
                         >
                             <button
@@ -81,34 +92,37 @@ export function EmployeeStep() {
                                     setStep(3);
                                 }}
                                 className={cn(
-                                    'group flex h-full w-full cursor-pointer flex-col items-center rounded-2xl border p-8 text-center transition-all duration-300 hover:shadow-sm',
+                                    'group flex h-full w-full cursor-pointer flex-col items-center justify-between rounded-2xl border-2 p-4 sm:p-6 text-center transition-all duration-300 hover:shadow-md',
                                     selected
-                                        ? 'border-primary bg-primary/5 shadow-sm'
-                                        : 'border-border/70 bg-white/70 backdrop-blur-sm hover:border-secondary-400 hover:bg-white/90',
+                                        ? 'border-primary bg-primary/10 shadow-sm'
+                                        : 'border-stone-300 bg-white/70 backdrop-blur-sm hover:border-secondary-400 hover:bg-white/90',
                                 )}
                             >
-                                {/* Avatar — larger for visibility */}
-                                <span
-                                    className={cn(
-                                        'flex h-24 w-24 items-center justify-center rounded-full font-sans text-2xl font-bold transition-all duration-500',
-                                        selected
-                                            ? 'bg-primary text-neutral scale-105 shadow-md shadow-primary/20'
-                                            : 'bg-secondary-100 text-primary group-hover:bg-secondary-200',
-                                    )}
-                                >
-                                    {member.initials}
-                                </span>
-                                <h3 className="mt-5 font-display text-xl text-primary tracking-wide">
-                                    {member.name}
-                                </h3>
-                                <p className="mt-1 font-sans text-sm text-muted">{member.role}</p>
-                                {/* Selected badge or CTA */}
+                                <div className="flex flex-col items-center">
+                                    {/* Avatar */}
+                                    <span
+                                        className={cn(
+                                            'flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full font-sans text-lg sm:text-2xl font-bold transition-all duration-500',
+                                            selected
+                                                ? 'bg-primary text-neutral scale-105 shadow-md shadow-primary/25'
+                                                : 'bg-secondary-100 text-primary group-hover:bg-secondary-200',
+                                        )}
+                                    >
+                                        {member.initials}
+                                    </span>
+                                    <h3 className="mt-3 sm:mt-4 font-display text-base sm:text-xl font-bold text-primary tracking-wide leading-tight">
+                                        {member.name}
+                                    </h3>
+                                    <p className="mt-1 font-sans text-xs sm:text-sm font-semibold text-stone-600">
+                                        {member.role}
+                                    </p>
+                                </div>
                                 <div
                                     className={cn(
-                                        'mt-6 rounded-full px-6 py-2.5 font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300',
+                                        'mt-4 w-full rounded-full py-2 text-center font-sans text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-300 shadow-xs',
                                         selected
                                             ? 'bg-primary text-neutral'
-                                            : 'border border-border/60 text-muted group-hover:border-primary group-hover:text-primary',
+                                            : 'border border-stone-400 text-stone-700 group-hover:border-primary group-hover:text-primary',
                                     )}
                                 >
                                     {selected ? '✓ Selected' : 'Select'}
@@ -119,16 +133,25 @@ export function EmployeeStep() {
                 })}
             </ul>
 
-            <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="group inline-flex cursor-pointer items-center gap-2 font-sans text-xs tracking-widest text-muted uppercase transition-colors hover:text-primary"
-            >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-border/60 text-muted transition-all group-hover:border-primary group-hover:text-primary">
-                    ←
-                </span>
-                {t('backToServices')}
-            </button>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-stone-200/60">
+                <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="group inline-flex cursor-pointer items-center gap-3 rounded-full border border-stone-300 bg-background px-4 py-2 font-sans text-xs sm:text-sm font-semibold tracking-wider text-stone-700 uppercase transition-all hover:border-primary hover:text-primary hover:bg-tertiary/40 hover:scale-105 active:scale-95 duration-200 shadow-xs"
+                >
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-stone-100 group-hover:bg-primary/10">
+                        ←
+                    </span>
+                    {t('backToServices')}
+                </button>
+                <Button
+                    className="rounded-full px-8 py-3 tracking-widest uppercase shadow-md hover:scale-105 active:scale-95 transition-all duration-200"
+                    disabled={!staffId}
+                    onClick={() => setStep(3)}
+                >
+                    {t('continue')}
+                </Button>
+            </div>
         </div>
     );
 }

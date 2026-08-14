@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { LandingPageView } from '@components/marketing/landing';
+import { LandingPageView } from '@components/marketing';
 
 export const metadata: Metadata = {
     title: 'Averie — Nails • Facials • Beauty',

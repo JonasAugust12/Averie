@@ -48,12 +48,14 @@ export function TimeStep() {
         <div className="space-y-10">
             {periods.map(({ key, icon: Icon, items: periodItems }) => (
                 <section key={key} className="animate-fade-in-up">
-                    <h2 className="mb-4 flex items-center gap-2.5 font-display text-lg text-primary tracking-wide">
-                        <Icon className="h-4 w-4 text-muted" aria-hidden />
+                    <h2 className="mb-4 flex items-center gap-2.5 font-display text-xl font-bold text-primary tracking-wide">
+                        <Icon className="h-4.5 w-4.5 text-stone-600" aria-hidden />
                         {t(`periods.${key}`)}
                     </h2>
                     {periodItems.length === 0 ? (
-                        <p className="font-sans text-sm text-muted italic">{t('periods.empty')}</p>
+                        <p className="font-sans text-base text-stone-500 font-medium italic">
+                            {t('periods.empty')}
+                        </p>
                     ) : (
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                             {periodItems.map((slot) => {
@@ -64,10 +66,10 @@ export function TimeStep() {
                                         type="button"
                                         onClick={() => setTime(slot.time)}
                                         className={cn(
-                                            'cursor-pointer rounded-xl border px-4 py-4 font-sans text-base font-medium transition-all duration-250 hover:shadow-sm',
+                                            'cursor-pointer rounded-xl border-2 px-4 py-4 font-sans text-base font-bold transition-all duration-200 hover:shadow-md hover:scale-103',
                                             selected
-                                                ? 'border-primary bg-primary text-neutral shadow-sm'
-                                                : 'border-border/70 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
+                                                ? 'border-primary bg-primary text-neutral shadow-md scale-103'
+                                                : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
                                         )}
                                     >
                                         {slot.time}
@@ -82,13 +84,13 @@ export function TimeStep() {
             <div className="flex flex-wrap gap-3 pt-2">
                 <Button
                     variant="outlined"
-                    className="rounded-full py-3 px-8 text-base tracking-widest uppercase"
+                    className="rounded-full py-3 px-8 text-base tracking-widest uppercase hover:scale-105 active:scale-95 transition-all duration-200"
                     onClick={() => setStep(3)}
                 >
                     {t('back')}
                 </Button>
                 <Button
-                    className="rounded-full py-3 px-10 text-base tracking-widest uppercase shadow-sm"
+                    className="rounded-full py-3 px-10 text-base tracking-widest uppercase shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
                     disabled={!time}
                     onClick={() => setStep(5)}
                 >

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Star } from 'lucide-react';
+import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn } from './FadeIn';
@@ -13,7 +13,7 @@ export function LandingTestimonials() {
     const t = useSalonTranslations();
 
     return (
-        <section id="testimonials" className="relative py-16 md:py-24">
+        <section id="testimonials" className="relative py-12 md:py-24">
             <div
                 className={cn(
                     'absolute bottom-0 z-0 aspect-3/4 w-56 translate-y-1/2 md:w-72',
@@ -31,11 +31,60 @@ export function LandingTestimonials() {
                 />
             </div>
             <div className="relative z-10">
-                <FadeIn className="mb-10 text-center">
-                    <h2 className={landingTitle}>{t('landing.testimonials.title')}</h2>
+                <FadeIn className="mb-8 text-center md:mb-10">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
+                        <Sparkles className="size-3 text-nude" />
+                        <span>Client Love</span>
+                    </div>
+                    <h2 className={`mt-3 ${landingTitle}`}>{t('landing.testimonials.title')}</h2>
                 </FadeIn>
 
-                <div className="grid gap-6 md:grid-cols-3">
+                {/* Mobile: Horizontal Snap-Scroll Luxury Carousel */}
+                <div className="md:hidden -mx-4 flex snap-x snap-mandatory overflow-x-auto gap-4 px-4 pb-4 scrollbar-none">
+                    {reviews.map((key, i) => (
+                        <FadeIn
+                            key={key}
+                            delay={i * 0.08}
+                            className="shrink-0 w-[84vw] max-w-85 snap-center"
+                        >
+                            <article className="flex h-full flex-col rounded-4xl border border-stone-200/80 bg-white/95 p-6 shadow-[0_12px_32px_-8px_rgba(58,48,39,0.08)]">
+                                <div className="mb-3 flex items-center justify-between">
+                                    <div className="flex gap-1 text-nude">
+                                        {Array.from({ length: 5 }).map((_, starIndex) => (
+                                            <Star
+                                                key={starIndex}
+                                                className="size-4.5 fill-current stroke-none"
+                                            />
+                                        ))}
+                                    </div>
+                                    <div className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                                        <CheckCircle2 className="size-3" />
+                                        <span>Verified</span>
+                                    </div>
+                                </div>
+                                <p className="flex-1 font-sans text-sm italic leading-relaxed text-secondary-600">
+                                    &ldquo;{t(`landing.testimonials.reviews.${key}.text`)}&rdquo;
+                                </p>
+                                <div className="mt-5 flex items-center gap-3 border-t border-stone-100 pt-4">
+                                    <div className="flex size-10 items-center justify-center rounded-full bg-third font-sans text-xs font-semibold text-cream shadow-xs">
+                                        {t(`landing.testimonials.reviews.${key}.initials`)}
+                                    </div>
+                                    <div>
+                                        <p className="font-sans text-sm font-semibold text-third">
+                                            {t(`landing.testimonials.reviews.${key}.author`)}
+                                        </p>
+                                        <p className="font-sans text-[11px] text-muted">
+                                            Averie Member
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </FadeIn>
+                    ))}
+                </div>
+
+                {/* Desktop: 3-column Grid (100% Unchanged) */}
+                <div className="hidden md:grid gap-6 md:grid-cols-3">
                     {reviews.map((key, i) => (
                         <FadeIn key={key} delay={i * 0.08}>
                             <article className="flex h-full flex-col rounded-card bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1">

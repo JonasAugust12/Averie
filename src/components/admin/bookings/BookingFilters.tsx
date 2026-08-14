@@ -8,9 +8,8 @@ import type { BookingStatus } from '@typings/salon.type';
 
 interface BookingStats {
     total: number;
-    pending: number;
-    confirmed: number;
-    rejected: number;
+    upcoming: number;
+    completed: number;
     cancelled: number;
 }
 
@@ -39,9 +38,8 @@ export function BookingFilters({
 
     const statusTabs: { key: 'all' | BookingStatus; count: number }[] = [
         { key: 'all', count: stats.total },
-        { key: 'pending', count: stats.pending },
-        { key: 'confirmed', count: stats.confirmed },
-        { key: 'rejected', count: stats.rejected },
+        { key: 'upcoming', count: stats.upcoming },
+        { key: 'completed', count: stats.completed },
         { key: 'cancelled', count: stats.cancelled },
     ];
 

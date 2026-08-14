@@ -13,6 +13,7 @@
             "about": "Giới thiệu",
             "menu": "Menu",
             "blog": "Blog",
+            "search": "Tra cứu lịch hẹn",
             "contact": "Liên hệ",
             "book": "Đặt lịch"
         },
@@ -124,6 +125,19 @@
             "book": "Đặt lịch",
             "call": "Gọi"
         },
+        "searchBooking": {
+            "title": "Tra cứu lịch hẹn",
+            "subtitle": "Nhập số điện thoại của bạn để xem danh sách lịch đặt.",
+            "label": "Số điện thoại",
+            "placeholder": "Ví dụ: 781-923-1955",
+            "button": "Tìm lịch hẹn",
+            "noResults": "Không tìm thấy lịch hẹn nào đăng ký bằng số điện thoại này.",
+            "date": "Ngày đặt",
+            "time": "Giờ đặt",
+            "staff": "Kỹ thuật viên",
+            "status": "Trạng thái",
+            "guide": "Để thay đổi hoặc hủy lịch hẹn, vui lòng liên hệ hotline 781-923-1955."
+        },
         "footer": {
             "menu": "Menu",
             "service": "Dịch vụ",
@@ -133,15 +147,16 @@
             "services": "Dịch vụ",
             "contact": "Liên hệ",
             "phone": "781-923-1955",
-            "addressLine1": "132 Chief Justice Cushing Highway #25",
-            "addressLine2": "Cohasset, MA 02025",
+            "addressLine1": "132 Chief Justice Cushing Hwy",
+            "addressLine2": "Cohasset, MA 02025, Hoa Kỳ",
             "mani": "Manicure",
             "facial": "Facial",
             "wax": "Waxing",
             "products": "Sản phẩm",
             "privacy": "Chính sách bảo mật",
             "terms": "Điều khoản sử dụng",
-            "rights": "Copyright © 2026 Averie. Đã đăng ký bản quyền."
+            "rights": "Copyright © 2026 Averie. Đã đăng ký bản quyền.",
+            "location": "Vị trí của chúng tôi"
         }
     }
 }

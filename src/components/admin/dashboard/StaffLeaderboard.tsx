@@ -25,10 +25,8 @@ export function StaffLeaderboard({ bookings, staff }: StaffLeaderboardProps) {
         const staffBookings = bookings?.filter((b) => b.staffId === s.id) ?? [];
         const total = staffBookings.length;
 
-        // Count upcoming bookings (status pending or confirmed)
-        const upcoming = staffBookings.filter(
-            (b) => b.status === 'pending' || b.status === 'confirmed',
-        ).length;
+        // Count upcoming bookings (status upcoming)
+        const upcoming = staffBookings.filter((b) => b.status === 'upcoming').length;
 
         return {
             id: s.id,
@@ -51,53 +49,53 @@ export function StaffLeaderboard({ bookings, staff }: StaffLeaderboardProps) {
                         <Award className="h-5 w-5" />
                     </div>
                     <div>
-                        <h3 className="font-display text-base text-neutral-900 font-semibold">
+                        <h3 className="font-display text-lg md:text-[19px] text-stone-900 font-semibold">
                             {t('overview.staffLeaderboardTitle')}
                         </h3>
-                        <p className="font-sans text-[11px] text-neutral-500">
+                        <p className="font-sans text-[13px] text-stone-500 font-medium mt-0.5">
                             {t('overview.staffLeaderboardSubtitle')}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-border/40 bg-neutral/20">
-                <table className="w-full font-sans text-xs sm:text-sm">
-                    <thead className="border-b border-border/40 bg-white/50 text-left text-neutral-600">
+            <div className="overflow-hidden rounded-xl border border-stone-200/50 bg-white shadow-xs">
+                <table className="w-full font-sans text-sm">
+                    <thead className="border-b border-stone-200/65 bg-stone-50/50 text-left text-neutral-700">
                         <tr>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-stone-600">
                                 {t('overview.staffHeaderStaff')}
                             </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider text-center">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-center text-stone-600">
                                 {t('overview.staffHeaderTotalBookings')}
                             </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[11px] uppercase tracking-wider text-center">
+                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-center text-stone-600">
                                 {t('overview.staffHeaderUpcoming')}
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/30">
+                    <tbody className="divide-y divide-stone-200/45">
                         {leaderboard.map((member) => (
-                            <tr key={member.id} className="hover:bg-white/30 transition-colors">
+                            <tr key={member.id} className="hover:bg-tertiary/20 transition-colors">
                                 <td className="px-3.5 py-3 flex items-center gap-3">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral font-display text-xs font-semibold text-neutral-800">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-100 font-display text-xs font-semibold text-stone-700">
                                         {member.initials}
                                     </div>
                                     <div>
-                                        <p className="font-sans text-xs font-semibold text-neutral-800">
+                                        <p className="font-semibold text-[14.5px] text-primary-900">
                                             {member.name}
                                         </p>
-                                        <p className="font-sans text-[10px] text-neutral-600">
+                                        <p className="font-sans text-[11.5px] text-stone-500 font-medium mt-0.5">
                                             {member.role}
                                         </p>
                                     </div>
                                 </td>
-                                <td className="px-3.5 py-3 text-center font-sans text-xs font-semibold text-neutral-800">
+                                <td className="px-3.5 py-3 text-center font-semibold text-[13.5px] text-stone-700">
                                     {member.total}
                                 </td>
                                 <td className="px-3.5 py-3 text-center">
                                     {member.upcoming > 0 ? (
-                                        <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 font-sans text-[10px] font-bold text-amber-700">
+                                        <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 font-semibold text-[11.5px] text-amber-800 border border-amber-500/20">
                                             <CalendarClock className="h-2.5 w-2.5" />
                                             {member.upcoming}
                                         </span>

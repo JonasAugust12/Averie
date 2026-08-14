@@ -1,7 +1,8 @@
 export const landingTitle =
-    'font-display text-4xl font-semibold uppercase leading-tight text-nude md:text-section lg:text-5xl';
+    'font-display text-3xl sm:text-4xl font-semibold uppercase leading-tight text-nude md:text-5xl lg:text-[56px] xl:text-6xl';
 
-export const landingBody = 'font-sans text-base leading-body text-body';
+export const landingBody =
+    'font-sans text-base leading-body text-body md:text-[17px] md:leading-relaxed lg:text-[18px] lg:leading-relaxed xl:text-[19px] xl:leading-relaxed';
 
 /** Show block only at md+ (desktop landing layouts). */
 export const landingDesktopOnly = 'hidden md:block';

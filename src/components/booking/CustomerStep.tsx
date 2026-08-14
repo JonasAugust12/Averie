@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { bookingCustomerSchema, type BookingCustomerInput } from '@validations/booking.schema';
@@ -9,7 +10,7 @@ import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
 
 const fieldBase =
-    'w-full border-0 border-b border-border/60 bg-transparent px-0 py-3 font-sans text-sm text-primary outline-none transition-all placeholder:text-muted/50 focus:border-primary';
+    'w-full border-0 border-b border-stone-300 bg-transparent px-0 py-3 font-sans text-base text-primary outline-none transition-all placeholder:text-stone-400 focus:border-primary';
 
 export function CustomerStep() {
     const t = useBookingTranslations();
@@ -18,6 +19,7 @@ export function CustomerStep() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<BookingCustomerInput>({
         resolver: zodResolver(bookingCustomerSchema),
@@ -30,6 +32,18 @@ export function CustomerStep() {
         },
     });
 
+    useEffect(() => {
+        if (customer) {
+            reset({
+                firstName: customer.firstName || '',
+                lastName: customer.lastName || '',
+                phone: customer.phone || '',
+                email: customer.email || '',
+                note: customer.note || '',
+            });
+        }
+    }, [customer, reset]);
+
     function onSubmit(data: BookingCustomerInput) {
         setCustomer(data);
         setStep(6);
@@ -37,12 +51,16 @@ export function CustomerStep() {
 
     return (
         <div className="mx-auto w-full max-w-xl">
-            <p className="mb-8 font-sans text-sm text-muted leading-relaxed">
+            <p className="mb-8 font-sans text-[16px] text-stone-700 font-medium leading-relaxed">
                 Almost done — just a few details so we can confirm your appointment.
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <div className="grid gap-8 sm:grid-cols-2">
-                    <Field label={t('customer.firstName')} error={errors.firstName?.message}>
+                    <Field
+                        label={t('customer.firstName')}
+                        error={errors.firstName?.message}
+                        required
+                    >
                         <input
                             className={fieldBase}
                             autoComplete="given-name"
@@ -59,7 +77,7 @@ export function CustomerStep() {
                         />
                     </Field>
                 </div>
-                <Field label={t('customer.phone')} error={errors.phone?.message}>
+                <Field label={t('customer.phone')} error={errors.phone?.message} required>
                     <input
                         className={fieldBase}
                         type="tel"
@@ -87,17 +105,22 @@ export function CustomerStep() {
                 </Field>
 
                 <div className="sticky bottom-0 -mx-4 flex flex-wrap gap-3 border-t border-border/20 bg-background/95 px-4 py-4 backdrop-blur-sm sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-                    <Button
-                        type="button"
-                        variant="outlined"
-                        className="rounded-full tracking-widest uppercase px-8"
-                        onClick={() => setStep(4)}
-                    >
-                        {t('back')}
-                    </Button>
-                    <Button type="submit" className="rounded-full tracking-widest uppercase px-10">
-                        {t('cta.toReview')}
-                    </Button>
+                    <div className="flex flex-wrap gap-3 pt-4">
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            className="rounded-full tracking-widest uppercase px-8 hover:scale-105 active:scale-95 transition-all duration-200"
+                            onClick={() => setStep(4)}
+                        >
+                            {t('back')}
+                        </Button>
+                        <Button
+                            type="submit"
+                            className="rounded-full tracking-widest uppercase px-10 hover:scale-105 active:scale-95 transition-all duration-200"
+                        >
+                            {t('cta.toReview')}
+                        </Button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -107,19 +130,33 @@ export function CustomerStep() {
 function Field({
     label,
     error,
+    required,
     children,
 }: {
     label: string;
     error?: string;
+    required?: boolean;
     children: React.ReactNode;
 }) {
     return (
         <div>
-            <label className="mb-1 block font-sans text-xs tracking-[0.18em] text-muted uppercase">
-                {label}
+            <label
+                className={cn(
+                    'mb-2 block font-sans text-sm tracking-[0.12em] uppercase',
+                    required ? 'font-bold text-stone-900' : 'font-semibold text-stone-500',
+                )}
+            >
+                {label}{' '}
+                {required && (
+                    <span className="text-danger ml-0.5" aria-hidden="true">
+                        *
+                    </span>
+                )}
             </label>
             {children}
-            {error ? <p className="mt-1.5 font-sans text-xs text-danger">{error}</p> : null}
+            {error ? (
+                <p className="mt-1.5 font-sans text-sm font-bold text-danger">{error}</p>
+            ) : null}
         </div>
     );
 }

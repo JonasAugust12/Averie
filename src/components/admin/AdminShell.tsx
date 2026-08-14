@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
     Bell,
@@ -19,6 +20,7 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
 import { isAdminMockAuthed, setAdminMockAuthed } from '@stores/booking.store';
 import { Button } from '@components/common';
+import { AdminNewBookingModal } from './AdminNewBookingModal';
 import { cn } from '@utils/cn.util';
 
 const navItems = [
@@ -41,6 +43,7 @@ export function AdminShell({ children }: AdminShellProps) {
     const [ready, setReady] = useState(false);
     const [authed, setAuthed] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
 
     useEffect(() => {
         const ok = isAdminMockAuthed();
@@ -70,7 +73,7 @@ export function AdminShell({ children }: AdminShellProps) {
                 <button
                     type="button"
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="hidden lg:flex z-50 absolute top-27 right-0 translate-x-1/2 h-9 w-9 items-center justify-center bg-white border border-neutral-200/90 rounded-full shadow-md text-neutral-800 hover:bg-neutral-50 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    className="hidden lg:flex z-50 absolute top-27 right-0 translate-x-1/2 h-9 w-9 items-center justify-center bg-white border border-stone-200/60 rounded-full shadow-xs text-stone-705 hover:bg-stone-50/50 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                     aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 >
                     {isCollapsed ? (
@@ -80,24 +83,22 @@ export function AdminShell({ children }: AdminShellProps) {
                     )}
                 </button>
 
-                <div className="px-6 py-7 border-b border-neutral-100">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 text-white font-display text-base font-bold shadow-sm shrink-0">
-                            A
-                        </div>
-                        {!isCollapsed && (
-                            <div className="animate-in fade-in duration-200">
-                                <p className="font-display text-lg tracking-widest text-stone-800 font-semibold uppercase leading-none">
-                                    {t('brand')}
-                                </p>
-                                <p className="font-sans text-[10px] text-stone-500 tracking-wider uppercase mt-1 font-bold">
-                                    Cơ sở quản trị
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                <div className="px-6 py-7 border-b border-neutral-105">
+                    <Link href="/admin" className="flex items-center justify-center">
+                        <Image
+                            src="/salon/figma/logo.svg"
+                            alt="Averie Logo"
+                            width={113}
+                            height={36}
+                            className={cn(
+                                'h-8 w-auto object-contain transition-transform hover:scale-105',
+                                isCollapsed && 'h-6 w-auto',
+                            )}
+                            priority
+                        />
+                    </Link>
                 </div>
-                <nav className="flex-1 space-y-1.5 overflow-y-auto px-2 py-4">
+                <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-6">
                     {navItems.map(({ href, icon: Icon, key }) => {
                         const active =
                             href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
@@ -109,20 +110,20 @@ export function AdminShell({ children }: AdminShellProps) {
                                 className={cn(
                                     'flex cursor-pointer items-center transition-all duration-150',
                                     isCollapsed
-                                        ? 'justify-center h-11 w-11 mx-auto rounded-xl'
-                                        : 'gap-3 py-2.5 font-sans text-sm pl-2.25 pr-3 rounded-md',
+                                        ? 'justify-center h-12 w-12 mx-auto rounded-xl'
+                                        : 'gap-4 py-3 font-sans text-base pl-3 pr-4 rounded-xl',
                                     active
                                         ? isCollapsed
                                             ? 'bg-stone-100 text-stone-900 font-bold'
-                                            : 'bg-stone-100 text-stone-900 border-l-2 border-stone-700 font-bold rounded-r-md pl-2 pr-3'
+                                            : 'bg-stone-100 text-stone-900 border-l-2 border-stone-705 font-bold rounded-r-xl pl-3 pr-4'
                                         : isCollapsed
-                                          ? 'text-stone-500 font-semibold hover:bg-stone-50 hover:text-stone-800'
-                                          : 'text-stone-500 font-semibold hover:bg-stone-50 hover:text-stone-800 pl-2.25 pr-3 rounded-md',
+                                          ? 'text-stone-500 font-semibold hover:bg-stone-50/80 hover:text-stone-800'
+                                          : 'text-stone-500 font-semibold hover:bg-stone-50/80 hover:text-stone-800 pl-3 pr-4 rounded-xl',
                                 )}
                             >
                                 <Icon
                                     className={cn(
-                                        'h-4 w-4 shrink-0 transition-transform',
+                                        'h-5 w-5 shrink-0 transition-transform',
                                         active ? 'text-stone-800 scale-105' : 'text-stone-400',
                                     )}
                                 />
@@ -152,8 +153,8 @@ export function AdminShell({ children }: AdminShellProps) {
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-center justify-between border border-neutral-200/80 bg-neutral-50 rounded-xl p-2 shadow-sm animate-in fade-in duration-200">
-                                <span className="text-[11px] text-neutral-700 font-sans font-bold pl-1">
+                            <div className="flex items-center justify-between border border-stone-200/50 bg-stone-50/40 rounded-xl p-2 shadow-xs animate-in fade-in duration-200">
+                                <span className="text-[13px] text-stone-605 font-sans font-medium pl-1">
                                     Ngôn ngữ / Language:
                                 </span>
                                 <div className="scale-90 origin-right">
@@ -176,9 +177,14 @@ export function AdminShell({ children }: AdminShellProps) {
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
                 <header className="flex h-20 shrink-0 items-center justify-between gap-4 border-b border-neutral-100 bg-white/95 shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:h-24 lg:px-8 z-20">
                     <div>
-                        <p className="font-display text-lg text-stone-700 lg:hidden">
-                            {t('brand')}
-                        </p>
+                        {/* Mobile: show logo instead of text */}
+                        <Image
+                            src="/salon/figma/logo.svg"
+                            alt="Averie Logo"
+                            width={100}
+                            height={32}
+                            className="h-7 w-auto object-contain mb-1 lg:hidden"
+                        />
                         <h1 className="font-display text-xl text-stone-900 md:text-2xl font-bold">
                             {pageTitle}
                         </h1>
@@ -207,11 +213,13 @@ export function AdminShell({ children }: AdminShellProps) {
                                 </p>
                             </div>
                         </div>
-                        <Link href="/book" className="hidden md:inline-flex">
-                            <Button size="sm" className="tracking-wide uppercase">
-                                {t('newBooking')}
-                            </Button>
-                        </Link>
+                        <Button
+                            size="sm"
+                            onClick={() => setIsNewBookingOpen(true)}
+                            className="hidden md:inline-flex tracking-wide uppercase cursor-pointer"
+                        >
+                            {t('newBooking')}
+                        </Button>
                     </div>
                 </header>
 
@@ -249,6 +257,11 @@ export function AdminShell({ children }: AdminShellProps) {
                     <div className="relative mx-auto w-full max-w-app z-10">{children}</div>
                 </main>
             </div>
+
+            <AdminNewBookingModal
+                isOpen={isNewBookingOpen}
+                onClose={() => setIsNewBookingOpen(false)}
+            />
         </div>
     );
 }

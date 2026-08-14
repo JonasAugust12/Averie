@@ -24,7 +24,7 @@ export interface SalonStaff {
     color?: string;
 }
 
-export type BookingStatus = 'pending' | 'confirmed' | 'rejected' | 'cancelled';
+export type BookingStatus = 'upcoming' | 'completed' | 'cancelled';
 
 export interface SalonBooking {
     id: string;
@@ -74,6 +74,7 @@ export interface ScheduleSettings {
     workingWeekdays: number[];
     periodSlots: PeriodSlots;
     dayOffs: DayOffEntry[];
+    allowStaffSelection: boolean;
 }
 
 export interface AdminKpi {

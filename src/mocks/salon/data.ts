@@ -176,6 +176,7 @@ export const mockScheduleSettings: ScheduleSettings = {
         { id: 'do-1', date: '2026-12-25', scope: 'full' },
         { id: 'do-2', date: '2026-01-01', scope: 'full' },
     ],
+    allowStaffSelection: true,
 };
 
 export let mockBookings: SalonBooking[] = [
@@ -194,7 +195,7 @@ export let mockBookings: SalonBooking[] = [
             phone: '(781) 555-0142',
             email: 'sarah@example.com',
         },
-        status: 'confirmed',
+        status: 'upcoming',
         createdAt: '2026-08-10T09:15:00Z',
     },
     {
@@ -211,7 +212,7 @@ export let mockBookings: SalonBooking[] = [
             lastName: 'Shah',
             phone: '(781) 555-0199',
         },
-        status: 'confirmed',
+        status: 'upcoming',
         createdAt: '2026-08-11T14:30:00Z',
     },
     {
@@ -229,7 +230,7 @@ export let mockBookings: SalonBooking[] = [
             phone: '(617) 555-0110',
             note: 'Preferred soft pink polish',
         },
-        status: 'pending',
+        status: 'upcoming',
         createdAt: '2026-08-12T08:00:00Z',
     },
     {
@@ -246,7 +247,7 @@ export let mockBookings: SalonBooking[] = [
             lastName: 'Ross',
             phone: '(781) 555-0177',
         },
-        status: 'confirmed',
+        status: 'upcoming',
         createdAt: '2026-08-12T10:45:00Z',
     },
 ];

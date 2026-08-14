@@ -88,10 +88,10 @@ export default function AdminDashboardPage() {
     // Recalculate KPIs based on filtered bookings
     const calculatedKpis = useMemo(() => {
         const total = filteredBookings.length;
-        const pending = filteredBookings.filter((b) => b.status === 'pending').length;
+        const pending = filteredBookings.filter((b) => b.status === 'upcoming').length;
 
         const revenue = filteredBookings.reduce((sum, b) => {
-            const hasCharge = ['confirmed'].includes(b.status);
+            const hasCharge = ['upcoming', 'completed'].includes(b.status);
             return sum + (hasCharge ? b.price || 0 : 0);
         }, 0);
 
@@ -122,24 +122,24 @@ export default function AdminDashboardPage() {
             {/* Header */}
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 className="font-display text-2xl text-neutral-950 md:text-3xl font-bold">
+                    <h2 className="font-display text-2xl text-neutral-955 md:text-3xl font-bold">
                         {t('overview.dashboardTitle')}
                     </h2>
-                    <p className="font-sans text-xs text-neutral-700 mt-1 font-bold">
+                    <p className="font-sans text-[13.5px] text-stone-500 mt-1 font-medium">
                         {t('overview.dashboardSubtitle')}
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-3 items-center">
                     {/* Period Date Filter Select */}
-                    <div className="flex items-center gap-2 bg-white border border-neutral-200/80 rounded-xl p-1.5 shadow-sm">
-                        <Filter className="h-3.5 w-3.5 text-neutral-500 ml-2" />
-                        <span className="text-xs text-neutral-700 font-sans font-bold">
+                    <div className="flex items-center gap-2 bg-white border border-stone-200/60 rounded-xl p-1.5 shadow-3xs">
+                        <Filter className="h-3.5 w-3.5 text-stone-500 ml-2" />
+                        <span className="text-[13px] text-stone-605 font-sans font-medium">
                             {t('overview.filterLabel')}
                         </span>
                         <select
                             value={filterPeriod}
                             onChange={(e) => setFilterPeriod(e.target.value as FilterPeriod)}
-                            className="bg-transparent border-0 font-sans text-xs font-bold text-neutral-900 focus:ring-0 focus:outline-none cursor-pointer pr-8 py-1 rounded-lg"
+                            className="bg-transparent border-0 font-sans text-[13px] font-semibold text-stone-850 focus:ring-0 focus:outline-none cursor-pointer pr-8 py-1 rounded-lg"
                         >
                             <option value="today">{t('overview.filterToday')}</option>
                             <option value="week">{t('overview.filterWeek')}</option>
@@ -155,10 +155,10 @@ export default function AdminDashboardPage() {
                         size="sm"
                         disabled={isRefreshing || isLoading}
                         onClick={handleRefresh}
-                        className="gap-2 border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 relative pr-3 group shadow-sm font-semibold"
+                        className="gap-2 border-stone-250 bg-white hover:bg-stone-50/50 text-stone-705 relative pr-3 group shadow-3xs font-medium text-[13px]"
                     >
                         <RefreshCw
-                            className={`h-3.5 w-3.5 text-neutral-700 ${isRefreshing ? 'animate-spin' : 'group-hover:rotate-45 transition-transform duration-300'}`}
+                            className={`h-3.5 w-3.5 text-stone-605 ${isRefreshing ? 'animate-spin' : 'group-hover:rotate-45 transition-transform duration-300'}`}
                         />
                         <span>
                             {isRefreshing

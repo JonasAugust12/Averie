@@ -26,17 +26,35 @@ export function RevenueChart({ bookings = [], period }: RevenueChartProps) {
         currentData = [80, 150, 220, 180, 260, 310];
         previousData = [70, 130, 200, 190, 220, 280];
     } else if (period === 'week') {
-        labels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'C.Nhật'];
+        labels = [
+            t('overview.chartDays.mon') || 'Mon',
+            t('overview.chartDays.tue') || 'Tue',
+            t('overview.chartDays.wed') || 'Wed',
+            t('overview.chartDays.thu') || 'Thu',
+            t('overview.chartDays.fri') || 'Fri',
+            t('overview.chartDays.sat') || 'Sat',
+            t('overview.chartDays.sun') || 'Sun',
+        ];
         // calculate from bookings or fallback to relative mock values
         currentData = [450, 680, 520, 890, 1150, 1600, 1850];
         previousData = [400, 600, 550, 750, 950, 1400, 1600];
     } else if (period === 'month') {
-        labels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'];
+        labels = [
+            t('overview.chartWeeks.w1') || 'Week 1',
+            t('overview.chartWeeks.w2') || 'Week 2',
+            t('overview.chartWeeks.w3') || 'Week 3',
+            t('overview.chartWeeks.w4') || 'Week 4',
+        ];
         currentData = [2400, 3100, 2850, 4200];
         previousData = [2100, 2800, 2600, 3800];
     } else {
         // Year or All Time
-        labels = ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'];
+        labels = [
+            t('overview.chartQuarters.q1') || 'Q1',
+            t('overview.chartQuarters.q2') || 'Q2',
+            t('overview.chartQuarters.q3') || 'Q3',
+            t('overview.chartQuarters.q4') || 'Q4',
+        ];
         currentData = [12000, 16500, 18200, 24500];
         previousData = [10500, 14000, 16000, 21000];
     }
@@ -78,17 +96,17 @@ export function RevenueChart({ bookings = [], period }: RevenueChartProps) {
     };
 
     return (
-        <section className="h-full rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md transition-all flex flex-col">
+        <section className="h-full rounded-2xl border border-stone-200/50 bg-white p-5 shadow-xs flex flex-col">
             <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                         <TrendingUp className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                        <h3 className="font-display text-lg text-neutral-900 font-semibold">
+                        <h3 className="font-display text-lg md:text-[19px] text-stone-905 font-semibold">
                             {t('overview.revenueChartTitle')}
                         </h3>
-                        <p className="font-sans text-xs text-neutral-700 font-bold">
+                        <p className="font-sans text-[13px] text-stone-500 font-medium mt-0.5">
                             {t('overview.revenueChartSubtitle')}
                         </p>
                     </div>
@@ -274,28 +292,28 @@ export function RevenueChart({ bookings = [], period }: RevenueChartProps) {
                 </svg>
 
                 {/* Legend */}
-                <div className="absolute top-2 right-4 flex items-center gap-4 text-[10px] font-bold leading-none">
+                <div className="absolute top-2 right-4 flex items-center gap-4 text-[12px] font-medium leading-none">
                     <div className="flex items-center gap-1.5">
                         <span
                             className="h-2 w-2 rounded-full bg-primary"
                             style={{ backgroundColor: '#D4C5B9' }}
                         />
-                        <span className="text-neutral-800">{t('overview.currentPeriod')}</span>
+                        <span className="text-stone-600">{t('overview.currentPeriod')}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                         <span
                             className="h-2 w-2 rounded-full"
                             style={{ backgroundColor: '#5F87C1' }}
                         />
-                        <span className="text-neutral-800">{t('overview.previousPeriod')}</span>
+                        <span className="text-stone-600">{t('overview.previousPeriod')}</span>
                     </div>
                 </div>
             </div>
 
             {/* Note Footnote */}
-            <div className="mt-4 rounded-xl bg-primary/5 p-3 flex gap-2.5 items-start text-xs border border-primary/10">
-                <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <p className="text-neutral-800 leading-relaxed font-sans font-bold">
+            <div className="mt-4 rounded-xl bg-primary-50/20 p-3 flex gap-2.5 items-start text-[12.5px] border border-primary-200/30">
+                <Info className="h-4.5 w-4.5 text-primary-600/90 shrink-0 mt-0.5" />
+                <p className="text-primary-900 leading-relaxed font-sans font-medium">
                     {t('overview.revenueNote')}
                 </p>
             </div>

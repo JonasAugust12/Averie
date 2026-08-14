@@ -280,3 +280,14 @@ textarea:focus {
     flex: 1;
     transition: background-color 0.5s ease;
 }
+
+/* Browser autofill styling to preserve rounded corners and theme colors */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.95) inset !important;
+    -webkit-text-fill-color: #1c1917 !important;
+    border-radius: inherit !important;
+    transition: background-color 5000s ease-in-out 0s;
+}

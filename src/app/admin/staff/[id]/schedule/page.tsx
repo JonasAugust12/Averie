@@ -8,8 +8,8 @@ import { useAllSalonStaff, useSalonBookings, useAllSalonServices } from '@servic
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { EmptyState } from '@components/ui';
 import { StaffCalendar } from '@components/admin/staff';
-import { BookingStatCard } from '@components/admin/bookings/BookingStatCard';
-import { BookingStatusBadge } from '@components/admin/BookingStatusBadge';
+import { BookingStatCard } from '@components/admin/bookings';
+import { BookingStatusBadge } from '@components/admin';
 import { buildStaffBookingsCalendarEvents, parseSalonTime } from '@utils/staff-calendar.util';
 import { formatUsd } from '@utils/format.util';
 import type { SalonBooking } from '@typings/salon.type';
@@ -25,11 +25,7 @@ export default function StaffSchedulePage() {
     const member = staffList?.find((s) => s.id === params.id);
 
     const staffBookings = useMemo(
-        () =>
-            (bookings ?? []).filter(
-                (b) =>
-                    b.staffId === params.id && b.status !== 'rejected' && b.status !== 'cancelled',
-            ),
+        () => (bookings ?? []).filter((b) => b.staffId === params.id && b.status !== 'cancelled'),
         [bookings, params.id],
     );
 

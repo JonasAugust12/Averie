@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { ServiceCard } from './ServiceCard';
+import { ServiceCard } from '@components/admin/services';
 import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
 
 interface ServiceCategorySectionProps {
@@ -60,21 +60,21 @@ export function ServiceCategorySection({
                     <button
                         type="button"
                         onClick={() => setOpen((o) => !o)}
-                        className="flex items-center gap-2 text-stone-800 hover:text-stone-950 transition-colors"
+                        className="flex items-center gap-2 text-stone-850 hover:text-stone-950 transition-colors"
                     >
                         <span
                             className={cn(
-                                'px-2.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider',
+                                'px-3 py-0.5.5 rounded-lg border text-[10px] font-extrabold uppercase tracking-wider shadow-xs shrink-0',
                                 colorClass,
                             )}
                         >
                             {categoryTag}
                         </span>
-                        <h3 className="font-serif text-lg md:text-xl font-medium tracking-wide text-stone-900 text-left">
+                        <h3 className="font-serif text-xl md:text-2xl font-bold tracking-wide text-stone-900 text-left">
                             {label}
                         </h3>
                     </button>
-                    <span className="font-sans text-xs text-stone-400 font-semibold shrink-0">
+                    <span className="font-sans text-sm text-stone-400 font-semibold shrink-0">
                         {activeCount}/{totalCount} {t('services.visibleCount')}
                     </span>
                 </div>
@@ -83,7 +83,7 @@ export function ServiceCategorySection({
                     <button
                         type="button"
                         onClick={() => onAdd(categoryId)}
-                        className="flex items-center gap-1 h-8 px-3 rounded-lg border border-stone-200/40 bg-white hover:border-stone-300 hover:bg-stone-50 transition-colors text-xs font-bold text-stone-700 shadow-sm"
+                        className="flex items-center gap-1.5 h-9 px-3.5 rounded-lg border border-stone-200/40 bg-white hover:border-stone-300 hover:bg-stone-50 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out text-xs font-bold text-stone-700 shadow-sm"
                     >
                         <Plus className="h-3.5 w-3.5" />
                         <span>{t('services.addToCategory')}</span>
@@ -91,7 +91,7 @@ export function ServiceCategorySection({
                     <button
                         type="button"
                         onClick={() => setOpen((o) => !o)}
-                        className="h-8 w-8 rounded-lg flex items-center justify-center border border-stone-200/40 bg-white hover:border-stone-300 hover:bg-stone-50 text-stone-500 transition-colors shadow-sm"
+                        className="h-9 w-9 rounded-lg flex items-center justify-center border border-stone-200/40 bg-white hover:border-stone-300 hover:bg-stone-50 hover:scale-105 active:scale-95 text-stone-500 transition-all duration-300 ease-in-out shadow-sm"
                     >
                         {open ? (
                             <ChevronUp className="h-4 w-4" />

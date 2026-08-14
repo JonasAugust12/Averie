@@ -9,15 +9,21 @@ import { useLocale } from 'next-intl';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import type { BookingCalendarEvent } from '@utils/staff-calendar.util';
-import type { SalonBooking } from '@typings/salon.type';
+import type { SalonBooking, SalonStaff } from '@typings/salon.type';
 
 interface StaffCalendarProps {
     events: BookingCalendarEvent[];
     onBookingClick?: (booking: SalonBooking) => void;
     initialDate?: string;
+    staffList?: SalonStaff[];
 }
 
-export function StaffCalendar({ events, onBookingClick, initialDate }: StaffCalendarProps) {
+export function StaffCalendar({
+    events,
+    onBookingClick,
+    initialDate,
+    staffList,
+}: StaffCalendarProps) {
     const t = useAdminTranslations();
     const locale = useLocale();
 
@@ -151,15 +157,38 @@ export function StaffCalendar({ events, onBookingClick, initialDate }: StaffCale
             `}</style>
 
             <div className="border-b border-stone-100 bg-linear-to-r from-stone-50 to-white px-4 py-3">
-                <div className="flex flex-wrap items-center gap-4 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-                    <span className="flex items-center gap-1.5">
-                        <span className="h-2.5 w-2.5 rounded-full bg-sky-500" />
-                        {t('staff.calendarLegendConfirmed')}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                        {t('staff.calendarLegendPending')}
-                    </span>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+                    {staffList && staffList.length > 0 ? (
+                        <>
+                            {staffList.map((s) => (
+                                <span
+                                    key={s.id}
+                                    className="flex items-center gap-1.5 bg-stone-100/50 border border-stone-200/50 px-2 py-0.5 rounded-md"
+                                >
+                                    <span
+                                        className="h-2.5 w-2.5 rounded-full"
+                                        style={{ backgroundColor: s.color ?? '#78716c' }}
+                                    />
+                                    <span>{s.name}</span>
+                                </span>
+                            ))}
+                            <span className="flex items-center gap-1.5 bg-stone-100/50 border border-stone-200/50 px-2 py-0.5 rounded-md">
+                                <span className="h-2.5 w-2.5 rounded-full bg-stone-400" />
+                                <span>{t('overview.anyTechnician') || 'KTV ngẫu nhiên'}</span>
+                            </span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="flex items-center gap-1.5">
+                                <span className="h-2.5 w-2.5 rounded-full bg-sky-500" />
+                                {t('staff.calendarLegendConfirmed')}
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                                {t('staff.calendarLegendPending')}
+                            </span>
+                        </>
+                    )}
                 </div>
             </div>
 

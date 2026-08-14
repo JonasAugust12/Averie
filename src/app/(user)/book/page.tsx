@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { BookPageView } from '@components/booking/BookPageView';
+import { BookPageView } from '@components/booking';
 
 export const metadata: Metadata = {
     title: 'Book an appointment',

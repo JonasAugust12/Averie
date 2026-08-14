@@ -59,5 +59,9 @@ export const authConfig = {
             return session;
         },
     },
+    secret:
+        process.env.NEXTAUTH_SECRET ||
+        process.env.AUTH_SECRET ||
+        'averie-dev-secret-key-32-chars-long-quiet-luxury',
     trustHost: true,
 } satisfies NextAuthConfig;

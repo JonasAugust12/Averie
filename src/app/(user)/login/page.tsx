@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ClientLoginView } from '@components/account/ClientLoginView';
+import { ClientLoginView } from '@components/account';
 
 export const metadata: Metadata = {
     title: 'Client sign in',

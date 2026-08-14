@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Calendar, Clock, Loader2, RotateCcw, Trash2 } from 'lucide-react';
+import { Calendar, Clock, Loader2, RotateCcw } from 'lucide-react';
 import {
     useSalonBookings,
     useSalonServices,
@@ -9,12 +9,11 @@ import {
     useSaveMockBooking,
 } from '@services/salon.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { Button } from '@components/common/Button';
+import { Button } from '@components/common';
 import { usePagination } from '@hooks/usePagination';
+import { useUIStore } from '@stores/ui.store';
 import type { SalonBooking, BookingStatus } from '@typings/salon.type';
-import { BookingStatCard } from '@components/admin/bookings/BookingStatCard';
-import { BookingFilters } from '@components/admin/bookings/BookingFilters';
-import { BookingTableRow } from '@components/admin/bookings/BookingTableRow';
+import { BookingStatCard, BookingFilters, BookingTableRow } from '@components/admin/bookings';
 
 export default function AdminBookingsPage() {
     const t = useAdminTranslations();
@@ -26,14 +25,14 @@ export default function AdminBookingsPage() {
     const { data: bookings, isLoading } = useSalonBookings();
     const { data: services } = useSalonServices();
     const { data: staff } = useSalonStaff();
+    const { showConfirm, hideConfirm } = useUIStore();
     const { mutate: saveBooking } = useSaveMockBooking();
 
     const stats = useMemo(() => {
         const list = bookings ?? [];
         return {
-            pending: list.filter((b) => b.status === 'pending').length,
-            confirmed: list.filter((b) => b.status === 'confirmed').length,
-            rejected: list.filter((b) => b.status === 'rejected').length,
+            upcoming: list.filter((b) => b.status === 'upcoming').length,
+            completed: list.filter((b) => b.status === 'completed').length,
             cancelled: list.filter((b) => b.status === 'cancelled').length,
             total: list.length,
         };
@@ -45,7 +44,26 @@ export default function AdminBookingsPage() {
         e: React.MouseEvent,
     ) => {
         e.stopPropagation();
-        saveBooking({ ...booking, status: newStatus });
+        const isCancelling = newStatus === 'cancelled';
+        showConfirm({
+            title: isCancelling
+                ? t('bookings.actions.cancelConfirmTitle') || 'Hủy lịch hẹn'
+                : t('bookings.actions.restoreConfirmTitle') || 'Khôi phục lịch hẹn',
+            message: isCancelling
+                ? t('bookings.actions.cancelConfirmMsg') ||
+                  `Bạn có chắc muốn hủy lịch #${booking.reference}? Khách hàng sẽ được thông báo.`
+                : t('bookings.actions.restoreConfirmMsg') ||
+                  `Khôi phục lịch #${booking.reference} về trạng thái "Sắp tới"?`,
+            confirmText: isCancelling
+                ? t('bookings.actions.confirmCancel') || 'Xác nhận hủy'
+                : t('bookings.actions.confirmRestore') || 'Khôi phục',
+            cancelText: t('bookings.actions.cancelNo') || 'Không',
+            type: isCancelling ? 'danger' : 'info',
+            onConfirm: () => {
+                saveBooking({ ...booking, status: newStatus });
+                hideConfirm();
+            },
+        });
     };
 
     const filtered = useMemo(() => {
@@ -101,24 +119,18 @@ export default function AdminBookingsPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <BookingStatCard
-                    label={t('bookings.stats.pending')}
-                    count={stats.pending}
-                    icon={Clock}
-                    variant="pending"
-                />
-                <BookingStatCard
-                    label={t('bookings.stats.confirmed')}
-                    count={stats.confirmed}
+                    label={t('bookings.stats.upcoming')}
+                    count={stats.upcoming}
                     icon={Calendar}
                     variant="confirmed"
                 />
                 <BookingStatCard
-                    label={t('bookings.stats.rejected')}
-                    count={stats.rejected}
-                    icon={Trash2}
-                    variant="rejected"
+                    label={t('bookings.stats.completed')}
+                    count={stats.completed}
+                    icon={Clock}
+                    variant="pending"
                 />
                 <BookingStatCard
                     label={t('bookings.stats.cancelled')}

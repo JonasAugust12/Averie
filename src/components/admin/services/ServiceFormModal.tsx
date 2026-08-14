@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useAdminTranslations, useBookingTranslations } from '@i18n/use-app-translations';
 import { Input } from '@components/ui';
-import { Button } from '@components/common/Button';
+import { Button } from '@components/common';
 import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
 import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
@@ -92,7 +92,7 @@ export function ServiceFormModal({
                     </div>
                     <button
                         onClick={onClose}
-                        className="h-9 w-9 rounded-lg flex items-center justify-center border border-neutral-100 hover:bg-stone-50 transition-colors"
+                        className="h-9 w-9 rounded-lg flex items-center justify-center border border-neutral-100 hover:bg-stone-50 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
                     >
                         <X className="h-4 w-4 text-stone-400" />
                     </button>
@@ -172,7 +172,7 @@ export function ServiceFormModal({
                             type="button"
                             onClick={() => patch({ active: !form.active })}
                             className={cn(
-                                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
+                                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none',
                                 form.active ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
                             )}
                             role="switch"
@@ -180,7 +180,7 @@ export function ServiceFormModal({
                         >
                             <span
                                 className={cn(
-                                    'pointer-events-none inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-200 ease-in-out mt-0.5 ml-0.5',
+                                    'pointer-events-none inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-305 ease-in-out mt-0.5 ml-0.5',
                                     form.active ? 'translate-x-5' : 'translate-x-0',
                                 )}
                             />
@@ -190,10 +190,18 @@ export function ServiceFormModal({
 
                 {/* Footer */}
                 <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-neutral-100 bg-stone-50/50">
-                    <Button variant="outlined" onClick={onClose} className="border-neutral-200">
+                    <Button
+                        variant="outlined"
+                        onClick={onClose}
+                        className="border-neutral-200 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                    >
                         {t('services.cancel')}
                     </Button>
-                    <Button onClick={handleSave} disabled={!form.name.trim() || isSaving}>
+                    <Button
+                        onClick={handleSave}
+                        disabled={!form.name.trim() || isSaving}
+                        className="hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                    >
                         {isSaving ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (

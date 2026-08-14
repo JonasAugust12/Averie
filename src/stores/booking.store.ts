@@ -19,13 +19,14 @@ interface BookingState {
     setTime: (time: string | null) => void;
     setCustomer: (customer: BookingCustomerInput | null) => void;
     setReference: (ref: string | null) => void;
+    resetBookingFlow: () => void;
     reset: () => void;
 }
 
 const initial = {
     step: 1 as BookingStep,
     serviceIds: [] as string[],
-    staffId: null,
+    staffId: 'any' as string | 'any' | null,
     date: null,
     time: null,
     customer: null,
@@ -50,9 +51,31 @@ export const useBookingStore = create<BookingState>()(
             setTime: (time) => set({ time }),
             setCustomer: (customer) => set({ customer }),
             setReference: (reference) => set({ reference }),
+            resetBookingFlow: () =>
+                set({
+                    step: 1,
+                    serviceIds: [],
+                    staffId: 'any',
+                    date: null,
+                    time: null,
+                    reference: null,
+                }),
             reset: () => set({ ...initial }),
         }),
-        { name: 'averie-booking-draft' },
+        {
+            name: 'averie-booking-draft',
+            partialize: (state) => ({
+                customer: state.customer
+                    ? {
+                          firstName: state.customer.firstName,
+                          lastName: state.customer.lastName || '',
+                          phone: state.customer.phone,
+                          email: state.customer.email || '',
+                          note: '',
+                      }
+                    : null,
+            }),
+        },
     ),
 );
 

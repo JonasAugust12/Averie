@@ -14,14 +14,14 @@ export function CategoryDistribution({ bookings = [], services = [] }: CategoryD
     const t = useAdminTranslations();
     const [hoveredBarIdx, setHoveredBarIdx] = useState<number | null>(null);
 
-    // Dynamic category mappings
+    // Dynamic category mappings (English for US salon clients)
     const categoryNames: Record<string, string> = {
-        'manicure-pedicure': 'Làm Móng Tay & Chân',
-        'gel-polish': 'Sơn Gel',
-        'nail-enhancements': 'Đắp Móng Giả & Nối',
-        'add-ons': 'Vẽ Nghệ Thuật & Charm',
-        waxing: 'Waxing & Wax Lông',
-        facials: 'Chăm Sóc Da Mặt',
+        'manicure-pedicure': t('overview.categoryManicure') || 'Manicure & Pedicure',
+        'gel-polish': t('overview.categoryGel') || 'Gel Polish',
+        'nail-enhancements': t('overview.categoryEnhancements') || 'Nail Enhancements',
+        'add-ons': t('overview.categoryAddons') || 'Nail Art & Charms',
+        waxing: t('overview.categoryWaxing') || 'Waxing & Hair Removal',
+        facials: t('overview.categoryFacials') || 'Dermalogica Facials',
     };
 
     const categoryColors: Record<string, string> = {
@@ -60,16 +60,16 @@ export function CategoryDistribution({ bookings = [], services = [] }: CategoryD
         .sort((a, b) => b.count - a.count);
 
     return (
-        <div className="h-full rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md transition-all flex flex-col">
+        <div className="h-full rounded-2xl border border-stone-200/50 bg-white p-5 shadow-xs flex flex-col">
             <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                     <Sparkles className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                    <h3 className="font-display text-lg text-neutral-900 font-semibold">
+                    <h3 className="font-display text-lg md:text-[19px] text-stone-900 font-semibold">
                         {t('overview.categoryChartTitle')}
                     </h3>
-                    <p className="font-sans text-xs text-neutral-700 font-bold">
+                    <p className="font-sans text-[13px] text-stone-500 font-medium mt-0.5">
                         {t('overview.categoryChartSubtitle')}
                     </p>
                 </div>
@@ -84,13 +84,13 @@ export function CategoryDistribution({ bookings = [], services = [] }: CategoryD
                         onMouseEnter={() => setHoveredBarIdx(idx)}
                         onMouseLeave={() => setHoveredBarIdx(null)}
                     >
-                        <div className="flex items-center justify-between text-xs font-semibold">
-                            <span className="text-neutral-900 font-bold truncate">{cat.name}</span>
-                            <span className="text-neutral-700 font-semibold flex gap-2">
+                        <div className="flex items-center justify-between text-[13px] font-semibold">
+                            <span className="text-stone-800 font-medium truncate">{cat.name}</span>
+                            <span className="text-stone-500 font-medium flex gap-2">
                                 <span>
                                     {cat.count} {t('overview.countBookings')}
                                 </span>
-                                <span className="text-neutral-950 font-bold">
+                                <span className="text-stone-900 font-semibold">
                                     {cat.percentage}%
                                 </span>
                             </span>
@@ -112,9 +112,9 @@ export function CategoryDistribution({ bookings = [], services = [] }: CategoryD
             </div>
 
             {/* Small tip widget */}
-            <div className="mt-auto rounded-xl bg-primary/5 p-3 flex gap-2.5 items-start text-xs border border-primary/10">
-                <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <p className="text-neutral-805 leading-relaxed font-sans font-bold">
+            <div className="mt-auto rounded-xl bg-primary-50/20 p-3 flex gap-2.5 items-start text-[12.5px] border border-primary-200/30">
+                <Info className="h-4.5 w-4.5 text-primary-600/90 shrink-0 mt-0.5" />
+                <p className="text-primary-900 leading-relaxed font-sans font-medium">
                     {t('overview.categoryDistributionTip')}
                 </p>
             </div>

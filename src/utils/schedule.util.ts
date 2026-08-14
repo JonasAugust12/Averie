@@ -84,9 +84,7 @@ export function getAvailableSlotsForDate(
 
     const offPeriods = getOffPeriodsForDate(date, settings);
     const bookedTimes = new Set(
-        bookings
-            .filter((b) => b.date === date && b.status !== 'cancelled' && b.status !== 'rejected')
-            .map((b) => b.time),
+        bookings.filter((b) => b.date === date && b.status !== 'cancelled').map((b) => b.time),
     );
 
     return getAllConfiguredSlots(settings)

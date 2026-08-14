@@ -2,7 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useSalonServices, useSalonStaff, useSaveMockBooking } from '@services/salon.service';
+import {
+    useSalonServices,
+    useSalonStaff,
+    useSaveMockBooking,
+    useScheduleSettings,
+} from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
@@ -16,6 +21,8 @@ export function ReviewStep() {
     const { serviceIds, staffId, date, time, customer, setReference, setStep } = useBookingStore();
     const { data: services } = useSalonServices();
     const { data: staff } = useSalonStaff();
+    const { data: settings } = useScheduleSettings();
+    const allowStaffSelection = settings?.allowStaffSelection ?? true;
 
     const selectedServices = services?.filter((s) => serviceIds.includes(s.id)) ?? [];
     const employee = staffId === 'any' ? t('anyTechnician') : staff?.find((s) => s.id === staffId);
@@ -42,12 +49,12 @@ export function ReviewStep() {
             price: totalPrice,
             customer: {
                 firstName: customer.firstName,
-                lastName: customer.lastName,
+                lastName: customer.lastName || '',
                 phone: customer.phone,
                 email: customer.email || undefined,
                 note: customer.note || undefined,
             },
-            status: 'pending',
+            status: 'upcoming',
         };
 
         await saveBooking.mutateAsync(booking);
@@ -65,21 +72,21 @@ export function ReviewStep() {
             <article className="rounded-2xl border border-border/70 bg-neutral/40 overflow-hidden backdrop-blur-sm">
                 {/* Services section */}
                 <div className="px-7 pt-7 pb-5 border-b border-border/40">
-                    <p className="font-sans text-xs tracking-[0.2em] text-muted uppercase mb-4">
+                    <p className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-4">
                         {t('review.service')}
                     </p>
                     <ul className="space-y-4">
                         {selectedServices.map((svc) => (
                             <li key={svc.id} className="flex items-start justify-between gap-4">
                                 <div>
-                                    <p className="font-sans text-sm font-medium text-primary">
+                                    <p className="font-sans text-[16px] font-semibold text-primary">
                                         {svc.name}
                                     </p>
-                                    <p className="mt-0.5 font-sans text-xs text-muted">
+                                    <p className="mt-1 font-sans text-sm font-medium text-stone-500">
                                         {svc.durationMin} min
                                     </p>
                                 </div>
-                                <span className="font-display text-base text-primary shrink-0">
+                                <span className="font-display text-[17px] font-bold text-primary shrink-0">
                                     {formatUsd(svc.price)}
                                 </span>
                             </li>
@@ -89,60 +96,68 @@ export function ReviewStep() {
 
                 <dl className="divide-y divide-border/30">
                     {/* Technician */}
-                    <div className="flex items-center justify-between gap-4 px-7 py-4">
-                        <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase">
-                            {t('review.employee')}
-                        </dt>
-                        <dd className="flex items-center gap-2.5">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-100 font-sans text-xs text-primary">
-                                {employeeInitials}
-                            </span>
-                            <span className="font-sans text-sm text-primary">{employeeName}</span>
-                        </dd>
-                    </div>
+                    {allowStaffSelection && (
+                        <div className="flex items-center justify-between gap-4 px-7 py-4">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase">
+                                {t('review.employee')}
+                            </dt>
+                            <dd className="flex items-center gap-2.5">
+                                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-100 font-sans text-xs font-bold text-primary">
+                                    {employeeInitials}
+                                </span>
+                                <span className="font-sans text-[15px] font-semibold text-primary">
+                                    {employeeName}
+                                </span>
+                            </dd>
+                        </div>
+                    )}
 
                     {/* Date & Time */}
                     <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/30">
                         <div className="px-7 py-4">
-                            <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase mb-1">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
                                 {t('review.date')}
                             </dt>
-                            <dd className="font-sans text-sm text-primary">
+                            <dd className="font-sans text-[15px] font-semibold text-primary">
                                 {formatDisplayDate(date)}
                             </dd>
                         </div>
                         <div className="px-7 py-4">
-                            <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase mb-1">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
                                 {t('review.time')}
                             </dt>
-                            <dd className="font-sans text-sm text-primary">{time}</dd>
+                            <dd className="font-sans text-[15px] font-semibold text-primary">
+                                {time}
+                            </dd>
                         </div>
                     </div>
 
                     {/* Customer */}
                     <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/30">
                         <div className="px-7 py-4">
-                            <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase mb-1">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
                                 {t('review.customer')}
                             </dt>
-                            <dd className="font-sans text-sm text-primary">
+                            <dd className="font-sans text-[15px] font-semibold text-primary">
                                 {customer.firstName} {customer.lastName}
                             </dd>
                         </div>
                         <div className="px-7 py-4">
-                            <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase mb-1">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
                                 {t('customer.phone')}
                             </dt>
-                            <dd className="font-sans text-sm text-primary">{customer.phone}</dd>
+                            <dd className="font-sans text-[15px] font-semibold text-primary">
+                                {customer.phone}
+                            </dd>
                         </div>
                     </div>
 
                     {customer.note ? (
                         <div className="px-7 py-4">
-                            <dt className="font-sans text-xs tracking-[0.18em] text-muted uppercase mb-1">
+                            <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
                                 {t('customer.note')}
                             </dt>
-                            <dd className="font-sans text-sm text-muted italic leading-relaxed">
+                            <dd className="font-sans text-[15px] font-medium text-stone-600 leading-relaxed">
                                 {customer.note}
                             </dd>
                         </div>
@@ -166,14 +181,14 @@ export function ReviewStep() {
             <div className="flex flex-wrap gap-3">
                 <Button
                     variant="outlined"
-                    className="rounded-full tracking-widest uppercase px-8"
+                    className="rounded-full tracking-widest uppercase px-8 hover:scale-105 active:scale-95 transition-all duration-200"
                     onClick={() => setStep(5)}
                     disabled={saveBooking.isPending}
                 >
                     {t('back')}
                 </Button>
                 <Button
-                    className="rounded-full tracking-widest uppercase px-10"
+                    className="rounded-full tracking-widest uppercase px-10 hover:scale-105 active:scale-95 transition-all duration-200"
                     onClick={handleConfirm}
                     disabled={saveBooking.isPending}
                 >
