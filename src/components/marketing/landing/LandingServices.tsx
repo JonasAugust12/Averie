@@ -80,28 +80,34 @@ export function LandingServices() {
             <div className="hidden md:grid gap-6 md:grid-cols-3">
                 {cards.map((card, i) => (
                     <FadeIn key={card.key} delay={i * 0.08}>
-                        <article className="flex h-full flex-col rounded-card bg-white p-5 shadow-sm transition-transform duration-300 hover:-translate-y-1">
-                            <div className="relative aspect-video overflow-hidden rounded-card">
+                        <article className="flex h-full flex-col rounded-3xl lg:rounded-4xl border border-stone-200/80 bg-white/95 p-5 shadow-[0_12px_32px_-8px_rgba(58,48,39,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(58,48,39,0.12)]">
+                            <div className="relative aspect-4/3 overflow-hidden rounded-2xl lg:rounded-3xl">
                                 <Image
                                     src={card.image}
                                     alt=""
                                     fill
                                     sizes="(max-width: 768px) 100vw, 33vw"
-                                    className="object-cover transition-transform duration-2000 hover:scale-105"
+                                    className="object-cover transition-transform duration-700 hover:scale-105"
                                 />
+                                <div className="absolute top-3.5 left-3.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-third shadow-xs backdrop-blur-md">
+                                    {card.tag}
+                                </div>
                             </div>
-                            <h3 className="mt-6 text-center font-sans text-2xl font-medium text-secondary-600">
-                                {t(`landing.services.items.${card.key}.title`)}
-                            </h3>
-                            <p className={`mt-2 flex-1 text-center ${landingBody}`}>
-                                {t(`landing.services.items.${card.key}.body`)}
-                            </p>
-                            <Link
-                                href="/book"
-                                className="mt-4 text-center font-sans text-base text-secondary-600 transition-colors hover:text-nude"
-                            >
-                                {t('landing.services.book')}
-                            </Link>
+                            <div className="flex flex-1 flex-col pt-5">
+                                <h3 className="text-center font-display text-2xl font-semibold text-secondary-600">
+                                    {t(`landing.services.items.${card.key}.title`)}
+                                </h3>
+                                <p className="mt-2.5 flex-1 text-center font-sans text-[15px] leading-relaxed text-body">
+                                    {t(`landing.services.items.${card.key}.body`)}
+                                </p>
+                                <Link
+                                    href="/book"
+                                    className="mt-5 flex items-center justify-center gap-2 rounded-full border border-third/20 bg-cream/60 py-2.5 px-6 font-sans text-xs font-semibold uppercase tracking-wider text-third transition-all duration-200 hover:bg-third hover:text-cream hover:scale-[1.02] active:scale-95 shadow-xs"
+                                >
+                                    <span>{t('landing.services.book')}</span>
+                                    <ArrowRight className="size-3.5" />
+                                </Link>
+                            </div>
                         </article>
                     </FadeIn>
                 ))}

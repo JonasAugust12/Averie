@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Loader2, Sparkles, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Loader2, Sparkles, X, Plus } from 'lucide-react';
 import {
     useAllSalonServices,
     useAllSalonStaff,
@@ -334,81 +334,100 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
                             selectedServices={selectedServicesList}
                             totalPrice={totalPrice}
                             customerForm={customerForm}
-                            onClose={handleClose}
-                            onNewBooking={handleResetAll}
                         />
                     )}
                 </div>
 
                 {/* Footer */}
-                {step <= 6 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-stone-200/70 bg-white shrink-0">
-                        {step === 1 ? (
+                <div className="flex items-center justify-between px-6 py-4 border-t border-stone-200/70 bg-white shrink-0">
+                    {step === 7 ? (
+                        <div className="flex items-center justify-between w-full gap-3">
                             <Button
                                 variant="outlined"
                                 onClick={handleClose}
-                                className="border-stone-200 text-stone-600 hover:bg-stone-100 text-xs font-bold uppercase tracking-wider"
+                                className="border-stone-300 text-stone-700 hover:bg-stone-100 rounded-xl uppercase tracking-wider text-xs font-bold"
                             >
-                                {tAdmin('services.cancel') || 'Cancel'}
+                                {tAdmin('booking.success.close') || 'Close'}
                             </Button>
-                        ) : (
                             <Button
-                                variant="outlined"
-                                onClick={() => setStep((s) => (s - 1) as ModalStep)}
-                                className="border-stone-200 text-stone-700 hover:bg-stone-100 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+                                onClick={handleResetAll}
+                                className="bg-stone-900 text-white rounded-xl uppercase tracking-wider text-xs font-bold flex items-center gap-1.5 shadow-sm hover:shadow-md"
                             >
-                                <ChevronLeft className="h-3.5 w-3.5" />
-                                {tAdmin('booking.back') || 'Back'}
+                                <Plus className="h-3.5 w-3.5" />
+                                {tAdmin('booking.success.newBooking') || 'New Appointment'}
                             </Button>
-                        )}
-
-                        <div className="flex items-center gap-3">
-                            {step === 1 && (
-                                <div className="text-right hidden sm:block">
-                                    <span className="font-sans text-xs text-stone-500 font-semibold">
-                                        {serviceIds.length} service
-                                        {serviceIds.length !== 1 ? 's' : ''} selected
-                                    </span>
-                                </div>
-                            )}
-
-                            {step < 6 ? (
+                        </div>
+                    ) : (
+                        <>
+                            {step === 1 ? (
                                 <Button
-                                    onClick={handleNextStep}
-                                    disabled={
-                                        (step === 1 && serviceIds.length === 0) ||
-                                        (step === 3 && !selectedDate) ||
-                                        (step === 4 && !selectedTime)
-                                    }
-                                    className="bg-stone-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:shadow-md"
+                                    variant="outlined"
+                                    onClick={handleClose}
+                                    className="border-stone-200 text-stone-600 hover:bg-stone-100 text-xs font-bold uppercase tracking-wider"
                                 >
-                                    <span>{tAdmin('booking.next') || 'Next'}</span>
-                                    <ChevronRight className="h-3.5 w-3.5" />
+                                    {tAdmin('services.cancel') || 'Cancel'}
                                 </Button>
                             ) : (
                                 <Button
-                                    onClick={handleConfirmBooking}
-                                    disabled={saveBooking.isPending}
-                                    className="bg-stone-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg"
+                                    variant="outlined"
+                                    onClick={() => setStep((s) => (s - 1) as ModalStep)}
+                                    className="border-stone-200 text-stone-700 hover:bg-stone-100 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
                                 >
-                                    {saveBooking.isPending ? (
-                                        <>
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                            <span>{tAdmin('booking.creating') || 'Creating…'}</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Check className="h-4 w-4" />
-                                            <span>
-                                                {tAdmin('booking.confirm') || 'Confirm Booking'}
-                                            </span>
-                                        </>
-                                    )}
+                                    <ChevronLeft className="h-3.5 w-3.5" />
+                                    {tAdmin('booking.back') || 'Back'}
                                 </Button>
                             )}
-                        </div>
-                    </div>
-                )}
+
+                            <div className="flex items-center gap-3">
+                                {step === 1 && (
+                                    <div className="text-right hidden sm:block">
+                                        <span className="font-sans text-xs text-stone-500 font-semibold">
+                                            {serviceIds.length} service
+                                            {serviceIds.length !== 1 ? 's' : ''} selected
+                                        </span>
+                                    </div>
+                                )}
+
+                                {step < 6 ? (
+                                    <Button
+                                        onClick={handleNextStep}
+                                        disabled={
+                                            (step === 1 && serviceIds.length === 0) ||
+                                            (step === 3 && !selectedDate) ||
+                                            (step === 4 && !selectedTime)
+                                        }
+                                        className="bg-stone-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:shadow-md"
+                                    >
+                                        <span>{tAdmin('booking.next') || 'Next'}</span>
+                                        <ChevronRight className="h-3.5 w-3.5" />
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={handleConfirmBooking}
+                                        disabled={saveBooking.isPending}
+                                        className="bg-stone-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg"
+                                    >
+                                        {saveBooking.isPending ? (
+                                            <>
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                <span>
+                                                    {tAdmin('booking.creating') || 'Creating…'}
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Check className="h-4 w-4" />
+                                                <span>
+                                                    {tAdmin('booking.confirm') || 'Confirm Booking'}
+                                                </span>
+                                            </>
+                                        )}
+                                    </Button>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );

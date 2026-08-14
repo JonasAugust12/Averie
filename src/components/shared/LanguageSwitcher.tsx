@@ -49,7 +49,7 @@ export function LanguageSwitcher({
             className={cn(
                 'group relative flex cursor-pointer items-center overflow-hidden transition-all duration-300 ease-out active:scale-95',
                 isPill
-                    ? 'h-9 w-9 justify-center rounded-full border border-third bg-white hover:border-nude flex items-center sm:h-12.5 sm:w-auto sm:min-w-37.75 sm:px-5 sm:gap-2'
+                    ? 'flex size-10 items-center justify-center rounded-full border border-stone-200/80 bg-white/85 shadow-2xs hover:border-nude hover:bg-white md:h-9.5 md:w-auto md:px-3.5 lg:h-10.5 lg:px-4.5 md:gap-2 md:border-third/60'
                     : 'h-9 gap-1 rounded px-1.5 sm:gap-2 sm:border sm:border-border sm:bg-tertiary/60 sm:px-3 sm:hover:border-primary/40 sm:hover:shadow-md sm:hover:shadow-primary/10',
                 isPending && 'pointer-events-none opacity-70',
                 className,
@@ -58,13 +58,13 @@ export function LanguageSwitcher({
         >
             <Globe
                 className={cn(
-                    'hidden size-4 transition-transform duration-700 sm:block',
+                    'hidden size-3.5 transition-transform duration-700 md:block',
                     isPill ? 'text-third' : 'text-primary',
                     isHovered ? 'rotate-180' : 'rotate-0',
                 )}
             />
 
-            <div className="relative h-4 w-6 overflow-hidden rounded-sm shadow-sm perspective-normal">
+            <div className="relative h-3.5 w-5.5 shrink-0 overflow-hidden rounded-xs shadow-xs perspective-normal">
                 <div
                     className="absolute inset-0 transition-transform duration-500 ease-in-out"
                     style={{
@@ -101,8 +101,8 @@ export function LanguageSwitcher({
 
             <span
                 className={cn(
-                    'hidden min-w-6 font-sans font-bold tracking-wider uppercase sm:block',
-                    isPill ? 'text-sm text-third' : 'text-2xs text-primary',
+                    'hidden font-sans font-semibold tracking-wider uppercase md:block',
+                    isPill ? 'text-xs text-third' : 'text-2xs text-primary',
                 )}
             >
                 {LABEL[locale] ?? LABEL.en}

@@ -81,21 +81,24 @@ export function TimeStep() {
                 </section>
             ))}
 
-            <div className="flex flex-wrap gap-3 pt-2">
-                <Button
-                    variant="outlined"
-                    className="rounded-full py-3 px-8 text-base tracking-widest uppercase hover:scale-105 active:scale-95 transition-all duration-200"
-                    onClick={() => setStep(3)}
-                >
-                    {t('back')}
-                </Button>
-                <Button
-                    className="rounded-full py-3 px-10 text-base tracking-widest uppercase shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
-                    disabled={!time}
-                    onClick={() => setStep(5)}
-                >
-                    {t('continue')}
-                </Button>
+            {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}
+            <div className="fixed sm:static bottom-0 left-0 right-0 z-40 border-t border-stone-300/80 bg-white/95 px-4 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:border-0 sm:bg-transparent sm:p-0 sm:pt-2 sm:shadow-none sm:backdrop-blur-none">
+                <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-3 sm:justify-start">
+                    <Button
+                        variant="outlined"
+                        className="rounded-full py-2.5 sm:py-3 px-6 sm:px-8 text-xs sm:text-sm tracking-widest uppercase active:scale-95 transition-all duration-200"
+                        onClick={() => setStep(3)}
+                    >
+                        ← {t('back')}
+                    </Button>
+                    <Button
+                        className="rounded-full py-2.5 sm:py-3 px-8 sm:px-10 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-md active:scale-95 transition-all duration-200"
+                        disabled={!time}
+                        onClick={() => setStep(5)}
+                    >
+                        {t('continue')} →
+                    </Button>
+                </div>
             </div>
         </div>
     );

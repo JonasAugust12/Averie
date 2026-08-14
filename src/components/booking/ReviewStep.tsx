@@ -178,29 +178,32 @@ export function ReviewStep() {
                 </div>
             </article>
 
-            <div className="flex flex-wrap gap-3">
-                <Button
-                    variant="outlined"
-                    className="rounded-full tracking-widest uppercase px-8 hover:scale-105 active:scale-95 transition-all duration-200"
-                    onClick={() => setStep(5)}
-                    disabled={saveBooking.isPending}
-                >
-                    {t('back')}
-                </Button>
-                <Button
-                    className="rounded-full tracking-widest uppercase px-10 hover:scale-105 active:scale-95 transition-all duration-200"
-                    onClick={handleConfirm}
-                    disabled={saveBooking.isPending}
-                >
-                    {saveBooking.isPending ? (
-                        <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            {t('cta.confirm')}
-                        </>
-                    ) : (
-                        t('cta.confirm')
-                    )}
-                </Button>
+            {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}
+            <div className="fixed sm:static bottom-0 left-0 right-0 z-40 border-t border-stone-300/80 bg-white/95 px-4 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:border-0 sm:bg-transparent sm:p-0 sm:pt-4 sm:shadow-none sm:backdrop-blur-none">
+                <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 sm:justify-start">
+                    <Button
+                        variant="outlined"
+                        className="rounded-full tracking-widest uppercase px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm active:scale-95 transition-all duration-200"
+                        onClick={() => setStep(5)}
+                        disabled={saveBooking.isPending}
+                    >
+                        ← {t('back')}
+                    </Button>
+                    <Button
+                        className="rounded-full tracking-widest uppercase px-8 sm:px-10 py-2.5 sm:py-3 text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all duration-200"
+                        onClick={handleConfirm}
+                        disabled={saveBooking.isPending}
+                    >
+                        {saveBooking.isPending ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                {t('cta.confirm')}
+                            </>
+                        ) : (
+                            `${t('cta.confirm')} ✓`
+                        )}
+                    </Button>
+                </div>
             </div>
         </div>
     );

@@ -5,13 +5,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-    Bell,
     Calendar,
     ChevronLeft,
     ChevronRight,
     ClipboardList,
     LayoutDashboard,
     LogOut,
+    Plus,
     Scissors,
     Settings,
     Users,
@@ -20,7 +20,7 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
 import { isAdminMockAuthed, setAdminMockAuthed } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { AdminNewBookingModal } from './AdminNewBookingModal';
+import { AdminNewBookingModal } from '@components/admin';
 import { cn } from '@utils/cn.util';
 
 const navItems = [
@@ -175,32 +175,50 @@ export function AdminShell({ children }: AdminShellProps) {
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-                <header className="flex h-20 shrink-0 items-center justify-between gap-4 border-b border-neutral-100 bg-white/95 shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:h-24 lg:px-8 z-20">
-                    <div>
-                        {/* Mobile: show logo instead of text */}
-                        <Image
-                            src="/salon/figma/logo.svg"
-                            alt="Averie Logo"
-                            width={100}
-                            height={32}
-                            className="h-7 w-auto object-contain mb-1 lg:hidden"
-                        />
-                        <h1 className="font-display text-xl text-stone-900 md:text-2xl font-bold">
-                            {pageTitle}
-                        </h1>
-                        <p className="hidden font-sans text-xs text-stone-400 sm:block font-bold">
-                            {t('title')}
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                        <button
-                            type="button"
-                            className="relative cursor-pointer rounded-full p-2 text-stone-400 hover:text-stone-700 transition-colors"
-                            aria-label="Notifications"
+                <header className="flex h-16 sm:h-20 lg:h-24 shrink-0 items-center justify-between gap-2 sm:gap-4 border-b border-neutral-100 bg-white/95 shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-3.5 sm:px-6 lg:px-8 z-20">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <Link
+                            href="/admin"
+                            className="lg:hidden shrink-0 transition-opacity hover:opacity-75"
                         >
-                            <Bell className="h-5 w-5" />
-                        </button>
-                        <div className="hidden items-center gap-2 sm:flex">
+                            <Image
+                                src="/salon/figma/logo.svg"
+                                alt="Averie Logo"
+                                width={92}
+                                height={30}
+                                className="h-6.5 sm:h-7 w-auto object-contain"
+                                priority
+                            />
+                        </Link>
+                        <div className="hidden xs:block lg:hidden h-4 w-px bg-stone-200 shrink-0" />
+                        <div className="min-w-0">
+                            <h1 className="font-display text-base sm:text-xl lg:text-2xl font-bold text-stone-900 truncate leading-tight">
+                                {pageTitle}
+                            </h1>
+                            <p className="hidden font-sans text-xs font-bold text-stone-400 sm:block">
+                                {t('title')}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                        {/* Language Switcher on mobile */}
+                        <div className="lg:hidden scale-90">
+                            <LanguageSwitcher />
+                        </div>
+
+                        {/* New Booking Button: accessible across mobile and desktop */}
+                        <Button
+                            size="sm"
+                            onClick={() => setIsNewBookingOpen(true)}
+                            className="rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1 sm:gap-1.5 shadow-xs cursor-pointer active:scale-95 transition-all"
+                        >
+                            <Plus className="h-3.5 w-3.5 shrink-0" />
+                            <span className="hidden sm:inline">{t('newBooking')}</span>
+                            <span className="sm:hidden">Booking</span>
+                        </Button>
+
+                        {/* Desktop Profile Info */}
+                        <div className="hidden items-center gap-2 lg:flex">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-700 font-sans text-xs font-bold text-white shadow-sm">
                                 EV
                             </span>
@@ -213,18 +231,22 @@ export function AdminShell({ children }: AdminShellProps) {
                                 </p>
                             </div>
                         </div>
-                        <Button
-                            size="sm"
-                            onClick={() => setIsNewBookingOpen(true)}
-                            className="hidden md:inline-flex tracking-wide uppercase cursor-pointer"
+
+                        {/* Mobile Sign Out Button */}
+                        <button
+                            type="button"
+                            onClick={handleSignOut}
+                            className="flex lg:hidden h-8.5 w-8.5 items-center justify-center rounded-full border border-stone-200/80 bg-stone-50/70 text-stone-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 active:scale-95 transition-all cursor-pointer"
+                            title={t('signOut')}
+                            aria-label={t('signOut')}
                         >
-                            {t('newBooking')}
-                        </Button>
+                            <LogOut className="h-4 w-4" />
+                        </button>
                     </div>
                 </header>
 
-                <div className="flex gap-2 overflow-x-auto border-b border-border/40 px-4 py-2 lg:hidden">
-                    {navItems.map(({ href, key }) => {
+                <div className="no-scrollbar flex gap-1.5 overflow-x-auto border-b border-stone-200/60 bg-white/80 backdrop-blur-md px-3.5 py-2 lg:hidden shadow-2xs">
+                    {navItems.map(({ href, icon: Icon, key }) => {
                         const active =
                             href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
                         return (
@@ -232,11 +254,19 @@ export function AdminShell({ children }: AdminShellProps) {
                                 key={href}
                                 href={href}
                                 className={cn(
-                                    'shrink-0 rounded-full px-3 py-1.5 font-sans text-xs',
-                                    active ? 'bg-primary text-neutral' : 'bg-tertiary text-muted',
+                                    'shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 font-sans text-xs transition-all duration-150',
+                                    active
+                                        ? 'bg-stone-900 text-white font-bold shadow-xs'
+                                        : 'bg-stone-100/90 text-stone-600 font-semibold hover:bg-stone-200/70 hover:text-stone-900',
                                 )}
                             >
-                                {t(`nav.${key}`)}
+                                <Icon
+                                    className={cn(
+                                        'h-3.5 w-3.5',
+                                        active ? 'text-amber-300' : 'text-stone-500',
+                                    )}
+                                />
+                                <span>{t(`nav.${key}`)}</span>
                             </Link>
                         );
                     })}

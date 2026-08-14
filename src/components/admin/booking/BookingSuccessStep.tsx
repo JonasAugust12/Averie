@@ -16,8 +16,8 @@ interface BookingSuccessStepProps {
         firstName: string;
         lastName: string;
     };
-    onClose: () => void;
-    onNewBooking: () => void;
+    onClose?: () => void;
+    onNewBooking?: () => void;
 }
 
 export function BookingSuccessStep({
@@ -33,7 +33,7 @@ export function BookingSuccessStep({
     const tAdmin = useAdminTranslations();
 
     return (
-        <div className="text-center py-8 space-y-6 max-w-md mx-auto animate-in zoom-in-95 duration-300">
+        <div className="text-center py-6 sm:py-8 space-y-6 max-w-md mx-auto animate-in zoom-in-95 duration-300">
             <div className="h-16 w-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-sm">
                 <CheckCircle2 className="h-10 w-10" />
             </div>
@@ -81,22 +81,24 @@ export function BookingSuccessStep({
                 </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 pt-2">
-                <Button
-                    variant="outlined"
-                    onClick={onClose}
-                    className="border-stone-300 text-stone-700 hover:bg-stone-100 rounded-xl uppercase tracking-wider text-xs"
-                >
-                    {tAdmin('booking.success.close')}
-                </Button>
-                <Button
-                    onClick={onNewBooking}
-                    className="bg-stone-900 text-white rounded-xl uppercase tracking-wider text-xs flex items-center gap-1.5"
-                >
-                    <Plus className="h-3.5 w-3.5" />
-                    {tAdmin('booking.success.newBooking')}
-                </Button>
-            </div>
+            {onClose && onNewBooking && (
+                <div className="flex items-center justify-center gap-3 pt-2">
+                    <Button
+                        variant="outlined"
+                        onClick={onClose}
+                        className="border-stone-300 text-stone-700 hover:bg-stone-100 rounded-xl uppercase tracking-wider text-xs"
+                    >
+                        {tAdmin('booking.success.close')}
+                    </Button>
+                    <Button
+                        onClick={onNewBooking}
+                        className="bg-stone-900 text-white rounded-xl uppercase tracking-wider text-xs flex items-center gap-1.5"
+                    >
+                        <Plus className="h-3.5 w-3.5" />
+                        {tAdmin('booking.success.newBooking')}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

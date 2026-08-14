@@ -155,26 +155,26 @@ export function BookingSummary() {
                 )}
             </aside>
 
-            {/* Mobile Bottom Floating Bar (< lg) */}
-            <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-stone-300 bg-white/95 px-4 py-3 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl">
-                <div className="mx-auto flex max-w-app items-center justify-between gap-3">
-                    <div className="min-w-0">
-                        <p className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
-                            {hasSelection
-                                ? `${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} selected`
-                                : t('yourBooking')}
-                        </p>
-                        <p className="font-display text-lg font-bold text-primary leading-tight">
-                            {hasSelection ? formatUsd(totalPrice) : '$0'}
-                            {hasSelection && (
-                                <span className="ml-2 font-sans text-xs font-semibold text-stone-500">
-                                    ({totalDuration} min)
-                                </span>
-                            )}
-                        </p>
-                    </div>
+            {/* Mobile Bottom Floating Bar (< lg) — Only shown on Step 1 */}
+            {step === 1 && (
+                <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-stone-300 bg-white/95 px-4 py-3 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl">
+                    <div className="mx-auto flex max-w-app items-center justify-between gap-3">
+                        <div className="min-w-0">
+                            <p className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                                {hasSelection
+                                    ? `${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} selected`
+                                    : t('yourBooking')}
+                            </p>
+                            <p className="font-display text-lg font-bold text-primary leading-tight">
+                                {hasSelection ? formatUsd(totalPrice) : '$0'}
+                                {hasSelection && (
+                                    <span className="ml-2 font-sans text-xs font-semibold text-stone-500">
+                                        ({totalDuration} min)
+                                    </span>
+                                )}
+                            </p>
+                        </div>
 
-                    {step === 1 ? (
                         <Button
                             className="rounded-full px-6 py-3 font-sans text-sm font-bold tracking-wider uppercase shadow-md active:scale-95 transition-all"
                             disabled={!hasSelection}
@@ -182,15 +182,9 @@ export function BookingSummary() {
                         >
                             Continue →
                         </Button>
-                    ) : (
-                        <div className="text-right">
-                            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 font-sans text-xs font-bold text-primary">
-                                Step {step} of 6
-                            </span>
-                        </div>
-                    )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }
