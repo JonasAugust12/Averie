@@ -1,15 +1,11 @@
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { connectToDatabase } from '@libs/mongodb';
+import { User } from '@models/user.model';
+import type { UserRole } from '@typings/salon/common.type';
 import { loginSchema } from '@validations/auth.schema';
 
-/**
- * Auth.js (next-auth v5) — local Credentials scaffold.
- *
- * TODO later:
- * - Verify password against MongoDB User model (bcrypt)
- * - Add OAuth providers if needed
- * - Wire protected routes via middleware
- */
 export const authConfig = {
     providers: [
         Credentials({
@@ -26,35 +22,54 @@ export const authConfig = {
 
                 const { email, password } = parsed.data;
 
-                // Stub local user — replace with DB lookup later.
-                if (email === 'demo@averie.local' && password === 'password') {
-                    return {
-                        id: 'demo-user',
-                        email,
-                        name: 'Demo User',
-                    };
-                }
+                try {
+                    await connectToDatabase();
+                    const user = await User.findOne({ email: email.toLowerCase() })
+                        .select('+passwordHash')
+                        .lean();
 
-                return null;
+                    if (!user?.passwordHash || !user.isActive) {
+                        return null;
+                    }
+
+                    const valid = await bcrypt.compare(password, user.passwordHash);
+                    if (!valid) {
+                        return null;
+                    }
+
+                    return {
+                        id: String(user._id),
+                        email: user.email,
+                        name: `${user.firstName} ${user.lastName}`.trim(),
+                        role: user.role,
+                    };
+                } catch (error) {
+                    console.error('[authorize]', error);
+                    return null;
+                }
             },
         }),
     ],
     session: {
         strategy: 'jwt',
     },
-    pages: {
-        // Add custom pages later, e.g. signIn: '/login'
-    },
+    pages: {},
     callbacks: {
         jwt({ token, user }) {
             if (user?.id) {
                 token.id = String(user.id);
+            }
+            if (user && 'role' in user && user.role) {
+                token.role = user.role as UserRole;
             }
             return token;
         },
         session({ session, token }) {
             if (session.user && typeof token.id === 'string') {
                 session.user.id = token.id;
+            }
+            if (session.user && typeof token.role === 'string') {
+                session.user.role = token.role as UserRole;
             }
             return session;
         },

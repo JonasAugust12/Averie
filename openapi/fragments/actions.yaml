@@ -1,0 +1,205 @@
+paths:
+    /actions/createBooking:
+        post:
+            tags: [Server Actions]
+            summary: createBookingAction
+            description: Invoked via Next.js Server Action — not a public HTTP endpoint.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [serviceIds, staffPreference, date, time, customer]
+                            properties:
+                                serviceIds:
+                                    type: array
+                                    items: { type: string }
+                                staffPreference:
+                                    type: string
+                                    enum: [any, specific]
+                                staffId:
+                                    type: string
+                                date:
+                                    type: string
+                                    example: '2026-08-15'
+                                time:
+                                    type: string
+                                    example: '09:00 AM'
+                                customer:
+                                    type: object
+                                    required: [firstName, lastName, phone]
+                                    properties:
+                                        firstName: { type: string }
+                                        lastName: { type: string }
+                                        phone: { type: string }
+                                        email: { type: string }
+                                        note: { type: string }
+            responses:
+                '201':
+                    description: Booking created
+                '409':
+                    description: Slot conflict
+
+    /actions/cancelBooking:
+        post:
+            tags: [Server Actions]
+            summary: cancelBookingAction
+            description: Admin only. Invoked via Server Action.
+            parameters:
+                - name: id
+                  in: query
+                  required: true
+                  schema: { type: string }
+            responses:
+                '200':
+                    description: Booking cancelled
+
+    /actions/restoreBooking:
+        post:
+            tags: [Server Actions]
+            summary: restoreBookingAction
+            description: Admin only. Invoked via Server Action.
+            parameters:
+                - name: id
+                  in: query
+                  required: true
+                  schema: { type: string }
+            responses:
+                '200':
+                    description: Booking restored
+
+    /actions/login:
+        post:
+            tags: [Server Actions]
+            summary: loginAction
+            description: Auth.js Credentials login via Server Action.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email, password]
+                            properties:
+                                email: { type: string, format: email }
+                                password: { type: string, minLength: 6 }
+            responses:
+                '200':
+                    description: Signed in
+
+    /actions/logout:
+        post:
+            tags: [Server Actions]
+            summary: logoutAction
+            description: Clears Auth.js session.
+            responses:
+                '200':
+                    description: Signed out
+
+    /actions/createServiceCategory:
+        post:
+            tags: [Server Actions]
+            summary: createServiceCategoryAction
+            description: Admin only.
+            responses:
+                '201':
+                    description: Created
+
+    /actions/updateServiceCategory:
+        post:
+            tags: [Server Actions]
+            summary: updateServiceCategoryAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Updated
+
+    /actions/deleteServiceCategory:
+        post:
+            tags: [Server Actions]
+            summary: deleteServiceCategoryAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Deleted
+
+    /actions/createService:
+        post:
+            tags: [Server Actions]
+            summary: createServiceAction
+            description: Admin only.
+            responses:
+                '201':
+                    description: Created
+
+    /actions/updateService:
+        post:
+            tags: [Server Actions]
+            summary: updateServiceAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Updated
+
+    /actions/deleteService:
+        post:
+            tags: [Server Actions]
+            summary: deleteServiceAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Deleted
+
+    /actions/toggleServiceVisibility:
+        post:
+            tags: [Server Actions]
+            summary: toggleServiceVisibilityAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Updated
+
+    /actions/createStaff:
+        post:
+            tags: [Server Actions]
+            summary: createStaffAction
+            description: Admin only. Creates staff user with bcrypt password.
+            responses:
+                '201':
+                    description: Created
+
+    /actions/updateStaff:
+        post:
+            tags: [Server Actions]
+            summary: updateStaffAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Updated
+
+    /actions/deleteStaff:
+        post:
+            tags: [Server Actions]
+            summary: deleteStaffAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Deleted
+
+    /actions/resetStaffPassword:
+        post:
+            tags: [Server Actions]
+            summary: resetStaffPasswordAction
+            description: Admin only.
+            responses:
+                '200':
+                    description: Password reset
+
+    /actions/updateScheduleSettings:
+        post:
+            tags: [Server Actions]
+            summary: updateScheduleSettingsAction
+            description: Admin only. Updates salon_settings singleton.
+            responses:
+                '200':
+                    description: Updated
