@@ -3,15 +3,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
 import { cn } from '@utils/cn.util';
 
 const nav = [
     { href: '#philosophy', key: 'about' as const },
-    { href: '#services', key: 'menu' as const },
-    { href: '#products', key: 'blog' as const },
+    { href: '#services', key: 'service' as const },
+    { href: '#products', key: 'product' as const },
     { href: '#search-booking', key: 'search' as const },
     { href: '#hours', key: 'contact' as const },
 ];
@@ -84,10 +84,8 @@ export function LandingHeader() {
                                 onClick={() => setOpen(false)}
                             >
                                 <span className="flex items-center gap-2">
-                                    <Sparkles className="size-3.5 text-nude opacity-0 transition-opacity group-hover:opacity-100" />
                                     {t(`landing.header.${item.key}`)}
                                 </span>
-                                <ArrowRight className="size-4 text-stone-400 transition-transform group-hover:translate-x-1 group-hover:text-nude" />
                             </a>
                         ))}
                         <Link
@@ -96,7 +94,6 @@ export function LandingHeader() {
                             onClick={() => setOpen(false)}
                         >
                             <span>{t('landing.header.book')}</span>
-                            <ArrowRight className="size-4" />
                         </Link>
                     </div>
                 </div>

@@ -2,15 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { FadeIn } from '@components/marketing/landing';
 import { landingBody, landingTitle } from '@components/marketing/landing/styles';
 
 const cards = [
-    { key: 'mani' as const, image: '/salon/figma/svc-mani.png', tag: 'Hands & Feet' },
-    { key: 'facial' as const, image: '/salon/figma/svc-facial.png', tag: 'Dermalogica' },
-    { key: 'wax' as const, image: '/salon/figma/svc-wax.png', tag: 'Gentle Care' },
+    { key: 'mani' as const, image: '/salon/manicure_pedicure.jpg', tag: 'Hands & Feet' },
+    { key: 'facial' as const, image: '/salon/dermalogica_facials.jpg', tag: 'Dermalogica' },
+    { key: 'wax' as const, image: '/salon/enhancements_waxing.jpg', tag: 'Gentle Care' },
 ];
 
 export function LandingServices() {
@@ -20,7 +20,6 @@ export function LandingServices() {
         <section id="services" className="py-12 md:py-24">
             <FadeIn className="mb-8 text-center md:mb-12">
                 <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
-                    <Sparkles className="size-3 text-nude" />
                     <span>{t('landing.services.eyebrow')}</span>
                 </div>
                 <h2 className={`mt-3 ${landingTitle}`}>{t('landing.services.title')}</h2>

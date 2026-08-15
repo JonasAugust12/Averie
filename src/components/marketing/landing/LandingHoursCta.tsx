@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Phone, Calendar } from 'lucide-react';
+import { Phone, Calendar, MapPin, ExternalLink } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn, PillLink } from '@components/marketing/landing';
@@ -46,7 +46,10 @@ export function LandingHoursCta() {
     const t = useSalonTranslations();
 
     return (
-        <section id="hours" className="relative grid gap-6 py-12 md:grid-cols-12 md:py-24">
+        <section
+            id="hours"
+            className="relative grid gap-6 py-12 md:grid-cols-12 md:py-24 md:items-stretch"
+        >
             <div
                 className={cn(
                     'absolute bottom-0 z-0 aspect-3/4 w-56 translate-y-1/2 md:w-72',
@@ -77,7 +80,7 @@ export function LandingHoursCta() {
                     className="h-full w-full object-cover"
                 />
             </div>
-            <FadeIn className="relative z-10 flex flex-col justify-center overflow-hidden rounded-4xl md:rounded-card border border-stone-200/80 px-6 py-10 text-center shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] md:col-span-4 md:aspect-square md:px-8">
+            <FadeIn className="relative z-10 flex flex-col justify-center overflow-hidden rounded-4xl md:rounded-card border border-stone-200/80 px-6 py-10 text-center shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] md:col-span-4 md:px-8">
                 <Image
                     src="/salon/figma/hours-marble.png"
                     alt=""
@@ -115,7 +118,7 @@ export function LandingHoursCta() {
             >
                 <h2 className={landingTitle}>{t('landing.cta.title')}</h2>
                 <p className={`mt-4 max-w-lg ${landingBody}`}>{t('landing.cta.body')}</p>
-                <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+                <div className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
                     <PillLink
                         href="/book"
                         className="flex items-center justify-center gap-2 sm:max-w-none"
@@ -131,6 +134,20 @@ export function LandingHoursCta() {
                         <Phone className="size-4" />
                         <span>{t('landing.cta.call')}: 781-923-1955</span>
                     </PillLink>
+                </div>
+                <div className="mt-7 flex items-center justify-center border-t border-stone-200/70 pt-6">
+                    <a
+                        href="https://maps.app.goo.gl/YCtZW533i3x6BB5QA"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-stone-800"
+                    >
+                        <MapPin className="size-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-700" />
+                        <span className="underline decoration-stone-300 underline-offset-4 group-hover:decoration-stone-500">
+                            {t('landing.cta.address')}
+                        </span>
+                        <ExternalLink className="size-3.5 text-stone-400 opacity-70 transition-opacity group-hover:opacity-100" />
+                    </a>
                 </div>
             </FadeIn>
         </section>

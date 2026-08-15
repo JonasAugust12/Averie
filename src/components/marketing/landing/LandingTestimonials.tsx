@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn } from '@components/marketing/landing';
@@ -38,7 +38,6 @@ export function LandingTestimonials() {
             <div className="relative z-10">
                 <FadeIn className="mb-8 text-center md:mb-10">
                     <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
-                        <Sparkles className="size-3 text-nude" />
                         <span>Client Love</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.testimonials.title')}</h2>
@@ -61,10 +60,6 @@ export function LandingTestimonials() {
                                                 className="size-4.5 fill-current stroke-none"
                                             />
                                         ))}
-                                    </div>
-                                    <div className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
-                                        <CheckCircle2 className="size-3" />
-                                        <span>Verified</span>
                                     </div>
                                 </div>
                                 <p className="flex-1 font-sans text-sm italic leading-relaxed text-secondary-600">

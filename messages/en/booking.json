@@ -45,7 +45,7 @@
         "firstName": "First name",
         "lastName": "Last name",
         "phone": "Phone number",
-        "email": "Email (optional)",
+        "email": "Email",
         "note": "Note / special request"
     },
     "review": {

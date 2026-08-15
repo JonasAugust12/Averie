@@ -1,14 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { Sparkles } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { FadeIn, PillLink } from '@components/marketing/landing';
-import {
-    landingDesktopOnly,
-    landingMobileOnly,
-    landingTitle,
-} from '@components/marketing/landing/styles';
+import { landingDesktopOnly, landingTitle } from '@components/marketing/landing/styles';
 
 const rows = ['mani', 'gel', 'enhance', 'wax', 'facial'] as const;
 
@@ -24,7 +19,6 @@ export function LandingPricing() {
             <FadeIn className="order-2 md:order-0 md:col-span-5">
                 <div className="text-center md:text-left">
                     <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
-                        <Sparkles className="size-3 text-nude" />
                         <span>Menu & Pricing</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.pricing.title')}</h2>
@@ -65,21 +59,6 @@ export function LandingPricing() {
 
             {/* Visual Imagery */}
             <FadeIn delay={0.1} className="order-1 md:order-0 md:col-span-7">
-                {/* Mobile Art Frame */}
-                <div
-                    className={`relative mx-auto aspect-4/3 w-full max-w-sm overflow-hidden rounded-4xl border border-white/90 bg-white/60 p-2 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.12)] ${landingMobileOnly}`}
-                >
-                    <div className="relative h-full w-full overflow-hidden rounded-3xl">
-                        <Image
-                            src="/salon/figma/pricing-art.png"
-                            alt=""
-                            fill
-                            sizes="(max-width: 768px) 90vw, 400px"
-                            className="object-cover transition-transform duration-700 hover:scale-105"
-                        />
-                    </div>
-                </div>
-
                 {/* Desktop Art Collage (Unchanged) */}
                 <div
                     className={`relative flex aspect-4/3 w-full items-center justify-center overflow-visible ${landingDesktopOnly}`}

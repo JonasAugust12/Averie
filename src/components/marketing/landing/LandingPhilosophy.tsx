@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Sparkles, ShieldCheck, HeartHandshake } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn, PillLink } from '@components/marketing/landing';
@@ -32,7 +31,7 @@ export function LandingPhilosophy() {
                     <div className="relative aspect-3/4 w-full overflow-hidden rounded-4xl border border-stone-200/80 bg-white/60 p-2 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.12)]">
                         <div className="relative h-full w-full overflow-hidden rounded-3xl">
                             <Image
-                                src="/salon/figma/philosophy-main.png"
+                                src="/salon/salon.jpg"
                                 alt=""
                                 fill
                                 sizes="(max-width: 768px) 90vw, 400px"
@@ -42,22 +41,8 @@ export function LandingPhilosophy() {
                         </div>
                     </div>
 
-                    {/* Floating Inset Badge Thumbnail on Mobile */}
-                    <div className="absolute -bottom-4 -right-1 z-20 aspect-square w-32 overflow-hidden rounded-2xl border-2 border-white bg-cream p-1.5 shadow-xl">
-                        <div className="relative h-full w-full overflow-hidden rounded-xl">
-                            <Image
-                                src="/salon/figma/philosophy-inset.png"
-                                alt=""
-                                fill
-                                sizes="120px"
-                                className="object-cover"
-                            />
-                        </div>
-                    </div>
-
                     {/* Floating luxury pill badge */}
                     <div className="absolute -top-3 left-4 z-20 inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1.5 shadow-md backdrop-blur-md">
-                        <Sparkles className="size-3 text-nude" />
                         <span className="font-sans text-xs font-semibold text-third tracking-wide">
                             The Averie Ritual
                         </span>
@@ -89,7 +74,7 @@ export function LandingPhilosophy() {
                     </div>
                     <div className="relative z-20 flex h-full w-full items-center justify-center">
                         <Image
-                            src="/salon/figma/philosophy-main.png"
+                            src="/salon/salon.jpg"
                             alt=""
                             width={400}
                             height={750}
@@ -97,7 +82,7 @@ export function LandingPhilosophy() {
                             priority
                         />
                     </div>
-                    <div className="absolute -bottom-16 -right-10 z-30 aspect-[4/4.6] w-[50%]">
+                    {/* <div className="absolute -bottom-16 -right-10 z-30 aspect-[4/4.6] w-[50%]">
                         <Image
                             src="/salon/figma/philosophy-inset.png"
                             alt=""
@@ -105,7 +90,7 @@ export function LandingPhilosophy() {
                             height={750}
                             className="object-cover transition-transform duration-700 hover:scale-105 cursor-pointer"
                         />
-                    </div>
+                    </div> */}
                 </div>
             </FadeIn>
 
@@ -125,18 +110,6 @@ export function LandingPhilosophy() {
                 >
                     {t('landing.philosophy.body')}
                 </p>
-
-                {/* Mobile Luxury Hallmarks */}
-                <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row sm:justify-center md:hidden">
-                    <div className="flex items-center justify-center gap-2 rounded-xl border border-stone-250/60 bg-white/70 px-3 py-2 text-xs font-medium text-stone-700 shadow-2xs">
-                        <ShieldCheck className="size-3.5 text-emerald-600 shrink-0" />
-                        <span>100% Clean & Medical-Grade Sanitation</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 rounded-xl border border-stone-250/60 bg-white/70 px-3 py-2 text-xs font-medium text-stone-700 shadow-2xs">
-                        <HeartHandshake className="size-3.5 text-nude shrink-0" />
-                        <span>Artisan Care & Non-Toxic Gels</span>
-                    </div>
-                </div>
 
                 <PillLink href="#services" className="mt-7 w-full sm:w-auto md:w-40">
                     {t('landing.philosophy.cta')}

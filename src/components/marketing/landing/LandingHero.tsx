@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Star, Sparkles, Phone } from 'lucide-react';
+import { Star, Phone } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { FadeIn, PillLink } from '@components/marketing/landing';
 import {
@@ -20,7 +20,6 @@ export function LandingHero() {
                 <FadeIn className="flex flex-col items-center text-center md:items-start md:text-left md:col-span-5">
                     {/* Eyebrow badge */}
                     <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
-                        <Sparkles className="size-3 text-nude" />
                         <span>{t('landing.hero.eyebrow')}</span>
                     </div>
 
@@ -33,17 +32,21 @@ export function LandingHero() {
                     </p>
 
                     {/* Mobile CTAs & Trust Badge */}
-                    <div className="mt-6 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center md:justify-start">
-                        <PillLink href="/book" className="w-full sm:w-auto">
-                            {t('landing.hero.cta')}
-                        </PillLink>
-                        <a
-                            href="tel:+17819231955"
-                            className="inline-flex h-12.5 w-full items-center justify-center gap-2 rounded-full border border-third/30 bg-white/60 px-6 font-sans text-sm font-medium tracking-wide text-third backdrop-blur-xs transition-colors hover:bg-white sm:w-auto md:hidden"
+                    <div className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center md:justify-start">
+                        <PillLink
+                            href="/book"
+                            className="flex items-center justify-center gap-2 sm:max-w-none"
                         >
-                            <Phone className="size-4 text-nude" />
+                            <span>{t('landing.hero.cta')}</span>
+                        </PillLink>
+                        <PillLink
+                            href="tel:+17819231955"
+                            variant="outline"
+                            className="inline-flex h-12.5 w-full items-center justify-center gap-2 rounded-full border border-third/30 bg-white/60 px-6 font-sans text-sm font-medium tracking-wide text-third backdrop-blur-xs transition-colors sm:w-auto md:hidden"
+                        >
+                            <Phone className="size-4" />
                             <span>781-923-1955</span>
-                        </a>
+                        </PillLink>
                     </div>
 
                     {/* Social proof rating */}
@@ -74,7 +77,7 @@ export function LandingHero() {
                                     alt=""
                                     fill
                                     sizes="(max-width: 768px) 90vw, 500px"
-                                    className="object-cover transition-transform duration-1000 hover:scale-105"
+                                    className="translate-x-[4%] object-cover transition-transform duration-1000 hover:scale-105"
                                     priority
                                 />
                             </div>
@@ -82,7 +85,6 @@ export function LandingHero() {
                             {/* Floating luxury badge */}
                             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-full border border-white/80 bg-white/90 px-4 py-2 shadow-md backdrop-blur-md">
                                 <div className="flex items-center gap-2">
-                                    <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
                                     <span className="font-sans text-xs font-semibold tracking-wide text-third">
                                         Sanctuary of Calm
                                     </span>
