@@ -1,3 +1,5 @@
+import './mongo-dns.mjs';
+
 /** Shared with scripts/check-mongodb.mjs — keep in sync with src/libs/mongodb.ts */
 export const mongoClientOptions = {
     bufferCommands: false,

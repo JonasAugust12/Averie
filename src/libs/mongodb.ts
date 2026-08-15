@@ -1,3 +1,4 @@
+import '@libs/mongo-dns';
 import mongoose from 'mongoose';
 
 /**

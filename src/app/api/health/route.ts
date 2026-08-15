@@ -7,6 +7,10 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET health — example read-only Route Handler.
+ * @response healthApiResponseSchema
+ * @responseSet common
+ * @add 503:apiErrorResponseSchema
+ * @openapi
  */
 export async function GET() {
     try {

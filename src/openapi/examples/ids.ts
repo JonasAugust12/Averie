@@ -1,0 +1,15 @@
+/** Stable MongoDB ObjectId strings for OpenAPI examples. */
+export const EXAMPLE_OBJECT_ID = '507f1f77bcf86cd799439011';
+export const EXAMPLE_CATEGORY_MANICURE_ID = '507f1f77bcf86cd799439012';
+export const EXAMPLE_CATEGORY_GEL_ID = '507f1f77bcf86cd799439013';
+export const EXAMPLE_SERVICE_MANICURE_ID = '507f1f77bcf86cd799439014';
+export const EXAMPLE_SERVICE_GEL_ID = '507f1f77bcf86cd799439015';
+export const EXAMPLE_STAFF_ID = '507f1f77bcf86cd799439016';
+export const EXAMPLE_BOOKING_ID = '507f1f77bcf86cd799439017';
+export const EXAMPLE_SETTINGS_ID = '507f1f77bcf86cd799439018';
+export const EXAMPLE_DAY_OFF_ID = '507f1f77bcf86cd799439019';
+
+export const EXAMPLE_TIMESTAMP = '2026-08-15T10:30:00.000Z';
+export const EXAMPLE_DATE = '2026-08-20';
+export const EXAMPLE_TIME = '09:00 AM';
+export const EXAMPLE_REFERENCE = 'AVR-20260820-A1B2';
