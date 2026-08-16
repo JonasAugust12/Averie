@@ -98,18 +98,7 @@ const CATEGORIES = [
 ];
 
 const DEFAULT_PERIOD_SLOTS = {
-    morning: [
-        '07:30 AM',
-        '07:45 AM',
-        '08:00 AM',
-        '08:30 AM',
-        '09:00 AM',
-        '09:30 AM',
-        '10:00 AM',
-        '10:30 AM',
-        '11:00 AM',
-        '11:30 AM',
-    ],
+    morning: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
     afternoon: [
         '12:00 PM',
         '12:30 PM',
@@ -122,7 +111,7 @@ const DEFAULT_PERIOD_SLOTS = {
         '04:00 PM',
         '04:30 PM',
     ],
-    evening: ['05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'],
+    evening: ['05:00 PM', '05:30 PM', '06:00 PM'],
 };
 
 async function seed() {

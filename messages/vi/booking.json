@@ -18,7 +18,10 @@
         "morning": "Sáng",
         "afternoon": "Chiều",
         "evening": "Tối",
-        "empty": "Không còn khung giờ trong buổi này."
+        "empty": "Không còn khung giờ trong buổi này.",
+        "eveningUnavailable": "Buổi tối không có lịch trống.",
+        "openTime": "Giờ mở cửa",
+        "closeTime": "Giờ đóng cửa"
     },
     "steps": {
         "service": "Chọn dịch vụ",

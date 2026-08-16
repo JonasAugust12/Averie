@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Phone, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import { AppLink } from '@components/shared';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn, PillLink } from '@components/marketing/landing';
@@ -136,10 +137,8 @@ export function LandingHoursCta() {
                     </PillLink>
                 </div>
                 <div className="mt-7 flex items-center justify-center border-t border-stone-200/70 pt-6">
-                    <a
+                    <AppLink
                         href="https://maps.app.goo.gl/YCtZW533i3x6BB5QA"
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="group flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-stone-800"
                     >
                         <MapPin className="size-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-700" />
@@ -147,7 +146,7 @@ export function LandingHoursCta() {
                             {t('landing.cta.address')}
                         </span>
                         <ExternalLink className="size-3.5 text-stone-400 opacity-70 transition-opacity group-hover:opacity-100" />
-                    </a>
+                    </AppLink>
                 </div>
             </FadeIn>
         </section>
