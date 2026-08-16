@@ -11,9 +11,9 @@
     "landing": {
         "header": {
             "about": "About",
-            "menu": "Menu",
-            "blog": "Blog",
-            "search": "Find Appointment",
+            "service": "Service",
+            "product": "Product",
+            "search": "Appointment",
             "contact": "Contact",
             "book": "Book Now"
         },
@@ -25,8 +25,8 @@
         },
         "philosophy": {
             "eyebrow": "Our Philosophy",
-            "title": "Elevating the standard of self-care.",
-            "body": "At Averie, we believe that beauty treatments should be a restorative ritual. Our curated selection of services, from precision manicures to Dermalogica facials, is designed to nourish both body and mind in an environment of quiet luxury.",
+            "title": "About Us",
+            "body": "At Averie, we’ve created a welcoming space where beauty, comfort, and thoughtful care come together. From the moment you arrive, our goal is to help you feel relaxed and well cared for. Every detail, from our inviting atmosphere to the quality of our services, is thoughtfully considered to make your visit feel personal, comfortable, and enjoyable.",
             "cta": "Explore"
         },
         "services": {
@@ -123,7 +123,8 @@
             "title": "Your next appointment starts here",
             "body": "Gift certificates available. Appointments and walk-ins welcome.",
             "book": "Book now",
-            "call": "Call"
+            "call": "Call",
+            "address": "132 Chief Justice Cushing Hwy, Cohasset, MA 02025"
         },
         "searchBooking": {
             "title": "Find Your Appointment",
@@ -141,7 +142,7 @@
         "footer": {
             "menu": "Menu",
             "service": "Service",
-            "social": "Social",
+            "social": "Social & Contact",
             "about": "About",
             "portfolio": "Portfolio",
             "services": "Services",

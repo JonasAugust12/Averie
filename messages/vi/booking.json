@@ -45,7 +45,7 @@
         "firstName": "Tên",
         "lastName": "Họ",
         "phone": "Số điện thoại",
-        "email": "Email (tuỳ chọn)",
+        "email": "Email",
         "note": "Ghi chú / yêu cầu đặc biệt"
     },
     "review": {

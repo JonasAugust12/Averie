@@ -170,7 +170,7 @@ export const mockStaff: SalonStaff[] = [
 ];
 
 export const mockScheduleSettings: ScheduleSettings = {
-    workingWeekdays: [1, 2, 3, 4, 5, 6],
+    workingWeekdays: [0, 1, 2, 3, 4, 5, 6],
     periodSlots: defaultPeriodSlots(),
     dayOffs: [
         { id: 'do-1', date: '2026-12-25', scope: 'full' },

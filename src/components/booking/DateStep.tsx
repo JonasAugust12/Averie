@@ -128,10 +128,6 @@ export function DateStep() {
                         );
                     })}
                 </div>
-
-                <p className="mt-5 font-sans text-sm font-medium text-stone-500">
-                    {t('closedDay')}
-                </p>
             </div>
 
             {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}

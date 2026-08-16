@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Sparkles } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { FadeIn } from '@components/marketing/landing';
@@ -62,7 +61,6 @@ export function LandingProducts() {
             <div className="relative z-10">
                 <FadeIn className="mb-8 text-center md:mb-10">
                     <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
-                        <Sparkles className="size-3 text-nude" />
                         <span>Curated Essentials</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.products.title')}</h2>

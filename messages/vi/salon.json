@@ -11,9 +11,9 @@
     "landing": {
         "header": {
             "about": "Giới thiệu",
-            "menu": "Menu",
-            "blog": "Blog",
-            "search": "Tra cứu lịch hẹn",
+            "service": "Dịch vụ",
+            "product": "Sản phẩm",
+            "search": "Lịch hẹn",
             "contact": "Liên hệ",
             "book": "Đặt lịch"
         },
@@ -25,8 +25,8 @@
         },
         "philosophy": {
             "eyebrow": "Triết lý của chúng tôi",
-            "title": "Nâng tầm chuẩn mực chăm sóc bản thân.",
-            "body": "Tại Averie, chúng tôi tin liệu trình làm đẹp là nghi thức phục hồi. Từ manicure chính xác đến facial Dermalogica, mọi dịch vụ đều nuôi dưỡng cơ thể và tinh thần trong không gian sang trọng dịu dàng.",
+            "title": "Về Averie",
+            "body": "Tại Averie, chúng tôi tạo nên một không gian ấm áp, nơi vẻ đẹp, sự thư giãn và sự chăm sóc tận tâm hòa quyện để mang đến cho bạn những trải nghiệm trọn vẹn. Ngay từ khi bước chân vào, chúng tôi mong muốn bạn cảm nhận được sự thư thái và chăm sóc chu đáo trong từng khoảnh khắc. Mỗi chi tiết từ không gian thân thiện, dễ chịu đến chất lượng dịch vụ đều được chúng tôi chăm chút tỉ mỉ, nhằm mang đến một trải nghiệm cá nhân hóa, thoải mái và đáng nhớ.",
             "cta": "Khám phá"
         },
         "services": {
@@ -123,7 +123,8 @@
             "title": "Cuộc hẹn tiếp theo bắt đầu tại đây",
             "body": "Có sẵn gift certificate. Nhận đặt lịch và walk-in.",
             "book": "Đặt lịch",
-            "call": "Gọi"
+            "call": "Gọi",
+            "address": "132 Chief Justice Cushing Hwy, Cohasset, MA 02025, Hoa Kỳ"
         },
         "searchBooking": {
             "title": "Tra cứu lịch hẹn",
@@ -141,7 +142,7 @@
         "footer": {
             "menu": "Menu",
             "service": "Dịch vụ",
-            "social": "Mạng xã hội",
+            "social": "Mạng xã hội & Liên hệ",
             "about": "Giới thiệu",
             "portfolio": "Bộ sưu tập",
             "services": "Dịch vụ",

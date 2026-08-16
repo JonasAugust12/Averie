@@ -68,7 +68,7 @@ export function CustomerStep() {
                             {...register('firstName')}
                         />
                     </Field>
-                    <Field label={t('customer.lastName')} error={errors.lastName?.message}>
+                    <Field label={t('customer.lastName')} error={errors.lastName?.message} required>
                         <input
                             className={fieldBase}
                             autoComplete="family-name"
