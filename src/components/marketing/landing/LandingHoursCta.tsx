@@ -114,14 +114,16 @@ export function LandingHoursCta() {
 
             <FadeIn
                 delay={0.1}
-                className="relative z-10 flex flex-col items-center justify-center rounded-4xl md:rounded-card border border-stone-200/80 bg-white/95 px-6 py-10 sm:py-12 text-center shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] md:col-span-8"
+                className="relative z-10 flex flex-col items-center justify-center rounded-4xl border border-stone-200/80 bg-white/95 px-6 py-10 text-center shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] sm:py-12 md:col-span-8 md:rounded-card"
             >
                 <h2 className={landingTitle}>{t('landing.cta.title')}</h2>
+
                 <p className={`mt-4 max-w-lg ${landingBody}`}>{t('landing.cta.body')}</p>
-                <div className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
+
+                <div className="mt-8 flex w-full flex-col items-center gap-3 lg:flex-row lg:justify-center">
                     <PillLink
                         href="/book"
-                        className="flex items-center justify-center gap-2 sm:max-w-none"
+                        className="flex items-center justify-center gap-2 lg:max-w-none"
                     >
                         <Calendar className="size-4" />
                         <span>{t('landing.cta.book')}</span>
@@ -129,7 +131,7 @@ export function LandingHoursCta() {
                     <PillLink
                         href="tel:+17819231955"
                         variant="outline"
-                        className="flex items-center justify-center gap-2 sm:max-w-none"
+                        className="flex items-center justify-center gap-2 lg:max-w-none"
                     >
                         <Phone className="size-4" />
                         <span>{t('landing.cta.call')}: 781-923-1955</span>

@@ -6,7 +6,6 @@ import {
     LandingHero,
     LandingPhilosophy,
     LandingServices,
-    LandingProducts,
     LandingTestimonials,
     LandingSearchBooking,
     LandingHoursCta,
@@ -21,7 +20,6 @@ export function LandingPageView() {
                 <LandingHero />
                 <LandingPhilosophy />
                 <LandingServices />
-                <LandingProducts />
                 <LandingTestimonials />
                 <LandingSearchBooking />
                 <LandingHoursCta />

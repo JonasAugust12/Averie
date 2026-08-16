@@ -12,15 +12,15 @@ export function LandingFooter() {
     return (
         <footer className={cn('border-t border-border/40 py-12 pb-0', landingBleedWhite)}>
             <div className="grid gap-10 md:grid-cols-12 md:gap-10">
-                {/* Brand & Logo */}
+                {/* Logo */}
                 <div className="flex flex-col items-center text-center md:col-span-4 md:items-start md:text-left">
-                    <div className="relative flex size-32 items-center justify-center overflow-hidden rounded-full p-3 md:size-auto md:aspect-square md:w-3/4 md:p-8">
+                    <div className="relative flex size-42 items-center justify-center overflow-hidden rounded-full p-3 md:size-auto md:aspect-square md:w-3/4 md:p-8">
                         <div className="relative h-full w-full">
                             <Image
                                 src="/icons/logo_round.png"
                                 alt={t('brand')}
                                 fill
-                                className="scale-90 rounded-full object-contain transition-transform duration-300 hover:scale-100"
+                                className="rounded-full object-contain transition-transform duration-300 hover:scale-100"
                                 priority
                             />
                         </div>
@@ -35,9 +35,6 @@ export function LandingFooter() {
                     <address className="flex flex-col items-center gap-3 not-italic md:items-start">
                         {/* Phone */}
                         <div className="flex items-center justify-center gap-2.5">
-                            <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-nude shadow-xs md:size-9">
-                                <Phone className="size-3.5 md:size-4" />
-                            </span>
                             <a
                                 href="tel:+17819231955"
                                 className="font-sans text-sm font-bold text-stone-850 transition-colors hover:text-nude"
@@ -48,10 +45,7 @@ export function LandingFooter() {
 
                         {/* Address */}
                         <div className="flex items-start justify-center gap-2.5">
-                            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-stone-600 shadow-xs md:size-9">
-                                <MapPin className="size-3.5 md:size-4" />
-                            </span>
-                            <div className="flex flex-col text-left">
+                            <div className="flex flex-col text-center md:text-left">
                                 <p className="font-sans text-xs font-bold leading-tight text-stone-855 md:text-[13px]">
                                     {t('landing.footer.addressLine1')}
                                 </p>
