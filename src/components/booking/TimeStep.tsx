@@ -6,13 +6,20 @@ import { useAvailableSlots } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { getPeriodForTime } from '@utils/schedule.util';
+import {
+    getPeriodForTime,
+    getWeekdayFromDate,
+    isCloseTimeSlot,
+    isOpenTimeSlot,
+} from '@utils/schedule.util';
 import { cn } from '@utils/cn.util';
 
 export function TimeStep() {
     const t = useBookingTranslations();
     const { date, time, setTime, setStep } = useBookingStore();
     const { data: slots, isLoading } = useAvailableSlots(date);
+
+    const weekday = date ? getWeekdayFromDate(date) : 1;
 
     const periods = useMemo(() => {
         const available = (slots ?? []).filter((s) => s.available);
@@ -54,25 +61,51 @@ export function TimeStep() {
                     </h2>
                     {periodItems.length === 0 ? (
                         <p className="font-sans text-base text-stone-500 font-medium italic">
-                            {t('periods.empty')}
+                            {key === 'evening'
+                                ? t('periods.eveningUnavailable')
+                                : t('periods.empty')}
                         </p>
                     ) : (
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                             {periodItems.map((slot) => {
                                 const selected = time === slot.time;
+                                const isOpenTime = isOpenTimeSlot(slot.time, weekday);
+                                const isCloseTime = isCloseTimeSlot(slot.time, weekday);
                                 return (
                                     <button
                                         key={slot.id}
                                         type="button"
                                         onClick={() => setTime(slot.time)}
                                         className={cn(
-                                            'cursor-pointer rounded-xl border-2 px-4 py-4 font-sans text-base font-bold transition-all duration-200 hover:shadow-md hover:scale-103',
+                                            'cursor-pointer rounded-xl border-2 px-4 py-3 font-sans text-base font-bold transition-all duration-200 hover:shadow-md hover:scale-103',
                                             selected
                                                 ? 'border-primary bg-primary text-neutral shadow-md scale-103'
-                                                : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
+                                                : isCloseTime
+                                                  ? 'border-stone-200 bg-stone-50/70 text-stone-500 opacity-60 hover:border-stone-300 hover:bg-stone-50/90 hover:opacity-80'
+                                                  : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
                                         )}
                                     >
-                                        {slot.time}
+                                        <span className="block">{slot.time}</span>
+                                        {isOpenTime && (
+                                            <span
+                                                className={cn(
+                                                    'mt-1 block text-[10px] font-semibold uppercase tracking-wider',
+                                                    selected ? 'text-neutral/80' : 'text-stone-500',
+                                                )}
+                                            >
+                                                {t('periods.openTime')}
+                                            </span>
+                                        )}
+                                        {isCloseTime && (
+                                            <span
+                                                className={cn(
+                                                    'mt-1 block text-[10px] font-semibold uppercase tracking-wider',
+                                                    selected ? 'text-neutral/70' : 'text-stone-400',
+                                                )}
+                                            >
+                                                {t('periods.closeTime')}
+                                            </span>
+                                        )}
                                     </button>
                                 );
                             })}

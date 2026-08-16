@@ -1,0 +1,52 @@
+## ADDED Requirements
+
+### Requirement: Salon domain Mongoose models
+
+The system SHALL define Mongoose 8 schemas for `ServiceCategory`, `Service`, `User`, `Booking`, and `SalonSettings` using collection names and field names from `docs/system-design/00-naming-conventions.md` and `02-domain-models.md`.
+
+#### Scenario: Collections use canonical names
+
+- **WHEN** models are registered with Mongoose
+- **THEN** collection names MUST be `service_categories`, `services`, `users`, `bookings`, and `salon_settings`
+- **AND** business fields MUST use canonical names (`visible`, `estimatedMinutes`, `staffPreference`, etc.) without mock aliases
+
+#### Scenario: User document excludes password in API paths
+
+- **WHEN** a User document is serialized for any API or action response
+- **THEN** `passwordHash` MUST NOT appear in the output DTO
+
+### Requirement: Zod validation mirrors
+
+The system SHALL provide Zod 4 schemas in `@validations/*` that mirror each entity's create/update inputs with the same field names as Mongoose models.
+
+#### Scenario: Server Action rejects invalid input
+
+- **WHEN** a Server Action receives input that fails Zod `safeParse`
+- **THEN** the action MUST return `{ status: 400, message, data: null }` without writing to the database
+
+### Requirement: Database indexes
+
+The system SHALL create indexes defined in `docs/system-design/02-domain-models.md`, including unique `users.email`, unique `bookings.reference`, and booking query indexes on `date`, `time`, and `status`.
+
+#### Scenario: Duplicate booking reference rejected
+
+- **WHEN** a second booking is created with an existing `reference` value
+- **THEN** the create operation MUST fail with a conflict error (HTTP/action status 409)
+
+### Requirement: Salon seed data
+
+The system SHALL provide a seed script that creates a default admin user, a singleton `salon_settings` document, and six default service categories aligned with mock catalog names.
+
+#### Scenario: Seed on empty database
+
+- **WHEN** the seed script runs against an empty salon database
+- **THEN** it MUST insert one admin user, one settings document, and six categories idempotently or skip if already present
+
+### Requirement: Salon mapper serialization
+
+The system SHALL implement serializers under `src/mappers/` (`@mappers`) to map `_id` to `id`, optional Date fields to ISO strings, and omit secrets — without renaming business fields.
+
+#### Scenario: Service DTO field names
+
+- **WHEN** a Service document is mapped for API output
+- **THEN** the DTO MUST expose `visible` and `estimatedMinutes` (not `active` or `durationMin`)

@@ -1,0 +1,32 @@
+{
+    "schemaFile": "openapi/generated/openapi.json",
+    "schemaType": ["zod"],
+    "schemaDirectory": ["src/openapi/schemas", "src/validations"],
+    "outputDir": "openapi/generated",
+    "docsUrl": "api/docs",
+    "ui": "scalar",
+    "apiDir": "src/app/api",
+    "includeUndocumented": true,
+    "defaultResponseSet": "common",
+    "responseSets": {
+        "common": ["400", "401", "404", "500"]
+    },
+    "errorConfig": {
+        "template": {
+            "type": "object",
+            "properties": {
+                "status": { "type": "integer", "description": "HTTP status code" },
+                "message": { "type": "string" },
+                "data": { "type": "null" }
+            },
+            "required": ["status", "message", "data"]
+        },
+        "codes": {
+            "400": { "description": "Validation failed" },
+            "401": { "description": "Unauthorized" },
+            "404": { "description": "Not found" },
+            "500": { "description": "Server error" },
+            "503": { "description": "Service unavailable" }
+        }
+    }
+}

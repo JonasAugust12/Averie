@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Instagram, Facebook, Phone, MapPin } from 'lucide-react';
+import { AppLink } from '@components/shared';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { landingBleedSecondary600, landingBleedWhite } from '@components/marketing/landing/styles';
@@ -29,27 +30,33 @@ export function LandingFooter() {
 
                 {/* Contact */}
                 <div className="flex flex-col items-center text-center md:col-span-4 md:items-start md:text-left">
-                    <p className="mb-4 flex w-full items-center justify-center gap-2 border-b border-stone-200/60 pb-2 font-sans text-sm font-bold tracking-wide text-nude md:justify-start md:text-[17px]">
+                    <p className="mb-4 flex w-full items-center justify-center gap-2 border-b border-stone-200/60 pb-2 font-sans text-base font-bold tracking-wide text-nude md:justify-start md:text-lg">
                         {t('landing.footer.contact')}
                     </p>
-                    <address className="flex flex-col items-center gap-3 not-italic md:items-start">
+                    <address className="flex flex-col items-center gap-4 not-italic md:items-start">
                         {/* Phone */}
-                        <div className="flex items-center justify-center gap-2.5">
-                            <a
+                        <div className="flex items-center justify-center gap-3">
+                            <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-nude shadow-xs md:size-10">
+                                <Phone className="size-4 md:size-[18px]" />
+                            </span>
+                            <AppLink
                                 href="tel:+17819231955"
-                                className="font-sans text-sm font-bold text-stone-850 transition-colors hover:text-nude"
+                                className="font-sans text-base font-bold text-stone-850 transition-colors hover:text-nude md:text-[17px]"
                             >
                                 {t('landing.footer.phone')}
-                            </a>
+                            </AppLink>
                         </div>
 
                         {/* Address */}
-                        <div className="flex items-start justify-center gap-2.5">
-                            <div className="flex flex-col text-center md:text-left">
-                                <p className="font-sans text-xs font-bold leading-tight text-stone-855 md:text-[13px]">
+                        <div className="flex items-start justify-center gap-3">
+                            <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-stone-600 shadow-xs md:size-10">
+                                <MapPin className="size-4 md:size-[18px]" />
+                            </span>
+                            <div className="flex flex-col text-left">
+                                <p className="font-sans text-sm font-bold leading-snug text-stone-855 md:text-base">
                                     {t('landing.footer.addressLine1')}
                                 </p>
-                                <p className="mt-0.5 font-sans text-[11px] font-semibold text-stone-500 md:mt-1 md:text-xs">
+                                <p className="mt-1 font-sans text-xs font-semibold text-stone-500 md:text-sm">
                                     {t('landing.footer.addressLine2')}
                                 </p>
                             </div>
@@ -57,21 +64,21 @@ export function LandingFooter() {
                     </address>
 
                     {/* Social */}
-                    <div className="mt-4 flex justify-center gap-3 md:mt-5 md:justify-start">
-                        <a
+                    <div className="mt-5 flex justify-center gap-3.5 md:mt-6 md:justify-start">
+                        <AppLink
                             href="https://facebook.com"
-                            className="flex size-10 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-11"
+                            className="flex size-11 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-12"
                             aria-label="Facebook"
                         >
-                            <Facebook className="size-4.5 md:size-5" />
-                        </a>
-                        <a
-                            href="https://instagram.com"
-                            className="flex size-10 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-11"
+                            <Facebook className="size-5 md:size-[22px]" />
+                        </AppLink>
+                        <AppLink
+                            href="https://www.instagram.com/averienailspa"
+                            className="flex size-11 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-12"
                             aria-label="Instagram"
                         >
-                            <Instagram className="size-4.5 md:size-5" />
-                        </a>
+                            <Instagram className="size-5 md:size-[22px]" />
+                        </AppLink>
                     </div>
                 </div>
 
@@ -105,18 +112,18 @@ export function LandingFooter() {
                     {t('landing.footer.rights')}
                 </p>
                 <div className="relative z-10 flex flex-wrap justify-center gap-4 px-4 md:gap-8 md:px-0">
-                    <a
+                    <AppLink
                         href="#"
                         className="font-sans text-xs text-cream/90 hover:text-cream md:text-sm"
                     >
                         {t('landing.footer.terms')}
-                    </a>
-                    <a
+                    </AppLink>
+                    <AppLink
                         href="#"
                         className="font-sans text-xs text-cream/90 hover:text-cream md:text-sm"
                     >
                         {t('landing.footer.privacy')}
-                    </a>
+                    </AppLink>
                 </div>
             </div>
         </footer>

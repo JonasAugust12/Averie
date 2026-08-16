@@ -18,7 +18,10 @@
         "morning": "Morning",
         "afternoon": "Afternoon",
         "evening": "Evening",
-        "empty": "No times available in this period."
+        "empty": "No times available in this period.",
+        "eveningUnavailable": "Evening not available.",
+        "openTime": "Open time",
+        "closeTime": "Close time"
     },
     "steps": {
         "service": "Select Service",

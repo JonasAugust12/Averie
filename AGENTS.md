@@ -5,7 +5,7 @@ Guidance for AI agents working in this repo.
 ## Project
 
 Averie is a Next.js 15 (App Router) full-stack app deployed on Vercel serverless.
-Docs: `docs/overview.md`, `docs/advanced-workflow.md`, `docs/superpowers.md`.
+Docs: `docs/overview.md`, `docs/backend-conventions.md`, `docs/advanced-workflow.md`, `docs/superpowers.md`.
 
 ## Commands
 
@@ -44,7 +44,7 @@ Client data layer: `@services/*` (TanStack Query) calls either `apiClient` (GET)
 
 ## Aliases
 
-Use `@actions`, `@services`, `@validations`, `@components`, `@hooks`, `@i18n`, `@libs`, `@messages`, `@models`, `@providers`, `@stores`, `@typings`, `@utils`.  
+Use `@actions`, `@services`, `@validations`, `@components`, `@hooks`, `@i18n`, `@libs`, `@mappers`, `@messages`, `@models`, `@openapi`, `@providers`, `@stores`, `@typings`, `@utils`.  
 Do **not** use `@types` (reserved by TypeScript).
 
 ## Workflow

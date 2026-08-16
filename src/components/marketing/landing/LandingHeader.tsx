@@ -42,13 +42,13 @@ export function LandingHeader() {
                     {/* Desktop Navigation */}
                     <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3.5 lg:flex lg:gap-6 xl:gap-8">
                         {nav.map((item) => (
-                            <a
+                            <Link
                                 key={item.key}
                                 href={item.href}
                                 className="nav-link-underline whitespace-nowrap pb-1 font-sans text-sm font-medium text-secondary-600 transition-colors hover:text-nude lg:text-base"
                             >
                                 {t(`landing.header.${item.key}`)}
-                            </a>
+                            </Link>
                         ))}
                     </div>
 
@@ -76,7 +76,7 @@ export function LandingHeader() {
                 <div className={cn('lg:hidden', !open && 'hidden')}>
                     <div className="mt-4 flex flex-col gap-2 border-t border-stone-200/60 pt-4">
                         {nav.map((item) => (
-                            <a
+                            <Link
                                 key={item.key}
                                 href={item.href}
                                 className="group flex items-center justify-between rounded-2xl px-4 py-3 font-sans text-base font-medium text-secondary-600 transition-all hover:bg-white/80 hover:text-nude"
@@ -85,7 +85,7 @@ export function LandingHeader() {
                                 <span className="flex items-center gap-2">
                                     {t(`landing.header.${item.key}`)}
                                 </span>
-                            </a>
+                            </Link>
                         ))}
                         <Link
                             href="/book"

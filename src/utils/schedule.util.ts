@@ -9,6 +9,64 @@ import type {
 
 export const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
+/** Salon close time by weekday (24h). Last bookable slot is 1 hour before close. */
+export const SALON_CLOSE_HOUR: Record<number, number> = {
+    0: 17, // Sun 5:00 PM
+    1: 19, // Mon–Fri 7:00 PM
+    2: 19,
+    3: 19,
+    4: 19,
+    5: 19,
+    6: 18, // Sat 6:00 PM
+};
+
+/** First bookable slot hour (24h) by weekday. */
+export const SALON_OPEN_HOUR: Record<number, number> = {
+    0: 10, // Sun 10:00 AM
+    1: 9,
+    2: 9,
+    3: 9,
+    4: 9,
+    5: 9,
+    6: 9,
+};
+
+export function minuteOf(time: string): number {
+    const h = hourOf(time);
+    const m = parseInt(time.match(/:(\d{2})/)?.[1] ?? '0', 10) || 0;
+    return h * 60 + m;
+}
+
+export function getLastBookableMinute(weekday: number): number {
+    const closeHour = SALON_CLOSE_HOUR[weekday] ?? 19;
+    return (closeHour - 1) * 60;
+}
+
+export function getFirstBookableMinute(weekday: number): number {
+    const openHour = SALON_OPEN_HOUR[weekday] ?? 9;
+    return openHour * 60;
+}
+
+export function getWeekdayFromDate(date: string): number {
+    return new Date(`${date}T12:00:00`).getDay();
+}
+
+export function isOpenTimeSlot(time: string, weekday: number): boolean {
+    return minuteOf(time) === getFirstBookableMinute(weekday);
+}
+
+export function isCloseTimeSlot(time: string, weekday: number): boolean {
+    return minuteOf(time) === getLastBookableMinute(weekday);
+}
+
+export function isSlotBookableForWeekday(time: string, weekday: number): boolean {
+    const slotMinute = minuteOf(time);
+    return (
+        slotMinute >= getFirstBookableMinute(weekday) &&
+        slotMinute <= getLastBookableMinute(weekday)
+    );
+}
+
 export function hourOf(time: string): number {
     const match = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
     if (!match) {
@@ -87,7 +145,10 @@ export function getAvailableSlotsForDate(
         bookings.filter((b) => b.date === date && b.status !== 'cancelled').map((b) => b.time),
     );
 
+    const weekday = new Date(`${date}T12:00:00`).getDay();
+
     return getAllConfiguredSlots(settings)
+        .filter((slot) => isSlotBookableForWeekday(slot.time, weekday))
         .filter((slot) => !offPeriods.includes(getPeriodForTime(slot.time)))
         .map((slot) => ({
             ...slot,
@@ -105,18 +166,7 @@ export function sortTimes(times: string[]): string[] {
 
 export function defaultPeriodSlots(): PeriodSlots {
     return {
-        morning: [
-            '07:30 AM',
-            '07:45 AM',
-            '08:00 AM',
-            '08:30 AM',
-            '09:00 AM',
-            '09:30 AM',
-            '10:00 AM',
-            '10:30 AM',
-            '11:00 AM',
-            '11:30 AM',
-        ],
+        morning: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
         afternoon: [
             '12:00 PM',
             '12:30 PM',
@@ -129,7 +179,7 @@ export function defaultPeriodSlots(): PeriodSlots {
             '04:00 PM',
             '04:30 PM',
         ],
-        evening: ['05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'],
+        evening: ['05:00 PM', '05:30 PM', '06:00 PM'],
     };
 }
 

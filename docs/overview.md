@@ -12,6 +12,8 @@ Tài liệu mô tả mục đích, công nghệ và **convention / rule** đã t
 
 Mục tiêu kiến trúc: cấu trúc rõ, dễ mở rộng, chi phí host thấp.
 
+**Backend salon (quy tắc + ma trận sửa file):** [backend-conventions.md](./backend-conventions.md).
+
 ---
 
 ## 2. Công nghệ sử dụng

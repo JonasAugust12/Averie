@@ -170,10 +170,11 @@ pnpm build   # optional local production check
 
 ## Scripts
 
-| Command           | Description          |
-| ----------------- | -------------------- |
-| `pnpm dev`        | Dev server           |
-| `pnpm build`      | Production build     |
-| `pnpm start`      | Run production build |
-| `pnpm lint`       | ESLint               |
-| `pnpm type-check` | TypeScript           |
+| Command           | Description                                        |
+| ----------------- | -------------------------------------------------- |
+| `pnpm dev`        | Dev server                                         |
+| `pnpm build`      | Production build                                   |
+| `pnpm start`      | Run production build                               |
+| `pnpm lint`       | ESLint                                             |
+| `pnpm type-check` | TypeScript                                         |
+| `pnpm db:check`   | Test MongoDB Atlas connection (reads `.env.local`) |

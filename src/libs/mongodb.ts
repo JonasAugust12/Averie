@@ -1,3 +1,4 @@
+import '@libs/mongo-dns';
 import mongoose from 'mongoose';
 
 /**
@@ -10,6 +11,21 @@ import mongoose from 'mongoose';
  */
 
 const MONGODB_URI = process.env.MONGODB_URI;
+
+if (process.env.MONGODB_DEBUG === '1') {
+    mongoose.set('debug', true);
+}
+
+/** Align with MongoDB Atlas driver onboarding (Stable API v1). */
+export const mongoClientOptions = {
+    bufferCommands: false,
+    maxPoolSize: 10,
+    serverApi: {
+        version: '1' as const,
+        strict: true,
+        deprecationErrors: true,
+    },
+} satisfies mongoose.ConnectOptions;
 
 interface MongooseCache {
     conn: typeof mongoose | null;
@@ -38,10 +54,7 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
     }
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI, {
-            bufferCommands: false,
-            maxPoolSize: 10,
-        });
+        cached.promise = mongoose.connect(MONGODB_URI, mongoClientOptions);
     }
 
     try {
