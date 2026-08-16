@@ -13,15 +13,15 @@ export function LandingFooter() {
     return (
         <footer className={cn('border-t border-border/40 py-12 pb-0', landingBleedWhite)}>
             <div className="grid gap-10 md:grid-cols-12 md:gap-10">
-                {/* Brand & Logo */}
+                {/* Logo */}
                 <div className="flex flex-col items-center text-center md:col-span-4 md:items-start md:text-left">
-                    <div className="relative flex size-32 items-center justify-center overflow-hidden rounded-full p-3 md:size-auto md:aspect-square md:w-3/4 md:p-8">
+                    <div className="relative flex size-42 items-center justify-center overflow-hidden rounded-full p-3 md:size-auto md:aspect-square md:w-3/4 md:p-8">
                         <div className="relative h-full w-full">
                             <Image
                                 src="/icons/logo_round.png"
                                 alt={t('brand')}
                                 fill
-                                className="scale-90 rounded-full object-contain transition-transform duration-300 hover:scale-100"
+                                className="rounded-full object-contain transition-transform duration-300 hover:scale-100"
                                 priority
                             />
                         </div>

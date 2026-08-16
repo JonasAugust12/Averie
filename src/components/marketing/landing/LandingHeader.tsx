@@ -11,7 +11,6 @@ import { cn } from '@utils/cn.util';
 const nav = [
     { href: '#philosophy', key: 'about' as const },
     { href: '#services', key: 'service' as const },
-    { href: '#products', key: 'product' as const },
     { href: '#search-booking', key: 'search' as const },
     { href: '#hours', key: 'contact' as const },
 ];
@@ -25,7 +24,7 @@ export function LandingHeader() {
             <div
                 className={cn(
                     'border border-white/70 bg-cream/70 shadow-[0_8px_32px_rgb(58_48_39/0.08)] backdrop-blur-xl transition-[border-radius] duration-300',
-                    open ? 'rounded-3xl p-4' : 'rounded-full px-4 py-2.5 sm:py-3 md:px-6 md:py-3.5',
+                    open ? 'rounded-3xl p-4' : 'rounded-3xl px-4 py-2.5 sm:py-3 md:px-6 md:py-3.5',
                 )}
             >
                 <nav className="relative flex items-center justify-between gap-3">
@@ -41,12 +40,12 @@ export function LandingHeader() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3.5 lg:gap-6 xl:gap-8 md:flex">
+                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3.5 lg:flex lg:gap-6 xl:gap-8">
                         {nav.map((item) => (
                             <Link
                                 key={item.key}
                                 href={item.href}
-                                className="nav-link-underline pb-1 font-sans text-sm lg:text-base font-medium text-secondary-600 transition-colors hover:text-nude whitespace-nowrap"
+                                className="nav-link-underline whitespace-nowrap pb-1 font-sans text-sm font-medium text-secondary-600 transition-colors hover:text-nude lg:text-base"
                             >
                                 {t(`landing.header.${item.key}`)}
                             </Link>
@@ -57,13 +56,13 @@ export function LandingHeader() {
                         <LanguageSwitcher variant="pill" />
                         <Link
                             href="/book"
-                            className="hidden md:inline-flex h-9.5 lg:h-10.5 items-center justify-center rounded-full bg-third px-4 lg:px-6 font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-xs transition-all duration-300 hover:bg-primary-800 hover:-translate-y-0.5 whitespace-nowrap"
+                            className="hidden h-9.5 items-center justify-center whitespace-nowrap rounded-full bg-third px-4 font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-800 lg:inline-flex lg:h-10.5 lg:px-6"
                         >
                             {t('landing.header.book')}
                         </Link>
                         <button
                             type="button"
-                            className="flex size-10 items-center justify-center rounded-full bg-white/70 text-third border border-stone-200/50 shadow-2xs transition-colors hover:bg-white active:scale-95 md:hidden"
+                            className="flex size-10 items-center justify-center rounded-full border border-stone-200/50 bg-white/70 text-third shadow-2xs transition-colors hover:bg-white active:scale-95 lg:hidden"
                             aria-label="Menu"
                             aria-expanded={open}
                             onClick={() => setOpen((v) => !v)}
@@ -74,7 +73,7 @@ export function LandingHeader() {
                 </nav>
 
                 {/* Mobile Menu Dropdown */}
-                <div className={cn('md:hidden', !open && 'hidden')}>
+                <div className={cn('lg:hidden', !open && 'hidden')}>
                     <div className="mt-4 flex flex-col gap-2 border-t border-stone-200/60 pt-4">
                         {nav.map((item) => (
                             <Link
