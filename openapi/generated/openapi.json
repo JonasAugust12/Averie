@@ -1336,16 +1336,13 @@
                     "allowStaffSelection": {
                         "type": "boolean"
                     },
-                    "workingWeekdays": {
+                    "weekdaySchedules": {
                         "type": "array",
                         "items": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 6
-                        }
-                    },
-                    "periodSlots": {
-                        "$ref": "#/components/schemas/periodSlotsDtoSchema"
+                            "$ref": "#/components/schemas/weekdayScheduleDtoSchema"
+                        },
+                        "minItems": 7,
+                        "maxItems": 7
                     },
                     "dayOffs": {
                         "type": "array",
@@ -1360,8 +1357,7 @@
                 "required": [
                     "id",
                     "allowStaffSelection",
-                    "workingWeekdays",
-                    "periodSlots",
+                    "weekdaySchedules",
                     "dayOffs",
                     "updatedAt"
                 ]
@@ -1633,20 +1629,13 @@
                     "allowStaffSelection": {
                         "type": "boolean"
                     },
-                    "workingWeekdays": {
+                    "weekdaySchedules": {
                         "type": "array",
                         "items": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 6
-                        }
-                    },
-                    "periodSlots": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/periodSlotsSchema"
-                            }
-                        ]
+                            "$ref": "#/components/schemas/weekdayScheduleSchema"
+                        },
+                        "minItems": 7,
+                        "maxItems": 7
                     },
                     "dayOffs": {
                         "type": "array",
@@ -1821,6 +1810,40 @@
                     "createdAt",
                     "updatedAt"
                 ]
+            },
+            "weekdayScheduleDtoSchema": {
+                "type": "object",
+                "properties": {
+                    "weekday": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 6
+                    },
+                    "isOpen": {
+                        "type": "boolean"
+                    },
+                    "periodSlots": {
+                        "$ref": "#/components/schemas/periodSlotsDtoSchema"
+                    }
+                },
+                "required": ["weekday", "isOpen", "periodSlots"]
+            },
+            "weekdayScheduleSchema": {
+                "type": "object",
+                "properties": {
+                    "weekday": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 6
+                    },
+                    "isOpen": {
+                        "type": "boolean"
+                    },
+                    "periodSlots": {
+                        "$ref": "#/components/schemas/periodSlotsSchema"
+                    }
+                },
+                "required": ["weekday", "isOpen", "periodSlots"]
             }
         },
         "responses": {

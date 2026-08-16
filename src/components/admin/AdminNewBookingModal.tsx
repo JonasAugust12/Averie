@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Loader2, Sparkles, X, Plus } from 'lucide-react';
+import {
+    CalendarPlus,
+    CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
+    Check,
+    Loader2,
+    X,
+    Plus,
+} from 'lucide-react';
 import {
     useAllSalonServices,
     useAllSalonStaff,
@@ -40,6 +49,9 @@ function startOfMonth(d: Date): Date {
 }
 
 const STEP_TITLES = ['Services', 'Specialist', 'Date', 'Time', 'Customer', 'Review'];
+
+const ADMIN_STEP_DOT_SIZE_PX = 32;
+const ADMIN_STEP_DOT_RADIUS_PX = ADMIN_STEP_DOT_SIZE_PX / 2;
 
 export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalProps) {
     const tAdmin = useAdminTranslations();
@@ -177,18 +189,22 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-md animate-in fade-in duration-200"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-[2vh_2vw] backdrop-blur-md animate-in fade-in duration-200 sm:p-[2.5vh_3vw]"
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
-            <div className="relative flex flex-col w-full max-w-4xl h-170 max-h-[92vh] bg-white rounded-3xl shadow-2xl border border-stone-200/80 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative flex h-[90dvh] w-[min(96vw,80rem)] max-h-[94dvh] flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200 sm:h-[92dvh] lg:h-[94dvh]">
                 {/* Modal Header */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-stone-200/70 bg-stone-50/80 shrink-0">
+                <div className="flex shrink-0 items-center justify-between border-b border-stone-300/70 bg-stone-100 px-6 py-5 lg:px-8 lg:py-6">
                     <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-2xl bg-stone-900 text-white flex items-center justify-center shadow-md">
-                            <Sparkles className="h-5 w-5 text-amber-300" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-stone-900 text-white shadow-md lg:h-11 lg:w-11">
+                            {step === 7 ? (
+                                <CheckCircle2 className="h-5 w-5 text-emerald-300" aria-hidden />
+                            ) : (
+                                <CalendarPlus className="h-5 w-5" aria-hidden />
+                            )}
                         </div>
                         <div>
-                            <h2 className="font-display text-xl font-black text-stone-900 leading-tight">
+                            <h2 className="font-display text-xl font-black leading-tight text-stone-900 lg:text-2xl">
                                 {step === 7
                                     ? tAdmin('booking.confirmTitle') || 'Booking Confirmed'
                                     : tAdmin('newBooking') || 'New Appointment'}
@@ -204,7 +220,7 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
                     </div>
                     <button
                         onClick={handleClose}
-                        className="h-9 w-9 rounded-full bg-stone-200/60 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors cursor-pointer"
+                        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-stone-300/70 text-stone-700 transition-colors hover:bg-stone-300"
                         aria-label="Close"
                     >
                         <X className="h-4 w-4" />
@@ -213,133 +229,200 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
 
                 {/* Stepper */}
                 {step <= 6 && (
-                    <div className="bg-white border-b border-stone-100 px-6 py-3 shrink-0 overflow-x-auto">
-                        <div className="flex items-center justify-between gap-1.5 min-w-135">
-                            {STEP_TITLES.map((title, i) => {
-                                const stepNum = (i + 1) as ModalStep;
-                                const isCurrent = step === stepNum;
-                                const isPassed = step > stepNum;
-                                return (
-                                    <button
-                                        key={title}
-                                        type="button"
-                                        disabled={!isPassed}
-                                        onClick={() => setStep(stepNum)}
-                                        className={cn(
-                                            'flex items-center gap-2 py-1.5 px-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all',
-                                            isCurrent
-                                                ? 'bg-stone-900 text-white shadow-sm'
-                                                : isPassed
-                                                  ? 'bg-stone-100 text-stone-700 hover:bg-stone-200 cursor-pointer'
-                                                  : 'bg-transparent text-stone-300 cursor-default',
-                                        )}
-                                    >
-                                        <span
-                                            className={cn(
-                                                'h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-black',
-                                                isCurrent
-                                                    ? 'bg-white text-stone-900'
-                                                    : isPassed
-                                                      ? 'bg-stone-900 text-white'
-                                                      : 'bg-stone-200 text-stone-400',
-                                            )}
+                    <div className="shrink-0 overflow-x-auto border-b border-stone-200 bg-stone-50 px-4 py-4 sm:px-6 lg:px-8">
+                        <nav
+                            aria-label="Booking progress"
+                            className="mx-auto w-full max-w-5xl min-w-136 lg:min-w-0"
+                        >
+                            <ol className="flex w-full items-start">
+                                {STEP_TITLES.map((title, index) => {
+                                    const stepNum = (index + 1) as ModalStep;
+                                    const isPassed = step > stepNum;
+                                    const isCurrent = step === stepNum;
+                                    const isLast = index === STEP_TITLES.length - 1;
+
+                                    return (
+                                        <li
+                                            key={title}
+                                            className="relative flex flex-1 flex-col items-center"
                                         >
-                                            {isPassed ? '✓' : stepNum}
-                                        </span>
-                                        <span>{title}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                            {!isLast && (
+                                                <div
+                                                    aria-hidden
+                                                    className="pointer-events-none absolute z-0 h-0.5"
+                                                    style={{
+                                                        top: ADMIN_STEP_DOT_RADIUS_PX,
+                                                        left: `calc(50% + ${ADMIN_STEP_DOT_RADIUS_PX}px)`,
+                                                        width: `calc(100% - ${ADMIN_STEP_DOT_SIZE_PX}px)`,
+                                                    }}
+                                                >
+                                                    <div className="h-full w-full rounded-full bg-stone-200/90" />
+                                                    <div
+                                                        key={`${stepNum}-${isPassed ? 'done' : isCurrent ? 'active' : 'idle'}`}
+                                                        className={cn(
+                                                            'absolute inset-y-0 left-0 origin-left rounded-full bg-stone-900',
+                                                            isPassed &&
+                                                                'animate-booking-step-line-fill',
+                                                            isCurrent &&
+                                                                'animate-booking-step-line-hint',
+                                                            !isPassed && !isCurrent && 'w-0',
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            <button
+                                                type="button"
+                                                disabled={!isPassed}
+                                                onClick={() => isPassed && setStep(stepNum)}
+                                                className={cn(
+                                                    'group relative z-10 flex flex-col items-center border-0 bg-transparent p-0 outline-none transition-all duration-200',
+                                                    isPassed
+                                                        ? 'cursor-pointer hover:scale-105'
+                                                        : 'cursor-default',
+                                                )}
+                                            >
+                                                <div className="relative">
+                                                    <div
+                                                        className={cn(
+                                                            'relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 ring-[3px] ring-stone-50 transition-all duration-300',
+                                                            isPassed
+                                                                ? 'border-stone-900 bg-stone-900 text-white'
+                                                                : isCurrent
+                                                                  ? 'border-stone-900 bg-white text-stone-900 shadow-md shadow-stone-900/10'
+                                                                  : 'border-stone-300 bg-white text-stone-400',
+                                                        )}
+                                                    >
+                                                        {isPassed ? (
+                                                            <Check
+                                                                className="h-3.5 w-3.5"
+                                                                strokeWidth={3}
+                                                            />
+                                                        ) : (
+                                                            <span className="font-sans text-[11px] font-black">
+                                                                {stepNum}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {isCurrent && (
+                                                        <span
+                                                            aria-hidden
+                                                            className="absolute -inset-1 rounded-full bg-stone-900/10 animate-ambient-pulse"
+                                                        />
+                                                    )}
+                                                </div>
+
+                                                <span
+                                                    className={cn(
+                                                        'mt-2 w-full truncate px-0.5 text-center font-sans text-[10px] font-semibold uppercase tracking-wider sm:text-[11px] lg:text-xs',
+                                                        isCurrent
+                                                            ? 'font-bold text-stone-900'
+                                                            : isPassed
+                                                              ? 'font-bold text-stone-700'
+                                                              : 'text-stone-400',
+                                                    )}
+                                                >
+                                                    {title}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ol>
+                        </nav>
                     </div>
                 )}
 
                 {/* Modal Body */}
-                <div className="flex-1 overflow-y-auto p-5 sm:p-7 min-h-0 bg-stone-50/40">
-                    {step === 1 && (
-                        <BookingServiceStep
-                            services={services}
-                            isLoading={servicesLoading}
-                            serviceIds={serviceIds}
-                            searchQuery={searchQuery}
-                            selectedCategory={selectedCategory}
-                            filteredServices={filteredServices}
-                            onToggleService={(id) =>
-                                setServiceIds((prev) =>
-                                    prev.includes(id)
-                                        ? prev.filter((x) => x !== id)
-                                        : [...prev, id],
-                                )
-                            }
-                            onSearchChange={setSearchQuery}
-                            onCategoryChange={setSelectedCategory}
-                        />
-                    )}
+                <div className="min-h-0 flex-1 overflow-y-auto bg-stone-100/90 p-5 sm:p-7 lg:p-8">
+                    <div className="mx-auto w-full max-w-5xl">
+                        {step === 1 && (
+                            <BookingServiceStep
+                                services={services}
+                                isLoading={servicesLoading}
+                                serviceIds={serviceIds}
+                                searchQuery={searchQuery}
+                                selectedCategory={selectedCategory}
+                                filteredServices={filteredServices}
+                                onToggleService={(id) =>
+                                    setServiceIds((prev) =>
+                                        prev.includes(id)
+                                            ? prev.filter((x) => x !== id)
+                                            : [...prev, id],
+                                    )
+                                }
+                                onSearchChange={setSearchQuery}
+                                onCategoryChange={setSelectedCategory}
+                            />
+                        )}
 
-                    {step === 2 && (
-                        <BookingStaffStep
-                            staff={staff}
-                            isLoading={staffLoading}
-                            staffId={staffId}
-                            onSelectStaff={setStaffId}
-                        />
-                    )}
+                        {step === 2 && (
+                            <BookingStaffStep
+                                staff={staff}
+                                isLoading={staffLoading}
+                                staffId={staffId}
+                                onSelectStaff={setStaffId}
+                            />
+                        )}
 
-                    {step === 3 && (
-                        <BookingDateStep
-                            selectedDate={selectedDate}
-                            monthCursor={monthCursor}
-                            settings={settings}
-                            onSelectDate={setSelectedDate}
-                            onMonthChange={setMonthCursor}
-                        />
-                    )}
+                        {step === 3 && (
+                            <BookingDateStep
+                                selectedDate={selectedDate}
+                                monthCursor={monthCursor}
+                                settings={settings}
+                                onSelectDate={setSelectedDate}
+                                onMonthChange={setMonthCursor}
+                            />
+                        )}
 
-                    {step === 4 && (
-                        <BookingTimeStep
-                            slots={slots}
-                            isLoading={slotsLoading}
-                            selectedDate={selectedDate}
-                            selectedTime={selectedTime}
-                            onSelectTime={setSelectedTime}
-                            onChangeDate={() => setStep(3)}
-                        />
-                    )}
+                        {step === 4 && (
+                            <BookingTimeStep
+                                slots={slots}
+                                isLoading={slotsLoading}
+                                selectedDate={selectedDate}
+                                selectedTime={selectedTime}
+                                onSelectTime={setSelectedTime}
+                                onChangeDate={() => setStep(3)}
+                            />
+                        )}
 
-                    {step === 5 && (
-                        <BookingCustomerStep
-                            form={customerForm}
-                            errors={formErrors}
-                            onChange={(updates) => setCustomerForm((f) => ({ ...f, ...updates }))}
-                        />
-                    )}
+                        {step === 5 && (
+                            <BookingCustomerStep
+                                form={customerForm}
+                                errors={formErrors}
+                                onChange={(updates) =>
+                                    setCustomerForm((f) => ({ ...f, ...updates }))
+                                }
+                            />
+                        )}
 
-                    {step === 6 && (
-                        <BookingReviewStep
-                            selectedServices={selectedServicesList}
-                            selectedStaff={selectedStaffMember}
-                            selectedDate={selectedDate}
-                            selectedTime={selectedTime}
-                            totalPrice={totalPrice}
-                            totalDuration={totalDuration}
-                            customerForm={customerForm}
-                        />
-                    )}
+                        {step === 6 && (
+                            <BookingReviewStep
+                                selectedServices={selectedServicesList}
+                                selectedStaff={selectedStaffMember}
+                                selectedDate={selectedDate}
+                                selectedTime={selectedTime}
+                                totalPrice={totalPrice}
+                                totalDuration={totalDuration}
+                                customerForm={customerForm}
+                            />
+                        )}
 
-                    {step === 7 && (
-                        <BookingSuccessStep
-                            createdReference={createdReference}
-                            selectedDate={selectedDate}
-                            selectedTime={selectedTime}
-                            selectedServices={selectedServicesList}
-                            totalPrice={totalPrice}
-                            customerForm={customerForm}
-                        />
-                    )}
+                        {step === 7 && (
+                            <BookingSuccessStep
+                                createdReference={createdReference}
+                                selectedDate={selectedDate}
+                                selectedTime={selectedTime}
+                                selectedServices={selectedServicesList}
+                                totalPrice={totalPrice}
+                                customerForm={customerForm}
+                            />
+                        )}
+                    </div>
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between px-6 py-4 border-t border-stone-200/70 bg-white shrink-0">
+                <div className="flex shrink-0 items-center justify-between border-t border-stone-300/70 bg-stone-50 px-6 py-4 lg:px-8 lg:py-5">
                     {step === 7 ? (
                         <div className="flex items-center justify-between w-full gap-3">
                             <Button
@@ -396,7 +479,7 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
                                             (step === 3 && !selectedDate) ||
                                             (step === 4 && !selectedTime)
                                         }
-                                        className="bg-stone-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:shadow-md"
+                                        className="flex items-center gap-1.5 bg-stone-900 text-xs font-bold uppercase tracking-wider text-white shadow-sm hover:shadow-md lg:px-5 lg:py-2.5"
                                     >
                                         <span>{tAdmin('booking.next') || 'Next'}</span>
                                         <ChevronRight className="h-3.5 w-3.5" />

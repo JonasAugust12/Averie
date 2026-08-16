@@ -154,7 +154,7 @@ export default function StaffLookupPage() {
                             {t('staff.schedule') || 'Schedule'}
                         </h3>
                         <p className="font-sans text-[10px] sm:text-xs text-stone-500 mt-0.5">
-                            {t('staffPortal.scheduleFor').replace('{name}', selectedStaff.name)}
+                            {t('staffPortal.scheduleFor', { name: selectedStaff.name })}
                         </p>
                     </div>
                     <div

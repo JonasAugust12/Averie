@@ -114,10 +114,9 @@
             "title": "Giờ làm việc",
             "monFri": "Thứ Hai - Thứ Sáu",
             "monFriHours": "9:00 AM - 7:00 PM",
-            "sat": "Thứ Bảy",
-            "satHours": "9:00 AM - 6:00 PM",
-            "sun": "Chủ Nhật",
-            "sunHours": "10:00 AM - 5:00 PM"
+            "satSun": "Thứ Bảy - Chủ Nhật",
+            "satSunHours": "9:00 AM - 6:00 PM",
+            "bookingNote": "Đặt lịch trực tuyến sẽ đóng trước một giờ so với giờ đóng cửa."
         },
         "cta": {
             "title": "Cuộc hẹn tiếp theo bắt đầu tại đây",

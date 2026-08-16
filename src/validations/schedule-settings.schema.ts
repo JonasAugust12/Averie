@@ -13,10 +13,22 @@ const periodSlotsSchema = z.object({
     evening: z.array(z.string().trim().min(1)),
 });
 
+const weekdayScheduleSchema = z.object({
+    weekday: z.number().int().min(0).max(6),
+    isOpen: z.boolean(),
+    periodSlots: periodSlotsSchema,
+});
+
 export const updateScheduleSettingsSchema = z.object({
     allowStaffSelection: z.boolean().optional(),
-    workingWeekdays: z.array(z.number().int().min(0).max(6)).optional(),
-    periodSlots: periodSlotsSchema.optional(),
+    weekdaySchedules: z
+        .array(weekdayScheduleSchema)
+        .length(7)
+        .refine(
+            (schedules) => new Set(schedules.map((s) => s.weekday)).size === 7,
+            'weekdaySchedules must include each weekday 0–6 exactly once',
+        )
+        .optional(),
     dayOffs: z.array(dayOffSchema).optional(),
 });
 

@@ -21,23 +21,24 @@ const PeriodSlotsSchema = new Schema(
     { _id: false },
 );
 
+const WeekdayScheduleSchema = new Schema(
+    {
+        weekday: { type: Number, required: true, min: 0, max: 6 },
+        isOpen: { type: Boolean, default: true },
+        periodSlots: { type: PeriodSlotsSchema, default: () => ({}) },
+    },
+    { _id: false },
+);
+
 const SalonSettingsSchema = new Schema(
     {
         allowStaffSelection: {
             type: Boolean,
             default: true,
         },
-        workingWeekdays: {
-            type: [Number],
-            default: [1, 2, 3, 4, 5, 6],
-        },
-        periodSlots: {
-            type: PeriodSlotsSchema,
-            default: () => ({
-                morning: [],
-                afternoon: [],
-                evening: [],
-            }),
+        weekdaySchedules: {
+            type: [WeekdayScheduleSchema],
+            default: [],
         },
         dayOffs: {
             type: [DayOffSchema],

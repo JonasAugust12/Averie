@@ -5,7 +5,7 @@ import type {
     SalonStaff,
     ScheduleSettings,
 } from '@typings/salon.type';
-import { defaultPeriodSlots } from '@utils/schedule.util';
+import { defaultWeekdaySchedules } from '@utils/schedule.util';
 
 export const SERVICE_CATEGORIES = [
     { id: 'manicure-pedicure', labelKey: 'categories.manicurePedicure' },
@@ -170,8 +170,7 @@ export const mockStaff: SalonStaff[] = [
 ];
 
 export const mockScheduleSettings: ScheduleSettings = {
-    workingWeekdays: [0, 1, 2, 3, 4, 5, 6],
-    periodSlots: defaultPeriodSlots(),
+    weekdaySchedules: defaultWeekdaySchedules(),
     dayOffs: [
         { id: 'do-1', date: '2026-12-25', scope: 'full' },
         { id: 'do-2', date: '2026-01-01', scope: 'full' },

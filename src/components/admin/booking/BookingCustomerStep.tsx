@@ -21,8 +21,8 @@ export function BookingCustomerStep({ form, errors, onChange }: BookingCustomerS
     const tAdmin = useAdminTranslations();
 
     return (
-        <div className="space-y-5 max-w-lg mx-auto">
-            <p className="font-sans text-sm text-stone-600 font-medium">
+        <div className="mx-auto w-full max-w-xl space-y-5">
+            <p className="font-sans text-sm font-medium text-stone-600">
                 {tAdmin('booking.customer.subtitle')}
             </p>
 

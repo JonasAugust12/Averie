@@ -33,7 +33,7 @@ export function BookingReviewStep({
     const tAdmin = useAdminTranslations();
 
     return (
-        <div className="space-y-5 max-w-xl mx-auto">
+        <div className="mx-auto w-full max-w-2xl space-y-5">
             <div className="bg-white rounded-2xl border border-stone-200/90 shadow-sm overflow-hidden divide-y divide-stone-100">
                 {/* Services Summary */}
                 <div className="p-5">

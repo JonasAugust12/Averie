@@ -65,7 +65,11 @@
         "title": "Your appointment has been requested successfully.",
         "subtitle": "We've reserved your place. A confirmation note is shown below (mock only).",
         "reference": "Reference",
-        "mockNote": "Mock booking only — not saved to a server."
+        "mockNote": "Mock booking only — not saved to a server.",
+        "visitUs": "Visit us",
+        "addressLine1": "132 Chief Justice Cushing Hwy",
+        "addressLine2": "Cohasset, MA 02025",
+        "getDirections": "Open in Google Maps"
     },
     "categories": {
         "manicurePedicure": "Manicure & Pedicure",

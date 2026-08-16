@@ -5,23 +5,39 @@ import {
     serializeScheduleSettings,
 } from '@mappers';
 import { Booking } from '@models/booking.model';
-import { SalonSettings } from '@models/salon-settings.model';
+import { SalonSettings, type SalonSettingsDocument } from '@models/salon-settings.model';
 import type { TimeSlotDto } from '@typings/salon/booking.type';
 import type { ScheduleSettingsDto } from '@typings/salon/schedule.type';
-import { defaultPeriodSlots } from '@utils/schedule.util';
+import { defaultWeekdaySchedules } from '@utils/schedule.util';
 import { getAvailableSlotsForDate } from '@utils/schedule.util';
+
+type LegacySettingsDoc = {
+    workingWeekdays?: unknown;
+    periodSlots?: unknown;
+};
+
+async function removeLegacyScheduleFields(doc: SalonSettingsDocument & LegacySettingsDoc) {
+    if (doc.workingWeekdays === undefined && doc.periodSlots === undefined) {
+        return;
+    }
+
+    await SalonSettings.collection.updateOne(
+        { _id: doc._id },
+        { $unset: { workingWeekdays: '', periodSlots: '' } },
+    );
+}
 
 export async function getSalonSettingsDocument() {
     await connectToDatabase();
     const existing = await SalonSettings.findOne().lean();
     if (existing) {
+        await removeLegacyScheduleFields(existing);
         return existing;
     }
 
     const created = await SalonSettings.create({
         allowStaffSelection: true,
-        workingWeekdays: [1, 2, 3, 4, 5, 6],
-        periodSlots: defaultPeriodSlots(),
+        weekdaySchedules: defaultWeekdaySchedules(),
         dayOffs: [],
     });
 

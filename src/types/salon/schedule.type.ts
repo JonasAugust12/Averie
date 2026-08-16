@@ -12,11 +12,16 @@ export interface PeriodSlotsDto {
     evening: string[];
 }
 
+export interface WeekdayScheduleDto {
+    weekday: number;
+    isOpen: boolean;
+    periodSlots: PeriodSlotsDto;
+}
+
 export interface ScheduleSettingsDto {
     id: string;
     allowStaffSelection: boolean;
-    workingWeekdays: number[];
-    periodSlots: PeriodSlotsDto;
+    weekdaySchedules: WeekdayScheduleDto[];
     dayOffs: DayOffDto[];
     updatedAt: string;
 }

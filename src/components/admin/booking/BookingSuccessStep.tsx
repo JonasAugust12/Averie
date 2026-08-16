@@ -33,19 +33,20 @@ export function BookingSuccessStep({
     const tAdmin = useAdminTranslations();
 
     return (
-        <div className="text-center py-6 sm:py-8 space-y-6 max-w-md mx-auto animate-in zoom-in-95 duration-300">
-            <div className="h-16 w-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-sm">
-                <CheckCircle2 className="h-10 w-10" />
-            </div>
-
-            <div>
-                <h3 className="font-display text-2xl font-black text-stone-900">
-                    {tAdmin('booking.success.title')}
-                </h3>
-                <p className="font-sans text-xs text-stone-500 font-semibold uppercase tracking-widest mt-1">
-                    {tAdmin('booking.success.ref')}{' '}
-                    <span className="text-stone-900 font-bold">{createdReference}</span>
-                </p>
+        <div className="mx-auto w-full max-w-md space-y-6 py-4 sm:py-6">
+            <div className="space-y-4 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 shadow-sm">
+                    <CheckCircle2 className="h-10 w-10" />
+                </div>
+                <div>
+                    <h3 className="font-display text-2xl font-black text-stone-900">
+                        {tAdmin('booking.success.title')}
+                    </h3>
+                    <p className="mt-1 font-sans text-xs font-semibold uppercase tracking-widest text-stone-500">
+                        {tAdmin('booking.success.ref')}{' '}
+                        <span className="font-bold text-stone-900">{createdReference}</span>
+                    </p>
+                </div>
             </div>
 
             <div className="bg-white rounded-2xl border border-stone-200 p-5 text-left space-y-3 shadow-sm">

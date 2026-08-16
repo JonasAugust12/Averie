@@ -14,11 +14,16 @@ export const periodSlotsDtoSchema = z.object({
     evening: z.array(z.string()),
 });
 
+export const weekdayScheduleDtoSchema = z.object({
+    weekday: z.number().int().min(0).max(6),
+    isOpen: z.boolean(),
+    periodSlots: periodSlotsDtoSchema,
+});
+
 export const scheduleSettingsDtoSchema = z.object({
     id: objectIdSchema,
     allowStaffSelection: z.boolean(),
-    workingWeekdays: z.array(z.number().int().min(0).max(6)),
-    periodSlots: periodSlotsDtoSchema,
+    weekdaySchedules: z.array(weekdayScheduleDtoSchema).length(7),
     dayOffs: z.array(dayOffDtoSchema),
     updatedAt: z.string(),
 });

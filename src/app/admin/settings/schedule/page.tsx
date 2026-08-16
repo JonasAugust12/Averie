@@ -10,7 +10,7 @@ import { Input } from '@components/ui';
 import { cn } from '@utils/cn.util';
 import {
     DAY_OFF_SCOPE_OPTIONS,
-    WEEKDAY_LABELS,
+    WEEKDAY_ORDER_MON_SUN,
     normalizeTimeInput,
     sortTimes,
 } from '@utils/schedule.util';
@@ -22,12 +22,15 @@ const PERIOD_META: { key: DayPeriod; icon: typeof Sun }[] = [
     { key: 'evening', icon: Moon },
 ];
 
+const WEEKDAY_I18N_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+
 export default function ScheduleSettingsPage() {
     const t = useAdminTranslations();
     const { data: settings, isLoading } = useScheduleSettings();
     const { showConfirm, hideConfirm, setConfirmLoading } = useUIStore();
     const saveSettings = useSaveScheduleSettings();
     const [form, setForm] = useState<ScheduleSettings | null>(null);
+    const [selectedWeekday, setSelectedWeekday] = useState<number>(1);
     const [newSlot, setNewSlot] = useState<Record<DayPeriod, string>>({
         morning: '',
         afternoon: '',
@@ -42,7 +45,10 @@ export default function ScheduleSettingsPage() {
         if (settings) setForm(structuredClone(settings));
     }, [settings]);
 
-    if (isLoading || !form) {
+    const selectedDay =
+        form?.weekdaySchedules.find((entry) => entry.weekday === selectedWeekday) ?? null;
+
+    if (isLoading || !form || !selectedDay) {
         return (
             <div className="flex h-64 items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-neutral-300" />
@@ -50,29 +56,37 @@ export default function ScheduleSettingsPage() {
         );
     }
 
-    function toggleWeekday(day: number) {
+    function updateSelectedDay(
+        updater: (
+            day: ScheduleSettings['weekdaySchedules'][number],
+        ) => ScheduleSettings['weekdaySchedules'][number],
+    ) {
         setForm((prev) => {
             if (!prev) return prev;
-            const has = prev.workingWeekdays.includes(day);
-            const workingWeekdays = has
-                ? prev.workingWeekdays.filter((d) => d !== day)
-                : [...prev.workingWeekdays, day].sort((a, b) => a - b);
-            return { ...prev, workingWeekdays };
+            return {
+                ...prev,
+                weekdaySchedules: prev.weekdaySchedules.map((entry) =>
+                    entry.weekday === selectedWeekday ? updater(entry) : entry,
+                ),
+            };
         });
+    }
+
+    function toggleDayOpen() {
+        updateSelectedDay((day) => ({ ...day, isOpen: !day.isOpen }));
     }
 
     function addSlot(period: DayPeriod) {
         const raw = newSlot[period].trim();
         if (!raw) return;
         const time = normalizeTimeInput(raw);
-        setForm((prev) => {
-            if (!prev) return prev;
-            if (prev.periodSlots[period].includes(time)) return prev;
+        updateSelectedDay((day) => {
+            if (day.periodSlots[period].includes(time)) return day;
             return {
-                ...prev,
+                ...day,
                 periodSlots: {
-                    ...prev.periodSlots,
-                    [period]: sortTimes([...prev.periodSlots[period], time]),
+                    ...day.periodSlots,
+                    [period]: sortTimes([...day.periodSlots[period], time]),
                 },
             };
         });
@@ -80,16 +94,13 @@ export default function ScheduleSettingsPage() {
     }
 
     function removeSlot(period: DayPeriod, time: string) {
-        setForm((prev) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                periodSlots: {
-                    ...prev.periodSlots,
-                    [period]: prev.periodSlots[period].filter((t) => t !== time),
-                },
-            };
-        });
+        updateSelectedDay((day) => ({
+            ...day,
+            periodSlots: {
+                ...day.periodSlots,
+                [period]: day.periodSlots[period].filter((t) => t !== time),
+            },
+        }));
     }
 
     function addDayOff() {
@@ -162,7 +173,6 @@ export default function ScheduleSettingsPage() {
                 </Button>
             </div>
 
-            {/* Customer Technician Selection Toggle */}
             <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm hover:shadow-xs transition-all duration-300">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
@@ -173,7 +183,6 @@ export default function ScheduleSettingsPage() {
                             {t('schedule.allowStaffSelectionHint')}
                         </p>
                     </div>
-                    {/* Toggle Switch */}
                     <button
                         type="button"
                         onClick={() =>
@@ -202,100 +211,133 @@ export default function ScheduleSettingsPage() {
                 </div>
             </section>
 
-            {/* Working days */}
-            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm">
-                <h2 className="font-display text-lg font-semibold text-stone-900">
-                    {t('schedule.workingDays')}
-                </h2>
-                <p className="mt-1 font-sans text-xs text-stone-400">
-                    {t('schedule.workingDaysHint')}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {WEEKDAY_LABELS.map((label, index) => {
-                        const active = form.workingWeekdays.includes(index);
+            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm space-y-5">
+                <div>
+                    <h2 className="font-display text-lg font-semibold text-stone-900">
+                        {t('schedule.weekdaySchedule')}
+                    </h2>
+                    <p className="mt-1 font-sans text-xs text-stone-400">
+                        {t('schedule.weekdayScheduleHint')}
+                    </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                    {WEEKDAY_ORDER_MON_SUN.map((weekday) => {
+                        const day = form.weekdaySchedules.find(
+                            (entry) => entry.weekday === weekday,
+                        );
+                        const active = selectedWeekday === weekday;
+                        const labelKey = WEEKDAY_I18N_KEYS[weekday];
                         return (
                             <button
-                                key={label}
+                                key={weekday}
                                 type="button"
-                                onClick={() => toggleWeekday(index)}
+                                onClick={() => setSelectedWeekday(weekday)}
                                 className={cn(
                                     'rounded-full border px-4 py-2 font-sans text-sm font-semibold transition-colors',
                                     active
                                         ? 'border-stone-800 bg-stone-800 text-white'
-                                        : 'border-stone-200 bg-stone-50 text-stone-400 hover:border-stone-300',
+                                        : day?.isOpen
+                                          ? 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300'
+                                          : 'border-stone-200 bg-stone-50 text-stone-400 line-through hover:border-stone-300',
                                 )}
                             >
-                                {t(`schedule.weekdays.${label.toLowerCase()}`)}
+                                {t(`schedule.weekdays.${labelKey}`)}
                             </button>
                         );
                     })}
                 </div>
-            </section>
 
-            {/* Period slots */}
-            <section className="space-y-4">
-                <div>
-                    <h2 className="font-display text-lg font-semibold text-stone-900">
-                        {t('schedule.periodSlots')}
-                    </h2>
-                    <p className="mt-1 font-sans text-xs text-stone-400">
-                        {t('schedule.periodSlotsHint')}
-                    </p>
+                <div className="flex flex-col gap-3 rounded-xl border border-stone-100 bg-stone-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p className="font-sans text-sm font-semibold text-stone-800">
+                            {t(`schedule.weekdays.${WEEKDAY_I18N_KEYS[selectedWeekday]}`)}
+                        </p>
+                        <p className="font-sans text-xs text-stone-500">
+                            {selectedDay.isOpen
+                                ? t('schedule.dayOpenHint')
+                                : t('schedule.dayClosedHint')}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={toggleDayOpen}
+                        className={cn(
+                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden',
+                            selectedDay.isOpen ? 'bg-stone-800' : 'bg-stone-200',
+                        )}
+                        role="switch"
+                        aria-checked={selectedDay.isOpen}
+                    >
+                        <span
+                            className={cn(
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
+                                selectedDay.isOpen ? 'translate-x-6' : 'translate-x-0.5',
+                            )}
+                        />
+                    </button>
                 </div>
 
-                {PERIOD_META.map(({ key, icon: Icon }) => (
-                    <div
-                        key={key}
-                        className="rounded-2xl border border-stone-200/80 bg-white p-5 shadow-sm"
-                    >
-                        <h3 className="mb-3 flex items-center gap-2 font-sans text-sm font-bold text-stone-800">
-                            <Icon className="h-4 w-4 text-stone-400" />
-                            {t(`schedule.periods.${key}`)}
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                            {form.periodSlots[key].map((time) => (
-                                <span
-                                    key={time}
-                                    className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 font-sans text-xs font-medium text-stone-700"
-                                >
-                                    {time}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeSlot(key, time)}
-                                        className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200 hover:text-red-600"
-                                        aria-label={t('schedule.removeSlot')}
-                                    >
-                                        <Trash2 className="h-3 w-3" />
-                                    </button>
-                                </span>
-                            ))}
-                        </div>
-                        <div className="mt-3 flex gap-2">
-                            <Input
-                                placeholder="07:30 AM"
-                                value={newSlot[key]}
-                                onChange={(e) =>
-                                    setNewSlot((s) => ({ ...s, [key]: e.target.value }))
-                                }
-                                onKeyDown={(e) => e.key === 'Enter' && addSlot(key)}
-                                className="max-w-40 border-neutral-200 bg-stone-50"
-                            />
-                            <Button
-                                type="button"
-                                variant="outlined"
-                                size="sm"
-                                onClick={() => addSlot(key)}
-                                className="border-neutral-200"
+                {!selectedDay.isOpen ? (
+                    <p className="font-sans text-sm italic text-stone-400">
+                        {t('schedule.dayClosed')}
+                    </p>
+                ) : (
+                    <div className="space-y-4">
+                        {PERIOD_META.map(({ key, icon: Icon }) => (
+                            <div
+                                key={key}
+                                className="rounded-2xl border border-stone-200/80 bg-white p-5 shadow-sm"
                             >
-                                <Plus className="h-4 w-4" />
-                                {t('schedule.addSlot')}
-                            </Button>
-                        </div>
+                                <h3 className="mb-3 flex items-center gap-2 font-sans text-sm font-bold text-stone-800">
+                                    <Icon className="h-4 w-4 text-stone-400" />
+                                    {t(`schedule.periods.${key}`)}
+                                </h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedDay.periodSlots[key].map((time) => (
+                                        <span
+                                            key={time}
+                                            className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 font-sans text-xs font-medium text-stone-700"
+                                        >
+                                            {time}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeSlot(key, time)}
+                                                className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200 hover:text-red-600"
+                                                aria-label={t('schedule.removeSlot')}
+                                            >
+                                                <Trash2 className="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="mt-3 flex gap-2">
+                                    <Input
+                                        placeholder="09:00 AM"
+                                        value={newSlot[key]}
+                                        onChange={(e) =>
+                                            setNewSlot((s) => ({ ...s, [key]: e.target.value }))
+                                        }
+                                        onKeyDown={(e) => e.key === 'Enter' && addSlot(key)}
+                                        className="max-w-40 border-neutral-200 bg-stone-50"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outlined"
+                                        size="sm"
+                                        onClick={() => addSlot(key)}
+                                        className="border-neutral-200"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        {t('schedule.addSlot')}
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                )}
             </section>
 
-            {/* Day offs */}
             <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm">
                 <h2 className="font-display text-lg font-semibold text-stone-900">
                     {t('schedule.dayOffs')}

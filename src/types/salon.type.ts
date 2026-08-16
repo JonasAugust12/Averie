@@ -69,10 +69,16 @@ export interface DayOffEntry {
     scope: DayOffScope;
 }
 
-export interface ScheduleSettings {
-    /** Weekdays the salon is open (0 = Sun … 6 = Sat) */
-    workingWeekdays: number[];
+/** Per-weekday schedule (weekday 0 = Sun … 6 = Sat). */
+export interface WeekdaySchedule {
+    weekday: number;
+    isOpen: boolean;
     periodSlots: PeriodSlots;
+}
+
+export interface ScheduleSettings {
+    /** One entry per weekday (0–6). */
+    weekdaySchedules: WeekdaySchedule[];
     dayOffs: DayOffEntry[];
     allowStaffSelection: boolean;
 }

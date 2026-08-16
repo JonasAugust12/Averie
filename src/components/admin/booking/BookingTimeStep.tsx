@@ -51,7 +51,7 @@ export function BookingTimeStep({
     ];
 
     return (
-        <div className="space-y-6 max-w-2xl mx-auto">
+        <div className="w-full space-y-6">
             <div className="flex items-center justify-between pb-2 border-b border-stone-200">
                 <p className="font-sans text-sm font-semibold text-stone-600">
                     {tAdmin('booking.time.availableFor')}{' '}

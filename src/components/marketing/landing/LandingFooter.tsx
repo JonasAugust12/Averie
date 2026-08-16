@@ -1,8 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Instagram, Facebook, Phone, MapPin } from 'lucide-react';
-import { AppLink } from '@components/shared';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { landingBleedSecondary600, landingBleedWhite } from '@components/marketing/landing/styles';
@@ -30,33 +28,27 @@ export function LandingFooter() {
 
                 {/* Contact */}
                 <div className="flex flex-col items-center text-center md:col-span-4 md:items-start md:text-left">
-                    <p className="mb-4 flex w-full items-center justify-center gap-2 border-b border-stone-200/60 pb-2 font-sans text-base font-bold tracking-wide text-nude md:justify-start md:text-lg">
+                    <p className="mb-4 flex w-full items-center justify-center gap-2 border-b border-stone-200/60 pb-2 font-sans text-sm font-bold tracking-wide text-nude md:justify-start md:text-[17px]">
                         {t('landing.footer.contact')}
                     </p>
-                    <address className="flex flex-col items-center gap-4 not-italic md:items-start">
+                    <address className="flex flex-col items-center gap-3 not-italic md:items-start">
                         {/* Phone */}
-                        <div className="flex items-center justify-center gap-3">
-                            <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-nude shadow-xs md:size-10">
-                                <Phone className="size-4 md:size-[18px]" />
-                            </span>
-                            <AppLink
+                        <div className="flex items-center justify-center gap-2.5">
+                            <a
                                 href="tel:+17819231955"
-                                className="font-sans text-base font-bold text-stone-850 transition-colors hover:text-nude md:text-[17px]"
+                                className="font-sans text-lg font-bold text-stone-850 transition-colors hover:text-nude md:text-[19px]"
                             >
                                 {t('landing.footer.phone')}
-                            </AppLink>
+                            </a>
                         </div>
 
                         {/* Address */}
-                        <div className="flex items-start justify-center gap-3">
-                            <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-stone-200/50 bg-cream/70 text-stone-600 shadow-xs md:size-10">
-                                <MapPin className="size-4 md:size-[18px]" />
-                            </span>
-                            <div className="flex flex-col text-left">
-                                <p className="font-sans text-sm font-bold leading-snug text-stone-855 md:text-base">
+                        <div className="flex items-start justify-center gap-2.5">
+                            <div className="flex flex-col text-center md:text-left">
+                                <p className="font-sans text-base font-bold leading-tight text-stone-855 md:text-[17px]">
                                     {t('landing.footer.addressLine1')}
                                 </p>
-                                <p className="mt-1 font-sans text-xs font-semibold text-stone-500 md:text-sm">
+                                <p className="mt-0.5 font-sans text-sm font-semibold text-stone-500 md:mt-1 md:text-base">
                                     {t('landing.footer.addressLine2')}
                                 </p>
                             </div>
@@ -64,21 +56,33 @@ export function LandingFooter() {
                     </address>
 
                     {/* Social */}
-                    <div className="mt-5 flex justify-center gap-3.5 md:mt-6 md:justify-start">
-                        <AppLink
-                            href="https://facebook.com"
-                            className="flex size-11 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-12"
-                            aria-label="Facebook"
-                        >
-                            <Facebook className="size-5 md:size-[22px]" />
-                        </AppLink>
-                        <AppLink
+                    <div className="mt-5 flex justify-center gap-4 md:mt-6 md:justify-start">
+                        <a
                             href="https://www.instagram.com/averienailspa"
-                            className="flex size-11 items-center justify-center rounded-full bg-third text-cream shadow-md transition-all duration-200 hover:scale-105 hover:bg-nude active:scale-95 md:size-12"
+                            className="group flex size-14 items-center justify-center rounded-2xl bg-linear-to-b from-white to-cream/60 p-2.5 shadow-[0_4px_16px_rgba(192,149,127,0.18)] ring-1 ring-stone-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(192,149,127,0.28)] hover:ring-nude/35 active:scale-95 md:size-16 md:rounded-[18px] md:p-3"
                             aria-label="Instagram"
                         >
-                            <Instagram className="size-5 md:size-[22px]" />
-                        </AppLink>
+                            <Image
+                                src="/icons/instagram.svg"
+                                alt=""
+                                width={40}
+                                height={40}
+                                className="size-9 transition-transform duration-300 group-hover:scale-110 md:size-10"
+                            />
+                        </a>
+                        <a
+                            href="https://www.facebook.com/minh.vinh.14#"
+                            className="group flex size-14 items-center justify-center rounded-2xl bg-linear-to-b from-white to-cream/60 p-2.5 shadow-[0_4px_16px_rgba(192,149,127,0.18)] ring-1 ring-stone-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(192,149,127,0.28)] hover:ring-nude/35 active:scale-95 md:size-16 md:rounded-[18px] md:p-3"
+                            aria-label="Facebook"
+                        >
+                            <Image
+                                src="/icons/facebook.svg"
+                                alt=""
+                                width={40}
+                                height={40}
+                                className="size-9 transition-transform duration-300 group-hover:scale-110 md:size-10"
+                            />
+                        </a>
                     </div>
                 </div>
 
@@ -87,7 +91,7 @@ export function LandingFooter() {
                     <p className="mb-4 flex w-full items-center justify-center gap-2 border-b border-stone-200/60 pb-2 font-sans text-sm font-bold tracking-wide text-nude md:justify-start md:text-[17px]">
                         {t('landing.footer.location')}
                     </p>
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border/40 bg-cream/10 shadow-xs md:rounded-lg">
+                    <div className="aspect-4/3 w-full overflow-hidden rounded-2xl border border-border/40 bg-cream/10 shadow-xs md:rounded-lg">
                         <iframe
                             src="https://maps.google.com/maps?q=Averie%20Nails%20Spa%20Cohasset%20MA&t=&z=17&ie=UTF8&iwloc=&output=embed"
                             width="100%"
@@ -112,18 +116,18 @@ export function LandingFooter() {
                     {t('landing.footer.rights')}
                 </p>
                 <div className="relative z-10 flex flex-wrap justify-center gap-4 px-4 md:gap-8 md:px-0">
-                    <AppLink
+                    <a
                         href="#"
                         className="font-sans text-xs text-cream/90 hover:text-cream md:text-sm"
                     >
                         {t('landing.footer.terms')}
-                    </AppLink>
-                    <AppLink
+                    </a>
+                    <a
                         href="#"
                         className="font-sans text-xs text-cream/90 hover:text-cream md:text-sm"
                     >
                         {t('landing.footer.privacy')}
-                    </AppLink>
+                    </a>
                 </div>
             </div>
         </footer>

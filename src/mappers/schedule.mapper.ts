@@ -1,23 +1,45 @@
 import { toId, toIso, type IdLike } from '@mappers/shared.mapper';
-import type { ScheduleSettingsDto } from '@typings/salon/schedule.type';
+import type { ScheduleSettingsDto, WeekdayScheduleDto } from '@typings/salon/schedule.type';
+import { defaultWeekdaySchedules, normalizeWeekdaySchedules } from '@utils/schedule.util';
+
+type PeriodSlotsDoc = {
+    morning: string[];
+    afternoon: string[];
+    evening: string[];
+};
+
+type WeekdayScheduleDoc = {
+    weekday: number;
+    isOpen: boolean;
+    periodSlots: PeriodSlotsDoc;
+};
+
+function serializeWeekdaySchedules(
+    weekdaySchedules: WeekdayScheduleDoc[] | undefined,
+    legacy?: {
+        workingWeekdays?: number[];
+        periodSlots?: PeriodSlotsDoc;
+    },
+): WeekdayScheduleDto[] {
+    return normalizeWeekdaySchedules(weekdaySchedules, legacy);
+}
 
 export function serializeScheduleSettings(doc: {
     _id: IdLike;
     allowStaffSelection: boolean;
-    workingWeekdays: number[];
-    periodSlots: {
-        morning: string[];
-        afternoon: string[];
-        evening: string[];
-    };
+    weekdaySchedules?: WeekdayScheduleDoc[];
+    workingWeekdays?: number[];
+    periodSlots?: PeriodSlotsDoc;
     dayOffs: Array<{ _id?: IdLike; date: string; scope: string }>;
     updatedAt?: Date | string;
 }): ScheduleSettingsDto {
     return {
         id: toId(doc._id),
         allowStaffSelection: doc.allowStaffSelection,
-        workingWeekdays: doc.workingWeekdays,
-        periodSlots: doc.periodSlots,
+        weekdaySchedules: serializeWeekdaySchedules(doc.weekdaySchedules, {
+            workingWeekdays: doc.workingWeekdays,
+            periodSlots: doc.periodSlots,
+        }),
         dayOffs: doc.dayOffs.map((off) => ({
             id: toId(off._id),
             date: off.date,
@@ -29,9 +51,12 @@ export function serializeScheduleSettings(doc: {
 
 export function scheduleSettingsForUtil(doc: ScheduleSettingsDto) {
     return {
-        workingWeekdays: doc.workingWeekdays,
-        periodSlots: doc.periodSlots,
+        weekdaySchedules: doc.weekdaySchedules,
         dayOffs: doc.dayOffs,
         allowStaffSelection: doc.allowStaffSelection,
     };
+}
+
+export function weekdaySchedulesForSeed(): WeekdayScheduleDto[] {
+    return defaultWeekdaySchedules();
 }

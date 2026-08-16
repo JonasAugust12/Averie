@@ -101,15 +101,13 @@ export function LandingHoursCta() {
                         />
                         <HoursSparkleRule />
                         <HoursSlot
-                            day={t('landing.hours.sat')}
-                            time={t('landing.hours.satHours')}
-                        />
-                        <HoursSparkleRule />
-                        <HoursSlot
-                            day={t('landing.hours.sun')}
-                            time={t('landing.hours.sunHours')}
+                            day={t('landing.hours.satSun')}
+                            time={t('landing.hours.satSunHours')}
                         />
                     </div>
+                    <p className="mt-5 font-sans text-xs leading-relaxed text-secondary-600/75 italic sm:text-sm">
+                        {t('landing.hours.bookingNote')}
+                    </p>
                 </div>
             </FadeIn>
 

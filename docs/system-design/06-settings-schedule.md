@@ -7,46 +7,53 @@ Logic: `src/utils/schedule.util.ts`
 
 Admin cấu hình:
 
-| Cấu hình                | Mô tả                                          |
-| ----------------------- | ---------------------------------------------- |
-| **allowStaffSelection** | Bật/tắt bước chọn nhân viên trong booking      |
-| **workingWeekdays**     | Ngày làm việc trong tuần (0=CN … 6=T7)         |
-| **periodSlots**         | Khung giờ mở cửa theo buổi: sáng / chiều / tối |
-| **dayOffs**             | Ngày nghỉ (cả ngày hoặc theo buổi)             |
+| Cấu hình                | Mô tả                                       |
+| ----------------------- | ------------------------------------------- |
+| **allowStaffSelection** | Bật/tắt bước chọn nhân viên trong booking   |
+| **weekdaySchedules**    | Giờ mở cửa **theo từng ngày** (0=CN … 6=T7) |
+| **dayOffs**             | Ngày nghỉ (cả ngày hoặc theo buổi)          |
 
 ## 2. Singleton document
 
 Lưu collection `SalonSettings` — **một document duy nhất** per deployment (single salon app).
 
-**Bootstrap:** migration/seed tạo default nếu chưa có (copy từ `mockScheduleSettings`).
+**Bootstrap:** `pnpm db:seed` hoặc `getSalonSettingsDocument()` tạo default nếu chưa có.
 
 ```typescript
-// Default seed (align mock)
+// Default seed — defaultWeekdaySchedules() in schedule.util.ts
 {
   allowStaffSelection: true,
-  workingWeekdays: [1, 2, 3, 4, 5, 6],  // Mon–Sat
-  periodSlots: defaultPeriodSlots,       // from schedule.util
+  weekdaySchedules: [
+    // 7 entries: weekday 0–6
+    { weekday: 1, isOpen: true, periodSlots: { morning: [...], afternoon: [...], evening: [...] } },
+    // Mon–Fri: 9am–6pm last slot; Sat: last 5:30pm; Sun: opens 10am, no evening
+  ],
   dayOffs: [],
 }
 ```
 
-## 3. periodSlots — Thời gian mở cửa
+## 3. weekdaySchedules — Giờ theo ngày
 
-Cấu trúc 3 buổi, mỗi buổi là mảng string giờ:
+Mỗi phần tử:
 
 ```typescript
-periodSlots: {
-  morning:   ['09:00 AM', '09:30 AM', ...],
-  afternoon: ['12:00 PM', '12:30 PM', ...],
-  evening:   ['05:00 PM', '05:30 PM', ...],
+{
+  weekday: number,   // 0=Sun … 6=Sat
+  isOpen: boolean,   // thay cho workingWeekdays
+  periodSlots: {
+    morning:   string[],
+    afternoon: string[],
+    evening:   string[],
+  },
 }
 ```
 
-- Admin thêm/xóa slot qua UI hiện có
+- Admin UI: tab T2 → CN, toggle mở/đóng + slots riêng từng ngày
 - Normalize qua `normalizeTimeInput()` trước khi lưu
 - Sort qua `sortTimes()`
+- Legacy docs DB cũ (`workingWeekdays` + `periodSlots` chung) được migrate khi đọc qua `normalizeWeekdaySchedules()` trong mapper
 
-**Không** dynamic generate từ open/close range phase 1 — admin khai báo discrete slots (đúng UI hiện tại).
+**Không** dynamic generate từ open/close range — admin khai báo discrete slots (đúng UI hiện tại).
 
 ## 4. dayOffs — Ngày nghỉ
 
@@ -102,7 +109,7 @@ Replace mock `useSaveScheduleSettings` → mutation gọi action.
                           │
           ┌───────────────┼───────────────┐
           ▼               ▼               ▼
-   workingWeekdays    periodSlots      dayOffs
+   weekdaySchedules   (per day)        dayOffs
           │               │               │
           └───────────────┼───────────────┘
                           ▼

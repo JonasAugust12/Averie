@@ -65,7 +65,11 @@
         "title": "Yêu cầu đặt lịch của bạn đã được gửi thành công.",
         "subtitle": "Chỗ của bạn đã được giữ. Chi tiết tham chiếu hiển thị bên dưới (chỉ mock).",
         "reference": "Mã tham chiếu",
-        "mockNote": "Chỉ là booking giả — chưa lưu máy chủ."
+        "mockNote": "Chỉ là booking giả — chưa lưu máy chủ.",
+        "visitUs": "Địa chỉ tiệm",
+        "addressLine1": "132 Chief Justice Cushing Hwy",
+        "addressLine2": "Cohasset, MA 02025",
+        "getDirections": "Mở trên Google Maps"
     },
     "categories": {
         "manicurePedicure": "Manicure & Pedicure",

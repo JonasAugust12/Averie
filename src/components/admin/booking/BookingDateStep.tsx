@@ -53,7 +53,7 @@ export function BookingDateStep({
     }
 
     return (
-        <div className="space-y-5 max-w-lg mx-auto">
+        <div className="mx-auto w-full max-w-md space-y-5 lg:max-w-lg">
             {/* Quick date pills */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
                 {[0, 1, 2, 3, 4].map((offset) => {

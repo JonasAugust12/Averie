@@ -23,6 +23,9 @@ const STEPS: StepDotDef[] = [
     { step: 6, labelKey: 'steps.review' },
 ];
 
+const STEP_DOT_SIZE_PX = 36;
+const STEP_DOT_RADIUS_PX = STEP_DOT_SIZE_PX / 2;
+
 interface BookingChromeProps {
     step: BookingStep;
     complete?: boolean;
@@ -123,16 +126,26 @@ export function BookingChrome({ step, complete = false }: BookingChromeProps) {
                                     key={s.step}
                                     className="relative flex flex-1 flex-col items-center"
                                 >
-                                    {/* Connector */}
+                                    {/* Connector — runs in the gap between circles, not through them */}
                                     {!isLast && (
                                         <div
-                                            className="absolute top-4.5 z-0 h-px"
-                                            style={{ left: '50%', width: '100%' }}
+                                            aria-hidden
+                                            className="pointer-events-none absolute z-0 h-0.5"
+                                            style={{
+                                                top: STEP_DOT_RADIUS_PX,
+                                                left: `calc(50% + ${STEP_DOT_RADIUS_PX}px)`,
+                                                width: `calc(100% - ${STEP_DOT_SIZE_PX}px)`,
+                                            }}
                                         >
-                                            <div className="h-full w-full bg-border/60" />
+                                            <div className="h-full w-full rounded-full bg-stone-200/90" />
                                             <div
-                                                className="absolute inset-y-0 left-0 bg-primary transition-all duration-700 ease-out"
-                                                style={{ width: isComplete ? '100%' : '0%' }}
+                                                key={`${s.step}-${isComplete ? 'done' : isActive ? 'active' : 'idle'}`}
+                                                className={cn(
+                                                    'absolute inset-y-0 left-0 origin-left rounded-full bg-primary',
+                                                    isComplete && 'animate-booking-step-line-fill',
+                                                    isActive && 'animate-booking-step-line-hint',
+                                                    !isComplete && !isActive && 'w-0',
+                                                )}
                                             />
                                         </div>
                                     )}
@@ -152,7 +165,7 @@ export function BookingChrome({ step, complete = false }: BookingChromeProps) {
                                         <div className="relative z-10">
                                             <div
                                                 className={cn(
-                                                    'flex h-9 w-9 items-center justify-center rounded-full border-2 transition-all duration-300',
+                                                    'relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 ring-[3px] ring-background transition-all duration-300',
                                                     isComplete
                                                         ? 'border-primary bg-primary text-neutral'
                                                         : isActive
@@ -176,7 +189,7 @@ export function BookingChrome({ step, complete = false }: BookingChromeProps) {
                                         {/* Label */}
                                         <span
                                             className={cn(
-                                                'mt-2 fabrics w-full px-0.5 text-center font-sans text-[13px] tracking-wide uppercase',
+                                                'mt-2 w-full truncate px-0.5 text-center font-sans text-[13px] tracking-wide uppercase',
                                                 isActive
                                                     ? 'font-bold text-primary scale-102'
                                                     : isComplete

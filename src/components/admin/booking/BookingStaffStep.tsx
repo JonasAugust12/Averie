@@ -24,16 +24,16 @@ export function BookingStaffStep({
 
     return (
         <div className="space-y-4">
-            <p className="font-sans text-sm text-stone-600 font-medium">
+            <p className="font-sans text-sm font-medium text-stone-600">
                 {tAdmin('booking.staff.subtitle')}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {/* Any Technician */}
                 <div
                     onClick={() => onSelectStaff('any')}
                     className={cn(
-                        'flex flex-col items-center justify-between p-5 rounded-2xl border-2 text-center transition-all cursor-pointer',
+                        'flex flex-col items-center justify-between rounded-2xl border-2 p-5 text-center transition-all cursor-pointer',
                         staffId === 'any'
                             ? 'border-stone-900 bg-stone-900/5 shadow-sm'
                             : 'border-stone-200/80 bg-white hover:border-stone-400',
@@ -92,7 +92,7 @@ export function BookingStaffStep({
                                     key={member.id}
                                     onClick={() => onSelectStaff(member.id)}
                                     className={cn(
-                                        'flex flex-col items-center justify-between p-5 rounded-2xl border-2 text-center transition-all cursor-pointer',
+                                        'flex flex-col items-center justify-between rounded-2xl border-2 p-5 text-center transition-all cursor-pointer',
                                         isSelected
                                             ? 'border-stone-900 bg-stone-900/5 shadow-sm'
                                             : 'border-stone-200/80 bg-white hover:border-stone-400',

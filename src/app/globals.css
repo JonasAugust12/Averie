@@ -195,6 +195,34 @@ h4 {
     animation: ambientPulse 15s ease-in-out infinite alternate;
 }
 
+@keyframes bookingStepLineFill {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes bookingStepLineHint {
+    0% {
+        width: 0%;
+        opacity: 0.55;
+    }
+    100% {
+        width: 36%;
+        opacity: 1;
+    }
+}
+
+.animate-booking-step-line-fill {
+    animation: bookingStepLineFill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-booking-step-line-hint {
+    animation: bookingStepLineHint 1.8s ease-in-out infinite alternate;
+}
+
 .nav-link-underline {
     position: relative;
 }

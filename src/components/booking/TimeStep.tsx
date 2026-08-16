@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Loader2, Moon, Sun, Sunset } from 'lucide-react';
-import { useAvailableSlots } from '@services/salon.service';
+import { useAvailableSlots, useScheduleSettings } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
@@ -18,6 +18,7 @@ export function TimeStep() {
     const t = useBookingTranslations();
     const { date, time, setTime, setStep } = useBookingStore();
     const { data: slots, isLoading } = useAvailableSlots(date);
+    const { data: settings } = useScheduleSettings();
 
     const weekday = date ? getWeekdayFromDate(date) : 1;
 
@@ -69,8 +70,10 @@ export function TimeStep() {
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                             {periodItems.map((slot) => {
                                 const selected = time === slot.time;
-                                const isOpenTime = isOpenTimeSlot(slot.time, weekday);
-                                const isCloseTime = isCloseTimeSlot(slot.time, weekday);
+                                const isOpenTime =
+                                    settings && isOpenTimeSlot(slot.time, settings, weekday);
+                                const isCloseTime =
+                                    settings && isCloseTimeSlot(slot.time, settings, weekday);
                                 return (
                                     <button
                                         key={slot.id}

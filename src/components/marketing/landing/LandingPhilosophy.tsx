@@ -31,7 +31,7 @@ export function LandingPhilosophy() {
                     <div className="relative aspect-3/4 w-full overflow-hidden rounded-4xl border border-stone-200/80 bg-white/60 p-2 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.12)]">
                         <div className="relative h-full w-full overflow-hidden rounded-3xl">
                             <Image
-                                src="/salon/salon.jpg"
+                                src="/salon/salon.png"
                                 alt=""
                                 fill
                                 sizes="(max-width: 768px) 90vw, 400px"
@@ -74,7 +74,7 @@ export function LandingPhilosophy() {
                     </div>
                     <div className="relative z-20 flex h-full w-full items-center justify-center">
                         <Image
-                            src="/salon/salon.jpg"
+                            src="/salon/salon.png"
                             alt=""
                             width={400}
                             height={750}
