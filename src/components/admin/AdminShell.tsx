@@ -17,7 +17,7 @@ import {
     Users,
 } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared';
+import { LanguageSwitcher, AdminRouteTransitionLoader } from '@components/shared';
 import { isAdminMockAuthed, setAdminMockAuthed } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { AdminNewBookingModal } from '@components/admin';
@@ -273,6 +273,7 @@ export function AdminShell({ children }: AdminShellProps) {
                 </div>
 
                 <main className="relative min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 bg-transparent">
+                    <AdminRouteTransitionLoader />
                     <div className="fixed inset-0 pointer-events-none z-0">
                         <div
                             className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.22] transition-opacity duration-300"

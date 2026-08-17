@@ -9,7 +9,16 @@
     },
     "status": {
         "loading": "Processing...",
-        "comingSoon": "Coming soon"
+        "comingSoon": "Coming soon",
+        "routeLoading": "Just a moment",
+        "routeLoadingHint": "We're preparing your experience"
+    },
+    "notFound": {
+        "title": "This page doesn't exist",
+        "description": "The page you're looking for may have been moved, removed, or never existed.",
+        "home": "Back to home",
+        "back": "Go back",
+        "code": "404 — Page not found"
     },
     "fallback": {
         "unknown": "An unexpected error occurred. Please try again."

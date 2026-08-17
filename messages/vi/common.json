@@ -9,7 +9,16 @@
     },
     "status": {
         "loading": "Đang xử lý...",
-        "comingSoon": "Tính năng sắp ra mắt"
+        "comingSoon": "Tính năng sắp ra mắt",
+        "routeLoading": "Vui lòng đợi",
+        "routeLoadingHint": "Chúng tôi đang chuẩn bị trải nghiệm cho bạn"
+    },
+    "notFound": {
+        "title": "Trang này không tồn tại",
+        "description": "Trang bạn đang tìm có thể đã bị di chuyển, xóa hoặc chưa từng tồn tại.",
+        "home": "Về trang chủ",
+        "back": "Quay lại",
+        "code": "404 — Không tìm thấy trang"
     },
     "fallback": {
         "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại."

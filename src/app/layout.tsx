@@ -5,6 +5,7 @@ import { fontsVariables } from './fonts';
 import { QueryProvider } from '@providers/QueryProvider';
 import { I18nProvider } from '@providers/I18nProvider';
 import { AuthProvider } from '@providers/AuthProvider';
+import { AppShell } from '@providers/AppShell';
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
@@ -50,7 +51,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <body className={`${fontsVariables.join(' ')} antialiased`} suppressHydrationWarning>
                 <AuthProvider>
                     <I18nProvider>
-                        <QueryProvider>{children}</QueryProvider>
+                        <QueryProvider>
+                            <AppShell>{children}</AppShell>
+                        </QueryProvider>
                     </I18nProvider>
                 </AuthProvider>
             </body>
