@@ -1036,6 +1036,13 @@
                     "sortOrder": {
                         "type": "integer",
                         "minimum": 0
+                    },
+                    "icon": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/lucideIconNameSchema"
+                            }
+                        ]
                     }
                 },
                 "required": ["name"]
@@ -1210,6 +1217,12 @@
                     }
                 },
                 "required": ["email", "password"]
+            },
+            "lucideIconNameSchema": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Z][a-zA-Z0-9]*$"
             },
             "objectIdSchema": {
                 "type": "string",
@@ -1393,6 +1406,10 @@
                     "sortOrder": {
                         "type": "integer"
                     },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "createdAt": {
                         "type": "string"
                     },
@@ -1400,7 +1417,7 @@
                         "type": "string"
                     }
                 },
-                "required": ["id", "name", "sortOrder", "createdAt", "updatedAt"]
+                "required": ["id", "name", "sortOrder", "icon", "createdAt", "updatedAt"]
             },
             "serviceCategoryIdSchema": {
                 "type": "object",
@@ -1423,6 +1440,10 @@
                     "sortOrder": {
                         "type": "integer"
                     },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "createdAt": {
                         "type": "string"
                     },
@@ -1436,7 +1457,15 @@
                         }
                     }
                 },
-                "required": ["id", "name", "sortOrder", "createdAt", "updatedAt", "services"]
+                "required": [
+                    "id",
+                    "name",
+                    "sortOrder",
+                    "icon",
+                    "createdAt",
+                    "updatedAt",
+                    "services"
+                ]
             },
             "serviceDtoSchema": {
                 "type": "object",
@@ -1656,6 +1685,10 @@
                     "sortOrder": {
                         "type": "integer",
                         "minimum": 0
+                    },
+                    "icon": {
+                        "$ref": "#/components/schemas/lucideIconNameSchema",
+                        "nullable": true
                     }
                 }
             },

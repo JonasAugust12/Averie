@@ -5,6 +5,7 @@ export function serializeServiceCategory(doc: {
     _id: IdLike;
     name: string;
     sortOrder?: number;
+    icon?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }): ServiceCategoryDto {
@@ -12,6 +13,7 @@ export function serializeServiceCategory(doc: {
         id: toId(doc._id),
         name: doc.name,
         sortOrder: doc.sortOrder ?? 0,
+        icon: doc.icon ?? null,
         createdAt: toIso(doc.createdAt),
         updatedAt: toIso(doc.updatedAt),
     };

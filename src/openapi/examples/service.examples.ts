@@ -34,6 +34,7 @@ export const serviceCategoryManicureExample = {
     id: EXAMPLE_CATEGORY_MANICURE_ID,
     name: 'Manicure & Pedicure',
     sortOrder: 1,
+    icon: 'Sparkles',
     createdAt: EXAMPLE_TIMESTAMP,
     updatedAt: EXAMPLE_TIMESTAMP,
 };
@@ -42,6 +43,7 @@ export const serviceCategoryGelExample = {
     id: EXAMPLE_CATEGORY_GEL_ID,
     name: 'Gel Polish',
     sortOrder: 2,
+    icon: 'Palette',
     createdAt: EXAMPLE_TIMESTAMP,
     updatedAt: EXAMPLE_TIMESTAMP,
 };

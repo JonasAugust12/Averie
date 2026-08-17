@@ -22,6 +22,7 @@ export const serviceCategoryDtoSchema = z.object({
     id: objectIdSchema,
     name: z.string(),
     sortOrder: z.number().int(),
+    icon: z.string().nullable(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });

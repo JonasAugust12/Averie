@@ -101,6 +101,25 @@ paths:
             tags: [Server Actions]
             summary: createServiceCategoryAction
             description: Admin only.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [name]
+                            properties:
+                                name:
+                                    type: string
+                                    maxLength: 100
+                                sortOrder:
+                                    type: integer
+                                    minimum: 0
+                                icon:
+                                    type: string
+                                    maxLength: 64
+                                    description: PascalCase Lucide React icon name (e.g. Scissors, Sparkles)
+                                    example: Sparkles
             responses:
                 '201':
                     description: Created
@@ -110,6 +129,25 @@ paths:
             tags: [Server Actions]
             summary: updateServiceCategoryAction
             description: Admin only.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    maxLength: 100
+                                sortOrder:
+                                    type: integer
+                                    minimum: 0
+                                icon:
+                                    type: string
+                                    nullable: true
+                                    maxLength: 64
+                                    description: PascalCase Lucide icon name; pass null to clear
+                                    example: Palette
             responses:
                 '200':
                     description: Updated

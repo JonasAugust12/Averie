@@ -12,6 +12,12 @@ const ServiceCategorySchema = new Schema(
             type: Number,
             default: 0,
         },
+        icon: {
+            type: String,
+            trim: true,
+            maxlength: 64,
+            default: null,
+        },
     },
     {
         timestamps: true,

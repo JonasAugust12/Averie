@@ -21,6 +21,7 @@ const ServiceCategory = mongoose.models.ServiceCategorySeed
               {
                   name: { type: String, required: true, trim: true },
                   sortOrder: { type: Number, default: 0 },
+                  icon: { type: String, trim: true, default: null },
               },
               { timestamps: true, collection: 'service_categories' },
           ),
@@ -148,12 +149,12 @@ const SalonSettings = mongoose.models.SalonSettingsSeed
       );
 
 const CATEGORIES = [
-    { name: 'Manicure & Pedicure', sortOrder: 0 },
-    { name: 'Gel Polish', sortOrder: 1 },
-    { name: 'Nail Enhancements', sortOrder: 2 },
-    { name: 'Add-ons', sortOrder: 3 },
-    { name: 'Waxing', sortOrder: 4 },
-    { name: 'Facials', sortOrder: 5 },
+    { name: 'Manicure & Pedicure', sortOrder: 0, icon: 'Sparkles' },
+    { name: 'Gel Polish', sortOrder: 1, icon: 'Palette' },
+    { name: 'Nail Enhancements', sortOrder: 2, icon: 'Gem' },
+    { name: 'Add-ons', sortOrder: 3, icon: 'Plus' },
+    { name: 'Waxing', sortOrder: 4, icon: 'Flame' },
+    { name: 'Facials', sortOrder: 5, icon: 'Smile' },
 ];
 
 const MORNING_WEEKDAY = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'];
