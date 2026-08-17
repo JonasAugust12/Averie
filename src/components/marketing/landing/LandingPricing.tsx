@@ -3,7 +3,14 @@
 import Image from 'next/image';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { FadeIn, PillLink } from '@components/marketing/landing';
-import { landingDesktopOnly, landingTitle } from '@components/marketing/landing/styles';
+import {
+    landingDesktopOnly,
+    landingEyebrow,
+    landingImage,
+    landingImageFrame,
+    landingStaticText,
+    landingTitle,
+} from '@components/marketing/landing/styles';
 
 const rows = ['mani', 'gel', 'enhance', 'wax', 'facial'] as const;
 
@@ -18,14 +25,16 @@ export function LandingPricing() {
             {/* Text & Price List */}
             <FadeIn className="order-2 md:order-0 md:col-span-5">
                 <div className="text-center md:text-left">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
+                    <div className={landingEyebrow}>
                         <span>Menu & Pricing</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.pricing.title')}</h2>
                 </div>
 
                 {/* Mobile Menu Bento Card */}
-                <div className="mt-6 rounded-4xl border border-stone-200/80 bg-white/90 p-5 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] backdrop-blur-xs md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+                <div
+                    className={`mt-6 rounded-4xl border border-stone-200/80 bg-white/90 p-5 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] backdrop-blur-xs md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none ${landingStaticText}`}
+                >
                     <ul className="space-y-4 md:space-y-5">
                         {rows.map((key) => (
                             <li
@@ -63,33 +72,38 @@ export function LandingPricing() {
                 <div
                     className={`relative flex aspect-4/3 w-full items-center justify-center overflow-visible ${landingDesktopOnly}`}
                 >
-                    <div className="relative z-20 flex items-center justify-center w-full h-full">
+                    <div
+                        className={`relative z-20 flex h-full w-full items-center justify-center ${landingImageFrame}`}
+                    >
                         <Image
                             src="/salon/figma/pricing-art.png"
                             alt=""
+                            draggable={false}
                             width={500}
                             height={750}
-                            className="object-cover transition-transform duration-700 hover:scale-[1.03] cursor-pointer"
+                            className={`object-cover transition-transform duration-700 group-hover:scale-[1.03] ${landingImage}`}
                         />
                     </div>
                     <div className="pointer-events-none absolute -bottom-60 -left-20 aspect-3/4">
                         <Image
                             src="/salon/figma/hero01.svg"
                             alt=""
+                            draggable={false}
                             sizes="300px"
                             width={400}
                             height={750}
-                            className="object-cover"
+                            className={`object-cover ${landingImage}`}
                         />
                     </div>
                     <div className="pointer-events-none absolute -right-10 -top-36 aspect-3/4">
                         <Image
                             src="/salon/figma/hero02.svg"
                             alt=""
+                            draggable={false}
                             sizes="300px"
                             width={400}
                             height={750}
-                            className="rotate-180 object-cover"
+                            className={`rotate-180 object-cover ${landingImage}`}
                         />
                     </div>
                 </div>

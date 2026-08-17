@@ -3,6 +3,7 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { AppLink } from '@components/shared';
 import { cn } from '@utils/cn.util';
+import { landingInteractive } from '@components/marketing/landing/styles';
 
 interface FadeInProps {
     children: ReactNode;
@@ -81,6 +82,7 @@ export function PillLink({
         <AppLink
             href={href}
             className={cn(
+                landingInteractive,
                 'inline-flex h-12.5 w-full max-w-sm items-center justify-center rounded-full px-8 font-sans text-sm font-medium uppercase tracking-wide transition-all duration-300 hover:-translate-y-0.5 md:w-auto md:min-w-64 md:max-w-none',
                 variant === 'solid'
                     ? 'bg-third text-cream hover:bg-primary-800'

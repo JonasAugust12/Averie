@@ -8,7 +8,11 @@ import {
     landingBody,
     landingBleedWhite,
     landingDesktopOnly,
+    landingEyebrowMuted,
+    landingImage,
+    landingImageFrame,
     landingMobileOnly,
+    landingStaticText,
     landingTitle,
 } from '@components/marketing/landing/styles';
 
@@ -29,23 +33,28 @@ export function LandingPhilosophy() {
                 <div className={`relative mx-auto w-full max-w-sm px-2 ${landingMobileOnly}`}>
                     {/* Main Image Frame */}
                     <div className="relative aspect-3/4 w-full overflow-hidden rounded-4xl border border-stone-200/80 bg-white/60 p-2 shadow-[0_16px_36px_-10px_rgba(58,48,39,0.12)]">
-                        <div className="relative h-full w-full overflow-hidden rounded-3xl">
+                        <div
+                            className={`relative h-full w-full overflow-hidden rounded-3xl ${landingImageFrame}`}
+                        >
                             <Image
                                 src="/salon/salon.png"
                                 alt=""
                                 fill
+                                draggable={false}
                                 sizes="(max-width: 768px) 90vw, 400px"
-                                className="object-cover transition-transform duration-700 hover:scale-105"
+                                className={`object-cover transition-transform duration-700 group-hover:scale-105 ${landingImage}`}
                                 priority
                             />
                         </div>
                     </div>
 
                     {/* Floating luxury pill badge */}
-                    <div className="absolute -top-3 left-4 z-20 inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1.5 shadow-md backdrop-blur-md">
-                        <span className="font-sans text-xs font-semibold text-third tracking-wide">
-                            The Averie Ritual
-                        </span>
+                    <div className={`absolute -top-3 left-4 z-20 ${landingStaticText}`}>
+                        <div className="inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1.5 shadow-md backdrop-blur-md">
+                            <span className="font-sans text-xs font-semibold text-third tracking-wide">
+                                The Averie Ritual
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -57,28 +66,33 @@ export function LandingPhilosophy() {
                         <Image
                             src="/salon/figma/hero01.svg"
                             alt=""
+                            draggable={false}
                             sizes="300px"
                             width={450}
                             height={750}
-                            className="h-full w-full object-cover"
+                            className={`h-full w-full object-cover ${landingImage}`}
                         />
                     </div>
                     <div className="pointer-events-none absolute -bottom-30 -left-40 z-10 aspect-3/4 w-[80%]">
                         <Image
                             src="/salon/figma/hero02.svg"
                             alt=""
+                            draggable={false}
                             width={450}
                             height={750}
-                            className="h-full w-full object-cover"
+                            className={`h-full w-full object-cover ${landingImage}`}
                         />
                     </div>
-                    <div className="relative z-20 flex h-full w-full items-center justify-center">
+                    <div
+                        className={`relative z-20 flex h-full w-full items-center justify-center ${landingImageFrame}`}
+                    >
                         <Image
                             src="/salon/salon.png"
                             alt=""
+                            draggable={false}
                             width={400}
                             height={750}
-                            className="object-cover transition-transform duration-700 hover:scale-[1.03] cursor-pointer"
+                            className={`object-cover transition-transform duration-700 group-hover:scale-[1.03] ${landingImage}`}
                             priority
                         />
                     </div>
@@ -99,7 +113,7 @@ export function LandingPhilosophy() {
                 delay={0.1}
                 className="order-1 flex flex-col items-center text-center md:items-start md:text-left md:order-0 md:col-span-5 md:max-w-md md:justify-self-end md:pr-8"
             >
-                <div className="inline-flex items-center gap-2 rounded-full border border-stone-300/60 bg-stone-100/60 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-muted">
+                <div className={landingEyebrowMuted}>
                     <span>{t('landing.philosophy.eyebrow')}</span>
                 </div>
 

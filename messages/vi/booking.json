@@ -21,7 +21,8 @@
         "empty": "Không còn khung giờ trong buổi này.",
         "eveningUnavailable": "Buổi tối không có lịch trống.",
         "openTime": "Giờ mở cửa",
-        "closeTime": "Giờ đóng cửa"
+        "closeTime": "Giờ đóng cửa",
+        "closed": "Đóng cửa"
     },
     "steps": {
         "service": "Chọn dịch vụ",

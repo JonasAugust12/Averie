@@ -21,7 +21,8 @@
         "empty": "No times available in this period.",
         "eveningUnavailable": "Evening not available.",
         "openTime": "Open time",
-        "closeTime": "Close time"
+        "closeTime": "Close time",
+        "closed": "Closed"
     },
     "steps": {
         "service": "Select Service",

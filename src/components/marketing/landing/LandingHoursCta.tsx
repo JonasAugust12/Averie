@@ -9,7 +9,10 @@ import { FadeIn, PillLink } from '@components/marketing/landing';
 import {
     landingBleedRight,
     landingBody,
+    landingImage,
     landingOrnamentDesktopOnly,
+    landingInteractive,
+    landingStaticText,
     landingTitle,
 } from '@components/marketing/landing/styles';
 
@@ -32,7 +35,7 @@ function HoursSparkleRule() {
 
 function HoursSlot({ day, time }: { day: string; time: string }) {
     return (
-        <div>
+        <div className={landingStaticText}>
             <p className="font-sans text-xs sm:text-sm font-normal text-secondary-600/80 uppercase tracking-wider">
                 {day}
             </p>
@@ -61,9 +64,10 @@ export function LandingHoursCta() {
                 <Image
                     src="/salon/figma/hero01.svg"
                     alt=""
+                    draggable={false}
                     width={450}
                     height={750}
-                    className="h-full w-full object-cover"
+                    className={`h-full w-full object-cover ${landingImage}`}
                 />
             </div>
             <div
@@ -76,9 +80,10 @@ export function LandingHoursCta() {
                 <Image
                     src="/salon/figma/hero03.svg"
                     alt=""
+                    draggable={false}
                     width={350}
                     height={750}
-                    className="h-full w-full object-cover"
+                    className={`h-full w-full object-cover ${landingImage}`}
                 />
             </div>
             <FadeIn className="relative z-10 flex flex-col justify-center overflow-hidden rounded-4xl md:rounded-card border border-stone-200/80 px-6 py-10 text-center shadow-[0_16px_36px_-10px_rgba(58,48,39,0.08)] md:col-span-4 md:px-8">
@@ -86,10 +91,11 @@ export function LandingHoursCta() {
                     src="/salon/figma/hours-marble.png"
                     alt=""
                     fill
+                    draggable={false}
                     sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-cover"
+                    className={`object-cover ${landingImage}`}
                 />
-                <div className="relative z-10 flex flex-col">
+                <div className={`relative z-10 flex flex-col ${landingStaticText}`}>
                     <h2 className="font-display text-xl font-semibold tracking-wider text-secondary-600 uppercase">
                         {t('landing.hours.title')}
                     </h2>
@@ -101,8 +107,13 @@ export function LandingHoursCta() {
                         />
                         <HoursSparkleRule />
                         <HoursSlot
-                            day={t('landing.hours.satSun')}
-                            time={t('landing.hours.satSunHours')}
+                            day={t('landing.hours.saturday')}
+                            time={t('landing.hours.saturdayHours')}
+                        />
+                        <HoursSparkleRule />
+                        <HoursSlot
+                            day={t('landing.hours.sunday')}
+                            time={t('landing.hours.sundayHours')}
                         />
                     </div>
                     <p className="mt-5 font-sans text-xs leading-relaxed text-secondary-600/75 italic sm:text-sm">
@@ -139,7 +150,7 @@ export function LandingHoursCta() {
                 <div className="mt-7 flex items-center justify-center border-t border-stone-200/70 pt-6">
                     <AppLink
                         href="https://maps.app.goo.gl/YCtZW533i3x6BB5QA"
-                        className="group flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-stone-800"
+                        className={`group flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-stone-800 ${landingInteractive}`}
                     >
                         <MapPin className="size-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-700" />
                         <span className="underline decoration-stone-300 underline-offset-4 group-hover:decoration-stone-500">

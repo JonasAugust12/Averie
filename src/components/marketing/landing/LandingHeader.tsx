@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
 import { cn } from '@utils/cn.util';
+import { landingImage, landingInteractive } from '@components/marketing/landing/styles';
 
 const nav = [
     { href: '#philosophy', key: 'about' as const },
@@ -28,13 +29,14 @@ export function LandingHeader() {
                 )}
             >
                 <nav className="relative flex items-center justify-between gap-3">
-                    <Link href="/" className="relative z-10 shrink-0">
+                    <Link href="/" className={`relative z-10 shrink-0 ${landingInteractive}`}>
                         <Image
                             src="/salon/figma/logo.svg"
                             alt={t('brand')}
                             width={157}
                             height={50}
-                            className="h-10 w-32 object-contain object-left sm:h-11 sm:w-36 md:h-12.5 md:w-39.25"
+                            draggable={false}
+                            className={`h-10 w-32 object-contain object-left sm:h-11 sm:w-36 md:h-12.5 md:w-39.25 ${landingImage}`}
                             priority
                         />
                     </Link>
@@ -45,7 +47,7 @@ export function LandingHeader() {
                             <Link
                                 key={item.key}
                                 href={item.href}
-                                className="nav-link-underline whitespace-nowrap pb-1 font-sans text-sm font-medium text-secondary-600 transition-colors hover:text-nude lg:text-base"
+                                className={`nav-link-underline whitespace-nowrap pb-1 font-sans text-sm font-medium text-secondary-600 transition-colors hover:text-nude lg:text-base ${landingInteractive}`}
                             >
                                 {t(`landing.header.${item.key}`)}
                             </Link>
@@ -56,13 +58,13 @@ export function LandingHeader() {
                         <LanguageSwitcher variant="pill" />
                         <Link
                             href="/book"
-                            className="hidden h-9.5 items-center justify-center whitespace-nowrap rounded-full bg-third px-4 font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-800 lg:inline-flex lg:h-10.5 lg:px-6"
+                            className={`hidden h-9.5 items-center justify-center whitespace-nowrap rounded-full bg-third px-4 font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-800 lg:inline-flex lg:h-10.5 lg:px-6 ${landingInteractive}`}
                         >
                             {t('landing.header.book')}
                         </Link>
                         <button
                             type="button"
-                            className="flex size-10 items-center justify-center rounded-full border border-stone-200/50 bg-white/70 text-third shadow-2xs transition-colors hover:bg-white active:scale-95 lg:hidden"
+                            className={`flex size-10 items-center justify-center rounded-full border border-stone-200/50 bg-white/70 text-third shadow-2xs transition-colors hover:bg-white active:scale-95 lg:hidden ${landingInteractive}`}
                             aria-label="Menu"
                             aria-expanded={open}
                             onClick={() => setOpen((v) => !v)}
@@ -79,7 +81,7 @@ export function LandingHeader() {
                             <Link
                                 key={item.key}
                                 href={item.href}
-                                className="group flex items-center justify-between rounded-2xl px-4 py-3 font-sans text-base font-medium text-secondary-600 transition-all hover:bg-white/80 hover:text-nude"
+                                className={`group flex items-center justify-between rounded-2xl px-4 py-3 font-sans text-base font-medium text-secondary-600 transition-all hover:bg-white/80 hover:text-nude ${landingInteractive}`}
                                 onClick={() => setOpen(false)}
                             >
                                 <span className="flex items-center gap-2">
@@ -89,7 +91,7 @@ export function LandingHeader() {
                         ))}
                         <Link
                             href="/book"
-                            className="mt-3 flex h-12 items-center justify-center gap-2 rounded-full bg-third font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-md transition-transform active:scale-98"
+                            className={`mt-3 flex h-12 items-center justify-center gap-2 rounded-full bg-third font-sans text-xs font-semibold uppercase tracking-wider text-cream shadow-md transition-transform active:scale-98 ${landingInteractive}`}
                             onClick={() => setOpen(false)}
                         >
                             <span>{t('landing.header.book')}</span>

@@ -39,9 +39,23 @@ const AFTERNOON_STANDARD: PeriodSlots['afternoon'] = [
     '04:30 PM',
 ];
 
+/** Sunday closes 5pm — last bookable slot 4:00 PM. */
+const AFTERNOON_SUNDAY: PeriodSlots['afternoon'] = [
+    '12:00 PM',
+    '12:30 PM',
+    '01:00 PM',
+    '01:30 PM',
+    '02:00 PM',
+    '02:30 PM',
+    '03:00 PM',
+    '03:30 PM',
+    '04:00 PM',
+];
+
 const EVENING_WEEKDAY: PeriodSlots['evening'] = ['05:00 PM', '05:30 PM', '06:00 PM'];
 
-const EVENING_SATURDAY: PeriodSlots['evening'] = ['05:00 PM', '05:30 PM'];
+/** Saturday closes 6pm — last bookable slot 5:00 PM. */
+const EVENING_SATURDAY: PeriodSlots['evening'] = ['05:00 PM'];
 
 const MORNING_SUNDAY: PeriodSlots['morning'] = ['10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'];
 
@@ -62,7 +76,7 @@ export function defaultWeekdaySchedules(): WeekdaySchedule[] {
                 isOpen: true,
                 periodSlots: {
                     morning: [...MORNING_SUNDAY],
-                    afternoon: [...AFTERNOON_STANDARD],
+                    afternoon: [...AFTERNOON_SUNDAY],
                     evening: [],
                 },
             };
@@ -259,6 +273,39 @@ export function sortTimes(times: string[]): string[] {
         const hb = hourOf(b) * 60 + (parseInt(b.match(/:(\d{2})/)?.[1] ?? '0', 10) || 0);
         return ha - hb;
     });
+}
+
+/** Salon closing hour shown in booking UI — not bookable (Mon–Fri 7pm, Sat 6pm, Sun 5pm). */
+export function getSalonClosedDisplayTime(weekday: number): string | null {
+    if (weekday >= 1 && weekday <= 5) return '07:00 PM';
+    if (weekday === 6) return '06:00 PM';
+    if (weekday === 0) return '05:00 PM';
+    return null;
+}
+
+export type BookingDisplaySlot = TimeSlot & { isClosedDisplay?: boolean };
+
+/** Bookable slots plus one dimmed “closed” slot after last appointment (UI only). */
+export function mergeBookingDisplaySlots(slots: TimeSlot[], weekday: number): BookingDisplaySlot[] {
+    const byTime = new Map<string, BookingDisplaySlot>();
+
+    for (const slot of slots) {
+        if (slot.available) {
+            byTime.set(slot.time, { ...slot });
+        }
+    }
+
+    const closedTime = getSalonClosedDisplayTime(weekday);
+    if (closedTime && !byTime.has(closedTime)) {
+        byTime.set(closedTime, {
+            id: `closed-display-${weekday}-${closedTime.replace(/\s/g, '')}`,
+            time: closedTime,
+            available: false,
+            isClosedDisplay: true,
+        });
+    }
+
+    return sortTimes([...byTime.keys()]).map((time) => byTime.get(time)!);
 }
 
 export const DAY_OFF_SCOPE_OPTIONS: DayOffScope[] = ['full', 'morning', 'afternoon', 'evening'];

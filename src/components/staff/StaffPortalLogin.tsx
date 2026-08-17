@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { AlertCircle, Phone, Shield } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
+import { loginStaticText } from '@components/marketing/landing/styles';
 
 interface StaffPortalLoginProps {
     phoneSearch: string;
@@ -46,18 +47,24 @@ export function StaffPortalLogin({
                                 priority
                             />
                         </div>
-                        <p className="mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase">
+                        <p
+                            className={`mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase ${loginStaticText}`}
+                        >
                             {t('staffPortal.subtitle')}
                         </p>
                     </header>
 
-                    <h1 className="mb-6 text-center font-display text-xl font-bold tracking-wide text-stone-950">
+                    <h1
+                        className={`mb-6 text-center font-display text-xl font-bold tracking-wide text-stone-950 ${loginStaticText}`}
+                    >
                         {t('staffPortal.title')}
                     </h1>
 
                     <form onSubmit={onSubmit} className="space-y-5">
                         <div className="space-y-1.5 text-left">
-                            <label className="block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase">
+                            <label
+                                className={`block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase ${loginStaticText}`}
+                            >
                                 {t('staffPortal.phoneLabel')}
                             </label>
                             <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300">
@@ -74,13 +81,17 @@ export function StaffPortalLogin({
                                     className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400 rounded-[inherit]"
                                 />
                             </div>
-                            <p className="font-sans text-xs font-medium text-stone-700 pl-1">
+                            <p
+                                className={`font-sans text-xs font-medium text-stone-700 pl-1 ${loginStaticText}`}
+                            >
                                 {t('staffPortal.inputHint')}
                             </p>
                         </div>
 
                         {searchError && (
-                            <div className="flex items-start text-rose-700 text-xs pl-1 animate-in fade-in slide-in-from-top-1 duration-200 font-semibold gap-1">
+                            <div
+                                className={`flex items-start text-rose-700 text-xs pl-1 animate-in fade-in slide-in-from-top-1 duration-200 font-semibold gap-1 ${loginStaticText}`}
+                            >
                                 <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                                 <span>{searchError}</span>
                             </div>
@@ -95,7 +106,9 @@ export function StaffPortalLogin({
                     </form>
                 </div>
 
-                <p className="text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase">
+                <p
+                    className={`text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase ${loginStaticText}`}
+                >
                     &copy; {new Date().getFullYear()} {t('brand')} Staff Portal
                 </p>
                 <Link

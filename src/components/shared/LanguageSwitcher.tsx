@@ -47,7 +47,7 @@ export function LanguageSwitcher({
             onMouseLeave={() => setIsHovered(false)}
             disabled={isPending}
             className={cn(
-                'group relative flex cursor-pointer items-center overflow-hidden transition-all duration-300 ease-out active:scale-95',
+                'group relative flex cursor-pointer select-none items-center overflow-hidden transition-all duration-300 ease-out active:scale-95',
                 isPill
                     ? 'flex size-10 items-center justify-center rounded-full border border-stone-200/80 bg-white/85 shadow-2xs hover:border-nude hover:bg-white md:h-9.5 md:w-auto md:px-3.5 lg:h-10.5 lg:px-4.5 md:gap-2 md:border-third/60'
                     : 'h-9 gap-1 rounded px-1.5 sm:gap-2 sm:border sm:border-border sm:bg-tertiary/60 sm:px-3 sm:hover:border-primary/40 sm:hover:shadow-md sm:hover:shadow-primary/10',
@@ -76,9 +76,10 @@ export function LanguageSwitcher({
                         src="/icons/vnflag.svg"
                         alt=""
                         fill
+                        draggable={false}
                         sizes="24px"
                         unoptimized
-                        className="object-cover"
+                        className="pointer-events-none select-none object-cover [-webkit-user-drag:none]"
                     />
                 </div>
                 <div
@@ -92,9 +93,10 @@ export function LanguageSwitcher({
                         src="/icons/usaflag.svg"
                         alt=""
                         fill
+                        draggable={false}
                         sizes="24px"
                         unoptimized
-                        className="object-cover"
+                        className="pointer-events-none select-none object-cover [-webkit-user-drag:none]"
                     />
                 </div>
             </div>

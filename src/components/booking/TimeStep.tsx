@@ -2,15 +2,14 @@
 
 import { useMemo } from 'react';
 import { Loader2, Moon, Sun, Sunset } from 'lucide-react';
-import { useAvailableSlots, useScheduleSettings } from '@services/salon.service';
+import { useAvailableSlots } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
 import {
     getPeriodForTime,
     getWeekdayFromDate,
-    isCloseTimeSlot,
-    isOpenTimeSlot,
+    mergeBookingDisplaySlots,
 } from '@utils/schedule.util';
 import { cn } from '@utils/cn.util';
 
@@ -18,30 +17,29 @@ export function TimeStep() {
     const t = useBookingTranslations();
     const { date, time, setTime, setStep } = useBookingStore();
     const { data: slots, isLoading } = useAvailableSlots(date);
-    const { data: settings } = useScheduleSettings();
 
     const weekday = date ? getWeekdayFromDate(date) : 1;
 
     const periods = useMemo(() => {
-        const available = (slots ?? []).filter((s) => s.available);
+        const displaySlots = mergeBookingDisplaySlots(slots ?? [], weekday);
         return [
             {
                 key: 'morning' as const,
                 icon: Sun,
-                items: available.filter((s) => getPeriodForTime(s.time) === 'morning'),
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'morning'),
             },
             {
                 key: 'afternoon' as const,
                 icon: Sunset,
-                items: available.filter((s) => getPeriodForTime(s.time) === 'afternoon'),
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'afternoon'),
             },
             {
                 key: 'evening' as const,
                 icon: Moon,
-                items: available.filter((s) => getPeriodForTime(s.time) === 'evening'),
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'evening'),
             },
         ];
-    }, [slots]);
+    }, [slots, weekday]);
 
     if (isLoading) {
         return (
@@ -69,11 +67,22 @@ export function TimeStep() {
                     ) : (
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                             {periodItems.map((slot) => {
+                                if (slot.isClosedDisplay) {
+                                    return (
+                                        <div
+                                            key={slot.id}
+                                            aria-disabled
+                                            className="cursor-not-allowed rounded-xl border-2 border-stone-200 bg-stone-50/60 px-4 py-3 font-sans text-base font-bold text-stone-400 opacity-55 select-none"
+                                        >
+                                            <span className="block">{slot.time}</span>
+                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                                                {t('periods.closed')}
+                                            </span>
+                                        </div>
+                                    );
+                                }
+
                                 const selected = time === slot.time;
-                                const isOpenTime =
-                                    settings && isOpenTimeSlot(slot.time, settings, weekday);
-                                const isCloseTime =
-                                    settings && isCloseTimeSlot(slot.time, settings, weekday);
                                 return (
                                     <button
                                         key={slot.id}
@@ -83,32 +92,10 @@ export function TimeStep() {
                                             'cursor-pointer rounded-xl border-2 px-4 py-3 font-sans text-base font-bold transition-all duration-200 hover:shadow-md hover:scale-103',
                                             selected
                                                 ? 'border-primary bg-primary text-neutral shadow-md scale-103'
-                                                : isCloseTime
-                                                  ? 'border-stone-200 bg-stone-50/70 text-stone-500 opacity-60 hover:border-stone-300 hover:bg-stone-50/90 hover:opacity-80'
-                                                  : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
+                                                : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
                                         )}
                                     >
                                         <span className="block">{slot.time}</span>
-                                        {isOpenTime && (
-                                            <span
-                                                className={cn(
-                                                    'mt-1 block text-[10px] font-semibold uppercase tracking-wider',
-                                                    selected ? 'text-neutral/80' : 'text-stone-500',
-                                                )}
-                                            >
-                                                {t('periods.openTime')}
-                                            </span>
-                                        )}
-                                        {isCloseTime && (
-                                            <span
-                                                className={cn(
-                                                    'mt-1 block text-[10px] font-semibold uppercase tracking-wider',
-                                                    selected ? 'text-neutral/70' : 'text-stone-400',
-                                                )}
-                                            >
-                                                {t('periods.closeTime')}
-                                            </span>
-                                        )}
                                     </button>
                                 );
                             })}

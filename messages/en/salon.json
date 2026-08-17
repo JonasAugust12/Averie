@@ -111,11 +111,13 @@
             }
         },
         "hours": {
-            "title": "Working hour",
-            "monFri": "Monday - Friday",
-            "monFriHours": "9:00 AM - 7:00 PM",
-            "satSun": "Saturday - Sunday",
-            "satSunHours": "9:00 AM - 6:00 PM",
+            "title": "Schedule",
+            "monFri": "Mon–Fri",
+            "monFriHours": "9:00 AM – 7:00 PM",
+            "saturday": "Saturday",
+            "saturdayHours": "9:00 AM – 6:00 PM",
+            "sunday": "Sunday",
+            "sundayHours": "10:00 AM – 5:00 PM",
             "bookingNote": "Online booking closes one hour before our closing time."
         },
         "cta": {

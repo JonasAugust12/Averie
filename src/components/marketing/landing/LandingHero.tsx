@@ -7,7 +7,11 @@ import { FadeIn, PillLink } from '@components/marketing/landing';
 import {
     landingBody,
     landingDesktopOnly,
+    landingEyebrow,
+    landingImage,
+    landingImageFrame,
     landingMobileOnly,
+    landingStaticText,
 } from '@components/marketing/landing/styles';
 
 export function LandingHero() {
@@ -19,11 +23,13 @@ export function LandingHero() {
                 {/* Text Content */}
                 <FadeIn className="flex flex-col items-center text-center md:items-start md:text-left md:col-span-5">
                     {/* Eyebrow badge */}
-                    <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
+                    <div className={landingEyebrow}>
                         <span>{t('landing.hero.eyebrow')}</span>
                     </div>
 
-                    <h1 className="mt-4 font-display text-4xl font-semibold uppercase leading-[1.08] tracking-tight text-nude sm:text-5xl md:text-6xl lg:text-7xl xl:text-hero">
+                    <h1
+                        className={`mt-4 font-display text-4xl font-semibold uppercase leading-[1.08] tracking-tight text-nude sm:text-5xl md:text-6xl lg:text-7xl xl:text-hero ${landingStaticText}`}
+                    >
                         {t('landing.hero.title')}
                     </h1>
 
@@ -50,7 +56,9 @@ export function LandingHero() {
                     </div>
 
                     {/* Social proof rating */}
-                    <div className="mt-5 flex items-center gap-2 text-xs font-medium text-stone-600">
+                    <div
+                        className={`mt-5 flex items-center gap-2 text-xs font-medium text-stone-600 ${landingStaticText}`}
+                    >
                         <div className="flex text-amber-500">
                             {Array.from({ length: 5 }).map((_, i) => (
                                 <Star key={i} className="size-3.5 fill-current" />
@@ -71,19 +79,24 @@ export function LandingHero() {
 
                         {/* Main framed photo */}
                         <div className="relative aspect-3/4 w-full overflow-hidden rounded-4xl border border-white/80 bg-white/50 p-2 shadow-[0_20px_40px_-15px_rgba(58,48,39,0.18)]">
-                            <div className="relative h-full w-full overflow-hidden rounded-3xl">
+                            <div
+                                className={`relative h-full w-full overflow-hidden rounded-3xl ${landingImageFrame}`}
+                            >
                                 <Image
                                     src="/salon/figma/hero.png"
                                     alt=""
                                     fill
+                                    draggable={false}
                                     sizes="(max-width: 768px) 90vw, 500px"
-                                    className="translate-x-[4%] object-cover transition-transform duration-1000 hover:scale-105"
+                                    className={`translate-x-[4%] object-cover transition-transform duration-1000 group-hover:scale-105 ${landingImage}`}
                                     priority
                                 />
                             </div>
 
                             {/* Floating luxury badge */}
-                            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-full border border-white/80 bg-white/90 px-4 py-2 shadow-md backdrop-blur-md">
+                            <div
+                                className={`absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-full border border-white/80 bg-white/90 px-4 py-2 shadow-md backdrop-blur-md ${landingStaticText}`}
+                            >
                                 <div className="flex items-center gap-2">
                                     <span className="font-sans text-xs font-semibold tracking-wide text-third">
                                         Sanctuary of Calm
@@ -104,30 +117,35 @@ export function LandingHero() {
                             <Image
                                 src="/salon/figma/hero01.svg"
                                 alt=""
+                                draggable={false}
                                 sizes="300px"
                                 width={450}
                                 height={750}
-                                className="h-full w-full object-cover"
+                                className={`h-full w-full object-cover ${landingImage}`}
                             />
                         </div>
                         <div className="pointer-events-none absolute -bottom-18 -left-40 z-10 aspect-3/4 w-[80%] rounded-card">
                             <Image
                                 src="/salon/figma/hero02.svg"
                                 alt=""
+                                draggable={false}
                                 sizes="300px"
                                 width={450}
                                 height={750}
-                                className="h-full w-full object-cover"
+                                className={`h-full w-full object-cover ${landingImage}`}
                             />
                         </div>
-                        <div className="absolute left-1/2 top-1/2 z-20 aspect-3/4 w-[68%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-card">
+                        <div
+                            className={`absolute left-1/2 top-1/2 z-20 aspect-3/4 w-[68%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-card ${landingImageFrame}`}
+                        >
                             <Image
                                 src="/salon/figma/hero.png"
                                 alt=""
+                                draggable={false}
                                 sizes="300px"
                                 width={500}
                                 height={750}
-                                className="h-full w-full object-cover transition-transform duration-2000 hover:scale-105"
+                                className={`h-full w-full object-cover transition-transform duration-2000 group-hover:scale-105 ${landingImage}`}
                                 priority
                             />
                         </div>

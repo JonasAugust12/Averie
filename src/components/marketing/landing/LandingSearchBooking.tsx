@@ -6,6 +6,7 @@ import { useSalonBookings, useSalonServices, useSalonStaff } from '@/services/sa
 import { useBookingStore } from '@stores/booking.store';
 import type { SalonBooking } from '@typings/salon.type';
 import { FadeIn } from '@components/marketing/landing';
+import { landingInteractive, landingStaticText } from '@components/marketing/landing/styles';
 import {
     Search,
     Calendar,
@@ -112,10 +113,12 @@ export function LandingSearchBooking() {
         <section id="search-booking" className="relative py-16 md:py-24">
             <div className="mx-auto max-w-3xl px-4">
                 <FadeIn className="text-center">
-                    <h2 className="font-display text-3xl font-semibold uppercase tracking-wide text-nude md:text-4xl">
+                    <h2
+                        className={`font-display text-3xl font-semibold uppercase tracking-wide text-nude md:text-4xl ${landingStaticText}`}
+                    >
                         {t('landing.searchBooking.title')}
                     </h2>
-                    <p className="mt-4 font-sans text-base text-body">
+                    <p className={`mt-4 font-sans text-base text-body ${landingStaticText}`}>
                         {t('landing.searchBooking.subtitle')}
                     </p>
                 </FadeIn>
@@ -145,7 +148,7 @@ export function LandingSearchBooking() {
                             </div>
                             <button
                                 type="submit"
-                                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-third px-6 py-4 font-sans text-sm font-semibold tracking-wider text-cream uppercase transition-all hover:scale-105 active:scale-95 duration-200 shadow-sm shrink-0"
+                                className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-third px-6 py-4 font-sans text-sm font-semibold tracking-wider text-cream uppercase transition-all hover:scale-105 active:scale-95 duration-200 shadow-sm shrink-0 ${landingInteractive}`}
                             >
                                 <Search className="size-4" />
                                 {t('landing.searchBooking.button')}
@@ -155,7 +158,9 @@ export function LandingSearchBooking() {
                         {hasSearched && (
                             <div className="mt-8 border-t border-stone-200/60 pt-6">
                                 {filteredBookings.length === 0 ? (
-                                    <div className="rounded-card border border-stone-200/50 bg-white/50 p-6 text-center backdrop-blur-md">
+                                    <div
+                                        className={`rounded-card border border-stone-200/50 bg-white/50 p-6 text-center backdrop-blur-md ${landingStaticText}`}
+                                    >
                                         <p className="font-sans text-base text-stone-600 font-medium">
                                             {t('landing.searchBooking.noResults')}
                                         </p>
@@ -167,9 +172,11 @@ export function LandingSearchBooking() {
                                             return (
                                                 <div
                                                     key={booking.id}
-                                                    className="overflow-hidden rounded-card border border-stone-200 bg-white/90 p-5 shadow-xs transition-all hover:shadow-md md:p-6"
+                                                    className="overflow-hidden rounded-card border border-stone-200 bg-white/90 p-5 shadow-xs md:p-6"
                                                 >
-                                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                    <div
+                                                        className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${landingStaticText}`}
+                                                    >
                                                         <div>
                                                             <p className="font-display text-lg font-bold text-primary">
                                                                 {getServicesNames(booking)}
@@ -192,7 +199,9 @@ export function LandingSearchBooking() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="mt-5 grid grid-cols-1 gap-3 border-t border-stone-100 pt-4 sm:grid-cols-3">
+                                                    <div
+                                                        className={`mt-5 grid grid-cols-1 gap-3 border-t border-stone-100 pt-4 sm:grid-cols-3 ${landingStaticText}`}
+                                                    >
                                                         <div className="flex items-center gap-2 text-stone-700">
                                                             <Calendar className="size-4 shrink-0 text-stone-400" />
                                                             <span className="font-sans text-sm font-semibold">
@@ -216,7 +225,7 @@ export function LandingSearchBooking() {
                                             );
                                         })}
 
-                                        <div className="mt-6 text-center">
+                                        <div className={`mt-6 text-center ${landingStaticText}`}>
                                             <p className="font-sans text-sm text-stone-550 font-medium">
                                                 {t('landing.searchBooking.guide')}
                                             </p>

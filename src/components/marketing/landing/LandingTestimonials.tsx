@@ -8,7 +8,10 @@ import { FadeIn } from '@components/marketing/landing';
 import {
     landingBleedLeft,
     landingBody,
+    landingEyebrow,
+    landingImage,
     landingOrnamentDesktopOnly,
+    landingStaticText,
     landingTitle,
 } from '@components/marketing/landing/styles';
 
@@ -29,15 +32,16 @@ export function LandingTestimonials() {
                 <Image
                     src="/salon/figma/hero02.svg"
                     alt=""
+                    draggable={false}
                     sizes="300px"
                     width={450}
                     height={750}
-                    className="h-full w-full object-cover rotate-180"
+                    className={`h-full w-full object-cover rotate-180 ${landingImage}`}
                 />
             </div>
             <div className="relative z-10">
                 <FadeIn className="mb-8 text-center md:mb-10">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-nude/30 bg-nude/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-nude">
+                    <div className={landingEyebrow}>
                         <span>Client Love</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.testimonials.title')}</h2>
@@ -62,14 +66,18 @@ export function LandingTestimonials() {
                                         ))}
                                     </div>
                                 </div>
-                                <p className="flex-1 font-sans text-sm italic leading-relaxed text-secondary-600">
+                                <p
+                                    className={`flex-1 font-sans text-sm italic leading-relaxed text-secondary-600 ${landingStaticText}`}
+                                >
                                     &ldquo;{t(`landing.testimonials.reviews.${key}.text`)}&rdquo;
                                 </p>
                                 <div className="mt-5 flex items-center gap-3 border-t border-stone-100 pt-4">
-                                    <div className="flex size-10 items-center justify-center rounded-full bg-third font-sans text-xs font-semibold text-cream shadow-xs">
+                                    <div
+                                        className={`flex size-10 items-center justify-center rounded-full bg-third font-sans text-xs font-semibold text-cream shadow-xs ${landingStaticText}`}
+                                    >
                                         {t(`landing.testimonials.reviews.${key}.initials`)}
                                     </div>
-                                    <div>
+                                    <div className={landingStaticText}>
                                         <p className="font-sans text-sm font-semibold text-third">
                                             {t(`landing.testimonials.reviews.${key}.author`)}
                                         </p>
@@ -100,10 +108,14 @@ export function LandingTestimonials() {
                                     &ldquo;{t(`landing.testimonials.reviews.${key}.text`)}&rdquo;
                                 </p>
                                 <div className="mt-6 flex items-center gap-3">
-                                    <div className="flex size-12.5 items-center justify-center rounded-full bg-third font-sans text-sm font-medium text-cream">
+                                    <div
+                                        className={`flex size-12.5 items-center justify-center rounded-full bg-third font-sans text-sm font-medium text-cream ${landingStaticText}`}
+                                    >
                                         {t(`landing.testimonials.reviews.${key}.initials`)}
                                     </div>
-                                    <p className="font-sans text-base font-medium text-third">
+                                    <p
+                                        className={`font-sans text-base font-medium text-third ${landingStaticText}`}
+                                    >
                                         {t(`landing.testimonials.reviews.${key}.author`)}
                                     </p>
                                 </div>

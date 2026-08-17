@@ -11,6 +11,7 @@ import { salonLoginSchema, type SalonLoginInput } from '@validations/booking.sch
 import { useAccountTranslations } from '@i18n/use-app-translations';
 import { setAdminMockAuthed } from '@stores/booking.store';
 import { Button } from '@components/common';
+import { loginStaticText } from '@components/marketing/landing/styles';
 
 const ADMIN_EMAIL = 'admin@averie.local';
 const ADMIN_PASSWORD = 'password';
@@ -70,12 +71,16 @@ export default function AdminLoginPage() {
                                 priority
                             />
                         </div>
-                        <p className="mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase">
+                        <p
+                            className={`mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase ${loginStaticText}`}
+                        >
                             {t('adminSubtitle')}
                         </p>
                     </header>
 
-                    <h1 className="mb-6 text-center font-display text-2xl font-bold tracking-wide text-stone-950">
+                    <h1
+                        className={`mb-6 text-center font-display text-2xl font-bold tracking-wide text-stone-950 ${loginStaticText}`}
+                    >
                         {t('adminTitle')}
                     </h1>
 
@@ -138,12 +143,16 @@ export default function AdminLoginPage() {
                             </label>
                         </div>
 
-                        <p className="font-sans text-xs leading-relaxed text-stone-700 font-medium">
+                        <p
+                            className={`font-sans text-xs leading-relaxed text-stone-700 font-medium ${loginStaticText}`}
+                        >
                             {t('adminHint')}
                         </p>
 
                         {authError ? (
-                            <div className="flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium">
+                            <div
+                                className={`flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium ${loginStaticText}`}
+                            >
                                 <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
                                 <span>{authError}</span>
                             </div>
@@ -159,7 +168,9 @@ export default function AdminLoginPage() {
                 </div>
 
                 {/* Footer Copyright block */}
-                <p className="text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase">
+                <p
+                    className={`text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase ${loginStaticText}`}
+                >
                     &copy; {new Date().getFullYear()} {t('brand')} Admin Portal. All rights
                     reserved.
                 </p>
@@ -184,12 +195,16 @@ interface FieldProps {
 function Field({ label, error, children }: FieldProps) {
     return (
         <div className="space-y-1.5 text-left">
-            <label className="block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase">
+            <label
+                className={`block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase ${loginStaticText}`}
+            >
                 {label}
             </label>
             {children}
             {error ? (
-                <div className="flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium">
+                <div
+                    className={`flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium ${loginStaticText}`}
+                >
                     <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
                     <span>{error}</span>
                 </div>
