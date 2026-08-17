@@ -5,15 +5,23 @@ import {
     mockScheduleSettings,
     mockServices,
     mockStaff,
+    SERVICE_CATEGORIES,
     upsertMockBooking,
     updateMockService,
     deleteMockService,
+    upsertMockCategory,
     updateMockStaff,
     deleteMockStaff,
     updateMockScheduleSettings,
 } from '@/mocks/salon/data';
 import { getAvailableSlotsForDate } from '@utils/schedule.util';
-import type { SalonBooking, SalonService, SalonStaff, ScheduleSettings } from '@typings/salon.type';
+import type {
+    SalonBooking,
+    SalonService,
+    SalonServiceCategory,
+    SalonStaff,
+    ScheduleSettings,
+} from '@typings/salon.type';
 
 const delay = (ms = 180) => new Promise((r) => setTimeout(r, ms));
 
@@ -34,6 +42,29 @@ export function useAllSalonServices() {
         queryFn: async () => {
             await delay();
             return [...mockServices];
+        },
+    });
+}
+
+export function useSalonCategories() {
+    return useQuery({
+        queryKey: ['salon', 'categories'],
+        queryFn: async () => {
+            await delay();
+            return [...SERVICE_CATEGORIES];
+        },
+    });
+}
+
+export function useSaveMockCategory() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (category: SalonServiceCategory) => {
+            await delay(200);
+            return upsertMockCategory(category);
+        },
+        onSuccess: async () => {
+            await qc.invalidateQueries({ queryKey: ['salon', 'categories'] });
         },
     });
 }

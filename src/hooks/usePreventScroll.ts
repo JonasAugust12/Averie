@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const SCROLL_LOCK_ROOT_SELECTOR = '[data-scroll-lock-root]';
+
 let scrollLockCount = 0;
 let originalStyles: {
     bodyOverflow: string;
@@ -12,7 +14,31 @@ let originalStyles: {
     bodyPaddingRight: string;
     scrollY: number;
     fixedStyles: Array<{ element: Element; paddingRight: string }>;
+    rootStyles: Array<{ element: HTMLElement; overflow: string; overflowY: string }>;
 } | null = null;
+
+function lockScrollRoots() {
+    const roots = Array.from(document.querySelectorAll<HTMLElement>(SCROLL_LOCK_ROOT_SELECTOR));
+    return roots.map((element) => {
+        const prev = {
+            element,
+            overflow: element.style.overflow,
+            overflowY: element.style.overflowY,
+        };
+        element.style.setProperty('overflow', 'hidden', 'important');
+        element.style.setProperty('overflow-y', 'hidden', 'important');
+        return prev;
+    });
+}
+
+function restoreScrollRoots(
+    rootStyles: Array<{ element: HTMLElement; overflow: string; overflowY: string }>,
+) {
+    rootStyles.forEach(({ element, overflow, overflowY }) => {
+        element.style.overflow = overflow;
+        element.style.overflowY = overflowY;
+    });
+}
 
 export const usePreventScroll = (isOpen: boolean) => {
     const isActiveRef = useRef(false);
@@ -52,6 +78,7 @@ export const usePreventScroll = (isOpen: boolean) => {
                     bodyPaddingRight: body.style.paddingRight,
                     scrollY,
                     fixedStyles,
+                    rootStyles: lockScrollRoots(),
                 };
 
                 body.style.setProperty('position', 'fixed', 'important');
@@ -72,6 +99,7 @@ export const usePreventScroll = (isOpen: boolean) => {
                 originalStyles.fixedStyles.forEach(({ element, paddingRight }) => {
                     (element as HTMLElement).style.paddingRight = paddingRight;
                 });
+                restoreScrollRoots(originalStyles.rootStyles);
 
                 body.style.position = originalStyles.bodyPosition;
                 body.style.top = originalStyles.bodyTop;
@@ -99,6 +127,7 @@ export const usePreventScroll = (isOpen: boolean) => {
                     originalStyles.fixedStyles.forEach(({ element, paddingRight }) => {
                         (element as HTMLElement).style.paddingRight = paddingRight;
                     });
+                    restoreScrollRoots(originalStyles.rootStyles);
 
                     body.style.position = originalStyles.bodyPosition;
                     body.style.top = originalStyles.bodyTop;

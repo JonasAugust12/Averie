@@ -16,6 +16,7 @@ interface UIState {
     loadingMessage?: string;
     confirmPopup: ConfirmPopupConfig | null;
     isConfirmLoading: boolean;
+    adminFormModalLocks: number;
 }
 
 interface UIActions {
@@ -25,6 +26,8 @@ interface UIActions {
     showConfirm: (config: ConfirmPopupConfig) => void;
     hideConfirm: () => void;
     setConfirmLoading: (loading: boolean) => void;
+    lockAdminFormModal: () => void;
+    unlockAdminFormModal: () => void;
 }
 
 type UIStore = UIState & UIActions;
@@ -34,6 +37,7 @@ export const useUIStore = create<UIStore>((set) => ({
     loadingMessage: undefined,
     confirmPopup: null,
     isConfirmLoading: false,
+    adminFormModalLocks: 0,
 
     setLoading: (isLoading, message) =>
         set({
@@ -69,4 +73,10 @@ export const useUIStore = create<UIStore>((set) => ({
         set({
             isConfirmLoading,
         }),
+
+    lockAdminFormModal: () =>
+        set((state) => ({ adminFormModalLocks: state.adminFormModalLocks + 1 })),
+
+    unlockAdminFormModal: () =>
+        set((state) => ({ adminFormModalLocks: Math.max(0, state.adminFormModalLocks - 1) })),
 }));

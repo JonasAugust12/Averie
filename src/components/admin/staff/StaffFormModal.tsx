@@ -11,6 +11,8 @@ import {
     STAFF_ROLE_OPTIONS,
     deriveInitials,
 } from '@utils/staff-calendar.util';
+import { StaffColorPicker } from './StaffColorPicker';
+import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
 import type { SalonStaff } from '@typings/salon.type';
 
 interface StaffFormModalProps {
@@ -34,6 +36,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffFormModalProps) {
     const t = useAdminTranslations();
     const isNew = !initial?.name;
+    useAdminFormModalLock();
 
     const [form, setForm] = useState<SalonStaff>(
         initial ?? {
@@ -84,11 +87,11 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-end justify-center bg-black/20 p-4 backdrop-blur-sm sm:items-center"
+            className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="animate-in slide-in-from-bottom-4 w-full max-w-lg overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl duration-300">
-                <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5">
+            <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+                <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-6 py-5">
                     <div>
                         <h2 className="font-display text-xl font-semibold text-stone-900">
                             {isNew ? t('staff.addTitle') : t('staff.editTitle')}
@@ -105,7 +108,7 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     </button>
                 </div>
 
-                <div className="max-h-[70vh] space-y-4 overflow-y-auto p-6">
+                <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
                     <Field label={t('staff.name')}>
                         <Input
                             placeholder="VD: Mia Tran"
@@ -159,23 +162,12 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     </Field>
 
                     <Field label={t('staff.color')}>
-                        <div className="flex flex-wrap gap-2">
-                            {STAFF_COLOR_OPTIONS.map((color) => (
-                                <button
-                                    key={color}
-                                    type="button"
-                                    onClick={() => patch({ color })}
-                                    className={cn(
-                                        'h-8 w-8 rounded-full border-2 transition-transform hover:scale-110',
-                                        form.color === color
-                                            ? 'border-stone-900 ring-2 ring-stone-300'
-                                            : 'border-transparent',
-                                    )}
-                                    style={{ backgroundColor: color }}
-                                    aria-label={color}
-                                />
-                            ))}
-                        </div>
+                        <StaffColorPicker
+                            key={form.id}
+                            value={form.color}
+                            onChange={(color) => patch({ color })}
+                            customLabel={t('staff.colorCustom')}
+                        />
                     </Field>
 
                     <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-stone-50 px-4 py-3">
@@ -207,7 +199,7 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 border-t border-neutral-100 bg-stone-50/50 px-6 py-4">
+                <div className="flex shrink-0 items-center justify-end gap-2 border-t border-neutral-100 bg-stone-50/50 px-6 py-4">
                     <Button variant="outlined" onClick={onClose} className="border-neutral-200">
                         {t('staff.cancel')}
                     </Button>

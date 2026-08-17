@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Star } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { FadeIn } from '@components/marketing/landing';
+import { FadeIn, LandingBubbles } from '@components/marketing/landing';
 import {
     landingBleedLeft,
     landingBody,
@@ -21,7 +21,8 @@ export function LandingTestimonials() {
     const t = useSalonTranslations();
 
     return (
-        <section id="testimonials" className="relative py-12 md:py-24">
+        <section id="testimonials" className="relative isolate py-12 md:py-24">
+            <LandingBubbles variant="testimonials" />
             <div
                 className={cn(
                     'absolute bottom-0 z-0 aspect-3/4 w-56 translate-y-1/2 md:w-72',

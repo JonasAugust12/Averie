@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { ServiceCard } from '@components/admin/services';
+import { ServiceCard } from './ServiceCard';
+import { resolveLucideIcon } from '@utils/lucide-icon.util';
 import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
 
 interface ServiceCategorySectionProps {
     categoryId: ServiceCategoryId;
     label: string;
+    icon?: string | null;
     services: SalonService[];
     onAdd: (categoryId: ServiceCategoryId) => void;
     onEdit: (svc: SalonService) => void;
@@ -17,7 +19,7 @@ interface ServiceCategorySectionProps {
     onDelete: (svc: SalonService) => void;
 }
 
-const CATEGORY_COLORS: Record<ServiceCategoryId, string> = {
+const CATEGORY_COLORS: Record<string, string> = {
     'manicure-pedicure': 'bg-rose-50/60 text-rose-800 border-rose-100/50',
     'gel-polish': 'bg-purple-50/60 text-purple-800 border-purple-100/50',
     'nail-enhancements': 'bg-blue-50/60 text-blue-800 border-blue-100/50',
@@ -26,7 +28,7 @@ const CATEGORY_COLORS: Record<ServiceCategoryId, string> = {
     facials: 'bg-teal-50/60 text-teal-850 border-teal-100/50',
 };
 
-const CATEGORY_TAGS: Record<ServiceCategoryId, string> = {
+const CATEGORY_TAGS: Record<string, string> = {
     'manicure-pedicure': 'Nails',
     'gel-polish': 'Gel',
     'nail-enhancements': 'Enhance',
@@ -38,6 +40,7 @@ const CATEGORY_TAGS: Record<ServiceCategoryId, string> = {
 export function ServiceCategorySection({
     categoryId,
     label,
+    icon,
     services,
     onAdd,
     onEdit,
@@ -49,8 +52,10 @@ export function ServiceCategorySection({
 
     const activeCount = services.filter((s) => s.active).length;
     const totalCount = services.length;
-    const colorClass = CATEGORY_COLORS[categoryId];
+    const colorClass =
+        CATEGORY_COLORS[categoryId] ?? 'bg-stone-50/60 text-stone-800 border-stone-100/50';
     const categoryTag = CATEGORY_TAGS[categoryId] || 'Service';
+    const CategoryIcon = resolveLucideIcon(icon);
 
     return (
         <div className="rounded-2xl border border-stone-300 bg-[#f4f3f2] p-6 flex flex-col gap-6 transition-all duration-200 hover:border-stone-400">
@@ -64,10 +69,11 @@ export function ServiceCategorySection({
                     >
                         <span
                             className={cn(
-                                'px-3 py-0.5.5 rounded-lg border text-[10px] font-extrabold uppercase tracking-wider shadow-xs shrink-0',
+                                'flex items-center gap-1.5 rounded-lg border px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider shadow-xs shrink-0',
                                 colorClass,
                             )}
                         >
+                            {CategoryIcon ? <CategoryIcon className="h-3 w-3" /> : null}
                             {categoryTag}
                         </span>
                         <h3 className="font-serif text-xl md:text-2xl font-bold tracking-wide text-stone-900 text-left">

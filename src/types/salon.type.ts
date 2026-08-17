@@ -1,5 +1,11 @@
-export type ServiceCategoryId =
-    'manicure-pedicure' | 'gel-polish' | 'nail-enhancements' | 'add-ons' | 'waxing' | 'facials';
+export type ServiceCategoryId = string;
+
+export interface SalonServiceCategory {
+    id: string;
+    name: string;
+    icon: string | null;
+    labelKey?: string;
+}
 
 export interface SalonService {
     id: string;

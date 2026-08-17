@@ -193,7 +193,19 @@
         "hidden": "Hidden",
         "search": "Search services...",
         "searchTip": "Type a service name or description to filter instantly.",
-        "emptyCategory": "No services in this category yet."
+        "emptyCategory": "No services in this category yet.",
+        "addCategory": "Add category",
+        "addCategoryTitle": "Add new category",
+        "addCategorySubtitle": "Name the category and pick a Lucide icon",
+        "editCategoryTitle": "Edit category",
+        "editCategorySubtitle": "Update the category name and icon",
+        "categoryName": "Category name",
+        "categoryNamePlaceholder": "e.g. Nail Art",
+        "categoryIcon": "Icon",
+        "saveCategory": "Save category",
+        "iconSearch": "Search Lucide icons...",
+        "iconNone": "No icon",
+        "iconSelected": "Selected"
     },
 
     "staff": {
@@ -217,6 +229,7 @@
         "specialties": "Specialties",
         "specialtiesPlaceholder": "Gel Polish, Nail Art (comma separated)",
         "color": "Calendar color",
+        "colorCustom": "Custom color",
         "visible": "Active",
         "visibleHint": "Active staff appear in booking flow",
         "visibleCount": "active",

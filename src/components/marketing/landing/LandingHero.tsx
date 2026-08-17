@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Star, Phone } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
-import { FadeIn, PillLink } from '@components/marketing/landing';
+import { FadeIn, LandingBubbles, PillLink } from '@components/marketing/landing';
 import {
     landingBody,
     landingDesktopOnly,
@@ -18,8 +18,9 @@ export function LandingHero() {
     const t = useSalonTranslations();
 
     return (
-        <section className="py-8 sm:py-12 md:py-16">
-            <div className="grid items-center gap-8 md:grid-cols-12 md:gap-8">
+        <section className="relative z-20 py-8 sm:py-12 md:py-16">
+            <LandingBubbles variant="hero" />
+            <div className="relative z-10 grid items-center gap-8 md:grid-cols-12 md:gap-8">
                 {/* Text Content */}
                 <FadeIn className="flex flex-col items-center text-center md:items-start md:text-left md:col-span-5">
                     {/* Eyebrow badge */}

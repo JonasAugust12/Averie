@@ -22,6 +22,7 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
 import { generateBookingReference } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
+import { usePreventScroll } from '@hooks/usePreventScroll';
 import type { SalonBooking } from '@typings/salon.type';
 import {
     BookingServiceStep,
@@ -56,6 +57,7 @@ const ADMIN_STEP_DOT_RADIUS_PX = ADMIN_STEP_DOT_SIZE_PX / 2;
 export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalProps) {
     const tAdmin = useAdminTranslations();
     const saveBooking = useSaveMockBooking();
+    usePreventScroll(isOpen);
 
     const { data: services, isLoading: servicesLoading } = useAllSalonServices();
     const { data: staff, isLoading: staffLoading } = useAllSalonStaff();
@@ -189,10 +191,10 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-[2vh_2vw] backdrop-blur-md animate-in fade-in duration-200 sm:p-[2.5vh_3vw]"
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-md animate-in fade-in duration-200 sm:p-4"
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
-            <div className="relative flex h-[90dvh] w-[min(96vw,80rem)] max-h-[94dvh] flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200 sm:h-[92dvh] lg:h-[94dvh]">
+            <div className="relative flex h-full max-h-full w-full max-w-app flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200">
                 {/* Modal Header */}
                 <div className="flex shrink-0 items-center justify-between border-b border-stone-300/70 bg-stone-100 px-6 py-5 lg:px-8 lg:py-6">
                     <div className="flex items-center gap-3">

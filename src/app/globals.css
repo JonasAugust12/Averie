@@ -5,6 +5,8 @@
   Primary #2B2623 · Secondary #D4C5B9 · Tertiary #F5EFEA · Neutral #FDFCFB
 */
 @theme {
+    --color-primary01: #5f87c1;
+    --color-primary02: #fd735d;
     --color-primary: #2b2623;
     --color-primary-50: #f7f6f5;
     --color-primary-100: #ebe8e6;
@@ -116,6 +118,7 @@ h4 {
     .animate-fade-in,
     .animate-scale-in,
     .animate-ambient-pulse,
+    .animate-landing-bubble,
     .animate-slow-zoom {
         animation: none !important;
         opacity: 1 !important;
@@ -193,6 +196,22 @@ h4 {
 
 .animate-ambient-pulse {
     animation: ambientPulse 15s ease-in-out infinite alternate;
+}
+
+@keyframes landingBubble {
+    0%,
+    100% {
+        transform: scale(0.8) translate(0, 0);
+        opacity: 0.35;
+    }
+    50% {
+        transform: scale(1.35) translate(22px, -16px);
+        opacity: 1;
+    }
+}
+
+.animate-landing-bubble {
+    animation: landingBubble 3s ease-in-out infinite;
 }
 
 @keyframes bookingStepLineFill {

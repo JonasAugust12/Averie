@@ -5,7 +5,7 @@ import { Phone, Calendar, MapPin, ExternalLink } from 'lucide-react';
 import { AppLink } from '@components/shared';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import { FadeIn, PillLink } from '@components/marketing/landing';
+import { FadeIn, LandingBubbles, PillLink } from '@components/marketing/landing';
 import {
     landingBleedRight,
     landingBody,
@@ -52,8 +52,9 @@ export function LandingHoursCta() {
     return (
         <section
             id="hours"
-            className="relative grid gap-6 py-12 md:grid-cols-12 md:py-24 md:items-stretch"
+            className="relative isolate grid gap-6 py-12 md:grid-cols-12 md:py-24 md:items-stretch"
         >
+            <LandingBubbles variant="hours" />
             <div
                 className={cn(
                     'absolute bottom-0 z-0 aspect-3/4 w-56 translate-y-1/2 md:w-72',

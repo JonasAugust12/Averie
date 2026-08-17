@@ -113,13 +113,44 @@ export function deriveInitials(name: string): string {
 
 export const STAFF_COLOR_OPTIONS = [
     '#78716c',
+    '#44403c',
+    '#c0957f',
+    '#b45309',
     '#0ea5e9',
+    '#2563eb',
+    '#0891b2',
+    '#0d9488',
     '#10b981',
+    '#65a30d',
     '#f59e0b',
+    '#ea580c',
     '#ef4444',
+    '#e11d48',
+    '#db2777',
     '#8b5cf6',
+    '#6366f1',
+    '#7c3aed',
     '#ec4899',
+    '#14b8a6',
+    '#1d4ed8',
 ] as const;
+
+export function normalizeStaffHex(color?: string): string {
+    const raw = (color ?? '').trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(raw)) return `#${raw.slice(1).toLowerCase()}`;
+    if (/^#[0-9a-fA-F]{3}$/.test(raw)) {
+        const r = raw[1];
+        const g = raw[2];
+        const b = raw[3];
+        return `#${r}${r}${g}${g}${b}${b}`.toLowerCase();
+    }
+    return STAFF_COLOR_OPTIONS[0];
+}
+
+export function isStaffPresetColor(color?: string): boolean {
+    const hex = normalizeStaffHex(color);
+    return STAFF_COLOR_OPTIONS.some((option) => option.toLowerCase() === hex);
+}
 
 export const STAFF_ROLE_OPTIONS = [
     'Lead Nail Artist',

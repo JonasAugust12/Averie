@@ -7,6 +7,7 @@ import { Input } from '@components/ui';
 import { Button } from '@components/common';
 import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
+import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
 import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
 
 interface ServiceFormModalProps {
@@ -38,6 +39,7 @@ export function ServiceFormModal({
     const t = useAdminTranslations();
     const bt = useBookingTranslations();
     const isNew = !initial?.name;
+    useAdminFormModalLock();
 
     const [form, setForm] = useState<SalonService>(
         initial ?? {
@@ -75,13 +77,13 @@ export function ServiceFormModal({
     return (
         /* Backdrop */
         <div
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
             {/* Panel */}
-            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-100 overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+            <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
+                <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-6 py-5">
                     <div>
                         <h2 className="font-display text-xl font-semibold text-stone-900">
                             {isNew ? t('services.addTitle') : t('services.editTitle')}
@@ -99,7 +101,7 @@ export function ServiceFormModal({
                 </div>
 
                 {/* Body */}
-                <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
                     <Field label={t('services.name')}>
                         <Input
                             placeholder="VD: Classic Manicure"
@@ -129,7 +131,9 @@ export function ServiceFormModal({
                         >
                             {SERVICE_CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
-                                    {bt(c.labelKey)}
+                                    {c.labelKey
+                                        ? bt(c.labelKey as 'categories.manicurePedicure')
+                                        : c.name}
                                 </option>
                             ))}
                         </select>
@@ -189,7 +193,7 @@ export function ServiceFormModal({
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-neutral-100 bg-stone-50/50">
+                <div className="flex shrink-0 items-center justify-end gap-2 border-t border-neutral-100 bg-stone-50/50 px-6 py-4">
                     <Button
                         variant="outlined"
                         onClick={onClose}

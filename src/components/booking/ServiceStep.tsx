@@ -1,54 +1,38 @@
 'use client';
 
 import { useState } from 'react';
-import {
-    Check,
-    ChevronDown,
-    Clock,
-    Loader2,
-    Sparkles,
-    Flower2,
-    Gem,
-    Star,
-    Feather,
-    Smile,
-} from 'lucide-react';
+import { Check, ChevronDown, Clock, Loader2, Sparkles } from 'lucide-react';
 import { useSalonServices } from '@services/salon.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { formatUsd } from '@utils/format.util';
 import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
+import { resolveLucideIcon } from '@utils/lucide-icon.util';
 
-/** Icon + gradient colour per category (warm neutrals for quiet luxury) */
-const CAT_META: Record<string, { icon: React.ElementType; gradient: string; accent: string }> = {
+/** Gradient colour per category (warm neutrals for quiet luxury) */
+const CAT_META: Record<string, { gradient: string; accent: string }> = {
     'manicure-pedicure': {
-        icon: Sparkles,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
     'gel-polish': {
-        icon: Star,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
     'nail-enhancements': {
-        icon: Gem,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
     'add-ons': {
-        icon: Feather,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
     waxing: {
-        icon: Flower2,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
     facials: {
-        icon: Smile,
         gradient: 'from-secondary-50 to-tertiary-100/50',
         accent: 'text-primary/75',
     },
@@ -63,16 +47,21 @@ export function ServiceStep() {
         Object.fromEntries(SERVICE_CATEGORIES.map((c) => [c.id, true])),
     );
 
-    const grouped = SERVICE_CATEGORIES.map((cat) => ({
-        ...cat,
-        label: t(cat.labelKey),
-        items: (services ?? []).filter((s) => s.categoryId === cat.id),
-        meta: CAT_META[cat.id] ?? {
-            icon: Sparkles,
+    const grouped = SERVICE_CATEGORIES.map((cat) => {
+        const meta = CAT_META[cat.id] ?? {
             gradient: 'from-neutral-50 to-stone-50',
             accent: 'text-stone-400',
-        },
-    })).filter((g) => g.items.length > 0);
+        };
+        return {
+            ...cat,
+            label: cat.labelKey ? t(cat.labelKey as 'categories.manicurePedicure') : cat.name,
+            items: (services ?? []).filter((s) => s.categoryId === cat.id),
+            meta: {
+                ...meta,
+                icon: resolveLucideIcon(cat.icon) ?? Sparkles,
+            },
+        };
+    }).filter((g) => g.items.length > 0);
 
     function toggleCat(id: string) {
         setOpenCats((prev) => ({ ...prev, [id]: !prev[id] }));

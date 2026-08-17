@@ -48,6 +48,7 @@
         "next-auth": "5.0.0-beta.32",
         "next-intl": "^4.4.0",
         "react": "^19.2.0",
+        "react-colorful": "^5.8.0",
         "react-dom": "^19.2.0",
         "react-hook-form": "^7.85.0",
         "tailwind-merge": "^3.4.0",

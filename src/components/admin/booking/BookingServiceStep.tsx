@@ -73,7 +73,9 @@ export function BookingServiceStep({
                                     : 'bg-white border border-stone-200 text-stone-600 hover:bg-stone-100',
                             )}
                         >
-                            {tBook(cat.labelKey) || cat.id}
+                            {cat.labelKey
+                                ? tBook(cat.labelKey as 'categories.manicurePedicure')
+                                : cat.name}
                         </button>
                     ))}
                 </div>

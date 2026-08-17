@@ -1,31 +1,39 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Plus, Search, Loader2 } from 'lucide-react';
+import { Plus, Search, Loader2, FolderPlus } from 'lucide-react';
 import {
     useAllSalonServices,
     useSaveMockService,
     useDeleteMockService,
+    useSalonCategories,
+    useSaveMockCategory,
 } from '@services/salon.service';
 import { useAdminTranslations, useBookingTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
 import { useUIStore } from '@stores/ui.store';
-import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
-import { ServiceFormModal, ServiceCategorySection } from '@components/admin/services';
-import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
+import {
+    ServiceFormModal,
+    ServiceCategorySection,
+    CategoryFormModal,
+} from '@components/admin/services';
+import type { SalonService, SalonServiceCategory, ServiceCategoryId } from '@typings/salon.type';
 
 export default function AdminServicesPage() {
     const t = useAdminTranslations();
     const bt = useBookingTranslations();
 
     const { data: services, isLoading } = useAllSalonServices();
+    const { data: categories } = useSalonCategories();
     const saveService = useSaveMockService();
     const deleteService = useDeleteMockService();
+    const saveCategory = useSaveMockCategory();
     const { showConfirm, hideConfirm } = useUIStore();
 
     const [query, setQuery] = useState('');
     const [editing, setEditing] = useState<SalonService | null | 'new'>(null);
     const [defaultCategoryId, setDefaultCategoryId] = useState<ServiceCategoryId | undefined>();
+    const [categoryModal, setCategoryModal] = useState<SalonServiceCategory | null | 'new'>(null);
 
     // Group by category, filtered by search
     const grouped = useMemo(() => {
@@ -37,11 +45,11 @@ export default function AdminServicesPage() {
               )
             : (services ?? []);
 
-        return SERVICE_CATEGORIES.map((cat) => ({
+        return (categories ?? []).map((cat) => ({
             cat,
             items: list.filter((s) => s.categoryId === cat.id),
         }));
-    }, [services, query]);
+    }, [services, query, categories]);
 
     const totalActive = (services ?? []).filter((s) => s.active).length;
     const totalAll = (services ?? []).length;
@@ -60,6 +68,11 @@ export default function AdminServicesPage() {
     async function handleSave(svc: SalonService) {
         await saveService.mutateAsync(svc);
         setEditing(null);
+    }
+
+    async function handleSaveCategory(category: SalonServiceCategory) {
+        await saveCategory.mutateAsync(category);
+        setCategoryModal(null);
     }
 
     async function handleToggle(svc: SalonService) {
@@ -104,13 +117,23 @@ export default function AdminServicesPage() {
                         {t('services.visibleCount')}
                     </p>
                 </div>
-                <Button
-                    onClick={() => openAdd()}
-                    className="shrink-0 flex items-center gap-2 tracking-wide hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out shadow-xs"
-                >
-                    <Plus className="h-4 w-4" />
-                    {t('services.add')}
-                </Button>
+                <div className="flex shrink-0 items-center gap-2">
+                    <Button
+                        variant="outlined"
+                        onClick={() => setCategoryModal('new')}
+                        className="flex items-center gap-2 tracking-wide shadow-xs transition-all duration-300 ease-in-out hover:scale-105 active:scale-95"
+                    >
+                        <FolderPlus className="h-4 w-4" />
+                        {t('services.addCategory')}
+                    </Button>
+                    <Button
+                        onClick={() => openAdd()}
+                        className="flex items-center gap-2 tracking-wide shadow-xs transition-all duration-300 ease-in-out hover:scale-105 active:scale-95"
+                    >
+                        <Plus className="h-4 w-4" />
+                        {t('services.add')}
+                    </Button>
+                </div>
             </div>
 
             {/* Search/Filter Bar */}
@@ -137,8 +160,13 @@ export default function AdminServicesPage() {
                 {grouped.map(({ cat, items }) => (
                     <ServiceCategorySection
                         key={cat.id}
-                        categoryId={cat.id as ServiceCategoryId}
-                        label={bt(cat.labelKey)}
+                        categoryId={cat.id}
+                        label={
+                            cat.labelKey
+                                ? bt(cat.labelKey as 'categories.manicurePedicure')
+                                : cat.name
+                        }
+                        icon={cat.icon}
                         services={items}
                         onAdd={openAdd}
                         onEdit={openEdit}
@@ -156,6 +184,16 @@ export default function AdminServicesPage() {
                     onSave={handleSave}
                     onClose={() => setEditing(null)}
                     isSaving={saveService.isPending}
+                />
+            )}
+
+            {categoryModal !== null && (
+                <CategoryFormModal
+                    initial={categoryModal === 'new' ? null : categoryModal}
+                    existingIds={(categories ?? []).map((c) => c.id)}
+                    onSave={handleSaveCategory}
+                    onClose={() => setCategoryModal(null)}
+                    isSaving={saveCategory.isPending}
                 />
             )}
         </div>

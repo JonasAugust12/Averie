@@ -185,6 +185,7 @@
         "specialties": "Chuyên môn",
         "specialtiesPlaceholder": "Sơn Gel, Nail Art (cách nhau bởi dấu phẩy)",
         "color": "Màu trên lịch",
+        "colorCustom": "Màu tùy chọn",
         "visible": "Đang hoạt động",
         "visibleHint": "Nhân viên active sẽ hiện khi khách đặt lịch",
         "visibleCount": "đang hoạt động",
@@ -296,7 +297,19 @@
         "hidden": "Ẩn",
         "search": "Tìm kiếm dịch vụ...",
         "searchTip": "Nhập tên hoặc mô tả để tìm kiếm dịch vụ nhanh chóng.",
-        "emptyCategory": "Chưa có dịch vụ nào trong danh mục này."
+        "emptyCategory": "Chưa có dịch vụ nào trong danh mục này.",
+        "addCategory": "Thêm phân loại",
+        "addCategoryTitle": "Thêm phân loại mới",
+        "addCategorySubtitle": "Đặt tên và chọn icon Lucide cho phân loại",
+        "editCategoryTitle": "Chỉnh sửa phân loại",
+        "editCategorySubtitle": "Cập nhật tên và icon phân loại",
+        "categoryName": "Tên phân loại",
+        "categoryNamePlaceholder": "VD: Nail Art",
+        "categoryIcon": "Icon",
+        "saveCategory": "Lưu phân loại",
+        "iconSearch": "Tìm icon Lucide...",
+        "iconNone": "Không dùng icon",
+        "iconSelected": "Đã chọn"
     },
     "staffPortal": {
         "title": "Cổng Lịch Làm Nhân Viên",

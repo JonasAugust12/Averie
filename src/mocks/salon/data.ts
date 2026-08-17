@@ -2,19 +2,30 @@ import type {
     AdminKpi,
     SalonBooking,
     SalonService,
+    SalonServiceCategory,
     SalonStaff,
     ScheduleSettings,
 } from '@typings/salon.type';
 import { defaultWeekdaySchedules } from '@utils/schedule.util';
 
-export const SERVICE_CATEGORIES = [
-    { id: 'manicure-pedicure', labelKey: 'categories.manicurePedicure' },
-    { id: 'gel-polish', labelKey: 'categories.gelPolish' },
-    { id: 'nail-enhancements', labelKey: 'categories.nailEnhancements' },
-    { id: 'add-ons', labelKey: 'categories.addOns' },
-    { id: 'waxing', labelKey: 'categories.waxing' },
-    { id: 'facials', labelKey: 'categories.facials' },
-] as const;
+export const SERVICE_CATEGORIES: SalonServiceCategory[] = [
+    {
+        id: 'manicure-pedicure',
+        name: 'Manicure & Pedicure',
+        labelKey: 'categories.manicurePedicure',
+        icon: 'Sparkles',
+    },
+    { id: 'gel-polish', name: 'Gel Polish', labelKey: 'categories.gelPolish', icon: 'Palette' },
+    {
+        id: 'nail-enhancements',
+        name: 'Nail Enhancements',
+        labelKey: 'categories.nailEnhancements',
+        icon: 'Gem',
+    },
+    { id: 'add-ons', name: 'Add-ons', labelKey: 'categories.addOns', icon: 'Plus' },
+    { id: 'waxing', name: 'Waxing', labelKey: 'categories.waxing', icon: 'Flame' },
+    { id: 'facials', name: 'Facials', labelKey: 'categories.facials', icon: 'Smile' },
+];
 
 export const mockServices: SalonService[] = [
     {
@@ -265,6 +276,13 @@ export const mockKpis: AdminKpi = {
 export function upsertMockBooking(booking: SalonBooking) {
     mockBookings = [booking, ...mockBookings.filter((b) => b.id !== booking.id)];
     return booking;
+}
+
+export function upsertMockCategory(category: SalonServiceCategory) {
+    const idx = SERVICE_CATEGORIES.findIndex((c) => c.id === category.id);
+    if (idx >= 0) SERVICE_CATEGORIES[idx] = category;
+    else SERVICE_CATEGORIES.push(category);
+    return category;
 }
 
 export function updateMockService(service: SalonService) {

@@ -21,6 +21,7 @@ import { LanguageSwitcher, AdminRouteTransitionLoader } from '@components/shared
 import { isAdminMockAuthed, setAdminMockAuthed } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { AdminNewBookingModal } from '@components/admin';
+import { useUIStore } from '@stores/ui.store';
 import { cn } from '@utils/cn.util';
 
 const navItems = [
@@ -44,6 +45,7 @@ export function AdminShell({ children }: AdminShellProps) {
     const [authed, setAuthed] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
+    const isFormModalOpen = useUIStore((s) => s.adminFormModalLocks > 0);
 
     useEffect(() => {
         const ok = isAdminMockAuthed();
@@ -175,7 +177,7 @@ export function AdminShell({ children }: AdminShellProps) {
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-                <header className="flex h-16 sm:h-20 lg:h-24 shrink-0 items-center justify-between gap-2 sm:gap-4 border-b border-neutral-100 bg-white/95 shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-3.5 sm:px-6 lg:px-8 z-20">
+                <header className="relative z-20 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-neutral-100 bg-white/95 px-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:h-20 sm:gap-4 sm:px-6 lg:h-24 lg:px-8">
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                         <Link
                             href="/admin"
@@ -209,8 +211,9 @@ export function AdminShell({ children }: AdminShellProps) {
                         {/* New Booking Button: accessible across mobile and desktop */}
                         <Button
                             size="sm"
+                            disabled={isFormModalOpen}
                             onClick={() => setIsNewBookingOpen(true)}
-                            className="rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1 sm:gap-1.5 shadow-xs cursor-pointer active:scale-95 transition-all"
+                            className="flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-bold tracking-wide uppercase shadow-xs transition-all active:scale-95 sm:gap-1.5 sm:px-4 sm:py-2 sm:text-xs"
                         >
                             <Plus className="h-3.5 w-3.5 shrink-0" />
                             <span className="hidden sm:inline">{t('newBooking')}</span>
@@ -245,7 +248,7 @@ export function AdminShell({ children }: AdminShellProps) {
                     </div>
                 </header>
 
-                <div className="no-scrollbar flex gap-1.5 overflow-x-auto border-b border-stone-200/60 bg-white/80 backdrop-blur-md px-3.5 py-2 lg:hidden shadow-2xs">
+                <div className="no-scrollbar relative z-20 flex gap-1.5 overflow-x-auto border-b border-stone-200/60 bg-white/80 px-3.5 py-2 shadow-2xs backdrop-blur-md lg:hidden">
                     {navItems.map(({ href, icon: Icon, key }) => {
                         const active =
                             href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
@@ -272,9 +275,9 @@ export function AdminShell({ children }: AdminShellProps) {
                     })}
                 </div>
 
-                <main className="relative min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 bg-transparent">
+                <main className="relative min-h-0 flex-1 overflow-hidden bg-transparent">
                     <AdminRouteTransitionLoader />
-                    <div className="fixed inset-0 pointer-events-none z-0">
+                    <div className="pointer-events-none absolute inset-0 z-0">
                         <div
                             className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.22] transition-opacity duration-300"
                             style={{
@@ -285,14 +288,18 @@ export function AdminShell({ children }: AdminShellProps) {
                         <div className="absolute inset-0 bg-neutral-50/15" />
                         <div className="absolute inset-0 bg-primary/4" />
                     </div>
-                    <div className="relative mx-auto w-full max-w-app z-10">{children}</div>
+                    <div
+                        data-scroll-lock-root
+                        className="relative z-10 h-full min-h-0 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8"
+                    >
+                        <div className="mx-auto w-full max-w-app">{children}</div>
+                    </div>
+                    <AdminNewBookingModal
+                        isOpen={isNewBookingOpen}
+                        onClose={() => setIsNewBookingOpen(false)}
+                    />
                 </main>
             </div>
-
-            <AdminNewBookingModal
-                isOpen={isNewBookingOpen}
-                onClose={() => setIsNewBookingOpen(false)}
-            />
         </div>
     );
 }

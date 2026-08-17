@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
-import { FadeIn } from '@components/marketing/landing';
+import { FadeIn, LandingBubbles } from '@components/marketing/landing';
 import {
     landingBody,
     landingEyebrow,
@@ -25,8 +25,9 @@ export function LandingServices() {
     const t = useSalonTranslations();
 
     return (
-        <section id="services" className="py-12 md:py-24">
-            <FadeIn className="mb-8 text-center md:mb-12">
+        <section id="services" className="relative isolate py-12 md:py-24">
+            <LandingBubbles variant="services" />
+            <FadeIn className="relative z-10 mb-8 text-center md:mb-12">
                 <div className={landingEyebrow}>
                     <span>{t('landing.services.eyebrow')}</span>
                 </div>
@@ -37,7 +38,7 @@ export function LandingServices() {
             </FadeIn>
 
             {/* Mobile: Horizontal Snap-Scroll Luxury Carousel with peek effect */}
-            <div className="md:hidden -mx-4 flex snap-x snap-mandatory overflow-x-auto gap-4 px-4 pb-4 scrollbar-none">
+            <div className="relative z-10 md:hidden -mx-4 flex snap-x snap-mandatory overflow-x-auto gap-4 px-4 pb-4 scrollbar-none">
                 {cards.map((card, i) => (
                     <FadeIn
                         key={card.key}
