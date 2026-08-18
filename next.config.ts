@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     reactStrictMode: true,
     poweredByHeader: false,
     productionBrowserSourceMaps: process.env.PRODUCTION_BROWSER_SOURCE_MAPS === 'true',
+    serverActions: {
+        // Promotion image uploads allow up to 5 MB (+ FormData overhead)
+        bodySizeLimit: '6mb',
+    },
     images: {
         formats: ['image/avif', 'image/webp'],
         remotePatterns: [
