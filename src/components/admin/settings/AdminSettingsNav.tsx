@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarClock, Shield } from 'lucide-react';
+import { CalendarClock, Megaphone, Shield } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 
@@ -12,6 +12,12 @@ const tabs = [
         href: '/admin/settings/schedule',
         icon: CalendarClock,
         key: 'schedule' as const,
+        exact: false,
+    },
+    {
+        href: '/admin/settings/promotion',
+        icon: Megaphone,
+        key: 'promotion' as const,
         exact: false,
     },
 ];

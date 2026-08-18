@@ -295,6 +295,30 @@
                             "minItems": 1
                         },
                         "example": "example"
+                    },
+                    {
+                        "in": "query",
+                        "name": "staffPreference",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["any", "specific"],
+                            "default": "any"
+                        },
+                        "example": "any"
+                    },
+                    {
+                        "in": "query",
+                        "name": "staffId",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/objectIdSchema"
+                                }
+                            ]
+                        },
+                        "example": "123"
                     }
                 ],
                 "responses": {
@@ -446,6 +470,39 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/servicesApiResponseSchema"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/settings/promotion": {
+            "get": {
+                "operationId": "get-settings-promotion",
+                "summary": "",
+                "description": "",
+                "tags": ["Settings"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/promotionSettingsApiResponseSchema"
                                 }
                             }
                         }
@@ -1181,9 +1238,21 @@
                             "$ref": "#/components/schemas/objectIdSchema"
                         },
                         "minItems": 1
+                    },
+                    "staffPreference": {
+                        "type": "string",
+                        "enum": ["any", "specific"],
+                        "default": "any"
+                    },
+                    "staffId": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/objectIdSchema"
+                            }
+                        ]
                     }
                 },
-                "required": ["date", "serviceIds"]
+                "required": ["date", "serviceIds", "staffPreference"]
             },
             "bookingStaffSummarySchema": {
                 "type": "object",
@@ -1453,6 +1522,21 @@
                 "type": "string",
                 "pattern": "^[a-f\\d]{24}$"
             },
+            "optionalDateSchema": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    {
+                        "type": "string",
+                        "enum": [""]
+                    },
+                    {
+                        "type": "null"
+                    }
+                ]
+            },
             "paginatedBookingsDataSchema": {
                 "type": "object",
                 "properties": {
@@ -1524,6 +1608,79 @@
                     }
                 },
                 "required": ["morning", "afternoon", "evening"]
+            },
+            "promotionSettingsApiResponseSchema": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code (mirrored in body)"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/promotionSettingsDtoSchema"
+                    }
+                },
+                "required": ["status", "message", "data"]
+            },
+            "promotionSettingsDtoSchema": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hideAfterExpiry": {
+                        "type": "boolean"
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "imagePublicId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "imageWidth": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "imageHeight": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "visible": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "enabled",
+                    "title",
+                    "description",
+                    "startDate",
+                    "endDate",
+                    "hideAfterExpiry",
+                    "imageUrl",
+                    "imagePublicId",
+                    "imageWidth",
+                    "imageHeight",
+                    "visible"
+                ]
             },
             "resetStaffPasswordSchema": {
                 "type": "object",
@@ -1889,6 +2046,83 @@
                     }
                 },
                 "required": ["visible"]
+            },
+            "updatePromotionSettingsActionResponseSchema": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/promotionSettingsDtoSchema"
+                    }
+                },
+                "required": ["status", "message", "data"]
+            },
+            "updatePromotionSettingsInputSchema": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hideAfterExpiry": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "enabled",
+                    "title",
+                    "description",
+                    "startDate",
+                    "endDate",
+                    "hideAfterExpiry"
+                ]
+            },
+            "updatePromotionSettingsSchema": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "startDate": {
+                        "$ref": "#/components/schemas/optionalDateSchema"
+                    },
+                    "endDate": {
+                        "$ref": "#/components/schemas/optionalDateSchema"
+                    },
+                    "hideAfterExpiry": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["enabled", "title", "description", "hideAfterExpiry"]
             },
             "updateScheduleSettingsSchema": {
                 "type": "object",

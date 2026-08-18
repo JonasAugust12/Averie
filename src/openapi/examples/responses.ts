@@ -6,6 +6,7 @@ import {
 } from '@openapi/examples/booking.examples';
 import { healthDataExample } from '@openapi/examples/health.examples';
 import { scheduleSettingsExample } from '@openapi/examples/schedule.examples';
+import { promotionSettingsExample } from '@openapi/examples/promotion.examples';
 import {
     serviceCategoryWithServicesExample,
     serviceGelExample,
@@ -39,6 +40,11 @@ export const openApiResponseExamples = {
         status: 200,
         message: 'OK',
         data: scheduleSettingsExample,
+    },
+    promotionSettingsApiResponseSchema: {
+        status: 200,
+        message: 'OK',
+        data: promotionSettingsExample,
     },
     bookingSlotsApiResponseSchema: {
         status: 200,

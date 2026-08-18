@@ -7,3 +7,4 @@ export {
     bookingForScheduleUtil,
 } from '@mappers/booking.mapper';
 export { serializeScheduleSettings, scheduleSettingsForUtil } from '@mappers/schedule.mapper';
+export { serializePromotionSettings } from '@mappers/promotion.mapper';

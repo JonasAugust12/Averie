@@ -1,6 +1,7 @@
 export { LandingPageView } from './LandingPageView';
 export { LandingHeader } from './LandingHeader';
 export { LandingHero } from './LandingHero';
+export { LandingPromotion } from './LandingPromotion';
 export { LandingPhilosophy } from './LandingPhilosophy';
 export { LandingServices } from './LandingServices';
 export { LandingPricing } from './LandingPricing';
