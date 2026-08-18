@@ -31,6 +31,15 @@
         "unavailable": "Không khả dụng"
     },
     "dateToday": "Hôm nay",
+    "advanceBookingNotice": "Có thể đặt lịch trước tối đa {days} ngày.",
+    "sameDayNotice": "Lịch đặt trong ngày cần đặt trước ít nhất 1 giờ.",
+    "advanceDaysPill": "Đặt trước tối đa 15 ngày",
+    "legend": {
+        "available": "Còn trống",
+        "selected": "Đang chọn",
+        "today": "Hôm nay",
+        "closed": "Đóng / Quá hạn"
+    },
     "weekdaysShort": {
         "sun": "CN",
         "mon": "T2",

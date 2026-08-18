@@ -31,6 +31,15 @@
         "unavailable": "Unavailable"
     },
     "dateToday": "Today",
+    "advanceBookingNotice": "Appointments can be booked up to {days} days in advance.",
+    "sameDayNotice": "Same-day appointments require at least 1 hour advance notice.",
+    "advanceDaysPill": "15-Day Booking Window",
+    "legend": {
+        "available": "Available",
+        "selected": "Selected",
+        "today": "Today",
+        "closed": "Closed / Past"
+    },
     "weekdaysShort": {
         "sun": "Sun",
         "mon": "Mon",
