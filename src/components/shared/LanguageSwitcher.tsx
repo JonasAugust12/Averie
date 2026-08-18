@@ -6,30 +6,36 @@ import { useLocale } from 'next-intl';
 import { Globe } from 'lucide-react';
 import Image from 'next/image';
 import { setLocaleAction } from '@actions/locale.action';
+import { useCommonTranslations } from '@i18n/use-app-translations';
+import { useScheduleSettings } from '@services/schedule.service';
 import { usePreferencesStore } from '@stores/preferences.store';
 import type { AppLocale } from '@i18n/config';
 import { cn } from '@utils/cn.util';
 
-const LABEL: Record<AppLocale, string> = {
-    en: 'ENG',
-    vi: 'VI',
-};
-
 export function LanguageSwitcher({
     variant = 'compact',
     className,
+    scope = 'any',
 }: {
     variant?: 'compact' | 'pill';
     className?: string;
+    /** When `guest`, respects admin `allowGuestLanguageSwitch` (click no-ops if disabled). */
+    scope?: 'guest' | 'any';
 }) {
     const router = useRouter();
     const locale = useLocale() as AppLocale;
+    const t = useCommonTranslations();
     const setLanguage = usePreferencesStore((s) => s.setLanguage);
+    const { data: settings } = useScheduleSettings({ enabled: scope === 'guest' });
     const [isHovered, setIsHovered] = useState(false);
     const [isPending, startTransition] = useTransition();
     const isPill = variant === 'pill';
 
+    const canSwitch = scope !== 'guest' || settings?.allowGuestLanguageSwitch !== false;
+
     function handleToggleLanguage() {
+        if (!canSwitch || isPending) return;
+
         const next: AppLocale = locale === 'en' ? 'vi' : 'en';
         startTransition(async () => {
             const result = await setLocaleAction(next);
@@ -45,7 +51,6 @@ export function LanguageSwitcher({
             onClick={handleToggleLanguage}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            disabled={isPending}
             className={cn(
                 'group relative flex cursor-pointer select-none items-center overflow-hidden transition-all duration-300 ease-out active:scale-95',
                 isPill
@@ -54,7 +59,9 @@ export function LanguageSwitcher({
                 isPending && 'pointer-events-none opacity-70',
                 className,
             )}
-            aria-label={locale === 'vi' ? 'Switch to English' : 'Switch to Vietnamese'}
+            aria-label={
+                locale === 'vi' ? t('language.switchToEnglish') : t('language.switchToVietnamese')
+            }
         >
             <Globe
                 className={cn(
@@ -107,7 +114,7 @@ export function LanguageSwitcher({
                     isPill ? 'text-xs text-third' : 'text-2xs text-primary',
                 )}
             >
-                {LABEL[locale] ?? LABEL.en}
+                {locale === 'vi' ? t('language.vi') : t('language.en')}
             </span>
 
             {!isPill && (

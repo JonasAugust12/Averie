@@ -4,24 +4,28 @@ import Link from 'next/link';
 import { CalendarDays, Mail, Pencil, Phone, Trash2 } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import type { SalonStaff } from '@typings/salon.type';
+import type { UserDto } from '@typings/salon-user.type';
+import { formatUserName, getUserColor, getUserInitials } from '@utils/staff.util';
 
 interface StaffCardProps {
-    staff: SalonStaff;
-    onEdit: (staff: SalonStaff) => void;
-    onToggle: (staff: SalonStaff) => void;
-    onDelete: (staff: SalonStaff) => void;
+    staff: UserDto;
+    onEdit: (staff: UserDto) => void;
+    onToggle: (staff: UserDto) => void;
+    onDelete: (staff: UserDto) => void;
 }
 
 export function StaffCard({ staff, onEdit, onToggle, onDelete }: StaffCardProps) {
     const t = useAdminTranslations();
-    const accent = staff.color ?? '#78716c';
+    const accent = getUserColor(staff);
+    const displayName = formatUserName(staff);
+    const initials = getUserInitials(staff);
+    const role = staff.specialties[0] ?? 'Technician';
 
     return (
         <article
             className={cn(
                 'group flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden',
-                staff.active
+                staff.visible
                     ? 'bg-white border-stone-200/80 shadow-xs hover:shadow-md hover:border-stone-300 hover:-translate-y-0.5'
                     : 'bg-stone-50/70 border-stone-200/50 opacity-70 hover:opacity-90',
             )}
@@ -31,7 +35,7 @@ export function StaffCard({ staff, onEdit, onToggle, onDelete }: StaffCardProps)
                     className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl font-sans text-base font-bold text-white shadow-sm transition-transform duration-300 group-hover:scale-105"
                     style={{ backgroundColor: accent }}
                 >
-                    {staff.initials}
+                    {initials}
                 </span>
 
                 <div className="min-w-0 flex-1">
@@ -39,22 +43,20 @@ export function StaffCard({ staff, onEdit, onToggle, onDelete }: StaffCardProps)
                         <h3
                             className={cn(
                                 'font-sans text-base font-bold leading-tight',
-                                staff.active ? 'text-stone-900' : 'text-stone-500 line-through',
+                                staff.visible ? 'text-stone-900' : 'text-stone-500 line-through',
                             )}
                         >
-                            {staff.name}
+                            {displayName}
                         </h3>
-                        {!staff.active && (
+                        {!staff.visible && (
                             <span className="rounded-md border border-stone-200 bg-stone-200/60 px-2 py-0.5 font-sans text-[10px] font-bold text-stone-600 uppercase tracking-wider">
                                 {t('staff.hidden') || 'Tạm ẩn'}
                             </span>
                         )}
                     </div>
-                    <p className="mt-1 font-sans text-sm font-medium text-stone-500">
-                        {staff.role}
-                    </p>
+                    <p className="mt-1 font-sans text-sm font-medium text-stone-500">{role}</p>
 
-                    {staff.specialties && staff.specialties.length > 0 && (
+                    {staff.specialties.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-1.5">
                             {staff.specialties.slice(0, 4).map((spec) => (
                                 <span
@@ -68,23 +70,18 @@ export function StaffCard({ staff, onEdit, onToggle, onDelete }: StaffCardProps)
                     )}
 
                     <div className="mt-3 space-y-1">
-                        {staff.phone && (
-                            <p className="flex items-center gap-2 font-sans text-xs font-medium text-stone-600">
-                                <Phone className="h-3.5 w-3.5 text-stone-400 shrink-0" />
-                                <span>{staff.phone}</span>
-                            </p>
-                        )}
-                        {staff.email && (
-                            <p className="flex items-center gap-2 font-sans text-xs font-medium text-stone-600">
-                                <Mail className="h-3.5 w-3.5 text-stone-400 shrink-0" />
-                                <span className="truncate">{staff.email}</span>
-                            </p>
-                        )}
+                        <p className="flex items-center gap-2 font-sans text-xs font-medium text-stone-600">
+                            <Phone className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                            <span>{staff.phone}</span>
+                        </p>
+                        <p className="flex items-center gap-2 font-sans text-xs font-medium text-stone-600">
+                            <Mail className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                            <span className="truncate">{staff.email}</span>
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Bottom Actions Bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 bg-stone-50/60 px-5 py-3.5">
                 <Link
                     href={`/admin/staff/${staff.id}/schedule`}
@@ -95,32 +92,29 @@ export function StaffCard({ staff, onEdit, onToggle, onDelete }: StaffCardProps)
                 </Link>
 
                 <div className="flex items-center gap-3">
-                    {/* Toggle Switch with Status Label */}
                     <div className="flex items-center gap-2">
                         <span className="font-sans text-xs font-semibold text-stone-500 hidden sm:inline">
-                            {staff.active ? t('staff.show') || 'Hiện' : t('staff.hide') || 'Ẩn'}
+                            {staff.visible ? t('staff.show') || 'Hiện' : t('staff.hide') || 'Ẩn'}
                         </span>
                         <button
                             type="button"
                             onClick={() => onToggle(staff)}
                             className={cn(
                                 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner',
-                                staff.active ? 'bg-emerald-600' : 'bg-stone-300',
+                                staff.visible ? 'bg-emerald-600' : 'bg-stone-300',
                             )}
                             role="switch"
-                            aria-checked={staff.active}
-                            title={staff.active ? t('staff.hide') : t('staff.show')}
+                            aria-checked={staff.visible}
                         >
                             <span
                                 className={cn(
                                     'pointer-events-none mt-0.5 ml-0.5 inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-200 ease-in-out',
-                                    staff.active ? 'translate-x-5' : 'translate-x-0',
+                                    staff.visible ? 'translate-x-5' : 'translate-x-0',
                                 )}
                             />
                         </button>
                     </div>
 
-                    {/* Edit and Delete Buttons with text/tooltips */}
                     <div className="flex items-center gap-1.5">
                         <button
                             type="button"

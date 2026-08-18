@@ -1,8 +1,9 @@
 'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { loginAction, logoutAction } from '@actions/auth.action';
+import { useAppMutation } from '@hooks/useAppMutation';
 import { unwrapApiResponse } from '@libs/action.util';
 import type { LoginSchema } from '@validations/auth.schema';
 
@@ -14,7 +15,7 @@ export function useAuthSession() {
 export function useLogin() {
     const queryClient = useQueryClient();
 
-    return useMutation({
+    return useAppMutation({
         mutationFn: async (input: LoginSchema) => unwrapApiResponse(await loginAction(input)),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['session'] });
@@ -25,7 +26,7 @@ export function useLogin() {
 export function useLogout() {
     const queryClient = useQueryClient();
 
-    return useMutation({
+    return useAppMutation({
         mutationFn: async () => unwrapApiResponse(await logoutAction()),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['session'] });

@@ -1,4 +1,4 @@
-import { getAvailableSlotsForDateServer } from '@libs/schedule.server';
+import { getAvailableSlotsForDateServer } from '@server/schedule.server';
 import { bookingSlotsQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../../_lib/http';
 

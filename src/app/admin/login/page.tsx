@@ -7,19 +7,16 @@ import { useState } from 'react';
 import { Eye, EyeOff, Shield, Mail, AlertCircle, KeyRound } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { salonLoginSchema, type SalonLoginInput } from '@validations/booking.schema';
+import { loginSchema, type LoginSchema } from '@validations/auth.schema';
 import { useAccountTranslations } from '@i18n/use-app-translations';
-import { setAdminMockAuthed } from '@stores/booking.store';
+import { useLogin } from '@services/auth.service';
 import { Button } from '@components/common';
-import { loginStaticText } from '@components/marketing/landing/styles';
-
-const ADMIN_EMAIL = 'admin@averie.local';
-const ADMIN_PASSWORD = 'password';
+import { loginStaticText } from '@components/landing/styles';
 
 export default function AdminLoginPage() {
     const t = useAccountTranslations();
     const router = useRouter();
-    const [authError, setAuthError] = useState<string | null>(null);
+    const login = useLogin();
     const [showPassword, setShowPassword] = useState(false);
     const [remember, setRemember] = useState(false);
 
@@ -27,18 +24,15 @@ export default function AdminLoginPage() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<SalonLoginInput>({
-        resolver: zodResolver(salonLoginSchema),
+    } = useForm<LoginSchema>({
+        resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '' },
     });
 
-    function onSubmit(data: SalonLoginInput) {
-        if (data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD) {
-            setAdminMockAuthed(true);
-            router.push('/admin');
-            return;
-        }
-        setAuthError(t('invalidAdmin'));
+    function onSubmit(data: LoginSchema) {
+        login.mutate(data, {
+            onSuccess: () => router.push('/admin'),
+        });
     }
 
     return (
@@ -149,17 +143,18 @@ export default function AdminLoginPage() {
                             {t('adminHint')}
                         </p>
 
-                        {authError ? (
+                        {login.error ? (
                             <div
                                 className={`flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium ${loginStaticText}`}
                             >
                                 <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
-                                <span>{authError}</span>
+                                <span>{login.error.message || t('invalidAdmin')}</span>
                             </div>
                         ) : null}
 
                         <Button
                             type="submit"
+                            disabled={login.isPending}
                             className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] hover:-translate-y-0.5 transition-all duration-300 bg-stone-900 text-white"
                         >
                             {t('adminAccess')}

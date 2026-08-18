@@ -36,6 +36,10 @@ const SalonSettingsSchema = new Schema(
             type: Boolean,
             default: true,
         },
+        allowGuestLanguageSwitch: {
+            type: Boolean,
+            default: true,
+        },
         weekdaySchedules: {
             type: [WeekdayScheduleSchema],
             default: [],

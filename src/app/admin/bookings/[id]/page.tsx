@@ -2,22 +2,21 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import { useSalonBooking, useSalonServices, useSalonStaff } from '@services/salon.service';
+import { useBooking } from '@services/booking.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { BookingStatusBadge } from '@components/admin';
+import { BookingStatusBadge } from '@components/admin/bookings';
 import { EmptyState } from '@components/ui';
+import { BookingDetailSkeleton } from '@components/skeletons';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
+import { formatUserName } from '@utils/staff.util';
 
 export default function AdminBookingDetailPage() {
     const t = useAdminTranslations();
     const params = useParams<{ id: string }>();
-    const { data: booking, isLoading } = useSalonBooking(params.id);
-    const { data: services } = useSalonServices();
-    const { data: staff } = useSalonStaff();
+    const { data: booking, isLoading } = useBooking(params.id);
 
     if (isLoading) {
-        return <Loader2 className="h-5 w-5 animate-spin text-muted" />;
+        return <BookingDetailSkeleton />;
     }
 
     if (!booking) {
@@ -36,11 +35,12 @@ export default function AdminBookingDetailPage() {
         );
     }
 
-    const svc = services?.find((s) => s.id === booking.serviceId);
-    const tech =
-        booking.staffId === 'any'
-            ? 'Any available'
-            : staff?.find((s) => s.id === booking.staffId)?.name;
+    const serviceNames = booking.services.map((s) => s.name).join(', ');
+    const tech = booking.staff
+        ? formatUserName(booking.staff)
+        : booking.staffPreference === 'any'
+          ? t('bookings.detailCard.anyStaff')
+          : '—';
 
     return (
         <div className="max-w-2xl space-y-6">
@@ -57,12 +57,12 @@ export default function AdminBookingDetailPage() {
                     ],
                     ['Phone', booking.customer.phone],
                     ['Email', booking.customer.email ?? '—'],
-                    [t('overview.service'), svc?.name ?? '—'],
-                    [t('overview.technician'), tech ?? '—'],
+                    [t('overview.service'), serviceNames || '—'],
+                    [t('overview.technician'), tech],
                     ['Date', formatDisplayDate(booking.date)],
                     [t('overview.time'), booking.time],
-                    ['Duration', `${booking.durationMin} min`],
-                    ['Price', formatUsd(booking.price)],
+                    ['Duration', `${booking.totalEstimatedMinutes} min`],
+                    ['Price', formatUsd(booking.totalPrice)],
                     ['Note', booking.customer.note ?? '—'],
                 ].map(([label, value]) => (
                     <div key={label} className="flex justify-between gap-4 px-4 py-3">

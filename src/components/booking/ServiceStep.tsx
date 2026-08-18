@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, ChevronDown, Clock, Loader2, Sparkles } from 'lucide-react';
-import { useSalonServices } from '@services/salon.service';
+import { Check, ChevronDown, Clock, Sparkles } from 'lucide-react';
+import { useServiceCategories, useServices } from '@services/service-catalog.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
+import { ServicesGridSkeleton } from '@components/skeletons';
 import { formatUsd } from '@utils/format.util';
-import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
 import { resolveLucideIcon } from '@utils/lucide-icon.util';
 
@@ -41,52 +41,48 @@ const CAT_META: Record<string, { gradient: string; accent: string }> = {
 export function ServiceStep() {
     const t = useBookingTranslations();
     const { serviceIds, toggleServiceId } = useBookingStore();
-    const { data: services, isLoading } = useSalonServices();
+    const { data: services, isLoading: servicesLoading } = useServices();
+    const { data: categories, isLoading: categoriesLoading } = useServiceCategories();
 
-    const [openCats, setOpenCats] = useState<Record<string, boolean>>(
-        Object.fromEntries(SERVICE_CATEGORIES.map((c) => [c.id, true])),
-    );
+    const [openCats, setOpenCats] = useState<Record<string, boolean>>({});
 
-    const grouped = SERVICE_CATEGORIES.map((cat) => {
-        const meta = CAT_META[cat.id] ?? {
-            gradient: 'from-neutral-50 to-stone-50',
-            accent: 'text-stone-400',
-        };
-        return {
-            ...cat,
-            label: cat.labelKey ? t(cat.labelKey as 'categories.manicurePedicure') : cat.name,
-            items: (services ?? []).filter((s) => s.categoryId === cat.id),
-            meta: {
-                ...meta,
-                icon: resolveLucideIcon(cat.icon) ?? Sparkles,
-            },
-        };
-    }).filter((g) => g.items.length > 0);
+    const isLoading = servicesLoading || categoriesLoading;
+
+    const grouped = (categories ?? [])
+        .map((cat) => {
+            const meta = CAT_META[cat.id] ?? {
+                gradient: 'from-neutral-50 to-stone-50',
+                accent: 'text-stone-400',
+            };
+            return {
+                ...cat,
+                label: cat.name,
+                items: (services ?? []).filter((s) => s.categoryId === cat.id),
+                meta: {
+                    ...meta,
+                    icon: resolveLucideIcon(cat.icon) ?? Sparkles,
+                },
+            };
+        })
+        .filter((g) => g.items.length > 0);
 
     function toggleCat(id: string) {
         setOpenCats((prev) => ({ ...prev, [id]: !prev[id] }));
     }
 
     if (isLoading) {
-        return (
-            <div className="flex items-center gap-3 py-12 font-sans text-base text-muted">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                <span>Loading services…</span>
-            </div>
-        );
+        return <ServicesGridSkeleton />;
     }
 
     const totalSelected = serviceIds.length;
 
     return (
         <div className="space-y-4">
-            {/* Intro */}
             <p className="font-sans text-[17px] text-stone-700 font-medium leading-relaxed">
                 Choose one or more services — we will tailor your appointment to your complete
                 selection.
             </p>
 
-            {/* Selection indicator */}
             {totalSelected > 0 && (
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-5 py-2.5 font-sans text-base font-medium text-primary">
                     <Check className="h-4 w-4" />
@@ -94,7 +90,6 @@ export function ServiceStep() {
                 </div>
             )}
 
-            {/* Category accordion sections */}
             {grouped.map((group, gi) => {
                 const isOpen = openCats[group.id] !== false;
                 const catSelectedCount = group.items.filter((s) =>
@@ -108,7 +103,6 @@ export function ServiceStep() {
                         style={{ animationDelay: `${gi * 60}ms` }}
                         className="animate-fade-in-up overflow-hidden rounded-2xl border border-border/50 bg-white/70 backdrop-blur-sm shadow-md shadow-black/5"
                     >
-                        {/* Category header — gradient + icon */}
                         <button
                             type="button"
                             onClick={() => toggleCat(group.id)}
@@ -119,7 +113,6 @@ export function ServiceStep() {
                             aria-expanded={isOpen}
                         >
                             <div className="flex items-center gap-3">
-                                {/* Category icon */}
                                 <span
                                     className={cn(
                                         'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm',
@@ -128,7 +121,6 @@ export function ServiceStep() {
                                 >
                                     <Icon className="h-5 w-5" />
                                 </span>
-                                {/* Serif display label */}
                                 <div>
                                     <h2 className="font-display text-2xl font-semibold text-primary leading-none">
                                         {group.label}
@@ -152,7 +144,6 @@ export function ServiceStep() {
                             />
                         </button>
 
-                        {/* Collapsible service list */}
                         <div
                             className={cn(
                                 'overflow-hidden transition-all duration-400 ease-in-out',
@@ -175,7 +166,6 @@ export function ServiceStep() {
                                                 )}
                                             >
                                                 <div className="flex items-start gap-4">
-                                                    {/* Large accessible checkbox */}
                                                     <div
                                                         className={cn(
                                                             'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-300',
@@ -192,7 +182,6 @@ export function ServiceStep() {
                                                         )}
                                                     </div>
 
-                                                    {/* Content */}
                                                     <div className="min-w-0 flex-1">
                                                         <div className="flex items-start justify-between gap-4">
                                                             <p
@@ -205,7 +194,6 @@ export function ServiceStep() {
                                                             >
                                                                 {svc.name}
                                                             </p>
-                                                            {/* Price — large and display serif */}
                                                             <div className="shrink-0 text-right">
                                                                 <p className="font-display text-2xl font-bold text-primary leading-none">
                                                                     {formatUsd(svc.price)}
@@ -218,7 +206,7 @@ export function ServiceStep() {
                                                         <div className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-secondary-100/60 px-3.5 py-1.5 font-sans text-sm font-semibold text-primary/80 border border-primary/5">
                                                             <Clock className="h-4 w-4 text-primary/75" />
                                                             {t('duration', {
-                                                                min: svc.durationMin,
+                                                                min: svc.estimatedMinutes,
                                                             })}
                                                         </div>
                                                     </div>

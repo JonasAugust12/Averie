@@ -24,14 +24,42 @@ The system SHALL provide an admin login page at `/admin/login` whose layout MUST
 - **WHEN** a visitor opens `/admin/login` after the fidelity pass
 - **THEN** the page SHALL render admin login fields and submit control consistent with the Stitch Admin Login screen
 
+### Requirement: Route middleware protection
+
+The system SHALL protect `/admin/*` (except `/admin/login`) and authenticated `/staff/*` routes via Next.js middleware that validates Auth.js session and user `role`.
+
+#### Scenario: Unauthenticated admin access
+
+- **WHEN** a visitor without a session opens `/admin/bookings`
+- **THEN** middleware MUST redirect to `/admin/login`
+
+#### Scenario: Staff blocked from admin
+
+- **WHEN** a user with `role: staff` opens `/admin/services`
+- **THEN** middleware MUST redirect away from admin routes
+
+### Requirement: Admin and staff login wire-up
+
+Admin login at `/admin/login` and staff login on `/staff` MUST invoke `loginAction` (Auth.js Credentials) on submit and MUST NOT use mock `sessionStorage` gates for authorization.
+
+#### Scenario: Admin login success
+
+- **WHEN** an operator submits valid admin credentials on `/admin/login`
+- **THEN** the UI MUST call `loginAction`, establish session, and redirect to `/admin`
+
+#### Scenario: Staff login success
+
+- **WHEN** a staff user submits valid credentials on the staff portal login
+- **THEN** the UI MUST call `loginAction` with redirect to `/staff` and MUST NOT authenticate via phone-only mock lookup
+
 ### Requirement: Mock credential submit
 
-Login forms SHALL validate with Zod. Production salon admin/staff authentication MUST use Auth.js Credentials via `loginAction` when invoked; the existing UI mock gate MAY remain until a follow-up wire-up change replaces client-side mock redirects.
+Login forms SHALL validate with react-hook-form and Zod. Production salon admin/staff authentication MUST use Auth.js Credentials via `loginAction` when login forms are submitted; mock client-side redirect gates MUST be removed from admin and staff shells.
 
 #### Scenario: Mock admin sign-in
 
-- **WHEN** an operator submits valid mock admin credentials on `/admin/login` without UI wired to `loginAction`
-- **THEN** the UI MAY still proceed via mock gate — this change does not require UI refactor
+- **WHEN** an operator submits valid credentials on `/admin/login` after integration
+- **THEN** the UI MUST authenticate via `loginAction` and MUST NOT set mock sessionStorage flags or use mock redirect gates
 
 #### Scenario: Real login action against database
 

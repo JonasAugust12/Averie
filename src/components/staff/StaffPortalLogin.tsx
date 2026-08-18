@@ -1,26 +1,36 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AlertCircle, Phone, Shield } from 'lucide-react';
+import { AlertCircle, Lock, Mail, Shield } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
-import { loginStaticText } from '@components/marketing/landing/styles';
+import { loginStaticText } from '@components/landing/styles';
 
 interface StaffPortalLoginProps {
-    phoneSearch: string;
-    searchError: string | null;
-    onPhoneChange: (v: string) => void;
-    onSubmit: (e: React.FormEvent) => void;
+    onLogin: (email: string, password: string) => Promise<void>;
 }
 
-export function StaffPortalLogin({
-    phoneSearch,
-    searchError,
-    onPhoneChange,
-    onSubmit,
-}: StaffPortalLoginProps) {
+export function StaffPortalLogin({ onLogin }: StaffPortalLoginProps) {
     const t = useAdminTranslations();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setIsSubmitting(true);
+        try {
+            await onLogin(email.trim(), password);
+        } catch {
+            setError(t('staffPortal.loginFailed'));
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12">
@@ -34,8 +44,8 @@ export function StaffPortalLogin({
             <div className="relative z-10 w-full max-w-sm animate-in fade-in zoom-in duration-500">
                 <div className="bg-white/50 backdrop-blur-xl rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] p-7 border border-white/60 ring-1 ring-black/5">
                     <header className="mb-7 text-center">
-                        <div className="mx-auto h-14 w-14 bg-stone-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-stone-900/25 transform rotate-3 hover:rotate-0 transition-transform duration-300 cursor-default group">
-                            <Shield className="h-6 w-6 text-neutral-100 transition-transform duration-500 group-hover:scale-110" />
+                        <div className="mx-auto h-14 w-14 bg-stone-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-stone-900/25">
+                            <Shield className="h-6 w-6 text-neutral-100" />
                         </div>
                         <div className="flex justify-center mb-2">
                             <Image
@@ -60,57 +70,56 @@ export function StaffPortalLogin({
                         {t('staffPortal.title')}
                     </h1>
 
-                    <form onSubmit={onSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-1.5 text-left">
-                            <label
-                                className={`block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase ${loginStaticText}`}
-                            >
-                                {t('staffPortal.phoneLabel')}
+                            <label className="block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase">
+                                Email
                             </label>
-                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300">
-                                <Phone
-                                    className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none"
-                                    aria-hidden
-                                />
+                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden">
+                                <Mail className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none" />
                                 <input
-                                    type="tel"
-                                    inputMode="numeric"
-                                    value={phoneSearch}
-                                    onChange={(e) => onPhoneChange(e.target.value)}
-                                    placeholder="0901234567"
-                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400 rounded-[inherit]"
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none"
                                 />
                             </div>
-                            <p
-                                className={`font-sans text-xs font-medium text-stone-700 pl-1 ${loginStaticText}`}
-                            >
-                                {t('staffPortal.inputHint')}
-                            </p>
                         </div>
 
-                        {searchError && (
-                            <div
-                                className={`flex items-start text-rose-700 text-xs pl-1 animate-in fade-in slide-in-from-top-1 duration-200 font-semibold gap-1 ${loginStaticText}`}
-                            >
+                        <div className="space-y-1.5 text-left">
+                            <label className="block font-sans text-xs font-bold tracking-[0.15em] text-stone-950 uppercase">
+                                Password
+                            </label>
+                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden">
+                                <Lock className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none" />
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        {error && (
+                            <div className="flex items-start text-rose-700 text-xs pl-1 font-semibold gap-1">
                                 <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-                                <span>{searchError}</span>
+                                <span>{error}</span>
                             </div>
                         )}
 
                         <Button
                             type="submit"
-                            className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] hover:-translate-y-0.5 transition-all duration-300 bg-stone-900 text-white"
+                            disabled={isSubmitting}
+                            className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase bg-stone-900 text-white"
                         >
-                            {t('staffPortal.lookupButton')}
+                            {isSubmitting ? 'Signing in…' : t('staffPortal.lookupButton')}
                         </Button>
                     </form>
                 </div>
 
-                <p
-                    className={`text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase ${loginStaticText}`}
-                >
-                    &copy; {new Date().getFullYear()} {t('brand')} Staff Portal
-                </p>
                 <Link
                     href="/"
                     className="mt-4 block text-center font-sans text-xs tracking-[0.15em] font-bold text-white/90 hover:text-white uppercase transition-colors"

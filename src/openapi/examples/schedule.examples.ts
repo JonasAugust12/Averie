@@ -12,6 +12,7 @@ export const dayOffExample = {
 export const scheduleSettingsExample = {
     id: EXAMPLE_SETTINGS_ID,
     allowStaffSelection: true,
+    allowGuestLanguageSwitch: true,
     weekdaySchedules: weekdaySchedulesExample,
     dayOffs: [
         dayOffExample,

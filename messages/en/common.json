@@ -22,5 +22,11 @@
     },
     "fallback": {
         "unknown": "An unexpected error occurred. Please try again."
+    },
+    "language": {
+        "en": "ENG",
+        "vi": "VI",
+        "switchToEnglish": "Switch to English",
+        "switchToVietnamese": "Switch to Vietnamese"
     }
 }

@@ -6,17 +6,17 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import { ServiceCard } from './ServiceCard';
 import { resolveLucideIcon } from '@utils/lucide-icon.util';
-import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
+import type { ServiceDto } from '@typings/service.type';
 
 interface ServiceCategorySectionProps {
-    categoryId: ServiceCategoryId;
+    categoryId: string;
     label: string;
     icon?: string | null;
-    services: SalonService[];
-    onAdd: (categoryId: ServiceCategoryId) => void;
-    onEdit: (svc: SalonService) => void;
-    onToggle: (svc: SalonService) => void;
-    onDelete: (svc: SalonService) => void;
+    services: ServiceDto[];
+    onAdd: (categoryId: string) => void;
+    onEdit: (svc: ServiceDto) => void;
+    onToggle: (svc: ServiceDto) => void;
+    onDelete: (svc: ServiceDto) => void;
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -50,7 +50,7 @@ export function ServiceCategorySection({
     const t = useAdminTranslations();
     const [open, setOpen] = useState(true);
 
-    const activeCount = services.filter((s) => s.active).length;
+    const activeCount = services.filter((s) => s.visible).length;
     const totalCount = services.length;
     const colorClass =
         CATEGORY_COLORS[categoryId] ?? 'bg-stone-50/60 text-stone-800 border-stone-100/50';

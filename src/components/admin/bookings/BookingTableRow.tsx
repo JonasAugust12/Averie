@@ -3,18 +3,23 @@
 import { Fragment } from 'react';
 import { CalendarX, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { BookingStatusBadge, BookingTicketCard } from '@components/admin';
+import { BookingStatusBadge, BookingTicketCard } from '@components/admin/bookings';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
-import type { SalonBooking, BookingStatus } from '@typings/salon.type';
+import type { BookingStatus } from '@typings/salon-common.type';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 interface BookingTableRowProps {
-    booking: SalonBooking;
+    booking: BookingListItemDto;
     serviceName?: string;
     staffName?: string;
     isExpanded: boolean;
     onToggle: () => void;
-    onUpdateStatus: (booking: SalonBooking, status: BookingStatus, e: React.MouseEvent) => void;
+    onUpdateStatus: (
+        booking: BookingListItemDto,
+        status: BookingStatus,
+        e: React.MouseEvent,
+    ) => void;
 }
 
 /** Format createdAt as dd/MM/yyyy HH:mm */
@@ -99,7 +104,7 @@ export function BookingTableRow({
 
                 {/* Price */}
                 <td className="px-6 py-4.5 text-right whitespace-nowrap font-bold text-neutral-900">
-                    {formatUsd(b.price)}
+                    {formatUsd(b.totalPrice)}
                 </td>
 
                 {/* Status Badge */}

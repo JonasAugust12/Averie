@@ -65,8 +65,8 @@
         "categoryAddons": "Nail Art & Charms",
         "categoryWaxing": "Waxing & Hair Removal",
         "categoryFacials": "Dermalogica Facials",
-        "categoryOthers": "Other Service",
-        "categoryDistributionTip": "Manicure & Pedicure services remain leading. You can configure cross-promotions during off-peak hours to balance technician demands.",
+        "categoryOthers": "Dịch vụ khác",
+        "categoryDistributionTip": "Dịch vụ Manicure & Pedicure vẫn dẫn đầu. Bạn có thể cấu hình khuyến mãi chéo trong giờ vắng để cân bằng nhu cầu kỹ thuật viên.",
         "staffLeaderboardTitle": "Bảng Xếp Hạng Nhân Viên",
         "staffLeaderboardSubtitle": "Xếp hạng năng suất làm việc của kỹ thuật viên",
         "staffHeaderStaff": "Nhân viên",
@@ -230,6 +230,12 @@
         "dayClosed": "Ngày này đóng cửa. Bật công tắc phía trên để thêm khung giờ.",
         "allowStaffSelection": "Yêu cầu kỹ thuật viên",
         "allowStaffSelectionHint": "Cho phép khách hàng lựa chọn kỹ thuật viên khi đặt lịch. Nếu tắt, tất cả lịch hẹn sẽ tự động điều phối cho kỹ thuật viên phù hợp.",
+        "allowGuestLanguageSwitch": "Đổi ngôn ngữ cho khách",
+        "allowGuestLanguageSwitchHint": "Khi bật, khách có thể chuyển giữa tiếng Anh và tiếng Việt trên trang chủ và luồng đặt lịch. Khu vực admin và nhân viên không bị ảnh hưởng.",
+        "confirmSaveTitle": "Lưu cài đặt",
+        "confirmSaveMsg": "Bạn có chắc chắn muốn lưu những thay đổi này?",
+        "confirmSaveBtn": "Lưu",
+        "confirmCancelBtn": "Hủy",
         "periodSlots": "Khung giờ theo buổi",
         "periodSlotsHint": "Các mốc giờ hiện khi khách đặt lịch — áp dụng toàn app",
         "periods": {
@@ -324,7 +330,8 @@
         "phoneLabel": "Số điện thoại",
         "roleLabel": "Vai trò",
         "specialtiesLabel": "Chuyên môn",
-        "colorLabel": "Màu hiển thị"
+        "colorLabel": "Màu hiển thị",
+        "loginFailed": "Email hoặc mật khẩu không đúng"
     },
     "booking": {
         "back": "Quay lại",

@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import { useSalonBookings, useAllSalonServices, useAllSalonStaff } from '@services/salon.service';
-import { useAdminTranslations } from '@i18n/use-app-translations';
+import { useMemo } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { useAllStaff, useStaffBookings } from '@services/staff.service';
+import { useAdminTranslations, useCommonTranslations } from '@i18n/use-app-translations';
+import { useUIStore } from '@stores/ui.store';
 import { StaffCalendar } from '@components/admin/staff';
 import {
     StaffPortalLogin,
@@ -12,60 +13,36 @@ import {
     StatChip,
     StaffUpcomingList,
 } from '@components/staff';
+import { StaffCalendarSkeleton } from '@components/skeletons';
 import { buildStaffBookingsCalendarEvents, parseSalonTime } from '@utils/staff-calendar.util';
-import type { SalonStaff } from '@typings/salon.type';
+import { getUserColor } from '@utils/staff.util';
 
 export default function StaffLookupPage() {
     const t = useAdminTranslations();
-    const { data: bookings, isLoading: bookingsLoading } = useSalonBookings();
-    const { data: services, isLoading: servicesLoading } = useAllSalonServices();
-    const { data: staff, isLoading: staffLoading } = useAllSalonStaff();
+    const tCommon = useCommonTranslations();
+    const showLoading = useUIStore((state) => state.showLoading);
+    const hideLoading = useUIStore((state) => state.hideLoading);
+    const { data: session, status, update } = useSession();
+    const staffId = session?.user?.id ?? '';
+    const { data: allStaff, isLoading: staffLoading } = useAllStaff();
+    const { data: staffBookings, isLoading: bookingsLoading } = useStaffBookings(staffId);
 
-    const [phoneSearch, setPhoneSearch] = useState('');
-    const [searchError, setSearchError] = useState<string | null>(null);
-    const [selectedStaff, setSelectedStaff] = useState<SalonStaff | null>(null);
-
-    const normalizePhone = (p: string) => p.replace(/\D/g, '');
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        setSearchError(null);
-        const clean = normalizePhone(phoneSearch);
-        if (!clean) {
-            setSearchError(t('staffPortal.inputHint') || 'Vui lòng nhập SĐT hợp lệ');
-            return;
-        }
-        if (!staff || staff.length === 0) return;
-        const found = staff.find((s) => s.phone && normalizePhone(s.phone) === clean);
-        // Fallback to first staff member as demo
-        setSelectedStaff(found ?? staff[0]);
-    };
-
-    const handleBack = () => {
-        setSelectedStaff(null);
-        setPhoneSearch('');
-        setSearchError(null);
-    };
-
-    const staffBookings = useMemo(() => {
-        if (!selectedStaff || !bookings) return [];
-        return bookings.filter((b) => b.staffId === selectedStaff.id);
-    }, [selectedStaff, bookings]);
+    const staffProfile = allStaff?.find((s) => s.id === staffId);
+    const bookingItems = staffBookings;
 
     const calendarEvents = useMemo(() => {
-        if (!selectedStaff || !services) return [];
+        if (!staffId) return [];
         return buildStaffBookingsCalendarEvents(
-            bookings ?? [],
-            services,
-            selectedStaff.id,
-            selectedStaff.color,
+            bookingItems ?? [],
+            staffId,
+            staffProfile ? getUserColor(staffProfile) : undefined,
         );
-    }, [selectedStaff, bookings, services]);
+    }, [staffId, bookingItems, staffProfile]);
 
     const upcomingBookings = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        return [...staffBookings]
+        return [...(bookingItems ?? [])]
             .filter((b) => b.status !== 'cancelled' && parseSalonTime(b.date, b.time) >= today)
             .sort(
                 (a, b) =>
@@ -73,89 +50,66 @@ export default function StaffLookupPage() {
                     parseSalonTime(b.date, b.time).getTime(),
             )
             .slice(0, 15);
-    }, [staffBookings]);
+    }, [bookingItems]);
 
-    const stats = useMemo(
-        () => ({
-            total: staffBookings.filter((b) => b.status !== 'cancelled').length,
-            upcoming: staffBookings.filter((b) => b.status === 'upcoming').length,
-            completed: staffBookings.filter((b) => b.status === 'completed').length,
-        }),
-        [staffBookings],
-    );
+    const stats = useMemo(() => {
+        const items = bookingItems ?? [];
+        return {
+            total: items.filter((b) => b.status !== 'cancelled').length,
+            upcoming: items.filter((b) => b.status === 'upcoming').length,
+            cancelled: items.filter((b) => b.status === 'cancelled').length,
+        };
+    }, [bookingItems]);
 
-    const serviceMap = useMemo(
-        () => new Map((services ?? []).map((s) => [s.id, s.name])),
-        [services],
-    );
+    const handleLogin = async (email: string, password: string) => {
+        showLoading(tCommon('status.loading'));
+        try {
+            const result = await signIn('credentials', { email, password, redirect: false });
+            if (result?.error) {
+                throw new Error(result.error);
+            }
+            await update();
+        } finally {
+            hideLoading();
+        }
+    };
 
-    const isLoading = bookingsLoading || servicesLoading || staffLoading;
-
-    /* ─── Loading ─── */
-    if (isLoading) {
+    if (status === 'loading' || (session?.user && (staffLoading || bookingsLoading))) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-stone-50">
-                <div className="text-center space-y-3">
-                    <Loader2 className="h-10 w-10 animate-spin text-stone-400 mx-auto" />
-                    <p className="font-sans text-sm font-semibold text-stone-500">
-                        Loading portal…
-                    </p>
-                </div>
+                <StaffCalendarSkeleton />
             </div>
         );
     }
 
-    /* ─── Login view ─── */
-    if (!selectedStaff) {
-        return (
-            <StaffPortalLogin
-                phoneSearch={phoneSearch}
-                searchError={searchError}
-                onPhoneChange={setPhoneSearch}
-                onSubmit={handleSearch}
-            />
-        );
+    if (!session?.user || session.user.role !== 'staff' || !staffProfile) {
+        return <StaffPortalLogin onLogin={handleLogin} />;
     }
 
-    const staffColor = selectedStaff.color || '#78716c';
+    const staffColor = getUserColor(staffProfile);
 
-    /* ─── Schedule view ─── */
     return (
         <div className="min-h-screen bg-stone-50">
-            <StaffNavbar staff={selectedStaff} onBack={handleBack} />
+            <StaffNavbar staff={staffProfile} onBack={() => signOut({ callbackUrl: '/staff' })} />
 
             <main className="max-w-3xl mx-auto px-3 sm:px-6 py-5 sm:py-8 space-y-5">
-                {/* Profile Card */}
-                <StaffProfileCard staff={selectedStaff} />
+                <StaffProfileCard staff={staffProfile} />
 
-                {/* Stats row */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    <StatChip label={t('staff.statsBookings')} count={stats.total} color="stone" />
+                    <StatChip label={t('staff.statsUpcoming')} count={stats.upcoming} color="sky" />
                     <StatChip
-                        label={t('staff.statsBookings') || 'Total'}
-                        count={stats.total}
-                        color="stone"
-                    />
-                    <StatChip
-                        label={t('staff.statsUpcoming') || 'Upcoming'}
-                        count={stats.upcoming}
-                        color="sky"
-                    />
-                    <StatChip
-                        label={t('overview.appointments') || 'Completed'}
-                        count={stats.completed}
+                        label={t('bookings.stats.cancelled')}
+                        count={stats.cancelled}
                         color="amber"
                     />
                 </div>
 
-                {/* Calendar */}
                 <div className="rounded-2xl border border-stone-200/80 bg-white shadow-sm overflow-hidden">
                     <div className="border-b border-stone-100 bg-stone-50/70 px-4 py-3">
                         <h3 className="font-display text-base sm:text-lg font-bold text-stone-950">
-                            {t('staff.schedule') || 'Schedule'}
+                            {t('staff.schedule')}
                         </h3>
-                        <p className="font-sans text-[10px] sm:text-xs text-stone-500 mt-0.5">
-                            {t('staffPortal.scheduleFor', { name: selectedStaff.name })}
-                        </p>
                     </div>
                     <div
                         className="p-2 sm:p-4"
@@ -170,12 +124,10 @@ export default function StaffLookupPage() {
                     </div>
                 </div>
 
-                {/* Upcoming bookings list */}
                 <StaffUpcomingList
                     bookings={upcomingBookings}
-                    serviceMap={serviceMap}
                     staffColor={staffColor}
-                    onBack={handleBack}
+                    onBack={() => signOut({ callbackUrl: '/staff' })}
                 />
             </main>
         </div>

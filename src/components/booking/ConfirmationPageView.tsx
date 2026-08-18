@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check, ExternalLink, MapPin } from 'lucide-react';
+import { useBookingByReference } from '@services/booking.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
-import { useSalonServices, useSalonStaff } from '@services/salon.service';
 import { useBookingStore } from '@stores/booking.store';
 import { BookingChrome } from '@components/booking';
 import { Button } from '@components/common';
+import { BookingDetailSkeleton } from '@components/skeletons';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
+import { formatUserName } from '@utils/staff.util';
 
 const SALON_MAP_EMBED_URL =
     'https://maps.google.com/maps?q=Averie%20Nails%20Spa%20Cohasset%20MA&t=&z=17&ie=UTF8&iwloc=&output=embed';
@@ -17,28 +19,39 @@ const SALON_MAP_DIRECTIONS_URL = 'https://maps.app.goo.gl/YCtZW533i3x6BB5QA';
 export function ConfirmationPageView() {
     const t = useBookingTranslations();
     const router = useRouter();
-    const { reference, serviceIds, staffId, date, time, reset } = useBookingStore();
-    const { data: services } = useSalonServices();
-    const { data: staff } = useSalonStaff();
+    const { reference, reset } = useBookingStore();
+    const { data: booking, isLoading } = useBookingByReference(reference ?? '');
 
-    const selectedServices = services?.filter((s) => serviceIds.includes(s.id)) ?? [];
-    const totalPrice = selectedServices.reduce((sum, s) => sum + s.price, 0);
-
-    const employeeName =
-        staffId === 'any'
-            ? t('anyTechnician')
-            : (staff?.find((s) => s.id === staffId)?.name ?? '—');
+    const serviceNames = booking?.services.map((s) => s.name).join(', ') ?? '';
+    const totalPrice = booking?.totalPrice ?? 0;
+    const employeeName = booking
+        ? booking.staff
+            ? formatUserName(booking.staff)
+            : booking.staffPreference === 'any'
+              ? t('anyTechnician')
+              : '—'
+        : '—';
 
     function handleBookAnother() {
         reset();
         router.push('/book');
     }
 
+    if (reference && isLoading) {
+        return (
+            <div className="flex min-h-screen flex-col bg-background pb-36 text-foreground md:pb-8">
+                <BookingChrome step={6} complete />
+                <div className="mx-auto w-full max-w-app px-4 py-12">
+                    <BookingDetailSkeleton />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex min-h-screen flex-col bg-background pb-36 text-foreground md:pb-8">
             <BookingChrome step={6} complete />
             <div className="mx-auto flex w-full max-w-app flex-1 flex-col items-center px-4 py-8 sm:px-6 sm:py-14 md:max-w-6xl md:justify-center md:py-6 lg:px-8">
-                {/* Success header */}
                 <div className="flex flex-col items-center text-center md:mb-5">
                     <div className="relative mb-6 sm:mb-8 md:mb-4">
                         <div className="absolute inset-0 scale-150 rounded-full bg-primary/10 blur-xl" />
@@ -58,27 +71,26 @@ export function ConfirmationPageView() {
                 </div>
 
                 <div className="grid w-full gap-6 md:grid-cols-2 md:items-stretch md:gap-6 lg:gap-8">
-                    {/* Left: booking details + desktop actions */}
                     <article className="flex w-full flex-col overflow-hidden rounded-2xl border-2 border-stone-200 bg-white/80 shadow-md backdrop-blur-md md:max-h-[min(62dvh,580px)]">
-                        {reference ? (
+                        {(booking?.reference ?? reference) ? (
                             <div className="border-b border-stone-200 bg-tertiary/40 px-5 py-4 sm:px-7 sm:py-5 md:px-6 md:py-3.5">
                                 <p className="font-sans text-xs font-bold tracking-[0.15em] text-stone-700 uppercase">
                                     {t('confirmation.reference')}
                                 </p>
                                 <p className="mt-1 font-display text-lg font-bold tracking-wider text-primary sm:text-xl md:text-lg">
-                                    {reference}
+                                    {booking?.reference ?? reference}
                                 </p>
                             </div>
                         ) : null}
 
                         <dl className="divide-y divide-stone-200 md:min-h-0 md:flex-1 md:overflow-y-auto">
-                            {selectedServices.length > 0 ? (
+                            {serviceNames ? (
                                 <div className="px-5 py-4 sm:px-7 sm:py-5 md:px-6 md:py-4">
                                     <dt className="mb-3 font-sans text-xs font-bold tracking-[0.15em] text-stone-750 uppercase">
                                         {t('review.service')}
                                     </dt>
                                     <dd className="space-y-2.5 sm:space-y-3">
-                                        {selectedServices.map((svc) => (
+                                        {(booking?.services ?? []).map((svc) => (
                                             <div
                                                 key={svc.id}
                                                 className="flex items-center justify-between gap-4"
@@ -87,7 +99,9 @@ export function ConfirmationPageView() {
                                                     {svc.name}
                                                 </span>
                                                 <span className="font-sans text-sm font-medium text-stone-500 sm:text-[15px]">
-                                                    {formatUsd(svc.price)}
+                                                    {t('minutesShort', {
+                                                        min: svc.estimatedMinutes,
+                                                    })}
                                                 </span>
                                             </div>
                                         ))}
@@ -104,13 +118,13 @@ export function ConfirmationPageView() {
                                 </dd>
                             </div>
 
-                            {date && time ? (
+                            {booking?.date && booking.time ? (
                                 <div className="px-5 py-3.5 sm:px-7 sm:py-4 md:px-6 md:py-3">
                                     <dt className="mb-1 font-sans text-xs font-bold tracking-[0.15em] text-stone-750 uppercase">
                                         {t('review.date')}
                                     </dt>
                                     <dd className="font-sans text-sm font-semibold text-primary sm:text-[15px]">
-                                        {formatDisplayDate(date)} · {time}
+                                        {formatDisplayDate(booking.date)} · {booking.time}
                                     </dd>
                                 </div>
                             ) : null}
@@ -118,7 +132,7 @@ export function ConfirmationPageView() {
                             {totalPrice > 0 ? (
                                 <div className="flex items-center justify-between gap-4 border-t border-stone-200 bg-primary/10 px-5 py-4 sm:px-7 sm:py-5 md:px-6 md:py-3.5">
                                     <span className="font-sans text-xs font-bold tracking-[0.15em] text-stone-700 uppercase sm:text-sm">
-                                        Total
+                                        {t('total')}
                                     </span>
                                     <span className="font-display text-xl font-black text-primary sm:text-2xl md:text-xl">
                                         {formatUsd(totalPrice)}
@@ -126,10 +140,6 @@ export function ConfirmationPageView() {
                                 </div>
                             ) : null}
                         </dl>
-
-                        <p className="border-t border-stone-200 bg-neutral/20 px-5 py-3.5 font-sans text-xs font-medium leading-relaxed text-stone-500 sm:px-7 sm:py-4 sm:text-sm md:px-6 md:py-3 md:text-xs">
-                            {t('confirmation.mockNote')}
-                        </p>
 
                         <div className="hidden border-t border-stone-200 bg-white/90 px-6 py-4 md:flex md:flex-col md:gap-3">
                             <Button
@@ -149,7 +159,6 @@ export function ConfirmationPageView() {
                         </div>
                     </article>
 
-                    {/* Right: location map */}
                     <section
                         aria-labelledby="confirmation-location-heading"
                         className="flex w-full md:min-h-0"
@@ -211,7 +220,6 @@ export function ConfirmationPageView() {
                 </div>
             </div>
 
-            {/* ── Fixed Mobile Bottom Action Bar (< md) ── */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200/80 bg-white/95 px-4 py-3 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-8px_20px_-6px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-app flex-col gap-2">
                     <Button

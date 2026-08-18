@@ -7,14 +7,15 @@ export type BookingStep = 1 | 2 | 3 | 4 | 5 | 6;
 interface BookingState {
     step: BookingStep;
     serviceIds: string[];
-    staffId: string | 'any' | null;
+    staffPreference: 'any' | 'specific';
+    staffId: string | null;
     date: string | null;
     time: string | null;
     customer: BookingCustomerInput | null;
     reference: string | null;
     setStep: (step: BookingStep) => void;
     toggleServiceId: (id: string) => void;
-    setStaffId: (id: string | 'any' | null) => void;
+    setStaffPreference: (preference: 'any' | 'specific', staffId?: string | null) => void;
     setDate: (date: string | null) => void;
     setTime: (time: string | null) => void;
     setCustomer: (customer: BookingCustomerInput | null) => void;
@@ -26,7 +27,8 @@ interface BookingState {
 const initial = {
     step: 1 as BookingStep,
     serviceIds: [] as string[],
-    staffId: 'any' as string | 'any' | null,
+    staffPreference: 'any' as const,
+    staffId: null as string | null,
     date: null,
     time: null,
     customer: null,
@@ -46,7 +48,8 @@ export const useBookingStore = create<BookingState>()(
                         : [...state.serviceIds, id];
                     return { serviceIds: nextIds };
                 }),
-            setStaffId: (staffId) => set({ staffId }),
+            setStaffPreference: (staffPreference, staffId = null) =>
+                set({ staffPreference, staffId: staffPreference === 'any' ? null : staffId }),
             setDate: (date) => set({ date }),
             setTime: (time) => set({ time }),
             setCustomer: (customer) => set({ customer }),
@@ -55,7 +58,8 @@ export const useBookingStore = create<BookingState>()(
                 set({
                     step: 1,
                     serviceIds: [],
-                    staffId: 'any',
+                    staffPreference: 'any',
+                    staffId: null,
                     date: null,
                     time: null,
                     reference: null,
@@ -78,16 +82,3 @@ export const useBookingStore = create<BookingState>()(
         },
     ),
 );
-
-export const ADMIN_MOCK_KEY = 'averie-admin-mock';
-
-export function isAdminMockAuthed() {
-    if (typeof window === 'undefined') return false;
-    return window.sessionStorage.getItem(ADMIN_MOCK_KEY) === '1';
-}
-
-export function setAdminMockAuthed(value: boolean) {
-    if (typeof window === 'undefined') return;
-    if (value) window.sessionStorage.setItem(ADMIN_MOCK_KEY, '1');
-    else window.sessionStorage.removeItem(ADMIN_MOCK_KEY);
-}

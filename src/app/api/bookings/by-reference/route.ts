@@ -1,5 +1,5 @@
 import { connectToDatabase } from '@libs/mongodb';
-import { serializeBooking } from '@mappers';
+import { enrichBookingListItem, loadStaffServiceMaps } from '@server/booking-enrich.server';
 import { Booking } from '@models/booking.model';
 import { bookingReferenceQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../../_lib/http';
@@ -35,7 +35,9 @@ export async function GET(request: Request) {
             return apiError('Booking not found', 404);
         }
 
-        return apiSuccess(serializeBooking(booking), 'OK');
+        const maps = await loadStaffServiceMaps();
+
+        return apiSuccess(enrichBookingListItem(booking, maps), 'OK');
     } catch (error) {
         console.error('[GET /api/bookings/by-reference]', error);
         return apiError('Failed to fetch booking', 500);

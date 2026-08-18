@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { cn } from '@utils/cn.util';
 
 interface LoadingGifProps {
@@ -18,12 +19,20 @@ const ICON_BOX = 'h-[38%] w-[38%]';
 export function LoadingGif({ className, iconClassName }: LoadingGifProps) {
     return (
         <div className={cn('relative shrink-0', LOADER_BOX, className)} aria-hidden>
-            {/* eslint-disable-next-line @next/next/no-img-element -- animated GIF */}
-            <img src="/animations/loading.gif" alt="" className="h-full w-full object-contain" />
-            {/* eslint-disable-next-line @next/next/no-img-element -- centered brand mark over spinner */}
-            <img
+            <Image
+                src="/animations/loading.gif"
+                alt=""
+                fill
+                unoptimized
+                priority
+                sizes="(max-width: 640px) 224px, 256px"
+                className="object-contain"
+            />
+            <Image
                 src="/icons/icon.png"
                 alt=""
+                width={97}
+                height={97}
                 className={cn(
                     'absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full object-contain',
                     ICON_BOX,

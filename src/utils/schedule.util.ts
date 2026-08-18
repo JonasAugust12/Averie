@@ -1,12 +1,20 @@
+import type { DayOffScope, DayPeriod } from '@typings/salon-common.type';
+import type { BookingListItemDto, TimeSlotDto } from '@typings/booking.type';
 import type {
-    DayOffScope,
-    DayPeriod,
-    PeriodSlots,
-    SalonBooking,
-    ScheduleSettings,
-    TimeSlot,
-    WeekdaySchedule,
-} from '@typings/salon.type';
+    PeriodSlotsDto,
+    ScheduleSettingsDto,
+    WeekdayScheduleDto,
+} from '@typings/schedule-settings.type';
+
+type PeriodSlots = PeriodSlotsDto;
+type WeekdaySchedule = WeekdayScheduleDto;
+/** Subset used by slot/availability helpers (id/updatedAt not required). */
+type ScheduleSettings = Pick<
+    ScheduleSettingsDto,
+    'weekdaySchedules' | 'dayOffs' | 'allowStaffSelection'
+>;
+type TimeSlot = TimeSlotDto;
+type SalonBooking = Pick<BookingListItemDto, 'date' | 'time' | 'status'>;
 
 export const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 

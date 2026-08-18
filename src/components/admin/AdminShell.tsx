@@ -18,11 +18,12 @@ import {
 } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher, AdminRouteTransitionLoader } from '@components/shared';
-import { isAdminMockAuthed, setAdminMockAuthed } from '@stores/booking.store';
+import { useLogout } from '@services/auth.service';
 import { Button } from '@components/common';
-import { AdminNewBookingModal } from '@components/admin';
+import { AdminNewBookingModal } from '@components/admin/bookings';
 import { useUIStore } from '@stores/ui.store';
 import { cn } from '@utils/cn.util';
+import { useSession } from 'next-auth/react';
 
 const navItems = [
     { href: '/admin', icon: LayoutDashboard, key: 'dashboard' as const },
@@ -41,26 +42,26 @@ export function AdminShell({ children }: AdminShellProps) {
     const t = useAdminTranslations();
     const pathname = usePathname();
     const router = useRouter();
-    const [ready, setReady] = useState(false);
-    const [authed, setAuthed] = useState(false);
+    const { data: session, status } = useSession();
+    const logout = useLogout();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
     const isFormModalOpen = useUIStore((s) => s.adminFormModalLocks > 0);
 
     useEffect(() => {
-        const ok = isAdminMockAuthed();
-        setAuthed(ok);
-        setReady(true);
-        if (!ok) router.replace('/admin/login');
-    }, [router]);
+        if (status === 'unauthenticated') {
+            router.replace('/admin/login');
+        }
+    }, [status, router]);
 
     function handleSignOut() {
-        setAdminMockAuthed(false);
-        router.replace('/admin/login');
+        logout.mutate(undefined, {
+            onSuccess: () => router.replace('/admin/login'),
+        });
     }
 
-    if (!ready) return null;
-    if (!authed) return null;
+    if (status === 'loading') return null;
+    if (status === 'unauthenticated' || session?.user?.role !== 'admin') return null;
 
     const pageTitle = titleForPath(pathname, t);
 

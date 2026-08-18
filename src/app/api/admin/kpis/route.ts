@@ -1,8 +1,8 @@
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
+import { requireAdmin } from '@guard/auth-guard';
 import { Booking } from '@models/booking.model';
 import { User } from '@models/user.model';
-import type { AdminKpiDto } from '@typings/salon/admin.type';
+import type { AdminKpiDto } from '@typings/admin-kpi.type';
 import { apiError, apiSuccess } from '../../_lib/http';
 
 export const runtime = 'nodejs';

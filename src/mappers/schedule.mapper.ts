@@ -1,5 +1,5 @@
 import { toId, toIso, type IdLike } from '@mappers/shared.mapper';
-import type { ScheduleSettingsDto, WeekdayScheduleDto } from '@typings/salon/schedule.type';
+import type { ScheduleSettingsDto, WeekdayScheduleDto } from '@typings/schedule-settings.type';
 import { defaultWeekdaySchedules, normalizeWeekdaySchedules } from '@utils/schedule.util';
 
 type PeriodSlotsDoc = {
@@ -27,6 +27,7 @@ function serializeWeekdaySchedules(
 export function serializeScheduleSettings(doc: {
     _id: IdLike;
     allowStaffSelection: boolean;
+    allowGuestLanguageSwitch?: boolean;
     weekdaySchedules?: WeekdayScheduleDoc[];
     workingWeekdays?: number[];
     periodSlots?: PeriodSlotsDoc;
@@ -36,6 +37,7 @@ export function serializeScheduleSettings(doc: {
     return {
         id: toId(doc._id),
         allowStaffSelection: doc.allowStaffSelection,
+        allowGuestLanguageSwitch: doc.allowGuestLanguageSwitch ?? true,
         weekdaySchedules: serializeWeekdaySchedules(doc.weekdaySchedules, {
             workingWeekdays: doc.workingWeekdays,
             periodSlots: doc.periodSlots,
@@ -54,6 +56,7 @@ export function scheduleSettingsForUtil(doc: ScheduleSettingsDto) {
         weekdaySchedules: doc.weekdaySchedules,
         dayOffs: doc.dayOffs,
         allowStaffSelection: doc.allowStaffSelection,
+        allowGuestLanguageSwitch: doc.allowGuestLanguageSwitch,
     };
 }
 

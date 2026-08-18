@@ -2,75 +2,77 @@
 
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import {
-    useSalonServices,
-    useSalonStaff,
-    useSaveMockBooking,
-    useScheduleSettings,
-} from '@services/salon.service';
+import { useCreateBooking } from '@services/booking.service';
+import { useServices } from '@services/service-catalog.service';
+import { useStaff } from '@services/staff.service';
+import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { formatDisplayDate, formatUsd, generateBookingReference } from '@utils/format.util';
-import type { SalonBooking } from '@typings/salon.type';
+import { formatDisplayDate, formatUsd } from '@utils/format.util';
+import { formatUserName, getUserInitials } from '@utils/staff.util';
 
 export function ReviewStep() {
     const t = useBookingTranslations();
     const router = useRouter();
-    const saveBooking = useSaveMockBooking();
-    const { serviceIds, staffId, date, time, customer, setReference, setStep } = useBookingStore();
-    const { data: services } = useSalonServices();
-    const { data: staff } = useSalonStaff();
+    const createBooking = useCreateBooking();
+    const { serviceIds, staffPreference, staffId, date, time, customer, setReference, setStep } =
+        useBookingStore();
+    const { data: services } = useServices();
+    const { data: staff } = useStaff();
     const { data: settings } = useScheduleSettings();
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
 
     const selectedServices = services?.filter((s) => serviceIds.includes(s.id)) ?? [];
-    const employee = staffId === 'any' ? t('anyTechnician') : staff?.find((s) => s.id === staffId);
-    const employeeName = typeof employee === 'string' ? employee : (employee?.name ?? '—');
-    const employeeInitials = typeof employee === 'string' ? '—' : (employee?.initials ?? '—');
+    const employee =
+        staffPreference === 'any' ? t('anyTechnician') : staff?.find((s) => s.id === staffId);
+    const employeeName =
+        typeof employee === 'string' ? employee : employee ? formatUserName(employee) : '—';
+    const employeeInitials =
+        typeof employee === 'string' ? '—' : employee ? getUserInitials(employee) : '—';
 
     const totalPrice = selectedServices.reduce((sum, s) => sum + s.price, 0);
-    const totalDuration = selectedServices.reduce((sum, s) => sum + s.durationMin, 0);
-    const primaryService = selectedServices[0];
+    const totalDuration = selectedServices.reduce((sum, s) => sum + s.estimatedMinutes, 0);
 
     async function handleConfirm() {
-        if (!primaryService || !staffId || !date || !time || !customer) return;
+        if (selectedServices.length === 0 || !date || !time || !customer) return;
+        if (staffPreference === 'specific' && !staffId) return;
 
-        const reference = generateBookingReference();
-        const booking: SalonBooking = {
-            id: `bk-${Date.now()}`,
-            reference,
-            serviceId: primaryService.id,
-            serviceIds: serviceIds,
-            staffId,
-            date,
-            time,
-            durationMin: totalDuration,
-            price: totalPrice,
-            customer: {
-                firstName: customer.firstName,
-                lastName: customer.lastName || '',
-                phone: customer.phone,
-                email: customer.email || undefined,
-                note: customer.note || undefined,
+        createBooking.mutate(
+            {
+                serviceIds,
+                staffPreference,
+                staffId: staffPreference === 'specific' ? (staffId ?? undefined) : undefined,
+                date,
+                time,
+                customer: {
+                    firstName: customer.firstName,
+                    lastName: customer.lastName || '—',
+                    phone: customer.phone,
+                    email: customer.email || undefined,
+                    note: customer.note || undefined,
+                },
             },
-            status: 'upcoming',
-        };
-
-        await saveBooking.mutateAsync(booking);
-        setReference(reference);
-        router.push('/book/confirmation');
+            {
+                onSuccess: (data) => {
+                    setReference(data.reference);
+                    router.push('/book/confirmation');
+                },
+            },
+        );
     }
 
-    if (!primaryService || !staffId || !date || !time || !customer) {
+    if (selectedServices.length === 0 || !date || !time || !customer) {
         return <p className="font-sans text-sm text-muted">Please complete all previous steps.</p>;
+    }
+
+    if (staffPreference === 'specific' && !staffId) {
+        return <p className="font-sans text-sm text-muted">Please select a technician.</p>;
     }
 
     return (
         <div className="mx-auto w-full max-w-3xl space-y-8">
-            {/* Summary card */}
             <article className="rounded-2xl border border-border/70 bg-neutral/40 overflow-hidden backdrop-blur-sm">
-                {/* Services section */}
                 <div className="px-7 pt-7 pb-5 border-b border-border/40">
                     <p className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-4">
                         {t('review.service')}
@@ -83,7 +85,7 @@ export function ReviewStep() {
                                         {svc.name}
                                     </p>
                                     <p className="mt-1 font-sans text-sm font-medium text-stone-500">
-                                        {svc.durationMin} min
+                                        {svc.estimatedMinutes} min
                                     </p>
                                 </div>
                                 <span className="font-display text-[17px] font-bold text-primary shrink-0">
@@ -95,7 +97,6 @@ export function ReviewStep() {
                 </div>
 
                 <dl className="divide-y divide-border/30">
-                    {/* Technician */}
                     {allowStaffSelection && (
                         <div className="flex items-center justify-between gap-4 px-7 py-4">
                             <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase">
@@ -112,7 +113,6 @@ export function ReviewStep() {
                         </div>
                     )}
 
-                    {/* Date & Time */}
                     <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/30">
                         <div className="px-7 py-4">
                             <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
@@ -132,7 +132,6 @@ export function ReviewStep() {
                         </div>
                     </div>
 
-                    {/* Customer */}
                     <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/30">
                         <div className="px-7 py-4">
                             <dt className="font-sans text-sm font-bold tracking-[0.15em] text-stone-700 uppercase mb-1.5">
@@ -164,7 +163,6 @@ export function ReviewStep() {
                     ) : null}
                 </dl>
 
-                {/* Total footer */}
                 <div className="flex items-center justify-between gap-4 border-t border-border/50 bg-primary/5 px-7 py-5">
                     <div>
                         <p className="font-sans text-xs tracking-widest text-muted uppercase">
@@ -178,23 +176,22 @@ export function ReviewStep() {
                 </div>
             </article>
 
-            {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}
             <div className="fixed sm:static bottom-0 left-0 right-0 z-40 border-t border-stone-300/80 bg-white/95 px-4 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:border-0 sm:bg-transparent sm:p-0 sm:pt-4 sm:shadow-none sm:backdrop-blur-none">
                 <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 sm:justify-start">
                     <Button
                         variant="outlined"
                         className="rounded-full tracking-widest uppercase px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm active:scale-95 transition-all duration-200"
                         onClick={() => setStep(5)}
-                        disabled={saveBooking.isPending}
+                        disabled={createBooking.isPending}
                     >
                         ← {t('back')}
                     </Button>
                     <Button
                         className="rounded-full tracking-widest uppercase px-8 sm:px-10 py-2.5 sm:py-3 text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all duration-200"
                         onClick={handleConfirm}
-                        disabled={saveBooking.isPending}
+                        disabled={createBooking.isPending}
                     >
-                        {saveBooking.isPending ? (
+                        {createBooking.isPending ? (
                             <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
                                 {t('cta.confirm')}

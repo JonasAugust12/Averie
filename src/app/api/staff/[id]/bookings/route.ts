@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { connectToDatabase } from '@libs/mongodb';
-import { requireStaffSelfOrAdmin } from '@libs/auth-guard';
-import { serializeBooking } from '@mappers';
+import { enrichBookingListItems, loadStaffServiceMaps } from '@server/booking-enrich.server';
+import { requireStaffSelfOrAdmin } from '@guard/auth-guard';
 import { Booking } from '@models/booking.model';
 import { apiError, apiSuccess } from '../../../_lib/http';
 
@@ -41,7 +41,9 @@ export async function GET(_request: Request, context: RouteContext) {
             .sort({ date: 1, time: 1 })
             .lean();
 
-        return apiSuccess(bookings.map(serializeBooking), 'OK');
+        const maps = await loadStaffServiceMaps();
+
+        return apiSuccess(enrichBookingListItems(bookings, maps), 'OK');
     } catch (error) {
         console.error('[GET /api/staff/[id]/bookings]', error);
         return apiError('Failed to fetch staff bookings', 500);

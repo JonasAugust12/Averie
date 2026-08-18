@@ -1,5 +1,11 @@
 import { toId, toIso, toOptionalIso, type IdLike } from '@mappers/shared.mapper';
-import type { BookingDto } from '@typings/salon/booking.type';
+import type {
+    BookingDto,
+    BookingListItemDto,
+    BookingServiceSummaryDto,
+    BookingStaffSummaryDto,
+    StaffServiceMaps,
+} from '@typings/booking.type';
 
 export function serializeBooking(doc: {
     _id: IdLike;
@@ -44,6 +50,37 @@ export function serializeBooking(doc: {
         cancelledAt: toOptionalIso(doc.cancelledAt),
         createdAt: toIso(doc.createdAt),
         updatedAt: toIso(doc.updatedAt),
+    };
+}
+
+function resolveStaff(
+    doc: { staffPreference: 'any' | 'specific'; staffId?: IdLike | null },
+    staffById: Map<string, BookingStaffSummaryDto>,
+): BookingStaffSummaryDto | null {
+    if (doc.staffPreference === 'any' || !doc.staffId) {
+        return null;
+    }
+    return staffById.get(toId(doc.staffId)) ?? null;
+}
+
+function resolveServices(
+    serviceIds: IdLike[],
+    serviceById: Map<string, BookingServiceSummaryDto>,
+): BookingServiceSummaryDto[] {
+    return serviceIds
+        .map((id) => serviceById.get(toId(id)))
+        .filter((service): service is BookingServiceSummaryDto => Boolean(service));
+}
+
+export function serializeBookingListItem(
+    doc: Parameters<typeof serializeBooking>[0],
+    maps: StaffServiceMaps,
+): BookingListItemDto {
+    const base = serializeBooking(doc);
+    return {
+        ...base,
+        staff: resolveStaff(doc, maps.staffById),
+        services: resolveServices(doc.serviceIds, maps.serviceById),
     };
 }
 

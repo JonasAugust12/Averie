@@ -6,14 +6,13 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Input } from '@components/ui';
 import { Button } from '@components/common';
 import { LucideIconPicker } from './LucideIconPicker';
-import type { SalonServiceCategory } from '@typings/salon.type';
-import { slugifyCategoryId } from '@utils/service-category.util';
+import type { ServiceCategoryDto } from '@typings/service-category.type';
 import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
 
 interface CategoryFormModalProps {
-    initial?: SalonServiceCategory | null;
+    initial?: ServiceCategoryDto | null;
     existingIds: string[];
-    onSave: (category: SalonServiceCategory) => Promise<void>;
+    onSave: (category: ServiceCategoryDto) => Promise<void>;
     onClose: () => void;
     isSaving?: boolean;
 }
@@ -41,15 +40,13 @@ export function CategoryFormModal({
         const trimmed = name.trim();
         if (!trimmed) return;
 
-        const baseId = initial?.id || slugifyCategoryId(trimmed);
-        const taken = existingIds.filter((id) => id !== initial?.id);
-        const id = taken.includes(baseId) ? `${baseId}-${Date.now()}` : baseId;
-
         await onSave({
-            id,
+            id: initial?.id ?? '',
             name: trimmed,
             icon,
-            labelKey: initial?.labelKey,
+            sortOrder: initial?.sortOrder ?? existingIds.length,
+            createdAt: initial?.createdAt ?? '',
+            updatedAt: initial?.updatedAt ?? '',
         });
     };
 

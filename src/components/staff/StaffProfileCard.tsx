@@ -2,15 +2,18 @@
 
 import Image from 'next/image';
 import { ArrowLeft, Award, Mail, Phone, Sparkles } from 'lucide-react';
-import type { SalonStaff } from '@typings/salon.type';
+import type { UserDto } from '@typings/salon-user.type';
+import { formatUserName, getUserColor, getUserInitials } from '@utils/staff.util';
 
 interface StaffNavbarProps {
-    staff: SalonStaff;
+    staff: UserDto;
     onBack: () => void;
 }
 
 export function StaffNavbar({ staff, onBack }: StaffNavbarProps) {
-    const staffColor = staff.color || '#78716c';
+    const staffColor = getUserColor(staff);
+    const displayName = formatUserName(staff);
+    const initials = getUserInitials(staff);
 
     return (
         <nav className="h-14 bg-white/85 backdrop-blur-xl border-b border-stone-200/80 sticky top-0 z-40 px-3 sm:px-6">
@@ -37,14 +40,11 @@ export function StaffNavbar({ staff, onBack }: StaffNavbarProps) {
                         className="h-6 w-6 rounded-full flex items-center justify-center text-[9px] font-black text-white shrink-0"
                         style={{ backgroundColor: staffColor }}
                     >
-                        {staff.initials}
+                        {initials}
                     </div>
                     <div className="min-w-0">
                         <p className="font-sans text-[11px] font-bold text-stone-800 leading-tight truncate">
-                            {staff.name}
-                        </p>
-                        <p className="font-sans text-[9px] text-stone-500 font-medium leading-tight truncate">
-                            {staff.role}
+                            {displayName}
                         </p>
                     </div>
                 </div>
@@ -54,11 +54,14 @@ export function StaffNavbar({ staff, onBack }: StaffNavbarProps) {
 }
 
 interface StaffProfileCardProps {
-    staff: SalonStaff;
+    staff: UserDto;
 }
 
 export function StaffProfileCard({ staff }: StaffProfileCardProps) {
-    const staffColor = staff.color || '#78716c';
+    const staffColor = getUserColor(staff);
+    const displayName = formatUserName(staff);
+    const initials = getUserInitials(staff);
+    const role = staff.specialties[0] ?? 'Technician';
 
     return (
         <div className="bg-white rounded-2xl border border-stone-200/80 shadow-sm p-4 sm:p-5 relative overflow-hidden">
@@ -71,33 +74,29 @@ export function StaffProfileCard({ staff }: StaffProfileCardProps) {
                     className="h-14 w-14 sm:h-18 sm:w-18 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black text-white shadow-md shrink-0"
                     style={{ backgroundColor: staffColor }}
                 >
-                    {staff.initials}
+                    {initials}
                 </div>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5 mb-1">
                         <h1 className="font-display text-lg sm:text-2xl font-black text-stone-900 leading-none">
-                            {staff.name}
+                            {displayName}
                         </h1>
                         <span className="inline-flex items-center gap-1 bg-stone-100 text-stone-600 text-[9px] sm:text-[11px] uppercase font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded border border-stone-200/50 shrink-0">
                             <Award className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />
-                            {staff.role}
+                            {role}
                         </span>
                     </div>
                     <p className="font-sans text-[11px] sm:text-sm text-stone-500 flex items-center gap-1 flex-wrap leading-relaxed">
                         <Phone className="h-3 w-3 shrink-0" />
                         <span>{staff.phone}</span>
-                        {staff.email && (
-                            <>
-                                <span className="text-stone-300">·</span>
-                                <Mail className="h-3 w-3 shrink-0" />
-                                <span className="truncate">{staff.email}</span>
-                            </>
-                        )}
+                        <span className="text-stone-300">·</span>
+                        <Mail className="h-3 w-3 shrink-0" />
+                        <span className="truncate">{staff.email}</span>
                     </p>
                 </div>
             </div>
 
-            {staff.specialties && staff.specialties.length > 0 && (
+            {staff.specialties.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-stone-100">
                     {staff.specialties.map((spec) => (
                         <span

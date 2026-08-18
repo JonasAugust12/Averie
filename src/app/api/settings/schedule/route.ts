@@ -1,4 +1,4 @@
-import { getScheduleSettingsDto } from '@libs/schedule.server';
+import { getScheduleSettingsDto } from '@server/schedule.server';
 import { apiError, apiSuccess } from '../../_lib/http';
 
 export const runtime = 'nodejs';

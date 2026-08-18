@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2, Moon, Plus, Sun, Sunset, Trash2 } from 'lucide-react';
-import { useScheduleSettings, useSaveScheduleSettings } from '@services/salon.service';
+import { useScheduleSettings, useUpdateScheduleSettings } from '@services/schedule.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useUIStore } from '@stores/ui.store';
+import { ScheduleSettingsSkeleton } from '@components/skeletons';
 import { Button } from '@components/common';
 import { Input } from '@components/ui';
 import { cn } from '@utils/cn.util';
@@ -14,7 +15,8 @@ import {
     normalizeTimeInput,
     sortTimes,
 } from '@utils/schedule.util';
-import type { DayOffEntry, DayOffScope, DayPeriod, ScheduleSettings } from '@typings/salon.type';
+import type { DayOffDto, ScheduleSettingsDto } from '@typings/schedule-settings.type';
+import type { DayOffScope, DayPeriod } from '@typings/salon-common.type';
 
 const PERIOD_META: { key: DayPeriod; icon: typeof Sun }[] = [
     { key: 'morning', icon: Sun },
@@ -28,8 +30,8 @@ export default function ScheduleSettingsPage() {
     const t = useAdminTranslations();
     const { data: settings, isLoading } = useScheduleSettings();
     const { showConfirm, hideConfirm, setConfirmLoading } = useUIStore();
-    const saveSettings = useSaveScheduleSettings();
-    const [form, setForm] = useState<ScheduleSettings | null>(null);
+    const saveSettings = useUpdateScheduleSettings();
+    const [form, setForm] = useState<ScheduleSettingsDto | null>(null);
     const [selectedWeekday, setSelectedWeekday] = useState<number>(1);
     const [newSlot, setNewSlot] = useState<Record<DayPeriod, string>>({
         morning: '',
@@ -49,17 +51,13 @@ export default function ScheduleSettingsPage() {
         form?.weekdaySchedules.find((entry) => entry.weekday === selectedWeekday) ?? null;
 
     if (isLoading || !form || !selectedDay) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-300" />
-            </div>
-        );
+        return <ScheduleSettingsSkeleton />;
     }
 
     function updateSelectedDay(
         updater: (
-            day: ScheduleSettings['weekdaySchedules'][number],
-        ) => ScheduleSettings['weekdaySchedules'][number],
+            day: ScheduleSettingsDto['weekdaySchedules'][number],
+        ) => ScheduleSettingsDto['weekdaySchedules'][number],
     ) {
         setForm((prev) => {
             if (!prev) return prev;
@@ -107,7 +105,7 @@ export default function ScheduleSettingsPage() {
         if (!newDayOff.date) return;
         setForm((prev) => {
             if (!prev) return prev;
-            const entry: DayOffEntry = {
+            const entry: DayOffDto = {
                 id: `do-${Date.now()}`,
                 date: newDayOff.date,
                 scope: newDayOff.scope,
@@ -133,16 +131,20 @@ export default function ScheduleSettingsPage() {
     async function handleSave() {
         if (!form) return;
         showConfirm({
-            title: t('schedule.confirmSaveTitle') || 'Lưu cài đặt',
-            message:
-                t('schedule.confirmSaveMsg') || 'Bạn có chắc chắn muốn lưu những thay đổi này?',
-            confirmText: t('schedule.confirmSaveBtn') || 'Lưu',
-            cancelText: t('schedule.confirmCancelBtn') || 'Hủy',
+            title: t('schedule.confirmSaveTitle'),
+            message: t('schedule.confirmSaveMsg'),
+            confirmText: t('schedule.confirmSaveBtn'),
+            cancelText: t('schedule.confirmCancelBtn'),
             type: 'info',
             onConfirm: async () => {
                 setConfirmLoading(true);
                 try {
-                    await saveSettings.mutateAsync(form);
+                    await saveSettings.mutateAsync({
+                        allowStaffSelection: form.allowStaffSelection,
+                        allowGuestLanguageSwitch: form.allowGuestLanguageSwitch,
+                        weekdaySchedules: form.weekdaySchedules,
+                        dayOffs: form.dayOffs,
+                    });
                     hideConfirm();
                 } catch (e) {
                     console.error(e);
@@ -205,6 +207,44 @@ export default function ScheduleSettingsPage() {
                             className={cn(
                                 'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
                                 form.allowStaffSelection ? 'translate-x-6' : 'translate-x-0.5',
+                            )}
+                        />
+                    </button>
+                </div>
+            </section>
+
+            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm hover:shadow-xs transition-all duration-300">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <h2 className="font-display text-lg font-bold text-stone-900">
+                            {t('schedule.allowGuestLanguageSwitch')}
+                        </h2>
+                        <p className="font-sans text-xs text-stone-400 max-w-xl">
+                            {t('schedule.allowGuestLanguageSwitchHint')}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setForm((prev) => {
+                                if (!prev) return prev;
+                                return {
+                                    ...prev,
+                                    allowGuestLanguageSwitch: !prev.allowGuestLanguageSwitch,
+                                };
+                            })
+                        }
+                        className={cn(
+                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden hover:scale-105 active:scale-95',
+                            form.allowGuestLanguageSwitch ? 'bg-stone-800' : 'bg-stone-200',
+                        )}
+                        role="switch"
+                        aria-checked={form.allowGuestLanguageSwitch}
+                    >
+                        <span
+                            className={cn(
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
+                                form.allowGuestLanguageSwitch ? 'translate-x-6' : 'translate-x-0.5',
                             )}
                         />
                     </button>

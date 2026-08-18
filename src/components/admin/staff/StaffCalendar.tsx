@@ -9,13 +9,15 @@ import { useLocale } from 'next-intl';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 import type { BookingCalendarEvent } from '@utils/staff-calendar.util';
-import type { SalonBooking, SalonStaff } from '@typings/salon.type';
+import type { BookingListItemDto } from '@typings/booking.type';
+import type { UserDto } from '@typings/salon-user.type';
+import { formatUserName, getUserColor } from '@utils/staff.util';
 
 interface StaffCalendarProps {
     events: BookingCalendarEvent[];
-    onBookingClick?: (booking: SalonBooking) => void;
+    onBookingClick?: (booking: BookingListItemDto) => void;
     initialDate?: string;
-    staffList?: SalonStaff[];
+    staffList?: UserDto[];
 }
 
 export function StaffCalendar({
@@ -30,7 +32,7 @@ export function StaffCalendar({
     const handleEventClick = (info: EventClickArg) => {
         const type = info.event.extendedProps.type as string;
         if (type === 'booking' && onBookingClick) {
-            onBookingClick(info.event.extendedProps.booking as SalonBooking);
+            onBookingClick(info.event.extendedProps.booking as BookingListItemDto);
         }
     };
 
@@ -167,9 +169,9 @@ export function StaffCalendar({
                                 >
                                     <span
                                         className="h-2.5 w-2.5 rounded-full"
-                                        style={{ backgroundColor: s.color ?? '#78716c' }}
+                                        style={{ backgroundColor: getUserColor(s) }}
                                     />
-                                    <span>{s.name}</span>
+                                    <span>{formatUserName(s)}</span>
                                 </span>
                             ))}
                             <span className="flex items-center gap-1.5 bg-stone-100/50 border border-stone-200/50 px-2 py-0.5 rounded-md">

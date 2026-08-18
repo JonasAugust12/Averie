@@ -1,18 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Calendar, Clock, Loader2, RotateCcw } from 'lucide-react';
-import {
-    useSalonBookings,
-    useSalonServices,
-    useSalonStaff,
-    useSaveMockBooking,
-} from '@services/salon.service';
+import { Calendar, RotateCcw } from 'lucide-react';
+import { useBookings, useCancelBooking, useRestoreBooking } from '@services/booking.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
-import { usePagination } from '@hooks/usePagination';
+import { BookingsTableSkeleton } from '@components/skeletons';
 import { useUIStore } from '@stores/ui.store';
-import type { SalonBooking, BookingStatus } from '@typings/salon.type';
+import type { BookingStatus } from '@typings/salon-common.type';
+import type { BookingListItemDto } from '@typings/booking.type';
+import { formatUserName } from '@utils/staff.util';
 import { BookingStatCard, BookingFilters, BookingTableRow } from '@components/admin/bookings';
 
 export default function AdminBookingsPage() {
@@ -20,26 +17,40 @@ export default function AdminBookingsPage() {
     const [query, setQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | BookingStatus>('all');
     const [dateFilter, setDateFilter] = useState('');
+    const [page, setPage] = useState(1);
     const [expandedId, setExpandedId] = useState<string | null>(null);
+    const limit = 8;
 
-    const { data: bookings, isLoading } = useSalonBookings();
-    const { data: services } = useSalonServices();
-    const { data: staff } = useSalonStaff();
+    const listFilters = {
+        page,
+        limit,
+        status: statusFilter === 'all' ? undefined : statusFilter,
+        date: dateFilter || undefined,
+        search: query.trim() || undefined,
+    };
+
+    const { data, isLoading } = useBookings(listFilters);
     const { showConfirm, hideConfirm } = useUIStore();
-    const { mutate: saveBooking } = useSaveMockBooking();
+    const cancelBooking = useCancelBooking();
+    const restoreBooking = useRestoreBooking();
+
+    const bookingItems = data?.items;
+    const total = data?.total ?? 0;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
 
     const stats = useMemo(() => {
-        const list = bookings ?? [];
+        const items = bookingItems ?? [];
         return {
-            upcoming: list.filter((b) => b.status === 'upcoming').length,
-            completed: list.filter((b) => b.status === 'completed').length,
-            cancelled: list.filter((b) => b.status === 'cancelled').length,
-            total: list.length,
+            upcoming: items.filter((b) => b.status === 'upcoming').length,
+            cancelled: items.filter((b) => b.status === 'cancelled').length,
+            total,
         };
-    }, [bookings]);
+    }, [bookingItems, total]);
+
+    const bookings = bookingItems ?? [];
 
     const handleUpdateStatus = (
-        booking: SalonBooking,
+        booking: BookingListItemDto,
         newStatus: BookingStatus,
         e: React.MouseEvent,
     ) => {
@@ -60,57 +71,18 @@ export default function AdminBookingsPage() {
             cancelText: t('bookings.actions.cancelNo') || 'Không',
             type: isCancelling ? 'danger' : 'info',
             onConfirm: () => {
-                saveBooking({ ...booking, status: newStatus });
-                hideConfirm();
+                const mutation = isCancelling ? cancelBooking : restoreBooking;
+                mutation.mutate(booking.id, { onSuccess: () => hideConfirm() });
             },
         });
     };
 
-    const filtered = useMemo(() => {
-        let list = bookings ?? [];
-        if (statusFilter !== 'all') list = list.filter((b) => b.status === statusFilter);
-        if (dateFilter) list = list.filter((b) => b.date === dateFilter);
-        const q = query.trim().toLowerCase();
-        if (q) {
-            list = list.filter((b) => {
-                const name = `${b.customer.firstName} ${b.customer.lastName}`.toLowerCase();
-                return (
-                    name.includes(q) ||
-                    b.customer.phone.toLowerCase().includes(q) ||
-                    b.reference.toLowerCase().includes(q)
-                );
-            });
-        }
-        return list;
-    }, [bookings, statusFilter, dateFilter, query]);
-
-    const {
-        currentPage,
-        itemsPerPage,
-        totalPages,
-        goToPage,
-        nextPage,
-        prevPage,
-        canGoNext,
-        canGoPrev,
-    } = usePagination({ totalItems: filtered.length, initialItemsPerPage: 8 });
-
-    const paginatedBookings = useMemo(() => {
-        const start = (currentPage - 1) * itemsPerPage;
-        return filtered.slice(start, start + itemsPerPage);
-    }, [filtered, currentPage, itemsPerPage]);
-
     if (isLoading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
-            </div>
-        );
+        return <BookingsTableSkeleton />;
     }
 
     return (
         <div className="space-y-6">
-            {/* Page Header */}
             <div>
                 <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
                     {t('bookings.title')}
@@ -118,19 +90,12 @@ export default function AdminBookingsPage() {
                 <p className="mt-1 font-sans text-sm text-stone-500">{t('bookings.subtitle')}</p>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <BookingStatCard
                     label={t('bookings.stats.upcoming')}
                     count={stats.upcoming}
                     icon={Calendar}
                     variant="confirmed"
-                />
-                <BookingStatCard
-                    label={t('bookings.stats.completed')}
-                    count={stats.completed}
-                    icon={Clock}
-                    variant="pending"
                 />
                 <BookingStatCard
                     label={t('bookings.stats.cancelled')}
@@ -140,7 +105,6 @@ export default function AdminBookingsPage() {
                 />
             </div>
 
-            {/* Filters */}
             <BookingFilters
                 query={query}
                 onQueryChange={setQuery}
@@ -152,10 +116,9 @@ export default function AdminBookingsPage() {
                     setExpandedId(null);
                 }}
                 stats={stats}
-                onFilterChange={() => goToPage(1)}
+                onFilterChange={() => setPage(1)}
             />
 
-            {/* Table */}
             <div className="overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-180 border-collapse font-sans text-sm text-left">
@@ -185,18 +148,17 @@ export default function AdminBookingsPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-neutral-100">
-                            {paginatedBookings.map((b) => {
-                                const svc = services?.find((s) => s.id === b.serviceId);
-                                const tech =
-                                    b.staffId === 'any'
-                                        ? t('bookings.detailCard.anyStaff')
-                                        : staff?.find((s) => s.id === b.staffId)?.name;
+                            {bookings.map((b) => {
+                                const serviceName = b.services.map((s) => s.name).join(', ');
+                                const staffName = b.staff
+                                    ? formatUserName(b.staff)
+                                    : t('bookings.detailCard.anyStaff');
                                 return (
                                     <BookingTableRow
                                         key={b.id}
                                         booking={b}
-                                        serviceName={svc?.name}
-                                        staffName={tech ?? undefined}
+                                        serviceName={serviceName}
+                                        staffName={staffName}
                                         isExpanded={expandedId === b.id}
                                         onToggle={() =>
                                             setExpandedId(expandedId === b.id ? null : b.id)
@@ -209,8 +171,7 @@ export default function AdminBookingsPage() {
                     </table>
                 </div>
 
-                {/* Empty State */}
-                {filtered.length === 0 && (
+                {total === 0 && (
                     <div className="text-center py-16">
                         <Calendar className="w-12 h-12 text-neutral-300 mx-auto mb-3" />
                         <p className="text-sm font-semibold text-stone-700">
@@ -221,40 +182,39 @@ export default function AdminBookingsPage() {
                 )}
             </div>
 
-            {/* Pagination */}
-            {filtered.length > 0 && (
+            {total > 0 && (
                 <div className="flex items-center justify-between bg-white px-6 py-4 rounded-xl border border-neutral-100 shadow-sm">
                     <div className="text-xs font-semibold text-stone-500">
                         {t('bookings.table.show')}{' '}
                         <span className="font-bold text-stone-800">
-                            {Math.min(filtered.length, (currentPage - 1) * itemsPerPage + 1)}
+                            {Math.min(total, (page - 1) * limit + 1)}
                         </span>{' '}
                         -{' '}
                         <span className="font-bold text-stone-800">
-                            {Math.min(filtered.length, currentPage * itemsPerPage)}
+                            {Math.min(total, page * limit)}
                         </span>{' '}
                         {t('bookings.table.of')}{' '}
-                        <span className="font-bold text-stone-700">{filtered.length}</span>{' '}
+                        <span className="font-bold text-stone-700">{total}</span>{' '}
                         {t('bookings.table.bookingsUnit')}
                     </div>
                     <div className="flex gap-2">
                         <Button
                             variant="outlined"
                             size="sm"
-                            disabled={!canGoPrev}
-                            onClick={prevPage}
+                            disabled={page <= 1}
+                            onClick={() => setPage((p) => Math.max(1, p - 1))}
                             className="h-9 px-3 rounded-lg border-stone-200 disabled:opacity-40"
                         >
                             {t('bookings.table.prev')}
                         </Button>
                         <div className="flex items-center px-2 text-xs font-semibold text-stone-700">
-                            {currentPage} / {totalPages}
+                            {page} / {totalPages}
                         </div>
                         <Button
                             variant="outlined"
                             size="sm"
-                            disabled={!canGoNext}
-                            onClick={nextPage}
+                            disabled={page >= totalPages}
+                            onClick={() => setPage((p) => p + 1)}
                             className="h-9 px-3 rounded-lg border-stone-200 disabled:opacity-40"
                         >
                             {t('bookings.table.next')}

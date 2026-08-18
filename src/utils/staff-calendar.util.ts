@@ -1,8 +1,10 @@
-import type { SalonBooking, SalonService, SalonStaff } from '@typings/salon.type';
+import type { BookingListItemDto } from '@typings/booking.type';
+import type { BookingStatus } from '@typings/salon-common.type';
+import type { UserDto } from '@typings/salon-user.type';
+import { formatUserName, getUserColor } from '@utils/staff.util';
 
-const STATUS_COLORS: Record<SalonBooking['status'], string> = {
+const STATUS_COLORS: Record<BookingStatus, string> = {
     upcoming: '#10b981',
-    completed: '#78716c',
     cancelled: '#ef4444',
 };
 
@@ -36,14 +38,33 @@ export interface BookingCalendarEvent {
     extendedProps: Record<string, unknown>;
 }
 
+function bookingServiceNames(booking: BookingListItemDto): string {
+    return booking.services.map((s) => s.name).join(', ') || '—';
+}
+
+function bookingStaffLabel(
+    booking: BookingListItemDto,
+    staffList?: UserDto[],
+    anyStaffLabel = 'Any',
+): string {
+    if (booking.staff) {
+        return formatUserName(booking.staff);
+    }
+    if (booking.staffPreference === 'any') {
+        return anyStaffLabel;
+    }
+    const match = staffList?.find((s) => s.id === booking.staffId);
+    return match ? formatUserName(match) : anyStaffLabel;
+}
+
 export function bookingToCalendarEvent(
-    booking: SalonBooking,
+    booking: BookingListItemDto,
     serviceName: string,
     subtitle: string,
     staffColor?: string,
 ): BookingCalendarEvent {
     const start = parseSalonTime(booking.date, booking.time);
-    const end = addMinutes(start, booking.durationMin);
+    const end = addMinutes(start, booking.totalEstimatedMinutes);
     const color = staffColor || STATUS_COLORS[booking.status];
 
     return {
@@ -64,52 +85,44 @@ export function bookingToCalendarEvent(
     };
 }
 
-function activeBookings(bookings: SalonBooking[]) {
+function activeBookings(bookings: BookingListItemDto[]) {
     return bookings.filter((b) => b.status !== 'cancelled');
 }
 
 export function buildAllBookingsCalendarEvents(
-    bookings: SalonBooking[],
-    services: SalonService[],
-    staffList: SalonStaff[],
+    bookings: BookingListItemDto[],
+    staffList: UserDto[],
+    anyStaffLabel = 'Any',
 ): BookingCalendarEvent[] {
-    const serviceMap = new Map(services.map((s) => [s.id, s.name]));
-    const staffMap = new Map(staffList.map((s) => [s.id, s.name]));
-    const staffColorMap = new Map(staffList.map((s) => [s.id, s.color]));
+    const staffColorMap = new Map(staffList.map((s) => [s.id, getUserColor(s)]));
 
     return activeBookings(bookings).map((b) => {
         const customerName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
-        const serviceName = serviceMap.get(b.serviceId) ?? b.serviceId;
-        const staffName = b.staffId === 'any' ? 'Any' : (staffMap.get(b.staffId) ?? b.staffId);
-        const staffColor = b.staffId === 'any' ? undefined : staffColorMap.get(b.staffId);
+        const serviceName = bookingServiceNames(b);
+        const staffName = bookingStaffLabel(b, staffList, anyStaffLabel);
+        const staffColor =
+            b.staffId && b.staffPreference === 'specific'
+                ? staffColorMap.get(b.staffId)
+                : undefined;
         return bookingToCalendarEvent(b, serviceName, `${customerName} (${staffName})`, staffColor);
     });
 }
 
 export function buildStaffBookingsCalendarEvents(
-    bookings: SalonBooking[],
-    services: SalonService[],
+    bookings: BookingListItemDto[],
     staffId: string,
     staffColor?: string,
 ): BookingCalendarEvent[] {
-    const serviceMap = new Map(services.map((s) => [s.id, s.name]));
     const staffBookings = activeBookings(bookings).filter((b) => b.staffId === staffId);
 
     return staffBookings.map((b) => {
         const customerName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
-        const serviceName = serviceMap.get(b.serviceId) ?? b.serviceId;
+        const serviceName = bookingServiceNames(b);
         return bookingToCalendarEvent(b, serviceName, customerName, staffColor);
     });
 }
 
-export function deriveInitials(name: string): string {
-    return name
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
-        .join('');
-}
+export { deriveInitials } from '@utils/staff.util';
 
 export const STAFF_COLOR_OPTIONS = [
     '#78716c',

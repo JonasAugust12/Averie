@@ -2,31 +2,46 @@
 
 import { Check, Clock } from 'lucide-react';
 import { useBookingTranslations } from '@i18n/use-app-translations';
-import { useSalonServices, useSalonStaff, useScheduleSettings } from '@services/salon.service';
+import { useServices } from '@services/service-catalog.service';
+import { useStaff } from '@services/staff.service';
+import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 
 export function BookingSummary() {
     const t = useBookingTranslations();
-    const { step, serviceIds, staffId, date, time, customer, setStep, setStaffId } =
-        useBookingStore();
-    const { data: services } = useSalonServices();
-    const { data: staff } = useSalonStaff();
+    const {
+        step,
+        serviceIds,
+        staffPreference,
+        staffId,
+        date,
+        time,
+        customer,
+        setStep,
+        setStaffPreference,
+    } = useBookingStore();
+    const { data: services } = useServices();
+    const { data: staff } = useStaff();
     const { data: settings } = useScheduleSettings();
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
 
     const selectedServices = services?.filter((s) => serviceIds.includes(s.id)) ?? [];
     const employee =
-        staffId === 'any' ? t('anyTechnician') : staff?.find((s) => s.id === staffId)?.name;
+        staffPreference === 'any'
+            ? t('anyTechnician')
+            : staff?.find((s) => s.id === staffId)
+              ? `${staff.find((s) => s.id === staffId)!.firstName} ${staff.find((s) => s.id === staffId)!.lastName}`
+              : undefined;
 
     const hasSelection = selectedServices.length > 0;
-    const totalDuration = selectedServices.reduce((sum, s) => sum + s.durationMin, 0);
+    const totalDuration = selectedServices.reduce((sum, s) => sum + s.estimatedMinutes, 0);
     const totalPrice = selectedServices.reduce((sum, s) => sum + s.price, 0);
 
     const handleContinue = () => {
         if (!allowStaffSelection) {
-            setStaffId('any');
+            setStaffPreference('any');
             setStep(3);
         } else {
             setStep(2);
@@ -72,7 +87,9 @@ export function BookingSummary() {
                                                     </p>
                                                     <p className="mt-1 flex items-center gap-1 font-sans text-sm font-semibold text-stone-500">
                                                         <Clock className="h-3 w-3" aria-hidden />
-                                                        {t('duration', { min: svc.durationMin })}
+                                                        {t('duration', {
+                                                            min: svc.estimatedMinutes,
+                                                        })}
                                                     </p>
                                                 </div>
                                             </div>
@@ -92,7 +109,7 @@ export function BookingSummary() {
                                     )}
                                     {totalDuration > 0 && (
                                         <DetailRow
-                                            label="Total duration"
+                                            label={t('totalDuration')}
                                             value={t('duration', { min: totalDuration })}
                                         />
                                     )}

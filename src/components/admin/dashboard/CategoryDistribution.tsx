@@ -3,15 +3,16 @@
 import React, { useState } from 'react';
 import { Sparkles, Info } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import type { SalonBooking, SalonService } from '@typings/salon.type';
+import type { BookingListItemDto } from '@typings/booking.type';
+import { useAllServices } from '@services/service-catalog.service';
 
 interface CategoryDistributionProps {
-    bookings: SalonBooking[] | undefined;
-    services: SalonService[] | undefined;
+    bookings: BookingListItemDto[] | undefined;
 }
 
-export function CategoryDistribution({ bookings = [], services = [] }: CategoryDistributionProps) {
+export function CategoryDistribution({ bookings = [] }: CategoryDistributionProps) {
     const t = useAdminTranslations();
+    const { data: services } = useAllServices();
     const [hoveredBarIdx, setHoveredBarIdx] = useState<number | null>(null);
 
     // Dynamic category mappings (English for US salon clients)
@@ -38,10 +39,12 @@ export function CategoryDistribution({ bookings = [], services = [] }: CategoryD
     let totalBookingsCount = 0;
 
     bookings.forEach((b) => {
-        const service = services.find((s) => s.id === b.serviceId);
-        const catId = service?.categoryId || 'manicure-pedicure';
-        categoryTotals[catId] = (categoryTotals[catId] || 0) + 1;
-        totalBookingsCount++;
+        b.serviceIds.forEach((serviceId) => {
+            const service = services?.find((s) => s.id === serviceId);
+            const catId = service?.categoryId || 'manicure-pedicure';
+            categoryTotals[catId] = (categoryTotals[catId] || 0) + 1;
+            totalBookingsCount++;
+        });
     });
 
     // Populate categories data

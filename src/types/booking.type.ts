@@ -1,0 +1,61 @@
+import type { BookingStatus, StaffPreference } from '@typings/salon-common.type';
+
+export interface BookingCustomerDto {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email?: string;
+    note?: string;
+}
+
+export interface BookingDto {
+    id: string;
+    reference: string;
+    serviceIds: string[];
+    staffPreference: StaffPreference;
+    staffId?: string;
+    date: string;
+    time: string;
+    totalEstimatedMinutes: number;
+    totalPrice: number;
+    customer: BookingCustomerDto;
+    status: BookingStatus;
+    cancelledAt?: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface TimeSlotDto {
+    id: string;
+    time: string;
+    available: boolean;
+}
+
+export interface BookingStaffSummaryDto {
+    id: string;
+    firstName: string;
+    lastName: string;
+}
+
+export interface BookingServiceSummaryDto {
+    id: string;
+    name: string;
+    estimatedMinutes: number;
+}
+
+export interface BookingListItemDto extends BookingDto {
+    staff: BookingStaffSummaryDto | null;
+    services: BookingServiceSummaryDto[];
+}
+
+export type StaffServiceMaps = {
+    staffById: Map<string, BookingStaffSummaryDto>;
+    serviceById: Map<string, BookingServiceSummaryDto>;
+};
+
+export interface PaginatedBookingsDto {
+    items: BookingListItemDto[];
+    total: number;
+    page: number;
+    limit: number;
+}

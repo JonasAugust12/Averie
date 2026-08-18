@@ -1,4 +1,5 @@
 import { connectToDatabase } from '@libs/mongodb';
+import { getSessionUser } from '@guard/auth-guard';
 import { serializeServiceCategory, serializeService } from '@mappers';
 import { ServiceCategory } from '@models/service-category.model';
 import { Service } from '@models/service.model';
@@ -19,8 +20,11 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
     try {
         await connectToDatabase();
+        const user = await getSessionUser();
+        const isAdmin = user?.role === 'admin';
         const categories = await ServiceCategory.find().sort({ sortOrder: 1, name: 1 }).lean();
-        const services = await Service.find({ visible: true }).lean();
+        const serviceFilter = isAdmin ? {} : { visible: true };
+        const services = await Service.find(serviceFilter).lean();
 
         const data = categories.map((category) => ({
             ...serializeServiceCategory(category),

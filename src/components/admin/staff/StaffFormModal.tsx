@@ -6,18 +6,26 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Input } from '@components/ui';
 import { Button } from '@components/common';
 import { cn } from '@utils/cn.util';
-import {
-    STAFF_COLOR_OPTIONS,
-    STAFF_ROLE_OPTIONS,
-    deriveInitials,
-} from '@utils/staff-calendar.util';
+import { STAFF_COLOR_OPTIONS } from '@utils/staff-calendar.util';
 import { StaffColorPicker } from './StaffColorPicker';
 import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
-import type { SalonStaff } from '@typings/salon.type';
+
+export type StaffFormValues = {
+    id?: string;
+    email: string;
+    password?: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    note?: string;
+    specialties: string[];
+    visible: boolean;
+    color?: string;
+};
 
 interface StaffFormModalProps {
-    initial?: SalonStaff | null;
-    onSave: (staff: SalonStaff) => Promise<void>;
+    initial?: StaffFormValues | null;
+    onSave: (staff: StaffFormValues) => Promise<void>;
     onClose: () => void;
     isSaving?: boolean;
 }
@@ -33,54 +41,44 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     );
 }
 
+const emptyForm = (): StaffFormValues => ({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    note: '',
+    specialties: [],
+    visible: true,
+    color: STAFF_COLOR_OPTIONS[0],
+});
+
 export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffFormModalProps) {
     const t = useAdminTranslations();
-    const isNew = !initial?.name;
+    const isNew = !initial?.id;
     useAdminFormModalLock();
 
-    const [form, setForm] = useState<SalonStaff>(
-        initial ?? {
-            id: `st-${Date.now()}`,
-            name: '',
-            role: STAFF_ROLE_OPTIONS[0],
-            active: true,
-            initials: '',
-            phone: '',
-            email: '',
-            specialties: [],
-            color: STAFF_COLOR_OPTIONS[0],
-        },
-    );
+    const [form, setForm] = useState<StaffFormValues>(initial ?? emptyForm());
     const [specialtiesInput, setSpecialtiesInput] = useState('');
 
     useEffect(() => {
-        const base: SalonStaff = initial ?? {
-            id: `st-${Date.now()}`,
-            name: '',
-            role: STAFF_ROLE_OPTIONS[0],
-            active: true,
-            initials: '',
-            phone: '',
-            email: '',
-            specialties: [],
-            color: STAFF_COLOR_OPTIONS[0],
-        };
+        const base = initial ?? emptyForm();
         setForm(base);
         setSpecialtiesInput((base.specialties ?? []).join(', '));
     }, [initial]);
 
-    const patch = (partial: Partial<SalonStaff>) => setForm((f) => ({ ...f, ...partial }));
+    const patch = (partial: Partial<StaffFormValues>) => setForm((f) => ({ ...f, ...partial }));
 
     const handleSave = async () => {
-        if (!form.name.trim()) return;
+        if (!form.firstName.trim() || !form.lastName.trim()) return;
         const specialties = specialtiesInput
             .split(',')
             .map((s) => s.trim())
             .filter(Boolean);
         await onSave({
             ...form,
-            name: form.name.trim(),
-            initials: deriveInitials(form.name),
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
             specialties,
         });
     };
@@ -109,48 +107,52 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                 </div>
 
                 <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
-                    <Field label={t('staff.name')}>
-                        <Input
-                            placeholder="VD: Mia Tran"
-                            value={form.name}
-                            onChange={(e) => patch({ name: e.target.value })}
-                            className="border-neutral-200 bg-stone-50 focus:bg-white"
-                        />
-                    </Field>
-
-                    <Field label={t('staff.role')}>
-                        <select
-                            value={form.role}
-                            onChange={(e) => patch({ role: e.target.value })}
-                            className="w-full rounded-xl border border-neutral-200 bg-stone-50 px-3 py-2 font-sans text-sm text-stone-900 focus:ring-2 focus:ring-stone-200 focus:outline-none"
-                        >
-                            {STAFF_ROLE_OPTIONS.map((role) => (
-                                <option key={role} value={role}>
-                                    {role}
-                                </option>
-                            ))}
-                        </select>
-                    </Field>
-
                     <div className="grid grid-cols-2 gap-4">
-                        <Field label={t('staff.phone')}>
+                        <Field label={t('staff.firstName') || 'First name'}>
                             <Input
-                                placeholder="(781) 555-0100"
-                                value={form.phone ?? ''}
-                                onChange={(e) => patch({ phone: e.target.value })}
+                                value={form.firstName}
+                                onChange={(e) => patch({ firstName: e.target.value })}
                                 className="border-neutral-200 bg-stone-50 focus:bg-white"
                             />
                         </Field>
-                        <Field label={t('staff.email')}>
+                        <Field label={t('staff.lastName') || 'Last name'}>
                             <Input
-                                type="email"
-                                placeholder="name@averie.local"
-                                value={form.email ?? ''}
-                                onChange={(e) => patch({ email: e.target.value })}
+                                value={form.lastName}
+                                onChange={(e) => patch({ lastName: e.target.value })}
                                 className="border-neutral-200 bg-stone-50 focus:bg-white"
                             />
                         </Field>
                     </div>
+
+                    <Field label={t('staff.email')}>
+                        <Input
+                            type="email"
+                            placeholder="name@averie.local"
+                            value={form.email}
+                            onChange={(e) => patch({ email: e.target.value })}
+                            className="border-neutral-200 bg-stone-50 focus:bg-white"
+                        />
+                    </Field>
+
+                    {isNew && (
+                        <Field label={t('staff.password') || 'Password'}>
+                            <Input
+                                type="password"
+                                value={form.password ?? ''}
+                                onChange={(e) => patch({ password: e.target.value })}
+                                className="border-neutral-200 bg-stone-50 focus:bg-white"
+                            />
+                        </Field>
+                    )}
+
+                    <Field label={t('staff.phone')}>
+                        <Input
+                            placeholder="(781) 555-0100"
+                            value={form.phone}
+                            onChange={(e) => patch({ phone: e.target.value })}
+                            className="border-neutral-200 bg-stone-50 focus:bg-white"
+                        />
+                    </Field>
 
                     <Field label={t('staff.specialties')}>
                         <Input
@@ -163,7 +165,7 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
 
                     <Field label={t('staff.color')}>
                         <StaffColorPicker
-                            key={form.id}
+                            key={form.id ?? 'new'}
                             value={form.color}
                             onChange={(color) => patch({ color })}
                             customLabel={t('staff.colorCustom')}
@@ -181,18 +183,18 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                         </div>
                         <button
                             type="button"
-                            onClick={() => patch({ active: !form.active })}
+                            onClick={() => patch({ visible: !form.visible })}
                             className={cn(
                                 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                                form.active ? 'bg-[#2b2623]' : 'bg-[#e3e2e1]',
+                                form.visible ? 'bg-[#2b2623]' : 'bg-[#e3e2e1]',
                             )}
                             role="switch"
-                            aria-checked={form.active}
+                            aria-checked={form.visible}
                         >
                             <span
                                 className={cn(
                                     'pointer-events-none mt-0.5 ml-0.5 inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-200 ease-in-out',
-                                    form.active ? 'translate-x-5' : 'translate-x-0',
+                                    form.visible ? 'translate-x-5' : 'translate-x-0',
                                 )}
                             />
                         </button>
@@ -203,7 +205,16 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     <Button variant="outlined" onClick={onClose} className="border-neutral-200">
                         {t('staff.cancel')}
                     </Button>
-                    <Button onClick={handleSave} disabled={!form.name.trim() || isSaving}>
+                    <Button
+                        onClick={handleSave}
+                        disabled={
+                            !form.firstName.trim() ||
+                            !form.lastName.trim() ||
+                            !form.email.trim() ||
+                            (isNew && !form.password?.trim()) ||
+                            isSaving
+                        }
+                    >
                         {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('staff.save')}
                     </Button>
                 </div>

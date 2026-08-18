@@ -4,12 +4,11 @@ import { CalendarDays, Search, X } from 'lucide-react';
 import { Input } from '@components/ui';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import type { BookingStatus } from '@typings/salon.type';
+import type { BookingStatus } from '@typings/salon-common.type';
 
 interface BookingStats {
     total: number;
     upcoming: number;
-    completed: number;
     cancelled: number;
 }
 
@@ -39,7 +38,6 @@ export function BookingFilters({
     const statusTabs: { key: 'all' | BookingStatus; count: number }[] = [
         { key: 'all', count: stats.total },
         { key: 'upcoming', count: stats.upcoming },
-        { key: 'completed', count: stats.completed },
         { key: 'cancelled', count: stats.cancelled },
     ];
 

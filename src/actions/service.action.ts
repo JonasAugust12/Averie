@@ -1,12 +1,12 @@
 'use server';
 
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
+import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeService } from '@mappers';
 import { Service } from '@models/service.model';
 import type { ApiResponse } from '@typings/api.type';
-import type { ServiceDto } from '@typings/salon/service.type';
+import type { ServiceDto } from '@typings/service.type';
 import {
     createServiceSchema,
     serviceIdSchema,

@@ -1,27 +1,20 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { Loader2, Info } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { BookingStatusBadge } from '@components/admin';
-import type { SalonBooking, SalonService, SalonStaff } from '@typings/salon.type';
+import { BookingStatusBadge } from '@components/admin/bookings';
+import type { BookingListItemDto } from '@typings/booking.type';
+import { formatUserName } from '@utils/staff.util';
 
 interface RecentBookingsTableProps {
-    bookings: SalonBooking[] | undefined;
+    bookings: BookingListItemDto[] | undefined;
     isLoading: boolean;
-    services: SalonService[] | undefined;
-    staff: SalonStaff[] | undefined;
 }
 
-export function RecentBookingsTable({
-    bookings,
-    isLoading,
-    services,
-    staff,
-}: RecentBookingsTableProps) {
+export function RecentBookingsTable({ bookings, isLoading }: RecentBookingsTableProps) {
     const t = useAdminTranslations();
-    const today = bookings?.slice(0, 5) ?? [];
+    const recent = bookings?.slice(0, 5) ?? [];
 
     return (
         <section className="rounded-2xl border border-neutral-200/50 bg-white/95 p-6 shadow-md backdrop-blur-md">
@@ -70,12 +63,13 @@ export function RecentBookingsTable({
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-stone-100 bg-white">
-                                {today.map((b) => {
-                                    const svc = services?.find((s) => s.id === b.serviceId);
-                                    const tech =
-                                        b.staffId === 'any'
-                                            ? t('overview.anyTechnician')
-                                            : staff?.find((s) => s.id === b.staffId)?.name;
+                                {recent.map((b) => {
+                                    const serviceName = b.services.map((s) => s.name).join(', ');
+                                    const tech = b.staff
+                                        ? formatUserName(b.staff)
+                                        : b.staffPreference === 'any'
+                                          ? t('overview.anyTechnician')
+                                          : '—';
                                     return (
                                         <tr
                                             key={b.id}
@@ -88,10 +82,10 @@ export function RecentBookingsTable({
                                                 {b.customer.firstName} {b.customer.lastName}
                                             </td>
                                             <td className="px-4 py-3.5 text-stone-700 font-medium">
-                                                {svc?.name ?? '—'}
+                                                {serviceName || '—'}
                                             </td>
                                             <td className="px-4 py-3.5 text-stone-600 font-medium">
-                                                {tech ?? '—'}
+                                                {tech}
                                             </td>
                                             <td className="px-4 py-3.5 text-center">
                                                 <div className="flex justify-center">
@@ -108,7 +102,6 @@ export function RecentBookingsTable({
                         </table>
                     </div>
 
-                    {/* Owner Tip Banner */}
                     <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-primary-200/30 bg-primary-50/50 p-3 text-xs text-primary-800 font-sans shadow-2xs">
                         <Info className="h-4.5 w-4.5 text-primary-600/90 shrink-0 mt-0.5" />
                         <p className="font-semibold leading-relaxed">
