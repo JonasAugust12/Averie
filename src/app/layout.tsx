@@ -6,6 +6,7 @@ import { QueryProvider } from '@providers/QueryProvider';
 import { I18nProvider } from '@providers/I18nProvider';
 import { AuthProvider } from '@providers/AuthProvider';
 import { AppShell } from '@providers/AppShell';
+import { ToastProvider } from '@providers/ToastProvider';
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <I18nProvider>
                         <QueryProvider>
                             <AppShell>{children}</AppShell>
+                            <ToastProvider />
                         </QueryProvider>
                     </I18nProvider>
                 </AuthProvider>

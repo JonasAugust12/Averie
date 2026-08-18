@@ -3,68 +3,66 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CalendarDays, Loader2, Users } from 'lucide-react';
-import { useAllSalonStaff, useSalonBookings, useAllSalonServices } from '@services/salon.service';
+import { CalendarDays, Users } from 'lucide-react';
+import { useAllStaff, useStaffBookings } from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { EmptyState } from '@components/ui';
 import { StaffCalendar } from '@components/admin/staff';
 import { BookingStatCard } from '@components/admin/bookings';
-import { BookingStatusBadge } from '@components/admin';
+import { BookingStatusBadge } from '@components/admin/bookings';
+import { StaffCalendarSkeleton } from '@components/skeletons';
 import { buildStaffBookingsCalendarEvents, parseSalonTime } from '@utils/staff-calendar.util';
 import { formatUsd } from '@utils/format.util';
-import type { SalonBooking } from '@typings/salon.type';
+import { formatUserName, getUserColor, getUserInitials } from '@utils/staff.util';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 export default function StaffSchedulePage() {
     const t = useAdminTranslations();
     const params = useParams<{ id: string }>();
-    const { data: staffList, isLoading: staffLoading } = useAllSalonStaff();
-    const { data: bookings, isLoading: bookingsLoading } = useSalonBookings();
-    const { data: services, isLoading: servicesLoading } = useAllSalonServices();
-    const [selectedBooking, setSelectedBooking] = useState<SalonBooking | null>(null);
+    const { data: staffList, isLoading: staffLoading } = useAllStaff();
+    const { data: staffBookings, isLoading: bookingsLoading } = useStaffBookings(params.id);
+    const [selectedBooking, setSelectedBooking] = useState<BookingListItemDto | null>(null);
 
     const member = staffList?.find((s) => s.id === params.id);
-
-    const staffBookings = useMemo(
-        () => (bookings ?? []).filter((b) => b.staffId === params.id && b.status !== 'cancelled'),
-        [bookings, params.id],
-    );
+    const bookingItems = staffBookings;
 
     const calendarEvents = useMemo(() => {
-        if (!services) return [];
-        return buildStaffBookingsCalendarEvents(bookings ?? [], services, params.id);
-    }, [bookings, services, params.id]);
+        if (!member) return [];
+        return buildStaffBookingsCalendarEvents(
+            bookingItems ?? [],
+            params.id,
+            getUserColor(member),
+        );
+    }, [bookingItems, params.id, member]);
 
     const upcomingBookings = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        return [...staffBookings]
-            .filter((b) => parseSalonTime(b.date, b.time) >= today)
+        return [...(bookingItems ?? [])]
+            .filter((b) => b.status !== 'cancelled' && parseSalonTime(b.date, b.time) >= today)
             .sort(
                 (a, b) =>
                     parseSalonTime(a.date, a.time).getTime() -
                     parseSalonTime(b.date, b.time).getTime(),
             )
             .slice(0, 6);
-    }, [staffBookings]);
+    }, [bookingItems]);
 
-    const serviceMap = useMemo(
-        () => new Map((services ?? []).map((s) => [s.id, s.name])),
-        [services],
-    );
+    const bookings = bookingItems ?? [];
 
-    const isLoading = staffLoading || bookingsLoading || servicesLoading;
+    const isLoading = staffLoading || bookingsLoading;
 
     if (isLoading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-300" />
-            </div>
-        );
+        return <StaffCalendarSkeleton />;
     }
 
     if (!member) {
         return <EmptyState title={t('staff.notFound')} />;
     }
+
+    const displayName = formatUserName(member);
+    const initials = getUserInitials(member);
+    const role = member.specialties[0] ?? 'Technician';
 
     return (
         <div className="space-y-6">
@@ -78,15 +76,15 @@ export default function StaffSchedulePage() {
                 <div className="mt-3 flex items-center gap-4">
                     <span
                         className="flex h-14 w-14 items-center justify-center rounded-full font-sans text-base font-semibold text-white shadow-sm"
-                        style={{ backgroundColor: member.color ?? '#78716c' }}
+                        style={{ backgroundColor: getUserColor(member) }}
                     >
-                        {member.initials}
+                        {initials}
                     </span>
                     <div>
                         <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900">
-                            {member.name}
+                            {displayName}
                         </h1>
-                        <p className="font-sans text-sm text-stone-500">{member.role}</p>
+                        <p className="font-sans text-sm text-stone-500">{role}</p>
                     </div>
                 </div>
             </div>
@@ -94,7 +92,7 @@ export default function StaffSchedulePage() {
             <div className="grid gap-4 sm:grid-cols-2">
                 <BookingStatCard
                     label={t('staff.statsBookings')}
-                    count={staffBookings.length}
+                    count={bookings.filter((b) => b.status !== 'cancelled').length}
                     icon={CalendarDays}
                     variant="confirmed"
                 />
@@ -114,9 +112,6 @@ export default function StaffSchedulePage() {
                         <h2 className="font-display text-lg font-semibold text-stone-900">
                             {t('staff.upcomingTitle')}
                         </h2>
-                        <p className="mt-0.5 font-sans text-xs text-stone-400">
-                            {t('staff.upcomingSubtitle')}
-                        </p>
                     </div>
                     <div className="flex-1 space-y-2 overflow-y-auto p-4">
                         {upcomingBookings.length === 0 ? (
@@ -125,8 +120,7 @@ export default function StaffSchedulePage() {
                             </p>
                         ) : (
                             upcomingBookings.map((booking) => {
-                                const serviceName =
-                                    serviceMap.get(booking.serviceId) ?? booking.serviceId;
+                                const serviceName = booking.services.map((s) => s.name).join(', ');
                                 return (
                                     <button
                                         key={booking.id}
@@ -171,10 +165,6 @@ export default function StaffSchedulePage() {
                                 <h3 className="font-display text-lg font-semibold text-stone-900">
                                     {selectedBooking.reference}
                                 </h3>
-                                <p className="mt-1 font-sans text-sm text-stone-500">
-                                    {selectedBooking.customer.firstName}{' '}
-                                    {selectedBooking.customer.lastName}
-                                </p>
                             </div>
                             <BookingStatusBadge
                                 status={selectedBooking.status}
@@ -185,8 +175,7 @@ export default function StaffSchedulePage() {
                             <div className="flex justify-between gap-4">
                                 <dt className="text-stone-400">{t('staff.detailService')}</dt>
                                 <dd className="font-medium text-stone-800">
-                                    {serviceMap.get(selectedBooking.serviceId) ??
-                                        selectedBooking.serviceId}
+                                    {selectedBooking.services.map((s) => s.name).join(', ')}
                                 </dd>
                             </div>
                             <div className="flex justify-between gap-4">
@@ -198,7 +187,7 @@ export default function StaffSchedulePage() {
                             <div className="flex justify-between gap-4">
                                 <dt className="text-stone-400">{t('staff.detailPrice')}</dt>
                                 <dd className="font-medium text-stone-800">
-                                    {formatUsd(selectedBooking.price)}
+                                    {formatUsd(selectedBooking.totalPrice)}
                                 </dd>
                             </div>
                         </dl>

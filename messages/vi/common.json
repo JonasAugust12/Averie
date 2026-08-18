@@ -22,5 +22,11 @@
     },
     "fallback": {
         "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại."
+    },
+    "language": {
+        "en": "ENG",
+        "vi": "VI",
+        "switchToEnglish": "Chuyển sang tiếng Anh",
+        "switchToVietnamese": "Chuyển sang tiếng Việt"
     }
 }

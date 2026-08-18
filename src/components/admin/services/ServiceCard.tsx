@@ -4,13 +4,13 @@ import { Pencil, Trash2, Clock } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { formatUsd } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
-import type { SalonService } from '@typings/salon.type';
+import type { ServiceDto } from '@typings/service.type';
 
 interface ServiceCardProps {
-    service: SalonService;
-    onEdit: (svc: SalonService) => void;
-    onToggle: (svc: SalonService) => void;
-    onDelete: (svc: SalonService) => void;
+    service: ServiceDto;
+    onEdit: (svc: ServiceDto) => void;
+    onToggle: (svc: ServiceDto) => void;
+    onDelete: (svc: ServiceDto) => void;
 }
 
 export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCardProps) {
@@ -20,7 +20,7 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
         <div
             className={cn(
                 'group flex items-center justify-between p-5 rounded-2xl border transition-all duration-200',
-                service.active
+                service.visible
                     ? 'bg-white border-stone-200/80 shadow-xs hover:shadow-md hover:border-stone-350'
                     : 'bg-stone-50/60 border-stone-200/45 opacity-65',
             )}
@@ -31,14 +31,14 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
                     <h4
                         className={cn(
                             'font-sans font-bold text-[15.5px] leading-tight transition-colors',
-                            service.active
+                            service.visible
                                 ? 'text-stone-900 group-hover:text-stone-950'
                                 : 'text-stone-400 line-through',
                         )}
                     >
                         {service.name}
                     </h4>
-                    {!service.active && (
+                    {!service.visible && (
                         <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200/40 text-[10.5px] font-extrabold text-stone-400 uppercase tracking-wider">
                             {t('services.hidden')}
                         </span>
@@ -53,7 +53,7 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
                 <div className="flex items-center gap-2.5 text-stone-500 font-sans text-xs uppercase font-bold tracking-wider mt-3">
                     <span className="flex items-center gap-1.5">
                         <Clock className="h-3.5 w-3.5 text-stone-400" />
-                        {service.durationMin} Min
+                        {service.estimatedMinutes} Min
                     </span>
                     <span className="w-1.5 h-1.5 bg-stone-300 rounded-full shrink-0" />
                     <span className="text-stone-700">{formatUsd(service.price)}</span>
@@ -68,16 +68,16 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
                     onClick={() => onToggle(service)}
                     className={cn(
                         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none',
-                        service.active ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
+                        service.visible ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
                     )}
                     role="switch"
-                    aria-checked={service.active}
-                    title={service.active ? t('services.hide') : t('services.show')}
+                    aria-checked={service.visible}
+                    title={service.visible ? t('services.hide') : t('services.show')}
                 >
                     <span
                         className={cn(
                             'pointer-events-none inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-300 ease-in-out mt-0.5 ml-0.5',
-                            service.active ? 'translate-x-5' : 'translate-x-0',
+                            service.visible ? 'translate-x-5' : 'translate-x-0',
                         )}
                     />
                 </button>

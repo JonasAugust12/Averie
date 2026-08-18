@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { TrendingUp, Info } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { formatUsd } from '@utils/format.util';
-import type { SalonBooking } from '@typings/salon.type';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 interface RevenueChartProps {
-    bookings: SalonBooking[] | undefined;
+    bookings: BookingListItemDto[] | undefined;
     period: 'today' | 'week' | 'month' | 'year' | 'all';
 }
 
@@ -62,7 +62,7 @@ export function RevenueChart({ bookings = [], period }: RevenueChartProps) {
     // Adjust values if there are matching bookings
     if (bookings.length > 0) {
         // Inject slight variation depending on actual booking values to make it feel alive!
-        const totalBookingPrice = bookings.reduce((sum, b) => sum + (b.price || 0), 0);
+        const totalBookingPrice = bookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
         if (totalBookingPrice > 0) {
             const ratio = totalBookingPrice / currentData.reduce((a, b) => a + b, 0);
             currentData = currentData.map((val) =>

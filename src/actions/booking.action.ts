@@ -9,13 +9,13 @@ import {
     isDuplicateKeyError,
     validateStaffForBooking,
 } from '@utils/booking.util';
-import { requireAdmin } from '@libs/auth-guard';
+import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeBooking } from '@mappers';
-import { getAvailableSlotsForDateServer } from '@libs/schedule.server';
+import { getAvailableSlotsForDateServer } from '@server/schedule.server';
 import { Booking } from '@models/booking.model';
 import type { ApiResponse } from '@typings/api.type';
-import type { BookingDto } from '@typings/salon/booking.type';
+import type { BookingDto } from '@typings/booking.type';
 import {
     bookingIdSchema,
     createBookingSchema,

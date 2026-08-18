@@ -688,7 +688,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "$ref": "#/components/schemas/bookingDtoSchema"
+                        "$ref": "#/components/schemas/bookingListItemDtoSchema"
                     }
                 },
                 "required": ["status", "message", "data"]
@@ -799,7 +799,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "$ref": "#/components/schemas/bookingDtoSchema"
+                        "$ref": "#/components/schemas/bookingListItemDtoSchema"
                     }
                 },
                 "required": ["status", "message", "data"]
@@ -885,6 +885,90 @@
                 },
                 "required": ["id"]
             },
+            "bookingListItemDtoSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/objectIdSchema"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "serviceIds": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/objectIdSchema"
+                        }
+                    },
+                    "staffPreference": {
+                        "type": "string",
+                        "enum": ["any", "specific"]
+                    },
+                    "staffId": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/objectIdSchema"
+                            }
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "YYYY-MM-DD"
+                    },
+                    "time": {
+                        "type": "string",
+                        "description": "e.g. 09:00 AM"
+                    },
+                    "totalEstimatedMinutes": {
+                        "type": "integer"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "customer": {
+                        "$ref": "#/components/schemas/bookingCustomerDtoSchema"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["upcoming", "cancelled"]
+                    },
+                    "cancelledAt": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "staff": {
+                        "$ref": "#/components/schemas/bookingStaffSummarySchema",
+                        "nullable": true
+                    },
+                    "services": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/bookingServiceSummarySchema"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "reference",
+                    "serviceIds",
+                    "staffPreference",
+                    "date",
+                    "time",
+                    "totalEstimatedMinutes",
+                    "totalPrice",
+                    "customer",
+                    "status",
+                    "createdAt",
+                    "updatedAt",
+                    "staff",
+                    "services"
+                ]
+            },
             "bookingReferenceQuerySchema": {
                 "type": "object",
                 "properties": {
@@ -894,6 +978,21 @@
                     }
                 },
                 "required": ["reference"]
+            },
+            "bookingServiceSummarySchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/objectIdSchema"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "estimatedMinutes": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["id", "name", "estimatedMinutes"]
             },
             "bookingsListApiResponseSchema": {
                 "type": "object",
@@ -989,6 +1088,21 @@
                     }
                 },
                 "required": ["date", "serviceIds"]
+            },
+            "bookingStaffSummarySchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/objectIdSchema"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id", "firstName", "lastName"]
             },
             "createBookingSchema": {
                 "type": "object",
@@ -1234,7 +1348,7 @@
                     "items": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/bookingDtoSchema"
+                            "$ref": "#/components/schemas/bookingListItemDtoSchema"
                         }
                     },
                     "total": {
@@ -1551,7 +1665,7 @@
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/bookingDtoSchema"
+                            "$ref": "#/components/schemas/bookingListItemDtoSchema"
                         }
                     }
                 },

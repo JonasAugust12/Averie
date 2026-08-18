@@ -1,5 +1,5 @@
 import { toId, toIso, type IdLike } from '@mappers/shared.mapper';
-import type { UserDto } from '@typings/salon/user.type';
+import type { UserDto } from '@typings/salon-user.type';
 
 export function serializeUser(doc: {
     _id: IdLike;

@@ -2,32 +2,43 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { CalendarDays, Clock, Loader2, Users, ArrowRight } from 'lucide-react';
-import { useSalonBookings, useAllSalonServices, useAllSalonStaff } from '@services/salon.service';
+import { CalendarDays, Clock, Users, ArrowRight } from 'lucide-react';
+import { useBookings } from '@services/booking.service';
+import { useAllStaff } from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { StaffCalendar } from '@components/admin/staff';
 import { BookingStatCard } from '@components/admin/bookings';
-import { BookingStatusBadge } from '@components/admin/BookingStatusBadge';
+import { BookingStatusBadge } from '@components/admin/bookings';
+import { StaffCalendarSkeleton } from '@components/skeletons';
 import { buildAllBookingsCalendarEvents, parseSalonTime } from '@utils/staff-calendar.util';
 import { formatUsd } from '@utils/format.util';
-import type { SalonBooking } from '@typings/salon.type';
+import { formatUserName } from '@utils/staff.util';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 export default function AdminSchedulePage() {
     const t = useAdminTranslations();
-    const { data: bookings, isLoading: bookingsLoading } = useSalonBookings();
-    const { data: services, isLoading: servicesLoading } = useAllSalonServices();
-    const { data: staff, isLoading: staffLoading } = useAllSalonStaff();
-    const [selectedBooking, setSelectedBooking] = useState<SalonBooking | null>(null);
+    const { data: bookingsData, isLoading: bookingsLoading } = useBookings({
+        page: 1,
+        limit: 200,
+    });
+    const { data: staff, isLoading: staffLoading } = useAllStaff();
+    const [selectedBooking, setSelectedBooking] = useState<BookingListItemDto | null>(null);
+
+    const bookingItems = bookingsData?.items;
 
     const calendarEvents = useMemo(() => {
-        if (!services || !staff) return [];
-        return buildAllBookingsCalendarEvents(bookings ?? [], services, staff);
-    }, [bookings, services, staff]);
+        if (!staff) return [];
+        return buildAllBookingsCalendarEvents(
+            bookingItems ?? [],
+            staff,
+            t('overview.anyTechnician') || 'Any',
+        );
+    }, [bookingItems, staff, t]);
 
     const upcomingBookings = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        return [...(bookings ?? [])]
+        return [...(bookingItems ?? [])]
             .filter((b) => b.status !== 'cancelled' && parseSalonTime(b.date, b.time) >= today)
             .sort(
                 (a, b) =>
@@ -35,36 +46,25 @@ export default function AdminSchedulePage() {
                     parseSalonTime(b.date, b.time).getTime(),
             )
             .slice(0, 10);
-    }, [bookings]);
+    }, [bookingItems]);
 
     const stats = useMemo(() => {
-        const list = bookings ?? [];
+        const items = bookingItems ?? [];
         return {
-            total: list.filter((b) => b.status !== 'cancelled').length,
-            upcoming: list.filter((b) => b.status === 'upcoming').length,
-            cancelled: list.filter((b) => b.status === 'cancelled').length,
+            total: items.filter((b) => b.status !== 'cancelled').length,
+            upcoming: items.filter((b) => b.status === 'upcoming').length,
+            cancelled: items.filter((b) => b.status === 'cancelled').length,
         };
-    }, [bookings]);
+    }, [bookingItems]);
 
-    const serviceMap = useMemo(
-        () => new Map((services ?? []).map((s) => [s.id, s.name])),
-        [services],
-    );
-    const staffMap = useMemo(() => new Map((staff ?? []).map((s) => [s.id, s.name])), [staff]);
-
-    const isLoading = bookingsLoading || servicesLoading || staffLoading;
+    const isLoading = bookingsLoading || staffLoading;
 
     if (isLoading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-300" />
-            </div>
-        );
+        return <StaffCalendarSkeleton />;
     }
 
     return (
         <div className="space-y-6">
-            {/* Header */}
             <div>
                 <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
                     {t('schedule.title')}
@@ -75,7 +75,6 @@ export default function AdminSchedulePage() {
                 </p>
             </div>
 
-            {/* Stat Cards */}
             <div className="grid gap-4 sm:grid-cols-3">
                 <BookingStatCard
                     label={t('schedule.statsTotal')}
@@ -97,7 +96,6 @@ export default function AdminSchedulePage() {
                 />
             </div>
 
-            {/* Main Calendar & Sidebar Grid */}
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
                 <StaffCalendar
                     events={calendarEvents}
@@ -105,7 +103,6 @@ export default function AdminSchedulePage() {
                     staffList={staff}
                 />
 
-                {/* Sidebar: Upcoming Bookings */}
                 <aside className="flex flex-col rounded-2xl border border-stone-200/80 bg-white shadow-sm overflow-hidden">
                     <div className="border-b border-stone-100 bg-stone-50/60 px-5 py-4">
                         <div className="flex items-center justify-between">
@@ -116,10 +113,6 @@ export default function AdminSchedulePage() {
                                 {upcomingBookings.length}
                             </span>
                         </div>
-                        <p className="mt-1 font-sans text-xs font-medium text-stone-500">
-                            {t('schedule.upcomingSubtitle') ||
-                                'Nhấp vào một lịch hẹn để xem chi tiết'}
-                        </p>
                     </div>
 
                     <div className="flex-1 space-y-3 overflow-y-auto p-4 max-h-160">
@@ -127,17 +120,15 @@ export default function AdminSchedulePage() {
                             <div className="py-12 text-center font-sans text-stone-400 space-y-2">
                                 <CalendarDays className="mx-auto h-8 w-8 text-stone-300" />
                                 <p className="text-sm font-semibold text-stone-500">
-                                    {t('schedule.upcomingEmpty') || 'Khái có lịch hẹn nào sắp tới'}
+                                    {t('schedule.upcomingEmpty') || 'Không có lịch hẹn nào sắp tới'}
                                 </p>
                             </div>
                         ) : (
                             upcomingBookings.map((booking) => {
-                                const serviceName =
-                                    serviceMap.get(booking.serviceId) ?? booking.serviceId;
-                                const staffName =
-                                    booking.staffId === 'any'
-                                        ? t('overview.anyTechnician') || 'KTV Ngẫu nhiên'
-                                        : (staffMap.get(booking.staffId) ?? '—');
+                                const serviceName = booking.services.map((s) => s.name).join(', ');
+                                const staffName = booking.staff
+                                    ? formatUserName(booking.staff)
+                                    : t('overview.anyTechnician') || 'Any';
                                 return (
                                     <button
                                         key={booking.id}
@@ -147,7 +138,7 @@ export default function AdminSchedulePage() {
                                     >
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="min-w-0 flex-1">
-                                                <p className="truncate font-sans text-base font-bold text-stone-800 group-hover:text-stone-900">
+                                                <p className="truncate font-sans text-base font-bold text-stone-800">
                                                     {booking.customer.firstName}{' '}
                                                     {booking.customer.lastName}
                                                 </p>
@@ -160,7 +151,6 @@ export default function AdminSchedulePage() {
                                                 label={t(`status.${booking.status}`)}
                                             />
                                         </div>
-
                                         <div className="mt-3 flex items-center justify-between border-t border-stone-200/50 pt-2.5 font-sans text-xs font-medium text-stone-500">
                                             <span className="flex items-center gap-1 text-stone-600">
                                                 <Clock className="h-3.5 w-3.5 text-stone-400" />
@@ -178,7 +168,6 @@ export default function AdminSchedulePage() {
                 </aside>
             </div>
 
-            {/* Selected Booking Modal */}
             {selectedBooking && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-xs"
@@ -194,10 +183,6 @@ export default function AdminSchedulePage() {
                                     {selectedBooking.customer.firstName}{' '}
                                     {selectedBooking.customer.lastName}
                                 </h3>
-                                <p className="font-sans text-xs text-stone-500 mt-0.5">
-                                    {selectedBooking.customer.phone} ·{' '}
-                                    {selectedBooking.customer.email}
-                                </p>
                             </div>
                             <BookingStatusBadge
                                 status={selectedBooking.status}
@@ -211,8 +196,7 @@ export default function AdminSchedulePage() {
                                     {t('staff.detailService') || 'Dịch vụ'}
                                 </dt>
                                 <dd className="text-right font-bold text-stone-800">
-                                    {serviceMap.get(selectedBooking.serviceId) ??
-                                        selectedBooking.serviceId}
+                                    {selectedBooking.services.map((s) => s.name).join(', ')}
                                 </dd>
                             </div>
                             <div className="flex justify-between items-center bg-stone-50/70 rounded-xl p-3 border border-stone-100">
@@ -220,9 +204,9 @@ export default function AdminSchedulePage() {
                                     {t('overview.technician') || 'Nhân viên thực hiện'}
                                 </dt>
                                 <dd className="text-right font-bold text-stone-800">
-                                    {selectedBooking.staffId === 'any'
-                                        ? t('overview.anyTechnician') || 'KTV Ngẫu nhiên'
-                                        : (staffMap.get(selectedBooking.staffId) ?? '—')}
+                                    {selectedBooking.staff
+                                        ? formatUserName(selectedBooking.staff)
+                                        : t('overview.anyTechnician') || 'Any'}
                                 </dd>
                             </div>
                             <div className="flex justify-between items-center bg-stone-50/70 rounded-xl p-3 border border-stone-100">
@@ -238,7 +222,7 @@ export default function AdminSchedulePage() {
                                     {t('staff.detailPrice') || 'Giá dịch vụ'}
                                 </dt>
                                 <dd className="text-right font-bold text-stone-900 text-base">
-                                    {formatUsd(selectedBooking.price)}
+                                    {formatUsd(selectedBooking.totalPrice)}
                                 </dd>
                             </div>
                         </dl>

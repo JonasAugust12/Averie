@@ -1,6 +1,6 @@
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
-import { serializeBooking } from '@mappers';
+import { requireAdmin } from '@guard/auth-guard';
+import { enrichBookingListItems, loadStaffServiceMaps } from '@server/booking-enrich.server';
 import { Booking } from '@models/booking.model';
 import { bookingsListQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../_lib/http';
@@ -59,9 +59,11 @@ export async function GET(request: Request) {
             Booking.countDocuments(filter),
         ]);
 
+        const maps = await loadStaffServiceMaps();
+
         return apiSuccess(
             {
-                items: items.map(serializeBooking),
+                items: enrichBookingListItems(items, maps),
                 total,
                 page,
                 limit,

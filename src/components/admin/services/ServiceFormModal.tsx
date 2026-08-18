@@ -2,18 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { useAdminTranslations, useBookingTranslations } from '@i18n/use-app-translations';
+import { useAdminTranslations } from '@i18n/use-app-translations';
+import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
 import { Input } from '@components/ui';
 import { Button } from '@components/common';
-import { SERVICE_CATEGORIES } from '@/mocks/salon/data';
 import { cn } from '@utils/cn.util';
-import { useAdminFormModalLock } from '@hooks/useAdminFormModalLock';
-import type { SalonService, ServiceCategoryId } from '@typings/salon.type';
+import type { ServiceDto } from '@typings/service.type';
+import type { ServiceCategoryDto } from '@typings/service-category.type';
 
 interface ServiceFormModalProps {
-    initial?: SalonService | null;
-    defaultCategoryId?: ServiceCategoryId;
-    onSave: (svc: SalonService) => Promise<void>;
+    initial?: ServiceDto | null;
+    defaultCategoryId?: string;
+    categories: ServiceCategoryDto[];
+    onSave: (svc: ServiceDto) => Promise<void>;
     onClose: () => void;
     isSaving?: boolean;
 }
@@ -32,42 +33,47 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export function ServiceFormModal({
     initial,
     defaultCategoryId,
+    categories,
     onSave,
     onClose,
     isSaving,
 }: ServiceFormModalProps) {
     const t = useAdminTranslations();
-    const bt = useBookingTranslations();
-    const isNew = !initial?.name;
+    const isNew = !initial?.id;
     useAdminFormModalLock();
 
-    const [form, setForm] = useState<SalonService>(
-        initial ?? {
-            id: `svc-${Date.now()}`,
-            categoryId: defaultCategoryId ?? 'manicure-pedicure',
-            name: '',
-            description: '',
-            price: 0,
-            durationMin: 30,
-            active: true,
-        },
+    const [form, setForm] = useState<ServiceDto>(
+        () =>
+            initial ?? {
+                id: '',
+                categoryId: defaultCategoryId ?? categories[0]?.id ?? '',
+                name: '',
+                description: '',
+                price: 0,
+                estimatedMinutes: 30,
+                visible: true,
+                createdAt: '',
+                updatedAt: '',
+            },
     );
 
     useEffect(() => {
         setForm(
             initial ?? {
-                id: `svc-${Date.now()}`,
-                categoryId: defaultCategoryId ?? 'manicure-pedicure',
+                id: '',
+                categoryId: defaultCategoryId ?? categories[0]?.id ?? '',
                 name: '',
                 description: '',
                 price: 0,
-                durationMin: 30,
-                active: true,
+                estimatedMinutes: 30,
+                visible: true,
+                createdAt: '',
+                updatedAt: '',
             },
         );
-    }, [initial, defaultCategoryId]);
+    }, [initial, defaultCategoryId, categories]);
 
-    const patch = (partial: Partial<SalonService>) => setForm((f) => ({ ...f, ...partial }));
+    const patch = (partial: Partial<ServiceDto>) => setForm((f) => ({ ...f, ...partial }));
 
     const handleSave = async () => {
         if (!form.name.trim()) return;
@@ -124,16 +130,12 @@ export function ServiceFormModal({
                     <Field label={t('services.category')}>
                         <select
                             value={form.categoryId}
-                            onChange={(e) =>
-                                patch({ categoryId: e.target.value as ServiceCategoryId })
-                            }
+                            onChange={(e) => patch({ categoryId: e.target.value })}
                             className="w-full rounded-xl border border-neutral-200 bg-stone-50 px-3 py-2 font-sans text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-200"
                         >
-                            {SERVICE_CATEGORIES.map((c) => (
+                            {categories.map((c) => (
                                 <option key={c.id} value={c.id}>
-                                    {c.labelKey
-                                        ? bt(c.labelKey as 'categories.manicurePedicure')
-                                        : c.name}
+                                    {c.name}
                                 </option>
                             ))}
                         </select>
@@ -155,8 +157,10 @@ export function ServiceFormModal({
                                 type="number"
                                 min={5}
                                 step={5}
-                                value={form.durationMin}
-                                onChange={(e) => patch({ durationMin: Number(e.target.value) })}
+                                value={form.estimatedMinutes}
+                                onChange={(e) =>
+                                    patch({ estimatedMinutes: Number(e.target.value) })
+                                }
                                 className="bg-stone-50 border-neutral-200 focus:bg-white"
                             />
                         </Field>
@@ -174,18 +178,18 @@ export function ServiceFormModal({
                         </div>
                         <button
                             type="button"
-                            onClick={() => patch({ active: !form.active })}
+                            onClick={() => patch({ visible: !form.visible })}
                             className={cn(
                                 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none',
-                                form.active ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
+                                form.visible ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
                             )}
                             role="switch"
-                            aria-checked={form.active}
+                            aria-checked={form.visible}
                         >
                             <span
                                 className={cn(
                                     'pointer-events-none inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-305 ease-in-out mt-0.5 ml-0.5',
-                                    form.active ? 'translate-x-5' : 'translate-x-0',
+                                    form.visible ? 'translate-x-5' : 'translate-x-0',
                                 )}
                             />
                         </button>

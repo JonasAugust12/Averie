@@ -21,7 +21,7 @@ const GENERATOR_META_KEYS = new Set([
 ]);
 
 /** Routes excluded from published docs (meta / examples). */
-const EXCLUDED_PATHS = new Set(['/docs', '/openapi.json', '/todos']);
+const EXCLUDED_PATHS = new Set(['/docs', '/openapi.json']);
 
 function loadGeneratedSpec(): Record<string, unknown> | null {
     try {

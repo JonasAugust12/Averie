@@ -12,14 +12,15 @@ import {
     TimeStep,
 } from '@components/booking';
 import { useBookingStore } from '@stores/booking.store';
-import { useScheduleSettings } from '@services/salon.service';
+import { useScheduleSettings } from '@services/schedule.service';
 import { cn } from '@utils/cn.util';
 
 /** Sidebar "Your Booking" appears on service, time, and customer steps. */
 const SIDEBAR_STEPS = new Set([1, 4, 5]);
 
 export function BookPageView() {
-    const { step, serviceIds, staffId, date, time, customer, setStep } = useBookingStore();
+    const { step, serviceIds, staffPreference, staffId, date, time, customer, setStep } =
+        useBookingStore();
     const resetBookingFlow = useBookingStore((s) => s.resetBookingFlow);
     const { data: settings } = useScheduleSettings();
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
@@ -34,7 +35,7 @@ export function BookPageView() {
     useEffect(() => {
         if (step > 1 && serviceIds.length === 0) {
             setStep(1);
-        } else if (step > 2 && allowStaffSelection && !staffId) {
+        } else if (step > 2 && allowStaffSelection && staffPreference === 'specific' && !staffId) {
             setStep(2);
         } else if (step > 3 && !date) {
             setStep(3);
@@ -43,7 +44,17 @@ export function BookPageView() {
         } else if (step > 5 && (!customer || !customer.firstName || !customer.phone)) {
             setStep(5);
         }
-    }, [step, serviceIds, staffId, date, time, customer, allowStaffSelection, setStep]);
+    }, [
+        step,
+        serviceIds,
+        staffPreference,
+        staffId,
+        date,
+        time,
+        customer,
+        allowStaffSelection,
+        setStep,
+    ]);
 
     return (
         <div className="min-h-screen bg-background text-foreground">

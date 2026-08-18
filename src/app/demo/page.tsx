@@ -1,35 +1,14 @@
 'use client';
 
-import { CheckCircle2, Database, Loader2, Server } from 'lucide-react';
+import { CheckCircle2, Loader2, Server } from 'lucide-react';
 import { useHealthCheck } from '@services/health.service';
-import { useTodos, useCreateTodo } from '@services/todo.service';
 import { useCommonTranslations, usePageTranslations } from '@i18n/use-app-translations';
-import { useUIStore } from '@stores/ui.store';
-import { Button, AppShell } from '@components/common';
-import { useState } from 'react';
+import { AppShell } from '@components/common';
 
 export default function DemoPage() {
     const t = usePageTranslations();
     const common = useCommonTranslations();
     const { data: health, isLoading: isHealthLoading } = useHealthCheck();
-    const { data: todos, isLoading: isTodosLoading } = useTodos();
-    const createTodo = useCreateTodo();
-    const showLoading = useUIStore((s) => s.showLoading);
-    const hideLoading = useUIStore((s) => s.hideLoading);
-    const [title, setTitle] = useState('');
-
-    async function handleCreateTodo(event: React.FormEvent) {
-        event.preventDefault();
-        if (!title.trim()) return;
-
-        showLoading(common('status.loading'));
-        try {
-            await createTodo.mutateAsync({ title: title.trim() });
-            setTitle('');
-        } finally {
-            hideLoading();
-        }
-    }
 
     return (
         <AppShell>
@@ -77,7 +56,7 @@ export default function DemoPage() {
 
                     <article className="rounded-xl border border-border bg-surface p-5">
                         <div className="mb-3 flex items-center gap-2 text-primary">
-                            <Database className="h-5 w-5" />
+                            <Server className="h-5 w-5" />
                             <h2 className="font-display text-lg font-medium">
                                 {t('home.stackTitle')}
                             </h2>
@@ -89,51 +68,6 @@ export default function DemoPage() {
                             <li>MongoDB (Mongoose) on Vercel serverless</li>
                         </ul>
                     </article>
-                </section>
-
-                <section className="rounded-xl border border-border bg-surface p-5">
-                    <h2 className="mb-4 font-display text-xl text-primary">
-                        {t('home.todosTitle')}
-                    </h2>
-
-                    <form
-                        onSubmit={handleCreateTodo}
-                        className="mb-4 flex flex-col gap-2 sm:flex-row"
-                    >
-                        <input
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder={t('home.todoPlaceholder')}
-                            className="flex-1 rounded-md border border-border bg-neutral px-3 py-2 font-sans text-sm text-primary outline-none focus:border-primary"
-                        />
-                        <Button type="submit" disabled={createTodo.isPending || !title.trim()}>
-                            {common('actions.save')}
-                        </Button>
-                    </form>
-
-                    {isTodosLoading ? (
-                        <p className="flex items-center gap-2 font-sans text-sm text-muted">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            {common('status.loading')}
-                        </p>
-                    ) : (
-                        <ul className="space-y-2">
-                            {(todos ?? []).length === 0 ? (
-                                <li className="font-sans text-sm text-muted">
-                                    {t('home.emptyTodos')}
-                                </li>
-                            ) : (
-                                (todos ?? []).map((todo) => (
-                                    <li
-                                        key={todo._id}
-                                        className="rounded-md border border-border bg-neutral px-3 py-2 font-sans text-sm text-primary"
-                                    >
-                                        {todo.title}
-                                    </li>
-                                ))
-                            )}
-                        </ul>
-                    )}
                 </section>
             </main>
         </AppShell>

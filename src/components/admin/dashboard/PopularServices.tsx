@@ -4,16 +4,38 @@ import React from 'react';
 import { Star } from 'lucide-react';
 import { formatUsd } from '@utils/format.util';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import type { SalonBooking, SalonService } from '@typings/salon.type';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 interface PopularServicesProps {
-    bookings: SalonBooking[] | undefined;
-    services: SalonService[] | undefined;
+    bookings: BookingListItemDto[] | undefined;
 }
 
-export function PopularServices({ bookings, services }: PopularServicesProps) {
+export function PopularServices({ bookings }: PopularServicesProps) {
     const t = useAdminTranslations();
-    if (!services || services.length === 0) {
+
+    const serviceStatsMap = new Map<
+        string,
+        { id: string; name: string; count: number; revenue: number }
+    >();
+
+    (bookings ?? []).forEach((b) => {
+        if (b.status === 'cancelled') return;
+        b.services.forEach((svc) => {
+            const existing = serviceStatsMap.get(svc.id) ?? {
+                id: svc.id,
+                name: svc.name,
+                count: 0,
+                revenue: 0,
+            };
+            existing.count += 1;
+            existing.revenue += b.totalPrice / Math.max(b.services.length, 1);
+            serviceStatsMap.set(svc.id, existing);
+        });
+    });
+
+    const computedServiceStats = [...serviceStatsMap.values()];
+
+    if (computedServiceStats.length === 0) {
         return (
             <div className="rounded-2xl border border-white/50 bg-white/80 p-5 shadow-md backdrop-blur-md text-center text-muted font-sans text-sm">
                 {t('overview.servicesNoData')}
@@ -21,34 +43,6 @@ export function PopularServices({ bookings, services }: PopularServicesProps) {
         );
     }
 
-    // Let's count booking metrics dynamically
-    const computedServiceStats = services.map((s) => {
-        const serviceBookings = bookings?.filter((b) => b.serviceId === s.id) ?? [];
-        const count = serviceBookings.length;
-        const totalRevenue = count * s.price;
-
-        const categoryKeys: Record<string, string> = {
-            'manicure-pedicure': 'categoryManicure',
-            'gel-polish': 'categoryGel',
-            'nail-enhancements': 'categoryEnhancements',
-            'add-ons': 'categoryAddons',
-            waxing: 'categoryWaxing',
-            facials: 'categoryFacials',
-        };
-        const key = categoryKeys[s.categoryId];
-        const categoryName = key ? t(`overview.${key}`) : t('overview.categoryOthers');
-
-        return {
-            id: s.id,
-            name: s.name,
-            category: categoryName,
-            price: s.price,
-            count,
-            revenue: totalRevenue,
-        };
-    });
-
-    // Sort by count descending, slice top 4
     const popularList = [...computedServiceStats].sort((a, b) => b.count - a.count).slice(0, 4);
 
     return (
@@ -90,9 +84,6 @@ export function PopularServices({ bookings, services }: PopularServicesProps) {
                                 <td className="px-3.5 py-2.5">
                                     <p className="font-semibold text-[14.5px] text-primary-900">
                                         {service.name}
-                                    </p>
-                                    <p className="text-[11.5px] text-stone-500 font-medium mt-0.5">
-                                        {service.category}
                                     </p>
                                 </td>
                                 <td className="px-3.5 py-2.5 text-center font-medium text-[13.5px] text-stone-700">

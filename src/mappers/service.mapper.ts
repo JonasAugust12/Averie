@@ -1,5 +1,5 @@
 import { toId, toIso, type IdLike } from '@mappers/shared.mapper';
-import type { ServiceDto } from '@typings/salon/service.type';
+import type { ServiceDto } from '@typings/service.type';
 
 export function serializeService(doc: {
     _id: IdLike;

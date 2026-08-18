@@ -2,22 +2,16 @@
 
 import { ArrowLeft, Clock } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { BookingStatusBadge } from '@components/admin';
-import type { SalonBooking } from '@typings/salon.type';
+import { BookingStatusBadge } from '@components/admin/bookings';
+import type { BookingListItemDto } from '@typings/booking.type';
 
 interface StaffUpcomingListProps {
-    bookings: SalonBooking[];
-    serviceMap: Map<string, string>;
+    bookings: BookingListItemDto[];
     staffColor: string;
     onBack: () => void;
 }
 
-export function StaffUpcomingList({
-    bookings,
-    serviceMap,
-    staffColor,
-    onBack,
-}: StaffUpcomingListProps) {
+export function StaffUpcomingList({ bookings, staffColor, onBack }: StaffUpcomingListProps) {
     const t = useAdminTranslations();
 
     return (
@@ -46,16 +40,15 @@ export function StaffUpcomingList({
                     </div>
                 ) : (
                     bookings.map((b) => {
-                        const serviceName = serviceMap.get(b.serviceId) ?? b.serviceId;
+                        const serviceName = b.services.map((s) => s.name).join(', ');
                         const clientName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
                         const [timePart, ampm] = [b.time.split(' ')[0], b.time.split(' ')[1]];
 
                         return (
                             <div
                                 key={b.id}
-                                className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-stone-100/80 bg-stone-50/40 active:bg-white hover:bg-white hover:border-stone-200 transition-all duration-200"
+                                className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-stone-100/80 bg-stone-50/40"
                             >
-                                {/* Time bubble */}
                                 <div
                                     className="shrink-0 rounded-xl px-2.5 py-2 text-center min-w-13"
                                     style={{ backgroundColor: `${staffColor}1a` }}
@@ -76,7 +69,6 @@ export function StaffUpcomingList({
                                     )}
                                 </div>
 
-                                {/* Booking details */}
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-start justify-between gap-1 mb-1">
                                         <h4 className="font-sans text-sm sm:text-base font-bold text-stone-900 leading-tight truncate">
@@ -91,7 +83,7 @@ export function StaffUpcomingList({
                                         {serviceName}
                                         <span className="mx-1 text-stone-300">·</span>
                                         <span className="font-semibold text-stone-600">
-                                            {b.durationMin}m
+                                            {b.totalEstimatedMinutes}m
                                         </span>
                                     </p>
                                 </div>

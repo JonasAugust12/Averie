@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Loader2, Moon, Sun, Sunset } from 'lucide-react';
-import { useAvailableSlots } from '@services/salon.service';
+import { Moon, Sun, Sunset } from 'lucide-react';
+import { useAvailableSlots } from '@services/booking.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
+import { TimeSlotsSkeleton } from '@components/skeletons';
 import {
     getPeriodForTime,
     getWeekdayFromDate,
@@ -15,8 +16,8 @@ import { cn } from '@utils/cn.util';
 
 export function TimeStep() {
     const t = useBookingTranslations();
-    const { date, time, setTime, setStep } = useBookingStore();
-    const { data: slots, isLoading } = useAvailableSlots(date);
+    const { date, time, serviceIds, setTime, setStep } = useBookingStore();
+    const { data: slots, isLoading } = useAvailableSlots(date, serviceIds);
 
     const weekday = date ? getWeekdayFromDate(date) : 1;
 
@@ -42,12 +43,7 @@ export function TimeStep() {
     }, [slots, weekday]);
 
     if (isLoading) {
-        return (
-            <div className="flex items-center gap-3 font-sans text-sm text-muted">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="tracking-widest uppercase text-xs">Loading…</span>
-            </div>
-        );
+        return <TimeSlotsSkeleton />;
     }
 
     return (
@@ -104,7 +100,6 @@ export function TimeStep() {
                 </section>
             ))}
 
-            {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}
             <div className="fixed sm:static bottom-0 left-0 right-0 z-40 border-t border-stone-300/80 bg-white/95 px-4 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:border-0 sm:bg-transparent sm:p-0 sm:pt-2 sm:shadow-none sm:backdrop-blur-none">
                 <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-3 sm:justify-start">
                     <Button

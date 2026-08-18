@@ -4,9 +4,11 @@ import { X, AlertTriangle, AlertCircle, Info, XCircle } from 'lucide-react';
 import { cn } from '@utils/cn.util';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import { useUIStore } from '@stores/ui.store';
+import { useCommonTranslations } from '@i18n/use-app-translations';
 
 export default function GlobalConfirmPopup() {
     const { confirmPopup, isConfirmLoading, hideConfirm } = useUIStore();
+    const t = useCommonTranslations();
 
     usePreventScroll(!!confirmPopup);
 
@@ -15,8 +17,8 @@ export default function GlobalConfirmPopup() {
     const {
         title,
         message,
-        confirmText = 'Xác nhận',
-        cancelText = 'Hủy',
+        confirmText = t('actions.confirm'),
+        cancelText = t('actions.cancel'),
         type = 'warning',
         isAlert = false,
         onConfirm,

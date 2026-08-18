@@ -37,8 +37,25 @@ export const timeSlotDtoSchema = z.object({
     available: z.boolean(),
 });
 
+export const bookingStaffSummarySchema = z.object({
+    id: objectIdSchema,
+    firstName: z.string(),
+    lastName: z.string(),
+});
+
+export const bookingServiceSummarySchema = z.object({
+    id: objectIdSchema,
+    name: z.string(),
+    estimatedMinutes: z.number().int(),
+});
+
+export const bookingListItemDtoSchema = bookingDtoSchema.extend({
+    staff: bookingStaffSummarySchema.nullable(),
+    services: z.array(bookingServiceSummarySchema),
+});
+
 export const paginatedBookingsDataSchema = z.object({
-    items: z.array(bookingDtoSchema),
+    items: z.array(bookingListItemDtoSchema),
     total: z.number().int(),
     page: z.number().int(),
     limit: z.number().int(),
@@ -53,7 +70,7 @@ export const bookingDetailApiResponseSchema = z
     .object({
         status: z.number().int().describe('HTTP status code (mirrored in body)'),
         message: z.string(),
-        data: bookingDtoSchema,
+        data: bookingListItemDtoSchema,
     })
     .meta({ examples: [{ status: 200, message: 'OK', data: bookingExample }] });
 
@@ -61,7 +78,7 @@ export const bookingByReferenceApiResponseSchema = z
     .object({
         status: z.number().int().describe('HTTP status code (mirrored in body)'),
         message: z.string(),
-        data: bookingDtoSchema,
+        data: bookingListItemDtoSchema,
     })
     .meta({ examples: [{ status: 200, message: 'OK', data: bookingExample }] });
 
@@ -85,6 +102,6 @@ export const staffBookingsApiResponseSchema = z
     .object({
         status: z.number().int().describe('HTTP status code (mirrored in body)'),
         message: z.string(),
-        data: z.array(bookingDtoSchema),
+        data: z.array(bookingListItemDtoSchema),
     })
     .meta({ examples: [{ status: 200, message: 'OK', data: [bookingExample] }] });

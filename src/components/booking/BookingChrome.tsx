@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Check, X } from 'lucide-react';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher } from '@components/shared';
-import { useScheduleSettings } from '@services/salon.service';
+import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingStore, type BookingStep } from '@stores/booking.store';
 import { cn } from '@utils/cn.util';
 
@@ -33,7 +33,8 @@ interface BookingChromeProps {
 
 export function BookingChrome({ step, complete = false }: BookingChromeProps) {
     const t = useBookingTranslations();
-    const { serviceIds, staffId, date, time, customer, setStep } = useBookingStore();
+    const { serviceIds, staffPreference, staffId, date, time, customer, setStep } =
+        useBookingStore();
     const { data: settings } = useScheduleSettings();
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
 
@@ -42,7 +43,7 @@ export function BookingChrome({ step, complete = false }: BookingChromeProps) {
         if (targetStep === 1) return true;
         if (serviceIds.length === 0) return false;
         if (targetStep === 2) return true;
-        if (allowStaffSelection && !staffId) return false;
+        if (allowStaffSelection && staffPreference === 'specific' && !staffId) return false;
         if (targetStep === 3) return true;
         if (!date) return false;
         if (targetStep === 4) return true;
@@ -75,7 +76,7 @@ export function BookingChrome({ step, complete = false }: BookingChromeProps) {
                 </Link>
 
                 <div className="flex items-center gap-2 sm:gap-3">
-                    <LanguageSwitcher />
+                    <LanguageSwitcher scope="guest" />
                     {/* Cancel button */}
                     <Link
                         href="/"

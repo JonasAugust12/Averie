@@ -3,12 +3,12 @@
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
+import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeUser } from '@mappers';
 import { User } from '@models/user.model';
 import type { ApiResponse } from '@typings/api.type';
-import type { UserDto } from '@typings/salon/user.type';
+import type { UserDto } from '@typings/salon-user.type';
 import {
     createStaffSchema,
     resetStaffPasswordSchema,

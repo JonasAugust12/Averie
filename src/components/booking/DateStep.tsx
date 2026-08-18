@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { useScheduleSettings } from '@services/salon.service';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
+import { ScheduleSettingsSkeleton } from '@components/skeletons';
 import { formatDisplayDate } from '@utils/format.util';
 import { isDateFullyClosed } from '@utils/schedule.util';
 import { cn } from '@utils/cn.util';
@@ -58,11 +59,7 @@ export function DateStep() {
     }, [cursor, settings, today]);
 
     if (isLoading) {
-        return (
-            <p className="flex items-center gap-2 font-sans text-sm text-muted">
-                <Loader2 className="h-4 w-4 animate-spin" />
-            </p>
-        );
+        return <ScheduleSettingsSkeleton />;
     }
 
     const monthLabel = cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });

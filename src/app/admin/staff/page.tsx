@@ -1,61 +1,128 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Plus, Search, Loader2, Users, UserCheck, UserX } from 'lucide-react';
-import { useAllSalonStaff, useSaveMockStaff, useDeleteMockStaff } from '@services/salon.service';
+import { Plus, Search, Users, UserCheck, UserX } from 'lucide-react';
+import {
+    useAllStaff,
+    useCreateStaff,
+    useUpdateStaff,
+    useDeleteStaff,
+} from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common/Button';
+import { StaffGridSkeleton } from '@components/skeletons';
 import { useUIStore } from '@stores/ui.store';
 import { StaffCard, StaffFormModal } from '@components/admin/staff';
-import { BookingStatCard } from '@components/admin/bookings/BookingStatCard';
-import type { SalonStaff } from '@typings/salon.type';
+import { BookingStatCard } from '@components/admin/bookings';
+import type { UserDto } from '@typings/salon-user.type';
+import type { CreateStaffInput, UpdateStaffInput } from '@validations/staff.schema';
+
+import type { StaffFormValues } from '@components/admin/staff/StaffFormModal';
 
 export default function AdminStaffPage() {
     const t = useAdminTranslations();
-    const { data: staff, isLoading } = useAllSalonStaff();
-    const saveStaff = useSaveMockStaff();
-    const deleteStaff = useDeleteMockStaff();
+    const { data: staff, isLoading } = useAllStaff();
+    const createStaff = useCreateStaff();
+    const updateStaff = useUpdateStaff();
+    const deleteStaff = useDeleteStaff();
     const { showConfirm, hideConfirm } = useUIStore();
 
     const [query, setQuery] = useState('');
-    const [editing, setEditing] = useState<SalonStaff | null | 'new'>(null);
+    const [editing, setEditing] = useState<StaffFormValues | null | 'new'>(null);
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
         if (!q) return staff ?? [];
-        return (staff ?? []).filter(
-            (s) =>
-                s.name.toLowerCase().includes(q) ||
-                s.role.toLowerCase().includes(q) ||
-                s.email?.toLowerCase().includes(q),
-        );
+        return (staff ?? []).filter((s) => {
+            const name = `${s.firstName} ${s.lastName}`.toLowerCase();
+            return (
+                name.includes(q) ||
+                s.email.toLowerCase().includes(q) ||
+                s.phone.toLowerCase().includes(q) ||
+                s.specialties.some((spec) => spec.toLowerCase().includes(q))
+            );
+        });
     }, [staff, query]);
 
-    const totalActive = (staff ?? []).filter((s) => s.active).length;
+    const totalVisible = (staff ?? []).filter((s) => s.visible).length;
     const totalAll = (staff ?? []).length;
-    const totalHidden = totalAll - totalActive;
+    const totalHidden = totalAll - totalVisible;
+
+    function userToForm(user: UserDto): StaffFormValues {
+        return {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
+            note: user.note,
+            specialties: user.specialties,
+            visible: user.visible,
+            color: user.staffProfile?.color,
+        };
+    }
 
     function openAdd() {
         setEditing('new');
     }
 
-    function openEdit(member: SalonStaff) {
-        setEditing(member);
+    function openEdit(member: UserDto) {
+        setEditing(userToForm(member));
     }
 
-    async function handleSave(member: SalonStaff) {
-        await saveStaff.mutateAsync(member);
+    async function handleSave(values: StaffFormValues) {
+        if (editing === 'new' || !values.id) {
+            const input: CreateStaffInput = {
+                email: values.email,
+                password: values.password ?? '',
+                firstName: values.firstName,
+                lastName: values.lastName,
+                phone: values.phone,
+                note: values.note,
+                specialties: values.specialties,
+                visible: values.visible,
+                staffProfile: values.color ? { color: values.color } : undefined,
+            };
+            await createStaff.mutateAsync(input);
+        } else {
+            const input: UpdateStaffInput = {
+                email: values.email,
+                firstName: values.firstName,
+                lastName: values.lastName,
+                phone: values.phone,
+                note: values.note,
+                specialties: values.specialties,
+                visible: values.visible,
+                staffProfile: values.color ? { color: values.color } : undefined,
+            };
+            await updateStaff.mutateAsync({ id: values.id, input });
+        }
         setEditing(null);
     }
 
-    async function handleToggle(member: SalonStaff) {
-        await saveStaff.mutateAsync({ ...member, active: !member.active });
+    function handleToggle(member: UserDto) {
+        showConfirm({
+            title: member.visible
+                ? t('staff.confirmHideTitle') || 'Hide staff'
+                : t('staff.confirmShowTitle') || 'Show staff',
+            message: `${member.firstName} ${member.lastName}`,
+            confirmText: t('staff.save') || 'Confirm',
+            cancelText: t('staff.cancel') || 'Cancel',
+            type: 'info',
+            onConfirm: async () => {
+                await updateStaff.mutateAsync({
+                    id: member.id,
+                    input: { visible: !member.visible },
+                });
+                hideConfirm();
+            },
+        });
     }
 
-    function handleDelete(member: SalonStaff) {
+    function handleDelete(member: UserDto) {
         showConfirm({
             title: t('staff.confirmDeleteTitle') || 'Xóa nhân viên',
-            message: `${t('staff.confirmDeleteDesc') || 'Bạn có chắc muốn xóa'} "${member.name}"?`,
+            message: `${t('staff.confirmDeleteDesc') || 'Bạn có chắc muốn xóa'} "${member.firstName} ${member.lastName}"?`,
             confirmText: t('staff.delete') || 'Xóa',
             cancelText: t('staff.cancel') || 'Hủy',
             type: 'danger',
@@ -67,16 +134,11 @@ export default function AdminStaffPage() {
     }
 
     if (isLoading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-300" />
-            </div>
-        );
+        return <StaffGridSkeleton />;
     }
 
     return (
         <div className="space-y-6">
-            {/* Page Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
@@ -85,7 +147,7 @@ export default function AdminStaffPage() {
                     <p className="mt-1 font-sans text-sm text-stone-500">
                         {t('staff.subtitle')} —{' '}
                         <span className="font-semibold text-stone-700">
-                            {totalActive}/{totalAll}
+                            {totalVisible}/{totalAll}
                         </span>{' '}
                         {t('staff.visibleCount')}
                     </p>
@@ -99,7 +161,6 @@ export default function AdminStaffPage() {
                 </Button>
             </div>
 
-            {/* Stats */}
             <div className="grid gap-4 sm:grid-cols-3">
                 <BookingStatCard
                     label={t('staff.statsTotal')}
@@ -109,7 +170,7 @@ export default function AdminStaffPage() {
                 />
                 <BookingStatCard
                     label={t('staff.statsActive')}
-                    count={totalActive}
+                    count={totalVisible}
                     icon={UserCheck}
                     variant="pending"
                 />
@@ -121,7 +182,6 @@ export default function AdminStaffPage() {
                 />
             </div>
 
-            {/* Search Bar */}
             <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-stone-200/60 p-4 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:max-w-xl">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
@@ -133,21 +193,13 @@ export default function AdminStaffPage() {
                         className="pl-10 pr-4 py-2.5 w-full bg-stone-50/50 hover:bg-stone-50 focus:bg-white rounded-xl border border-stone-200/80 focus:border-stone-300 focus:ring-2 focus:ring-stone-100 transition-all font-sans text-sm outline-none placeholder:text-stone-400 text-stone-800"
                     />
                 </div>
-                <div className="text-xs font-semibold text-stone-500 hidden md:block pr-2">
-                    💡 {t('staff.searchTip') || 'Gõ tên hoặc vai trò để lọc danh sách nhân viên.'}
-                </div>
             </div>
 
-            {/* Staff Grid */}
             {filtered.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-stone-200 bg-stone-50/50 px-6 py-16 text-center">
                     <Users className="mx-auto mb-4 h-10 w-10 text-stone-300" />
                     <p className="font-sans text-base font-semibold text-stone-600">
                         {t('staff.emptyState')}
-                    </p>
-                    <p className="mt-1 font-sans text-sm text-stone-400">
-                        {t('staff.emptyStateSubtitle') ||
-                            'Bắt đầu bằng cách thêm nhân viên đầu tiên của bạn.'}
                     </p>
                     <Button
                         onClick={openAdd}
@@ -176,7 +228,7 @@ export default function AdminStaffPage() {
                     initial={editing === 'new' ? null : editing}
                     onSave={handleSave}
                     onClose={() => setEditing(null)}
-                    isSaving={saveStaff.isPending}
+                    isSaving={createStaff.isPending || updateStaff.isPending}
                 />
             )}
         </div>

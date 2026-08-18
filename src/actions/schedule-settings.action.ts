@@ -1,13 +1,13 @@
 'use server';
 
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
+import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeScheduleSettings } from '@mappers';
-import { getSalonSettingsDocument } from '@libs/schedule.server';
+import { getSalonSettingsDocument } from '@server/schedule.server';
 import { SalonSettings } from '@models/salon-settings.model';
 import type { ApiResponse } from '@typings/api.type';
-import type { ScheduleSettingsDto } from '@typings/salon/schedule.type';
+import type { ScheduleSettingsDto } from '@typings/schedule-settings.type';
 import {
     updateScheduleSettingsSchema,
     type UpdateScheduleSettingsInput,

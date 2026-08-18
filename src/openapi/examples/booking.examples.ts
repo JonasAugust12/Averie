@@ -17,12 +17,33 @@ export const bookingCustomerExample = {
     note: 'Prefer gel finish',
 };
 
+export const bookingStaffSummaryExample = {
+    id: EXAMPLE_STAFF_ID,
+    firstName: 'Alex',
+    lastName: 'Nguyen',
+};
+
+export const bookingServiceSummaryExample = {
+    id: EXAMPLE_SERVICE_MANICURE_ID,
+    name: 'Classic Manicure',
+    estimatedMinutes: 45,
+};
+
 export const bookingExample = {
     id: EXAMPLE_BOOKING_ID,
     reference: EXAMPLE_REFERENCE,
     serviceIds: [EXAMPLE_SERVICE_MANICURE_ID, EXAMPLE_SERVICE_GEL_ID],
     staffPreference: 'specific' as const,
     staffId: EXAMPLE_STAFF_ID,
+    staff: bookingStaffSummaryExample,
+    services: [
+        bookingServiceSummaryExample,
+        {
+            id: EXAMPLE_SERVICE_GEL_ID,
+            name: 'Gel Polish',
+            estimatedMinutes: 50,
+        },
+    ],
     date: EXAMPLE_DATE,
     time: EXAMPLE_TIME,
     totalEstimatedMinutes: 95,

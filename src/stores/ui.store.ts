@@ -48,7 +48,7 @@ export const useUIStore = create<UIStore>((set) => ({
     showLoading: (message) =>
         set({
             isLoading: true,
-            loadingMessage: message || 'Đang xử lý...',
+            loadingMessage: message,
         }),
 
     hideLoading: () =>

@@ -274,6 +274,12 @@
         "dayClosed": "This day is closed. Toggle above to enable booking slots.",
         "allowStaffSelection": "Technician Selection Option",
         "allowStaffSelectionHint": "Allow customers to choose their preferred technician. If turned off, all booking requests are default to 'Any Technician' automatically.",
+        "allowGuestLanguageSwitch": "Guest language switcher",
+        "allowGuestLanguageSwitchHint": "When enabled, visitors can switch between English and Vietnamese on the landing page and booking flow. Admin and staff areas are not affected.",
+        "confirmSaveTitle": "Save settings",
+        "confirmSaveMsg": "Are you sure you want to save these changes?",
+        "confirmSaveBtn": "Save",
+        "confirmCancelBtn": "Cancel",
         "periodSlots": "Time slots by period",
         "periodSlotsHint": "These slots appear when customers book — applies app-wide",
         "periods": {
@@ -324,7 +330,8 @@
         "phoneLabel": "Phone Number",
         "roleLabel": "Role",
         "specialtiesLabel": "Specialties",
-        "colorLabel": "Calendar Color"
+        "colorLabel": "Calendar Color",
+        "loginFailed": "Invalid email or password"
     },
     "booking": {
         "back": "Back",

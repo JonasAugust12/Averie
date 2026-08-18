@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { connectToDatabase } from '@libs/mongodb';
-import { requireAdmin } from '@libs/auth-guard';
-import { serializeBooking } from '@mappers';
+import { enrichBookingListItem, loadStaffServiceMaps } from '@server/booking-enrich.server';
+import { requireAdmin } from '@guard/auth-guard';
 import { Booking } from '@models/booking.model';
 import { apiError, apiSuccess } from '../../_lib/http';
 
@@ -39,7 +39,9 @@ export async function GET(_request: Request, context: RouteContext) {
             return apiError('Booking not found', 404);
         }
 
-        return apiSuccess(serializeBooking(booking), 'OK');
+        const maps = await loadStaffServiceMaps();
+
+        return apiSuccess(enrichBookingListItem(booking, maps), 'OK');
     } catch (error) {
         console.error('[GET /api/bookings/[id]]', error);
         return apiError('Failed to fetch booking', 500);
