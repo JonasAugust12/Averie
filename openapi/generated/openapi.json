@@ -458,9 +458,10 @@
                         "name": "all",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": ["true", "false"]
                         },
-                        "example": "example"
+                        "example": "true"
                     }
                 ],
                 "responses": {
@@ -1629,7 +1630,8 @@
                 "type": "object",
                 "properties": {
                     "enabled": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Master switch: promotion can appear on the landing page"
                     },
                     "title": {
                         "type": "string"
@@ -1639,14 +1641,21 @@
                     },
                     "startDate": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "Optional YYYY-MM-DD start bound; null = no start limit"
                     },
                     "endDate": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "Optional YYYY-MM-DD end bound; null = no end limit"
                     },
                     "hideAfterExpiry": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "When true (default), landing hides the section after endDate passes"
+                    },
+                    "showBeforeStartDate": {
+                        "type": "boolean",
+                        "description": "When true (default), landing shows before startDate (announce early). When false, only between start and end dates"
                     },
                     "imageUrl": {
                         "type": "string",
@@ -1663,9 +1672,6 @@
                     "imageHeight": {
                         "type": "number",
                         "nullable": true
-                    },
-                    "visible": {
-                        "type": "boolean"
                     }
                 },
                 "required": [
@@ -1675,11 +1681,11 @@
                     "startDate",
                     "endDate",
                     "hideAfterExpiry",
+                    "showBeforeStartDate",
                     "imageUrl",
                     "imagePublicId",
                     "imageWidth",
-                    "imageHeight",
-                    "visible"
+                    "imageHeight"
                 ]
             },
             "resetStaffPasswordSchema": {
@@ -1924,6 +1930,15 @@
                 },
                 "required": ["status", "message", "data"]
             },
+            "servicesListQuerySchema": {
+                "type": "object",
+                "properties": {
+                    "all": {
+                        "type": "string",
+                        "enum": ["true", "false"]
+                    }
+                }
+            },
             "staffBookingsApiResponseSchema": {
                 "type": "object",
                 "properties": {
@@ -2086,6 +2101,9 @@
                     },
                     "hideAfterExpiry": {
                         "type": "boolean"
+                    },
+                    "showBeforeStartDate": {
+                        "type": "boolean"
                     }
                 },
                 "required": [
@@ -2094,7 +2112,8 @@
                     "description",
                     "startDate",
                     "endDate",
-                    "hideAfterExpiry"
+                    "hideAfterExpiry",
+                    "showBeforeStartDate"
                 ]
             },
             "updatePromotionSettingsSchema": {
@@ -2120,9 +2139,19 @@
                     "hideAfterExpiry": {
                         "type": "boolean",
                         "default": true
+                    },
+                    "showBeforeStartDate": {
+                        "type": "boolean",
+                        "default": true
                     }
                 },
-                "required": ["enabled", "title", "description", "hideAfterExpiry"]
+                "required": [
+                    "enabled",
+                    "title",
+                    "description",
+                    "hideAfterExpiry",
+                    "showBeforeStartDate"
+                ]
             },
             "updateScheduleSettingsSchema": {
                 "type": "object",

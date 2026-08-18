@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useSalonTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared';
+import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
 import { cn } from '@utils/cn.util';
 import { landingImage, landingInteractive } from '@components/landing/styles';
 

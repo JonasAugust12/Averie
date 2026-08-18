@@ -7,18 +7,26 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
 
 const tabs = [
-    { href: '/admin/settings', icon: Shield, key: 'account' as const, exact: true },
+    {
+        href: '/admin/settings',
+        icon: Shield,
+        key: 'account' as const,
+        exact: true,
+        fallback: 'Account & Security',
+    },
     {
         href: '/admin/settings/schedule',
         icon: CalendarClock,
         key: 'schedule' as const,
         exact: false,
+        fallback: 'Schedule',
     },
     {
         href: '/admin/settings/promotion',
         icon: Megaphone,
         key: 'promotion' as const,
         exact: false,
+        fallback: 'Promotion',
     },
 ];
 
@@ -27,22 +35,27 @@ export function AdminSettingsNav() {
     const pathname = usePathname();
 
     return (
-        <nav className="mb-6 flex flex-wrap gap-2">
-            {tabs.map(({ href, icon: Icon, key, exact }) => {
+        <nav className="mb-6 flex flex-wrap items-center gap-2 rounded-2xl border border-stone-200/80 bg-white/80 p-1.5 shadow-2xs backdrop-blur-md">
+            {tabs.map(({ href, icon: Icon, key, exact, fallback }) => {
                 const active = exact ? pathname === href : pathname.startsWith(href);
                 return (
                     <Link
                         key={href}
                         href={href}
                         className={cn(
-                            'inline-flex items-center gap-2 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition-all',
+                            'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 font-sans text-xs font-bold uppercase tracking-wider transition-all duration-200',
                             active
-                                ? 'border-stone-900 bg-stone-900 text-white shadow-sm'
-                                : 'border-stone-200 bg-white text-stone-700 hover:border-stone-300 hover:bg-stone-50',
+                                ? 'bg-stone-900 text-white shadow-xs'
+                                : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900',
                         )}
                     >
-                        <Icon className="h-4 w-4" />
-                        {t(`settingsNav.${key}`)}
+                        <Icon
+                            className={cn(
+                                'h-4 w-4 transition-colors',
+                                active ? 'text-sand-300' : 'text-stone-400',
+                            )}
+                        />
+                        {t(`settingsNav.${key}`) || fallback}
                     </Link>
                 );
             })}

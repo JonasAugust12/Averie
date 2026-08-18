@@ -17,6 +17,7 @@ export const updatePromotionSettingsSchema = z
         startDate: optionalDateSchema,
         endDate: optionalDateSchema,
         hideAfterExpiry: z.boolean().default(true),
+        showBeforeStartDate: z.boolean().default(true),
     })
     .refine(
         (data) => {

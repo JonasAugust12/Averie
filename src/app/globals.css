@@ -119,7 +119,13 @@ h4 {
     .animate-scale-in,
     .animate-ambient-pulse,
     .animate-landing-bubble,
-    .animate-slow-zoom {
+    .animate-slow-zoom,
+    .animate-promotion-wiggle,
+    .animate-marquee,
+    .animate-shine,
+    .animate-float-slow,
+    .animate-float-slow-reverse,
+    .animate-confetti-float {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
@@ -133,6 +139,64 @@ h4 {
     to {
         transform: translateX(-50%);
     }
+}
+
+.animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-120%) skewX(-20deg);
+    }
+    30%,
+    100% {
+        transform: translateX(240%) skewX(-20deg);
+    }
+}
+
+.animate-shine {
+    animation: shine 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes floatSlow {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(4deg);
+    }
+}
+
+.animate-float-slow {
+    animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-float-slow-reverse {
+    animation: floatSlow 6.5s ease-in-out infinite reverse;
+}
+
+@keyframes confettiFloat {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg) scale(0.95);
+        opacity: 0.75;
+    }
+    50% {
+        transform: translateY(-10px) rotate(15deg) scale(1.05);
+        opacity: 1;
+    }
+}
+
+.animate-confetti-float {
+    animation: confettiFloat 4.5s ease-in-out infinite;
 }
 
 @keyframes fadeInUp {
@@ -312,6 +376,24 @@ h4 {
 .animate-scale-in {
     opacity: 0;
     animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes promotionWiggle {
+    0%,
+    100% {
+        transform: rotate(0deg) translateY(0);
+    }
+    25% {
+        transform: rotate(-1.25deg) translateY(-2px);
+    }
+    75% {
+        transform: rotate(1.25deg) translateY(2px);
+    }
+}
+
+.animate-promotion-wiggle {
+    animation: promotionWiggle 5s ease-in-out infinite;
+    transform-origin: center center;
 }
 
 /* Booking step dot trail */

@@ -1,5 +1,5 @@
-import '@libs/mongo-dns';
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
+import { configureMongoDns } from '@libs/mongo-dns';
 
 /**
  * Cached MongoDB connection for Vercel serverless.
@@ -11,10 +11,6 @@ import mongoose from 'mongoose';
  */
 
 const MONGODB_URI = process.env.MONGODB_URI;
-
-if (process.env.MONGODB_DEBUG === '1') {
-    mongoose.set('debug', true);
-}
 
 /** Align with MongoDB Atlas driver onboarding (Stable API v1). */
 export const mongoClientOptions = {
@@ -30,16 +26,37 @@ export const mongoClientOptions = {
 interface MongooseCache {
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
+    module: typeof mongoose | null;
 }
 
 declare global {
     var mongooseCache: MongooseCache | undefined;
 }
 
-const cached: MongooseCache = global.mongooseCache ?? { conn: null, promise: null };
+const cached: MongooseCache = global.mongooseCache ?? {
+    conn: null,
+    promise: null,
+    module: null,
+};
 
 if (!global.mongooseCache) {
     global.mongooseCache = cached;
+}
+
+async function getMongoose(): Promise<typeof mongoose> {
+    if (cached.module) {
+        return cached.module;
+    }
+
+    configureMongoDns();
+    const mod = await import('mongoose');
+    cached.module = mod.default;
+
+    if (process.env.MONGODB_DEBUG === '1') {
+        mod.default.set('debug', true);
+    }
+
+    return mod.default;
 }
 
 export async function connectToDatabase(): Promise<typeof mongoose> {
@@ -48,6 +65,8 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
             'Missing MONGODB_URI. Copy .env.example to .env.local and set your Atlas URI.',
         );
     }
+
+    const mongoose = await getMongoose();
 
     if (cached.conn) {
         return cached.conn;
@@ -74,5 +93,5 @@ export function getMongoReadyState(): string {
         2: 'connecting',
         3: 'disconnecting',
     };
-    return states[mongoose.connection.readyState] ?? 'unknown';
+    return states[cached.module?.connection.readyState ?? 0] ?? 'unknown';
 }

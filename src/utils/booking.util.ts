@@ -1,8 +1,17 @@
 import mongoose from 'mongoose';
 import { connectToDatabase } from '@libs/mongodb';
-import { Booking } from '@models/booking.model';
+import { Booking, type BookingDocument } from '@models/booking.model';
 import { Service } from '@models/service.model';
 import { User } from '@models/user.model';
+import {
+    buildFlexiblePhoneRegex,
+    extractPhoneDigits,
+    normalizeBookingLookupQuery,
+    phoneDigitVariants,
+    phoneDigitsMatch,
+} from '@utils/phone.util';
+
+type BookingLean = BookingDocument & { _id: mongoose.Types.ObjectId; createdAt?: Date };
 
 export async function computeBookingTotals(serviceIds: string[]) {
     await connectToDatabase();
@@ -87,4 +96,53 @@ export function isDuplicateKeyError(error: unknown): boolean {
         error instanceof mongoose.mongo.MongoServerError &&
         (error as mongoose.mongo.MongoServerError).code === 11000
     );
+}
+
+function escapeRegex(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function pickBestBookingMatch(bookings: BookingLean[]): BookingLean | null {
+    if (bookings.length === 0) return null;
+    if (bookings.length === 1) return bookings[0];
+
+    const today = new Date().toISOString().slice(0, 10);
+    const upcoming = bookings
+        .filter((booking) => booking.status === 'upcoming' && booking.date >= today)
+        .sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+    if (upcoming.length > 0) return upcoming[0];
+
+    return [...bookings].sort(
+        (a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0),
+    )[0];
+}
+
+/** Public lookup by booking reference (AV-…) or customer phone (any common format). */
+export async function findBookingByLookupQuery(rawQuery: string): Promise<BookingLean | null> {
+    await connectToDatabase();
+
+    const query = normalizeBookingLookupQuery(rawQuery);
+    if (!query) return null;
+
+    if (/^AV-/i.test(query)) {
+        const byReference = await Booking.findOne({
+            reference: { $regex: new RegExp(`^${escapeRegex(query)}$`, 'i') },
+        }).lean<BookingLean>();
+        if (byReference) return byReference;
+    }
+
+    const digits = extractPhoneDigits(query);
+    if (digits.length < 7) return null;
+
+    const variants = phoneDigitVariants(digits);
+    const regexes = variants.map((variant) => buildFlexiblePhoneRegex(variant));
+
+    const candidates = await Booking.find({
+        $or: regexes.map((regex) => ({ 'customer.phone': regex })),
+    }).lean<BookingLean[]>();
+
+    const matched = candidates.filter((booking) => phoneDigitsMatch(booking.customer.phone, query));
+
+    return pickBestBookingMatch(matched);
 }

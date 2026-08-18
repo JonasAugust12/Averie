@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AlertCircle, Eye, EyeOff, KeyRound, Mail, Shield } from 'lucide-react';
 import { useAdminTranslations, useAccountTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared';
+import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
 import { Button } from '@components/common';
 import { loginStaticText } from '@components/landing/styles';
 
@@ -67,32 +67,34 @@ export function StaffPortalLogin({ onLogin }: StaffPortalLoginProps) {
                         <p
                             className={`mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase ${loginStaticText}`}
                         >
-                            {t('staffPortal.subtitle')}
+                            {t('staffPortal.subtitle') ||
+                                'Enter your technician credentials to view your schedule'}
                         </p>
                     </header>
 
                     <h1
                         className={`mb-6 text-center font-display text-2xl font-bold tracking-wide text-stone-950 ${loginStaticText}`}
                     >
-                        {t('staffPortal.title')}
+                        {t('staffPortal.title') || 'Staff Portal'}
                     </h1>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        <Field label={tAccount('email')}>
-                            <div className="relative flex items-center overflow-hidden rounded-2xl border border-stone-300 bg-white/75 transition-all duration-300 focus-within:border-stone-800 focus-within:bg-white focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                        <Field label={tAccount('email') || 'Email'}>
+                            <div className="relative flex items-center overflow-hidden rounded-2xl border border-stone-200/90 bg-white/80 transition-all duration-300 focus-within:border-stone-900 focus-within:bg-white focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
                                 <Mail className="pointer-events-none absolute left-4 h-5 w-5 text-stone-500" />
                                 <input
                                     type="email"
                                     required
                                     value={email}
+                                    placeholder="technician@averie.vn"
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none"
+                                    className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400"
                                 />
                             </div>
                         </Field>
 
-                        <Field label={tAccount('password')}>
-                            <div className="relative flex items-center overflow-hidden rounded-2xl border border-stone-300 bg-white/75 transition-all duration-300 focus-within:border-stone-800 focus-within:bg-white focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                        <Field label={tAccount('password') || 'Password'}>
+                            <div className="relative flex items-center overflow-hidden rounded-2xl border border-stone-200/90 bg-white/80 transition-all duration-300 focus-within:border-stone-900 focus-within:bg-white focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
                                 <KeyRound className="pointer-events-none absolute left-4 h-5 w-5 text-stone-500" />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
@@ -108,8 +110,8 @@ export function StaffPortalLogin({ onLogin }: StaffPortalLoginProps) {
                                     onClick={() => setShowPassword((v) => !v)}
                                     aria-label={
                                         showPassword
-                                            ? t('staffPortal.hidePassword')
-                                            : t('staffPortal.showPassword')
+                                            ? t('staffPortal.hidePassword') || 'Hide password'
+                                            : t('staffPortal.showPassword') || 'Show password'
                                     }
                                 >
                                     {showPassword ? (
@@ -131,11 +133,11 @@ export function StaffPortalLogin({ onLogin }: StaffPortalLoginProps) {
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full rounded-2xl bg-stone-900 py-4 text-xs font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)]"
+                            className="w-full rounded-2xl bg-stone-900 py-4 text-xs font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] cursor-pointer"
                         >
                             {isSubmitting
-                                ? t('staffPortal.signingIn')
-                                : t('staffPortal.lookupButton')}
+                                ? t('staffPortal.signingIn') || 'Signing in...'
+                                : t('staffPortal.lookupButton') || 'Sign In'}
                         </Button>
                     </form>
                 </div>
@@ -144,7 +146,7 @@ export function StaffPortalLogin({ onLogin }: StaffPortalLoginProps) {
                     href="/"
                     className="mt-6 block text-center font-sans text-xs font-bold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-white"
                 >
-                    {t('staffPortal.backToHome')}
+                    {t('staffPortal.backToHome') || 'Back to main site'}
                 </Link>
             </div>
         </div>

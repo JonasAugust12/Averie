@@ -157,7 +157,7 @@ export function AdminShell({ children }: AdminShellProps) {
                 <div className="border-t border-neutral-200/80 p-3 space-y-3">
                     {isCollapsed ? (
                         <div className="flex flex-col items-center gap-4 py-2">
-                            <div className="scale-90" title="Ngôn ngữ / Language">
+                            <div className="scale-90" title={t('language') || 'Language'}>
                                 <LanguageSwitcher />
                             </div>
                             <button
@@ -173,7 +173,7 @@ export function AdminShell({ children }: AdminShellProps) {
                         <>
                             <div className="flex items-center justify-between border border-stone-200/50 bg-stone-50/40 rounded-xl p-2 shadow-xs animate-in fade-in duration-200">
                                 <span className="text-[13px] text-stone-605 font-sans font-medium pl-1">
-                                    Ngôn ngữ / Language:
+                                    {t('language') || 'Language'}:
                                 </span>
                                 <div className="scale-90 origin-right">
                                     <LanguageSwitcher />

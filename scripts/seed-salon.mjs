@@ -4,6 +4,7 @@
  *
  * Usage: pnpm db:seed
  */
+import './mongo-dns.mjs';
 import bcrypt from 'bcryptjs';
 import mongoose, { Schema } from 'mongoose';
 import { mongoClientOptions } from './mongo-client-options.mjs';

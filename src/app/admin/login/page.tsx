@@ -12,6 +12,7 @@ import { loginSchema, type LoginSchema } from '@validations/auth.schema';
 import { useAccountTranslations } from '@i18n/use-app-translations';
 import { useLogin } from '@services/auth.service';
 import { Button } from '@components/common';
+import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
 import { loginStaticText } from '@components/landing/styles';
 
 export default function AdminLoginPage() {
@@ -53,6 +54,11 @@ export default function AdminLoginPage() {
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
             </div>
 
+            {/* Language Switcher Top Right */}
+            <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
+                <LanguageSwitcher variant="pill" />
+            </div>
+
             {/* Inner Content Wrapper */}
             <div className="relative z-10 w-full max-w-md animate-in fade-in zoom-in duration-500">
                 <div className="bg-white/50 backdrop-blur-xl rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] p-8 border border-white/60 ring-1 ring-black/5 md:p-10">
@@ -74,33 +80,34 @@ export default function AdminLoginPage() {
                         <p
                             className={`mt-2.5 font-sans text-xs font-bold tracking-[0.2em] text-stone-700 uppercase ${loginStaticText}`}
                         >
-                            {t('adminSubtitle')}
+                            {t('adminSubtitle') || 'Salon Administration'}
                         </p>
                     </header>
 
                     <h1
                         className={`mb-6 text-center font-display text-2xl font-bold tracking-wide text-stone-950 ${loginStaticText}`}
                     >
-                        {t('adminTitle')}
+                        {t('adminTitle') || 'Salon Management'}
                     </h1>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                        <Field label={t('email')} error={errors.email?.message}>
-                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden transition-all duration-300 focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                        <Field label={t('email') || 'Email'} error={errors.email?.message}>
+                            <div className="relative flex items-center bg-white/80 border border-stone-200/90 rounded-2xl overflow-hidden transition-all duration-300 focus-within:bg-white focus-within:border-stone-900 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
                                 <Mail
                                     className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none"
                                     aria-hidden
                                 />
                                 <input
                                     type="email"
+                                    placeholder="admin@averie.vn"
                                     className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400 rounded-[inherit]"
                                     {...register('email')}
                                 />
                             </div>
                         </Field>
 
-                        <Field label={t('password')} error={errors.password?.message}>
-                            <div className="relative flex items-center bg-white/75 border border-stone-300 rounded-2xl overflow-hidden transition-all duration-300 focus-within:bg-white focus-within:border-stone-800 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                        <Field label={t('password') || 'Password'} error={errors.password?.message}>
+                            <div className="relative flex items-center bg-white/80 border border-stone-200/90 rounded-2xl overflow-hidden transition-all duration-300 focus-within:bg-white focus-within:border-stone-900 focus-within:shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
                                 <KeyRound
                                     className="absolute left-4 h-5 w-5 text-stone-500 pointer-events-none"
                                     aria-hidden
@@ -138,7 +145,7 @@ export default function AdminLoginPage() {
                                 htmlFor="remember-me"
                                 className="font-sans text-sm font-semibold tracking-wide text-stone-800 select-none cursor-pointer hover:text-stone-950 transition-colors"
                             >
-                                {t('rememberMe')}
+                                {t('rememberMe') || 'Remember me'}
                             </label>
                         </div>
 
@@ -147,16 +154,20 @@ export default function AdminLoginPage() {
                                 className={`flex items-center text-rose-700 text-xs pl-1.5 pt-0.5 animate-in fade-in slide-in-from-top-1 duration-200 font-medium ${loginStaticText}`}
                             >
                                 <AlertCircle className="h-4 w-4 mr-1 text-rose-700 shrink-0" />
-                                <span>{login.error.message || t('invalidAdmin')}</span>
+                                <span>
+                                    {login.error.message ||
+                                        t('invalidAdmin') ||
+                                        'Invalid email or password'}
+                                </span>
                             </div>
                         ) : null}
 
                         <Button
                             type="submit"
                             disabled={login.isPending}
-                            className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] hover:-translate-y-0.5 transition-all duration-300 bg-stone-900 text-white"
+                            className="w-full rounded-2xl py-4 tracking-[0.2em] text-xs font-bold uppercase hover:shadow-[0_12px_24px_rgba(43,38,35,0.25)] hover:-translate-y-0.5 transition-all duration-300 bg-stone-900 text-white cursor-pointer"
                         >
-                            {t('adminAccess')}
+                            {t('adminAccess') || 'Sign In to Admin'}
                         </Button>
                     </form>
                 </div>
@@ -165,15 +176,15 @@ export default function AdminLoginPage() {
                 <p
                     className={`text-center mt-6 text-white/90 text-xs font-semibold tracking-wider drop-shadow-sm uppercase ${loginStaticText}`}
                 >
-                    &copy; {new Date().getFullYear()} {t('brand')} Admin Portal. All rights
-                    reserved.
+                    &copy; {new Date().getFullYear()} {t('brand') || 'AVERIE'} Admin Portal. All
+                    rights reserved.
                 </p>
 
                 <Link
                     href="/"
                     className="mt-6 block text-center font-sans text-xs tracking-[0.15em] font-bold text-white/90 hover:text-white uppercase transition-colors"
                 >
-                    {t('backHome')}
+                    {t('backHome') || 'Back to main site'}
                 </Link>
             </div>
         </div>

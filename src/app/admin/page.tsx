@@ -102,26 +102,27 @@ export default function AdminDashboardPage() {
     };
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-6 sm:space-y-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="font-display text-2xl font-bold text-neutral-955 md:text-3xl">
+                    <h2 className="font-display text-2xl font-bold text-stone-900 md:text-3xl">
                         {t('overview.dashboardTitle')}
                     </h2>
-                    <p className="mt-1 font-sans text-[13.5px] font-medium text-stone-500">
+                    <p className="mt-1 font-sans text-xs sm:text-sm font-medium text-stone-500">
                         {t('overview.dashboardSubtitle')}
                     </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
-                    <div className="flex items-center gap-2 rounded-xl border border-stone-200/60 bg-white p-1.5 shadow-3xs">
-                        <Filter className="ml-2 h-3.5 w-3.5 text-stone-500" />
-                        <span className="font-sans text-[13px] font-medium text-stone-605">
+                <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                    <div className="flex items-center gap-2 rounded-xl border border-stone-200/80 bg-white/90 px-3 py-1.5 shadow-2xs backdrop-blur-xs">
+                        <Filter className="h-3.5 w-3.5 text-stone-400" />
+                        <span className="font-sans text-xs font-semibold text-stone-600">
                             {t('overview.filterLabel')}
                         </span>
                         <select
                             value={filterPeriod}
                             onChange={(e) => setFilterPeriod(e.target.value as DashboardPeriod)}
-                            className="cursor-pointer rounded-lg border-0 bg-transparent py-1 pr-8 font-sans text-[13px] font-semibold text-stone-850 focus:ring-0 focus:outline-none"
+                            aria-label={t('overview.filterLabel')}
+                            className="cursor-pointer rounded-lg border-0 bg-transparent py-0.5 pr-2 font-sans text-xs font-bold text-stone-900 focus:ring-0 focus:outline-none"
                         >
                             <option value="today">
                                 {t('overview.filterTodayLabel', { date: todayFilterLabel })}
@@ -138,10 +139,10 @@ export default function AdminDashboardPage() {
                         size="sm"
                         disabled={isRefreshing || isLoading}
                         onClick={handleRefresh}
-                        className="group relative gap-2 border-stone-250 bg-white pr-3 text-[13px] font-medium text-stone-705 shadow-3xs hover:bg-stone-50/50"
+                        className="group relative gap-2 rounded-xl border-stone-200/80 bg-white/90 px-3.5 py-1.5 text-xs font-semibold text-stone-800 shadow-2xs hover:bg-stone-50 transition-all"
                     >
                         <RefreshCw
-                            className={`h-3.5 w-3.5 text-stone-605 ${isRefreshing ? 'animate-spin' : 'transition-transform duration-300 group-hover:rotate-45'}`}
+                            className={`h-3.5 w-3.5 text-stone-500 ${isRefreshing ? 'animate-spin' : 'transition-transform duration-300 group-hover:rotate-45'}`}
                         />
                         <span>
                             {isRefreshing

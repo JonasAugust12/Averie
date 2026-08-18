@@ -3,6 +3,7 @@
  *
  * Usage: pnpm db:check
  */
+import './mongo-dns.mjs';
 import mongoose from 'mongoose';
 import { mongoClientOptions } from './mongo-client-options.mjs';
 
@@ -40,7 +41,10 @@ try {
     console.error('  3. Database user has readWrite on the target database');
     if (message.includes('querySrv ECONNREFUSED')) {
         console.error(
-            '  4. Windows/Node DNS: use standard mongodb:// URI (not mongodb+srv) — see .env.example',
+            '  4. Windows/Node DNS: set MONGODB_DNS_SERVERS=8.8.8.8,1.1.1.1 in .env.local (see .env.example)',
+        );
+        console.error(
+            '     Node uses 127.0.0.1 by default; nslookup may still work via router DNS.',
         );
     }
     if (message.includes('timed out')) {

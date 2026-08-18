@@ -36,7 +36,7 @@ export function StaffCalendar({
 }: StaffCalendarProps) {
     const t = useAdminTranslations();
     const locale = useLocale();
-    const accent = accentColor ?? '#2b2623';
+    const accent = accentColor ?? '#1c1917';
     const accentMuted = accentColor ?? '#78716c';
 
     const handleDatesSet = useCallback(
@@ -60,14 +60,14 @@ export function StaffCalendar({
         return (
             <div
                 className={cn(
-                    'staff-event-chip flex w-full min-w-0 items-center gap-1 overflow-hidden rounded-md px-1.5 py-0.5 shadow-sm',
+                    'staff-event-chip flex w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-lg px-2 py-1 shadow-3xs cursor-pointer transition-transform hover:scale-101',
                 )}
                 style={{
                     backgroundColor: arg.event.backgroundColor ?? undefined,
                     color: '#fff',
                 }}
             >
-                <span className="truncate text-[10px] font-semibold leading-tight">
+                <span className="truncate font-sans text-[11px] font-semibold leading-tight">
                     {arg.timeText} {customerName}
                 </span>
                 <span className="sr-only">{status}</span>
@@ -78,7 +78,7 @@ export function StaffCalendar({
     return (
         <div
             className={cn(
-                'overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm transition-opacity',
+                'overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-2xs transition-opacity duration-200',
                 isLoadingEvents && 'opacity-60',
             )}
         >
@@ -92,9 +92,9 @@ export function StaffCalendar({
                     --fc-button-active-border-color: ${accentMuted};
                     --fc-button-text-color: #ffffff;
                     --fc-today-bg-color: color-mix(in oklab, ${accentMuted} 8%, white);
-                    --fc-border-color: #e7e5e4;
+                    --fc-border-color: #f0eeeb;
                     --fc-page-bg-color: #ffffff;
-                    --fc-neutral-bg-color: #fafaf9;
+                    --fc-neutral-bg-color: #faf9f7;
                     --fc-neutral-text-color: #57534e;
                     font-family: inherit;
                 }
@@ -102,67 +102,79 @@ export function StaffCalendar({
                 .fc .fc-toolbar {
                     padding: 1rem 1.25rem !important;
                     margin-bottom: 0 !important;
-                    background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
-                    border-bottom: 1px solid #e7e5e4;
+                    background-color: #faf9f7;
+                    border-bottom: 1px solid #f0eeeb;
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
                 }
 
                 .fc .fc-toolbar-title {
+                    font-family: var(--font-display, inherit);
                     font-size: 1.125rem;
-                    font-weight: 600;
+                    font-weight: 700;
                     color: #1c1917;
-                    letter-spacing: -0.02em;
+                    letter-spacing: -0.01em;
                 }
 
                 .fc .fc-button:not(:hover):not(.fc-button-active) {
                     background-color: #ffffff;
                     color: #44403c;
-                    border-color: #d6d3d1;
+                    border-color: #e7e5e4;
                 }
 
                 .fc .fc-button {
+                    font-family: var(--font-sans, inherit);
                     font-weight: 600;
                     font-size: 0.75rem;
-                    border-radius: 9999px;
+                    border-radius: 0.75rem;
                     padding: 6px 12px;
                     border: 1px solid;
-                    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
                     transition: all 0.2s ease;
                 }
 
                 .fc .fc-button:hover {
                     transform: translateY(-1px);
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+                }
+
+                .fc .fc-button:active {
+                    transform: scale(0.97);
                 }
 
                 .fc .fc-daygrid-day.fc-day-today {
-                    background: linear-gradient(135deg, color-mix(in oklab, ${accentMuted} 10%, white) 0%, color-mix(in oklab, ${accentMuted} 5%, white) 100%);
+                    background: linear-gradient(135deg, color-mix(in oklab, ${accentMuted} 10%, white) 0%, color-mix(in oklab, ${accentMuted} 4%, white) 100%);
                 }
 
                 .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-                    color: ${accentMuted};
-                    background: color-mix(in oklab, ${accentMuted} 15%, transparent);
-                    width: 24px;
-                    height: 24px;
+                    color: #ffffff;
+                    background-color: ${accentMuted};
+                    width: 22px;
+                    height: 22px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     border-radius: 9999px;
                     font-weight: 700;
+                    font-size: 0.75rem;
+                    margin: 2px;
                 }
 
                 .fc .fc-col-header-cell {
-                    background: #f5f5f4;
+                    background: #fdfdfd;
                     color: #78716c;
                     font-weight: 700;
                     font-size: 0.7rem;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                     padding: 8px 4px;
+                    border-color: #f0eeeb !important;
                 }
 
                 .fc-event {
                     cursor: pointer;
                     border: none !important;
-                    margin: 1px !important;
+                    margin: 1.5px !important;
                 }
 
                 .fc-daygrid-more-link {
@@ -176,47 +188,52 @@ export function StaffCalendar({
                 }
 
                 .fc-theme-standard td, .fc-theme-standard th {
-                    border-color: #e7e5e4;
+                    border-color: #f0eeeb;
                 }
             `}</style>
 
-            <div className="border-b border-stone-100 bg-linear-to-r from-stone-50 to-white px-4 py-3">
+            {/* Legend Bar */}
+            <div className="border-b border-stone-100 bg-stone-50/70 px-4 py-3">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                     {staffList && staffList.length > 0 ? (
                         <>
                             {staffList.map((s) => (
                                 <span
                                     key={s.id}
-                                    className="flex items-center gap-1.5 bg-stone-100/50 border border-stone-200/50 px-2 py-0.5 rounded-md"
+                                    className="flex items-center gap-1.5 bg-white border border-stone-200/80 px-2.5 py-1 rounded-xl shadow-3xs"
                                 >
                                     <span
-                                        className="h-2.5 w-2.5 rounded-full"
+                                        className="h-2.5 w-2.5 rounded-full shadow-3xs"
                                         style={{ backgroundColor: getUserColor(s) }}
                                     />
-                                    <span>{formatUserName(s)}</span>
+                                    <span className="font-sans text-xs font-semibold text-stone-700">
+                                        {formatUserName(s)}
+                                    </span>
                                 </span>
                             ))}
-                            <span className="flex items-center gap-1.5 bg-stone-100/50 border border-stone-200/50 px-2 py-0.5 rounded-md">
+                            <span className="flex items-center gap-1.5 bg-white border border-stone-200/80 px-2.5 py-1 rounded-xl shadow-3xs">
                                 <span className="h-2.5 w-2.5 rounded-full bg-stone-400" />
-                                <span>{t('overview.anyTechnician') || 'KTV ngẫu nhiên'}</span>
+                                <span className="font-sans text-xs font-semibold text-stone-700">
+                                    {t('overview.anyTechnician') || 'Any technician'}
+                                </span>
                             </span>
                         </>
                     ) : (
                         <>
                             <span className="flex items-center gap-1.5">
                                 <span className="h-2.5 w-2.5 rounded-full bg-sky-500" />
-                                {t('staff.calendarLegendConfirmed')}
+                                <span>{t('staff.calendarLegendConfirmed')}</span>
                             </span>
                             <span className="flex items-center gap-1.5">
                                 <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                                {t('staff.calendarLegendPending')}
+                                <span>{t('staff.calendarLegendPending')}</span>
                             </span>
                         </>
                     )}
                 </div>
             </div>
 
-            <div className="p-3">
+            <div className="p-3 sm:p-4">
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"

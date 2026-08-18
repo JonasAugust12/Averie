@@ -13,6 +13,7 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 /**
  * @pathParams staffIdSchema
+ * @queryParams staffBookingsQuerySchema
  * @response staffBookingsApiResponseSchema
  * @responseSet common
  * @auth sessionCookie

@@ -130,38 +130,42 @@ export default function StaffLookupPage() {
                 onClose={() => setPasswordModalOpen(false)}
             />
 
-            <main className="mx-auto max-w-3xl space-y-5 px-3 py-5 sm:px-6 sm:py-8">
+            <main className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
                 <StaffProfileCard staff={staffProfile} />
 
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
                     <StatChip
-                        label={t('staff.statsBookings')}
+                        label={t('staff.statsBookings') || 'Total Bookings'}
                         count={stats.total}
                         color="stone"
                         accentColor={staffColor}
                     />
-                    <StatChip label={t('staff.statsUpcoming')} count={stats.upcoming} color="sky" />
                     <StatChip
-                        label={t('staffPortal.statsCancelled')}
+                        label={t('staff.statsUpcoming') || 'Upcoming'}
+                        count={stats.upcoming}
+                        color="sky"
+                    />
+                    <StatChip
+                        label={t('staffPortal.statsCancelled') || 'Cancelled'}
                         count={stats.cancelled}
                         color="amber"
                     />
                 </div>
 
                 <div
-                    className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm"
+                    className="overflow-hidden rounded-3xl border border-stone-200/80 bg-white/95 shadow-2xs backdrop-blur-xs"
                     style={{ borderColor: staffColorAlpha(staffColor, 40) }}
                 >
                     <div
-                        className="border-b border-stone-100 px-4 py-3"
-                        style={{ backgroundColor: staffColorAlpha(staffColor, 14) }}
+                        className="border-b border-stone-100 px-5 py-4"
+                        style={{ backgroundColor: staffColorAlpha(staffColor, 12) }}
                     >
                         <h3 className="font-display text-base font-bold text-stone-950 sm:text-lg">
-                            {t('staffPortal.mySchedule')}
+                            {t('staffPortal.mySchedule') || 'My Work Schedule'}
                         </h3>
                     </div>
                     <div
-                        className="p-2 sm:p-4"
+                        className="p-3 sm:p-5"
                         style={
                             {
                                 '--fc-button-bg-color': staffColor,

@@ -5,17 +5,26 @@ import {
 } from '@openapi/examples/promotion.examples';
 
 export const promotionSettingsDtoSchema = z.object({
-    enabled: z.boolean(),
+    enabled: z.boolean().describe('Master switch: promotion can appear on the landing page'),
     title: z.string(),
     description: z.string(),
-    startDate: z.string().nullable(),
-    endDate: z.string().nullable(),
-    hideAfterExpiry: z.boolean(),
+    startDate: z
+        .string()
+        .nullable()
+        .describe('Optional YYYY-MM-DD start bound; null = no start limit'),
+    endDate: z.string().nullable().describe('Optional YYYY-MM-DD end bound; null = no end limit'),
+    hideAfterExpiry: z
+        .boolean()
+        .describe('When true (default), landing hides the section after endDate passes'),
+    showBeforeStartDate: z
+        .boolean()
+        .describe(
+            'When true (default), landing shows before startDate (announce early). When false, only between start and end dates',
+        ),
     imageUrl: z.string().nullable(),
     imagePublicId: z.string().nullable(),
     imageWidth: z.number().nullable(),
     imageHeight: z.number().nullable(),
-    visible: z.boolean(),
 });
 
 export const updatePromotionSettingsInputSchema = z.object({
@@ -25,6 +34,7 @@ export const updatePromotionSettingsInputSchema = z.object({
     startDate: z.string().nullable(),
     endDate: z.string().nullable(),
     hideAfterExpiry: z.boolean(),
+    showBeforeStartDate: z.boolean(),
 });
 
 export const promotionSettingsApiResponseSchema = z

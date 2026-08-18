@@ -38,6 +38,7 @@ const PromotionSettingsSchema = new Schema(
         startDate: { type: String, default: null, trim: true },
         endDate: { type: String, default: null, trim: true },
         hideAfterExpiry: { type: Boolean, default: true },
+        showBeforeStartDate: { type: Boolean, default: true },
         imageUrl: { type: String, default: null },
         imagePublicId: { type: String, default: null },
         imageWidth: { type: Number, default: null },

@@ -1,88 +1,86 @@
 # Averie
 
-Next.js (App Router) full-stack app — **frontend + serverless API** in one project, ready for **Vercel**. Stack mirrors `bkb-storage-ticket-app` on the client side.
+[![Lint](https://github.com/JonasAugust12/Averie/actions/workflows/lint.yml/badge.svg)](https://github.com/JonasAugust12/Averie/actions/workflows/lint.yml)
+[![Commit Lint](https://github.com/JonasAugust12/Averie/actions/workflows/commit-lint.yml/badge.svg)](https://github.com/JonasAugust12/Averie/actions/workflows/commit-lint.yml)
 
-Tổng quan kiến trúc & rules: [`docs/overview.md`](./docs/overview.md).  
-Quy trình nâng cao (OpenSpec / Superspec): [`docs/advanced-workflow.md`](./docs/advanced-workflow.md).  
-Stitch → code + iterate UI: [`docs/working-with-stitch.md`](./docs/working-with-stitch.md).
+Averie is a quiet-luxury nail salon and beauty care platform built on Next.js App Router. It is designed as a unified fullstack monolith where both the rich client experience (customer booking, staff schedule calendar, and administrative control center) and the serverless backend API / Server Actions coexist within a single cohesive project ready for Vercel deployment.
 
-## Stack
+This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
 
-| Layer        | Tech                                                 |
-| ------------ | ---------------------------------------------------- |
-| Framework    | Next.js 15 (App Router)                              |
-| UI           | React 19, Tailwind CSS 4, Lucide                     |
-| State / data | Zustand, TanStack Query, Axios, react-hook-form, Zod |
-| i18n         | next-intl (`vi` / `en`)                              |
-| CRUD         | Server Actions (`src/actions/*`)                     |
-| External SVC | Route Handlers (`src/app/api/*`)                     |
-| Auth         | Auth.js (`next-auth` v5) — Credentials local stub    |
+## Stack Snapshot
 
-## Path aliases
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
+![Auth.js](https://img.shields.io/badge/Auth.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-4B2E1F?style=for-the-badge&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-0B1220?style=for-the-badge&logo=cloudinary&logoColor=3448C5)
+![Scalar](https://img.shields.io/badge/Scalar-0F172A?style=for-the-badge&logo=swagger&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-0F172A?style=for-the-badge&logo=githubactions&logoColor=2088FF)
 
-| Alias            | Folder                                         |
-| ---------------- | ---------------------------------------------- |
-| `@actions/*`     | `src/actions/*` (Server Actions — CRUD)        |
-| `@services/*`    | `src/services/*` (client TanStack hooks)       |
-| `@validations/*` | `src/validations/*` (Zod schemas)              |
-| `@components/*`  | `src/components/*`                             |
-| `@hooks/*`       | `src/hooks/*`                                  |
-| `@i18n/*`        | `src/i18n/*`                                   |
-| `@libs/*`        | `src/libs/*`                                   |
-| `@messages/*`    | `messages/*`                                   |
-| `@models/*`      | `src/models/*`                                 |
-| `@providers/*`   | `src/providers/*`                              |
-| `@stores/*`      | `src/stores/*`                                 |
-| `@typings/*`     | `src/types/*` (`@types` bị TypeScript reserve) |
-| `@utils/*`       | `src/utils/*`                                  |
-| `@/*`            | `src/*` (fallback)                             |
+## What Averie Is
 
-Example: `import { Button } from '@components/common'`
+Averie transforms traditional salon operations into a modern, aesthetic, and automated booking experience for beauty and nail care studios.
 
-## Layout & theme
+- **Customer-Centric Booking**: Interactive appointment scheduling with instant categorization, service selection, technician preferences, and dynamic operating hours validation.
+- **Appointment Tracking**: Booking reference code generation (`AVR-XXXXX`) and instant lookup ticket view for clients to check their reservation status.
+- **Technician & Schedule Coordination**: Dedicated visual staff schedule calendar powered by FullCalendar with color-coded technician profiles and availability tracking.
+- **Administrative Operations**: Full-fledged admin dashboard for managing bookings, staff members, service catalogs, operating weekday schedules, and holiday day-offs.
+- **Promotional Showcase**: Dynamic promotional banners and salon marketing assets managed via Cloudinary integration.
+- **Serverless Architecture**: Single Next.js repository serving both rich React client interfaces and backend endpoints/mutations directly on MongoDB Atlas with connection caching.
 
-- `AppShell` caps content at **1280px** (`max-w-[1280px]`) centered on large screens.
-- Design tokens: Primary `#2B2623`, Secondary `#D4C5B9`, Tertiary `#F5EFEA`, Neutral `#FDFCFB`.
-- Fonts: **Playfair Display** (headlines) + **Inter** (body/labels).
-- Buttons: `primary` / `secondary` / `inverted` / `outlined` in `@components/common/Button`.
+## Highlight Features
 
-## Project structure
+- **Interactive Multi-Step Booking**:
+    - Filterable service categories (Manicure, Pedicure, Gel Polish, Nail Enhancements, Facials, Add-ons) with real-time pricing and estimated duration totals.
+    - Staff preference selector allowing clients to choose any available specialist or a specific technician.
+    - Smart time slot picker generated from weekday operational hours, period slots (morning/afternoon/evening), and holiday exceptions.
+    - Form validation with Zod and React Hook Form, generating unique reference codes.
+- **Boarding-Pass Style Booking Lookup**:
+    - Reference code and phone number search card displaying comprehensive booking information (technician, date/time, total duration, price, and live status).
+    - Copy-to-clipboard for reference codes and responsive bento-grid card layout.
+- **FullCalendar Staff Schedule Visualizer**:
+    - Interactive calendar views (Month, Week, Day) with assigned technician color coding, appointment duration blocks, and client metadata tooltips.
+- **Comprehensive Admin Control Center**:
+    - Booking management with quick status transitions (upcoming, completed, cancelled) and date/technician filtering.
+    - Staff directory with CRUD operations, specialty tagging, custom color picker (`react-colorful`), initials, and visibility toggles.
+    - Service catalog management with category sorting, Lucide icons, pricing, and estimated durations.
+    - Operational schedule controls with weekday toggles, custom period slot definitions, and special holiday day-offs.
+    - Promotional management with Cloudinary image upload and live banner status toggling.
+- **Staff Portal**:
+    - Clean, focused portal for technicians to check daily assigned appointments without admin privileges.
+- **Role-Based Authentication (RBAC)**:
+    - Built with Auth.js (NextAuth v5 beta), bcrypt password hashing, and role-based route protection (`admin`, `staff`) enforced by Next.js Edge Middleware.
+- **Multi-Language Support**:
+    - Seamless English (`en`) and Vietnamese (`vi`) internationalization powered by `next-intl` and server-action cookie synchronization.
+- **Automated API Documentation**:
+    - Auto-generated OpenAPI spec via `next-openapi-gen` paired with a modern Scalar API reference UI at `/api/docs`.
 
-```text
-src/
-  actions/             # Server Actions — internal CRUD
-    todo.action.ts
-  app/
-    api/               # Route Handlers — external SVC / webhooks / health
-      health/          # GET /api/health
-  services/            # Client TanStack hooks → actions hoặc axios(/api)
-  validations/         # Zod schemas (share FE form + Server Action)
-  components/
-  i18n/
-  libs/
-    action.util.ts     # ActionResult helpers + unwrap
-    api-client.ts      # Axios (external /api)
-    mongodb.ts
-    query-client.ts
-  models/
-  providers/
-  stores/
-  types/
-  utils/
-messages/
-```
+## Architecture & Fullstack Conventions
 
-## Backend convention
+Averie follows a clean separation of concerns within a Next.js App Router fullstack architecture:
 
-| Operation                            | Pattern        | Folder          |
-| ------------------------------------ | -------------- | --------------- |
-| **GET** (reads)                      | Route Handlers | `src/app/api/*` |
-| **POST / PUT / PATCH / DELETE**      | Server Actions | `src/actions/*` |
-| External SVC / webhooks / public API | Route Handlers | `src/app/api/*` |
+### 1. Query vs. Mutation Separation
 
-### Unified response envelope
+| Operation                                   | Pattern                | Location                         | Client Access                                          |
+| :------------------------------------------ | :--------------------- | :------------------------------- | :----------------------------------------------------- |
+| **Queries / Reads** (GET)                   | Next.js Route Handlers | `src/app/api/**/route.ts`        | TanStack Query + Axios (`apiClient`) via `@services/*` |
+| **Mutations** (POST / PUT / PATCH / DELETE) | Next.js Server Actions | `src/actions/*.action.ts`        | TanStack Query `useMutation` via `@services/*`         |
+| **External & Webhooks / Docs**              | Next.js Route Handlers | `src/app/api/*`                  | External callers / Scalar UI                           |
+| **Auth Session HTTP**                       | Route Handler          | `src/app/api/auth/[...nextauth]` | Auth.js client library                                 |
+| **Auth Mutation (Login/Logout)**            | Server Actions         | `src/actions/auth.action.ts`     | `useLogin`, `useLogout` hooks                          |
 
-Mọi API (và Server Action) trả về cùng shape:
+- **Why GET via Route Handlers**: Predictable REST endpoints, edge/server caching capability, clean external integration, and easy OpenAPI documentation generation.
+- **Why Mutations via Server Actions**: Zero boilerplate for POST endpoints, type-safe RPC execution directly from UI forms, automatic input validation with Zod, and direct execution against MongoDB.
+
+### 2. Unified Response Envelope
+
+All Route Handlers and Server Actions return a standardized response shape:
 
 ```json
 {
@@ -92,89 +90,303 @@ Mọi API (và Server Action) trả về cùng shape:
 }
 ```
 
-- `status` — HTTP code (200, 201, 400, 404, 500…)
-- `message` — mô tả ngắn
-- `data` — payload hoặc `null` khi lỗi
+- **Route Handlers**: `apiSuccess(data, message, status)` and `apiError(message, status, code)` in `src/app/api/_lib/http.ts`.
+- **Server Actions**: `apiSuccessResult(data, message, status)` and `apiErrorResult(message, status)` in `src/libs/action.util.ts`.
+- **Client Unwrapper**: `unwrapApiResponse()` in `src/libs/action.util.ts` automatically unwraps `data` and throws on HTTP error codes (`status >= 400`).
 
-Helpers:
+### 3. Serverless MongoDB Connection Pooling
 
-- Route Handlers: `apiSuccess` / `apiError` trong `src/app/api/_lib/http.ts`
-- Server Actions: `apiSuccessResult` / `apiErrorResult` trong `src/libs/action.util.ts`
-- Client unwrap: `unwrapApiResponse()`
+- In serverless environments (such as Vercel), Mongoose connections are cached on `globalThis` to prevent connection exhaustion across warm/cold invocations (`src/libs/mongodb.ts`).
+- Built-in DNS SRV resolution helper (`src/libs/mongo-dns.ts`) ensures reliable cluster connectivity across local and cloud environments.
 
-Flow GET: `UI → @services → Axios → GET /api/* → MongoDB / external`  
-Flow mutate: `UI → @services → Server Action → MongoDB`
+### 4. Role-Based Middleware Protection
 
-## Auth (Auth.js v5)
+- Edge middleware (`src/middleware.ts`) inspects the Auth.js JWT session token and guards administrative routes (`/admin/*`) and staff routes (`/staff/*`), redirecting unauthorized requests to appropriate login gates.
 
-Scaffold Credentials (local) — chưa nối DB.
+## Tech Stack
 
-| File                                      | Role                                    |
-| ----------------------------------------- | --------------------------------------- |
-| `src/libs/auth.config.ts`                 | Providers + JWT/session callbacks       |
-| `src/libs/auth.ts`                        | `handlers`, `auth`, `signIn`, `signOut` |
-| `src/app/api/auth/[...nextauth]/route.ts` | Auth.js HTTP endpoints (bắt buộc)       |
-| `src/actions/auth.action.ts`              | `loginAction` / `logoutAction`          |
-| `src/services/auth.service.ts`            | Client hooks                            |
-| `src/providers/AuthProvider.tsx`          | `SessionProvider`                       |
+### Frontend
 
-Demo stub:
+- **Framework**: Next.js 15 (App Router)
+- **UI Core**: React 19, TypeScript
+- **Styling**: Tailwind CSS v4, Lucide React
+- **Motion & UI Components**: Framer Motion, FullCalendar (`@fullcalendar/react`, `@fullcalendar/daygrid`, `@fullcalendar/timegrid`, `@fullcalendar/interaction`), react-colorful, react-toastify
+- **Typography**: Playfair Display (Headlines & Accents) + Inter (Body & Controls)
 
-- email: `demo@averie.local`
-- password: `password`
+### State, Data & Validation
 
-Thêm `AUTH_SECRET` vào `.env.local` trước khi chạy.
+- **Server State**: TanStack Query v5 (`@tanstack/react-query`) with React Query Devtools
+- **Client State**: Zustand v5
+- **HTTP Client**: Axios
+- **Form Management**: React Hook Form
+- **Validation**: Zod v4 (schemas shared between client forms and server actions)
 
-## Tooling (giống bkb)
+### Backend & Persistence
 
-- EditorConfig + Prettier (4 spaces, LF) + ESLint
-- Husky: `commit-msg` (commitlint), `pre-commit` (lint-staged), `pre-push` (lint + format check)
-- GitHub Actions: `.github/workflows/lint.yml`, `commit-lint.yml`
-- Conventional commits: `feat|fix|docs|style|refactor|perf|test|chore|revert`
+- **API Engine**: Next.js Route Handlers & Server Actions
+- **Database**: MongoDB Atlas
+- **ODM**: Mongoose v8
+- **Authentication**: Auth.js (`next-auth` v5 beta) with credentials provider & bcryptjs password hashing
 
-## Quick start
+### Media & Integrations
+
+- **Media Storage**: Cloudinary SDK (promotional asset management)
+- **API Documentation**: Scalar (`@scalar/nextjs-api-reference`) & OpenAPI (`next-openapi-gen`)
+- **Internationalization**: `next-intl` (English & Vietnamese)
+
+### Tooling & CI/CD
+
+- **Package Manager**: pnpm 10
+- **Code Quality**: ESLint 9 (Flat Config), Prettier
+- **Git Hooks**: Husky, lint-staged, Commitlint (Conventional Commits)
+- **CI/CD**: GitHub Actions (`lint.yml`, `commit-lint.yml`)
+
+## Product Routes at a Glance
+
+The application routes are organized under [`src/app`](./src/app):
+
+- `(user)` — Customer-facing portal
+    - `/` — Luxury salon landing page with services preview, philosophy, ambient glow effects, and testimonials
+    - `/book` — Interactive multi-step appointment booking flow
+    - `/book/lookup` — Boarding-pass style ticket search and reference code tracking
+    - `/login` — Client authentication portal
+- `admin` — Operational administration portal
+    - `/admin` — Dashboard overview with booking metrics and recent activity
+    - `/admin/bookings` — Appointment management and status controls
+    - `/admin/schedule` — Visual staff schedule calendar powered by FullCalendar
+    - `/admin/staff` — Staff team directory, specialties, and calendar color configuration
+    - `/admin/services` — Service catalog and category administration
+    - `/admin/settings` — Weekday working hours, time slots, and day-off exceptions
+    - `/admin/settings/promotions` — Promotional banners and Cloudinary media upload
+    - `/admin/login` — Admin authentication gate
+- `staff` — Technician schedule portal
+    - `/staff` — Focused appointment and roster view for salon technicians
+- `api` — REST Route Handlers
+    - `/api/health` — Service and database health check
+    - `/api/bookings` — Booking queries and customer reference lookups
+    - `/api/services` & `/api/service-categories` — Service catalog queries
+    - `/api/staff` — Staff directory queries
+    - `/api/settings` — Operating hours and salon settings queries
+    - `/api/admin` — Administrative metrics queries
+    - `/api/auth/[...nextauth]` — Auth.js protocol handling
+    - `/api/docs` & `/api/openapi.json` — Scalar interactive documentation and OpenAPI spec
+
+## Path Aliases
+
+| Alias            | Target Folder       | Description                                           |
+| :--------------- | :------------------ | :---------------------------------------------------- |
+| `@actions/*`     | `src/actions/*`     | Server Actions (mutations & writes)                   |
+| `@components/*`  | `src/components/*`  | Reusable & domain UI components                       |
+| `@guard/*`       | `src/guard/*`       | Client/route guard helpers & security detection       |
+| `@hooks/*`       | `src/hooks/*`       | Custom React hooks                                    |
+| `@i18n/*`        | `src/i18n/*`        | next-intl routing and helpers                         |
+| `@libs/*`        | `src/libs/*`        | MongoDB, Auth.js, Cloudinary, Axios, Query Client     |
+| `@mappers/*`     | `src/mappers/*`     | Domain DTO mappers and transformers                   |
+| `@messages/*`    | `messages/*`        | Translation JSON dictionaries                         |
+| `@models/*`      | `src/models/*`      | Mongoose database models                              |
+| `@openapi/*`     | `src/openapi/*`     | OpenAPI schema definitions & spec builder             |
+| `@providers/*`   | `src/providers/*`   | Context providers (Auth, Query, Locale)               |
+| `@server/*`      | `src/server/*`      | Server-only business logic & data enrichment services |
+| `@services/*`    | `src/services/*`    | Client TanStack Query hooks & service layer           |
+| `@stores/*`      | `src/stores/*`      | Zustand state stores                                  |
+| `@typings/*`     | `src/types/*`       | TypeScript domain types & interfaces                  |
+| `@utils/*`       | `src/utils/*`       | Utility functions                                     |
+| `@validations/*` | `src/validations/*` | Zod validation schemas (shared FE & BE)               |
+| `@/*`            | `src/*`             | Source root fallback                                  |
+
+## Project Structure
+
+```text
+.
+├── .github/workflows/        # GitHub Actions CI workflows (lint, commit-lint)
+├── docs/                     # Architectural documentation, conventions, and guides
+├── messages/                 # i18n translation dictionaries (en, vi)
+├── openapi/                  # Generated OpenAPI schema definition
+├── public/                   # Static assets, branding logos, icons
+├── scripts/                  # Database diagnosis, connection test, and seed scripts
+├── src/
+│   ├── actions/              # Next.js Server Actions (mutations & writes)
+│   ├── app/                  # App Router layouts, pages, and API Route Handlers
+│   │   ├── (user)/           # Public landing and booking flow
+│   │   ├── admin/            # Admin management dashboard
+│   │   ├── api/              # REST Route Handlers (queries & docs)
+│   │   └── staff/            # Staff portal
+│   ├── components/           # Modular UI components by domain
+│   │   ├── admin/            # Admin layout, forms, tables, modals
+│   │   ├── booking/          # Booking steps, time picker, lookup cards
+│   │   ├── common/           # Buttons, inputs, modals, shells, badges
+│   │   ├── landing/          # Hero, services, philosophy, testimonials
+│   │   └── staff/            # Staff calendar and appointment views
+│   ├── guard/                # Client & auth guards (e.g. devtools detector)
+│   ├── hooks/                # Custom React hooks
+│   ├── i18n/                 # next-intl configuration and routing
+│   ├── libs/                 # Auth.js, MongoDB connection, Cloudinary, API client
+│   ├── mappers/              # Domain DTO mappers and transformers
+│   ├── models/               # Mongoose schemas (User, Booking, Service, Settings)
+│   ├── openapi/              # OpenAPI specs, schemas, and example builders
+│   ├── providers/            # Auth, React Query, and Locale providers
+│   ├── server/               # Server-only services (booking enrichment, schedule, promotions)
+│   ├── services/             # Client TanStack Query hooks (actions & API)
+│   ├── stores/               # Zustand global UI state stores
+│   ├── types/                # TypeScript type definitions and interfaces
+│   ├── utils/                # Date formatting, price calculation, helper functions
+│   ├── validations/          # Zod validation schemas shared across FE & BE
+│   ├── instrumentation.ts    # Next.js server runtime instrumentation hook
+│   ├── middleware.ts         # Edge RBAC route protection
+│   └── next.config.ts        # Next.js configuration
+├── next-openapi-gen.config.json # OpenAPI generation config
+└── package.json              # Dependencies and scripts
+```
+
+## Local Development
+
+### Prerequisites
+
+- **Node.js**: `24.x` (or `>= 20.x`)
+- **Package Manager**: `pnpm` (version 10 recommended)
+- **Database**: MongoDB Atlas instance (or local MongoDB connection string)
+
+### 1. Install Dependencies
 
 ```bash
 pnpm install
+```
+
+### 2. Configure Environment
+
+Create a local environment file from the example template:
+
+```bash
 cp .env.example .env.local
-# Edit .env.local → set MONGODB_URI
+```
+
+Configure your `MONGODB_URI` and generate an `AUTH_SECRET`:
+
+```bash
+# Generate secret for Auth.js:
+openssl rand -base64 32
+```
+
+### 3. Database Check & Seed
+
+Verify your MongoDB Atlas connection and populate initial salon data (Admin user, Staff members with calendar color profiles, Service categories, Services, Operating schedules, and Sample Bookings):
+
+```bash
+# Test connection
+pnpm db:check
+
+# Seed initial salon catalog & default accounts
+pnpm db:seed
+```
+
+**Default Seeded Credentials:**
+
+- **Admin**: `admin@averie.local` / `Admin123!`
+- **Staff Members**: `mia@averie.local`, `elena@averie.local`, `jordan@averie.local`, `sofia@averie.local` / `Staff123!`
+
+### 4. Run the Development Server
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The home page calls `/api/health` and can create demo todos in MongoDB.
+The application will be available at:
 
-## MongoDB Atlas (first time)
+- **Customer Portal**: `http://localhost:3000`
+- **Booking Flow**: `http://localhost:3000/book`
+- **Admin Dashboard**: `http://localhost:3000/admin`
+- **Staff Portal**: `http://localhost:3000/staff`
+- **API Documentation (Scalar)**: `http://localhost:3000/api/docs` (when `ENABLE_API_DOCS=1`)
 
-1. Sign up at [cloud.mongodb.com](https://cloud.mongodb.com) → create a **free M0** cluster.
-2. **Database Access** → create a DB user + password.
-3. **Network Access** → add `0.0.0.0/0` (Allow Access from Anywhere). Vercel functions use dynamic IPs; this is the usual serverless setup.
-4. **Connect** → Drivers → copy the `mongodb+srv://...` URI into `.env.local` as `MONGODB_URI`.
-5. Put a database name in the path, e.g. `...mongodb.net/averie?retryWrites=true&w=majority`.
-
-How it works on Vercel:
-
-- Each API request runs as a short-lived Node serverless function.
-- `connectToDatabase()` in `src/libs/mongodb.ts` **reuses** a global connection across warm invocations (standard Mongoose/Lambda pattern).
-- Never expose `MONGODB_URI` to the browser — only use it inside Route Handlers / Server Components.
-
-## Deploy to Vercel
-
-1. Push this repo to GitHub.
-2. Import the project on [vercel.com](https://vercel.com).
-3. Add env vars from `.env.example` (`MONGODB_URI`, `NEXT_PUBLIC_APP_URL`).
-4. Deploy — FE pages and `/api/*` ship together on the same domain.
+### Useful Commands
 
 ```bash
-pnpm build   # optional local production check
+pnpm dev              # Start dev server with OpenAPI generator
+pnpm build            # Build production bundle
+pnpm start            # Start production server
+pnpm lint             # Run ESLint check
+pnpm format:check     # Verify Prettier code formatting
+pnpm format           # Automatically format all files
+pnpm type-check       # Validate TypeScript types without emitting
+pnpm openapi:gen      # Regenerate OpenAPI schema definitions
+pnpm db:check         # Test MongoDB Atlas connection
+pnpm db:diagnose      # Diagnose MongoDB DNS SRV resolution
+pnpm db:seed          # Seed salon admin, staff, services, and schedules
 ```
 
-## Scripts
+## Environment Variables
 
-| Command           | Description                                        |
-| ----------------- | -------------------------------------------------- |
-| `pnpm dev`        | Dev server                                         |
-| `pnpm build`      | Production build                                   |
-| `pnpm start`      | Run production build                               |
-| `pnpm lint`       | ESLint                                             |
-| `pnpm type-check` | TypeScript                                         |
-| `pnpm db:check`   | Test MongoDB Atlas connection (reads `.env.local`) |
+Reference configuration is documented in [`.env.example`](./.env.example).
+
+### Core Runtime & App
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_ROUTE_LOADING_MIN_MS=1200
+```
+
+### Auth.js (NextAuth v5)
+
+```env
+AUTH_SECRET=your-32-character-random-secret
+AUTH_URL=http://localhost:3000
+AUTH_SESSION_MAX_AGE_SECONDS=2592000
+```
+
+### MongoDB Atlas (Serverless Database)
+
+```env
+MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/averie?retryWrites=true&w=majority
+MONGODB_DNS_SERVERS=8.8.8.8,1.1.1.1 # Optional DNS fallback for Windows SRV queries
+MONGODB_DEBUG=0
+```
+
+### API Documentation
+
+```env
+ENABLE_API_DOCS=1 # Set to 1 to enable /api/docs (Scalar) and /api/openapi.json
+```
+
+### Media Storage (Cloudinary)
+
+```env
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
+
+### Security & Production Guards
+
+```env
+PRODUCTION_BROWSER_SOURCE_MAPS=false
+NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=false
+NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+```
+
+## CI/CD
+
+GitHub Actions workflows are configured in [`.github/workflows`](./.github/workflows):
+
+- `lint.yml`
+    - Runs on `push` and `pull_request`
+    - Sets up Node.js 24 and pnpm
+    - Executes ESLint (`pnpm run lint`)
+    - Executes TypeScript Type Checking (`pnpm run type-check`)
+    - Executes Prettier Code Formatting Check (`pnpm run format:check`)
+
+- `commit-lint.yml`
+    - Enforces Conventional Commits on all commits and Pull Requests
+    - Validates PR title and commit messages (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `revert`)
+
+## Related Documentation
+
+For deeper details on architectural guidelines, design system tokens, and agent workflows, see:
+
+- [Project Overview & Architecture](docs/overview.md)
+- [Backend Conventions & Rules](docs/backend-conventions.md)
+- [Advanced Workflow & Design System](docs/advanced-workflow.md)
+- [Working with Stitch MCP](docs/working-with-stitch.md)
+
+## Summary
+
+Averie delivers a complete, production-ready beauty salon management and booking ecosystem. By coupling Next.js 15 App Router with a structured division between Route Handlers (queries) and Server Actions (mutations), MongoDB serverless connection pooling, FullCalendar technician scheduling, and a quiet-luxury design system, Averie achieves a high-performance monolith with low operational overhead.

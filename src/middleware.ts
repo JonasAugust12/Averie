@@ -1,8 +1,7 @@
-import NextAuth from 'next-auth';
-import { authConfig } from '@libs/auth.config';
+import { auth } from '@libs/auth.edge';
 import { NextResponse } from 'next/server';
 
-export default NextAuth(authConfig).auth((req) => {
+export default auth((req) => {
     const { pathname } = req.nextUrl;
     const role = req.auth?.user?.role;
 
@@ -23,4 +22,5 @@ export default NextAuth(authConfig).auth((req) => {
 
 export const config = {
     matcher: ['/admin/:path*', '/staff/:path*'],
+    runtime: 'nodejs',
 };

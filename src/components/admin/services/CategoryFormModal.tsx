@@ -52,18 +52,19 @@ export function CategoryFormModal({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
+            className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-stone-900/40 p-3 backdrop-blur-xs sm:items-center sm:p-4"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
-                <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-6 py-5">
+            <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+                {/* Modal Header */}
+                <div className="flex shrink-0 items-center justify-between border-b border-stone-100 px-6 py-5">
                     <div>
-                        <h2 className="font-display text-xl font-semibold text-stone-900">
+                        <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-stone-900">
                             {isNew
                                 ? t('services.addCategoryTitle')
                                 : t('services.editCategoryTitle')}
                         </h2>
-                        <p className="mt-0.5 font-sans text-xs text-stone-400">
+                        <p className="mt-0.5 font-sans text-xs text-stone-500">
                             {isNew
                                 ? t('services.addCategorySubtitle')
                                 : t('services.editCategorySubtitle')}
@@ -72,13 +73,14 @@ export function CategoryFormModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-100 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-stone-50 active:scale-95"
+                        className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-stone-200/80 text-stone-400 hover:text-stone-700 hover:bg-stone-50 transition-all active:scale-95 cursor-pointer"
                     >
-                        <X className="h-4 w-4 text-stone-400" />
+                        <X className="h-4 w-4" />
                     </button>
                 </div>
 
-                <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
+                {/* Modal Body */}
+                <div className="min-h-0 flex-1 space-y-4.5 overflow-y-auto p-6">
                     <div className="flex flex-col gap-1.5">
                         <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-500">
                             {t('services.categoryName')}
@@ -87,7 +89,7 @@ export function CategoryFormModal({
                             placeholder={t('services.categoryNamePlaceholder')}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="border-neutral-200 bg-stone-50 focus:bg-white"
+                            className="border-stone-200/80 bg-stone-50/60 rounded-xl focus:bg-white focus:border-stone-400 focus:ring-2 focus:ring-stone-100"
                         />
                     </div>
 
@@ -101,18 +103,19 @@ export function CategoryFormModal({
                     />
                 </div>
 
-                <div className="flex shrink-0 items-center justify-end gap-2 border-t border-neutral-100 bg-stone-50/50 px-6 py-4">
+                {/* Modal Footer */}
+                <div className="flex shrink-0 items-center justify-end gap-2.5 border-t border-stone-100 bg-stone-50/50 px-6 py-4">
                     <Button
                         variant="outlined"
                         onClick={onClose}
-                        className="border-neutral-200 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95"
+                        className="rounded-xl border-stone-200/80 bg-white hover:bg-stone-50 active:scale-95 transition-all text-xs sm:text-sm font-semibold text-stone-700"
                     >
                         {t('services.cancel')}
                     </Button>
                     <Button
                         onClick={handleSave}
                         disabled={!name.trim() || isSaving}
-                        className="transition-all duration-300 ease-in-out hover:scale-105 active:scale-95"
+                        className="rounded-xl shadow-2xs active:scale-95 transition-all text-xs sm:text-sm font-semibold"
                     >
                         {isSaving ? (
                             <Loader2 className="h-4 w-4 animate-spin" />

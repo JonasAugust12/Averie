@@ -78,7 +78,7 @@ export function ChangePasswordForm({
             <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-full px-6 py-2.5 font-sans text-sm font-bold tracking-wide shadow-sm"
+                className="rounded-full bg-stone-900 hover:bg-stone-800 text-white px-6 py-2.5 font-sans text-xs font-bold uppercase tracking-wider shadow-xs active:scale-98 transition-all"
             >
                 {isSubmitting ? (
                     <>
@@ -120,7 +120,7 @@ function PasswordField({
                 <Input
                     type={visible ? 'text' : 'password'}
                     className={cn(
-                        'pr-11 border-stone-200 bg-stone-50/80 focus:bg-white',
+                        'pr-11 rounded-xl border-stone-200/80 bg-stone-50/70 focus:bg-white focus:border-stone-400 focus:ring-2 focus:ring-stone-100 transition-all',
                         className,
                     )}
                     {...props}
@@ -128,7 +128,7 @@ function PasswordField({
                 <button
                     type="button"
                     onClick={onToggle}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors"
                     aria-label={visible ? 'Hide password' : 'Show password'}
                 >
                     {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

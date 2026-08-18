@@ -71,7 +71,7 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
     };
 
     return (
-        <div className="w-full bg-[#FCFAF6] border border-[#EAE4D9]/95 rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row pb-4 md:pb-0">
+        <div className="w-full bg-[#FCFAF6] border border-[#EAE4D9] rounded-2xl shadow-2xs overflow-hidden flex flex-col md:flex-row pb-4 md:pb-0">
             {/* Left strip vertical logo header */}
             <div className="w-full md:w-20 bg-[#221F1C] flex items-center justify-center py-4 px-3.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EAE4D9]/20 self-stretch shrink-0">
                 <Image
@@ -89,22 +89,22 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
                 <div className="md:col-span-8 p-5 md:ml-2 flex flex-col justify-between">
                     {/* Ticket Header & Brand */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#F0ECE4] pb-3">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-[#221F1C] flex items-center justify-center text-white">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-[#221F1C] flex items-center justify-center text-white shadow-2xs">
                                 <Scissors className="w-3.5 h-3.5 text-amber-200" />
                             </div>
                             <div>
-                                <span className="font-serif text-xs uppercase tracking-wider text-amber-800 font-bold block">
+                                <span className="font-display text-sm tracking-wider text-amber-900 font-bold block leading-tight">
                                     Averie Salon
                                 </span>
-                                <span className="text-[10px] text-stone-500 font-medium leading-none block mt-0.5">
+                                <span className="font-sans text-[10px] text-stone-500 font-medium leading-none block mt-0.5 tracking-tight">
                                     Premium Nailcare Experience
                                 </span>
                             </div>
                         </div>
-                        <div className="text-stone-500 text-[11px] font-semibold">
+                        <div className="font-sans text-stone-500 text-[11px] font-medium">
                             {t('bookings.detailCard.placedAt')}{' '}
-                            <span className="text-stone-850 font-bold ml-0.5">
+                            <span className="text-stone-900 font-bold ml-0.5">
                                 {formatPlacedDate(booking.createdAt)}
                             </span>
                         </div>
@@ -114,30 +114,30 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-3 font-sans text-xs">
                             <div>
-                                <span className="text-stone-400 font-medium block uppercase tracking-wider text-[9px]">
+                                <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px]">
                                     {t('bookings.detailCard.customerInfo')}
                                 </span>
-                                <span className="font-bold text-stone-900 mt-0.5 flex items-center gap-1.5">
-                                    <User className="h-3.5 w-3.5 text-stone-450" />
+                                <span className="font-bold text-stone-950 mt-0.5 flex items-center gap-1.5 text-sm">
+                                    <User className="h-3.5 w-3.5 text-stone-400" />
                                     {booking.customer.firstName} {booking.customer.lastName}
                                 </span>
                             </div>
                             <div>
-                                <span className="text-stone-400 font-medium block uppercase tracking-wider text-[9px]">
+                                <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px]">
                                     {t('bookings.detailCard.phone')}
                                 </span>
-                                <span className="font-semibold text-stone-850 tracking-wide mt-0.5 flex items-center gap-1.5">
-                                    <Phone className="h-3.5 w-3.5 text-stone-450" />
+                                <span className="font-semibold text-stone-800 tracking-wide mt-0.5 flex items-center gap-1.5">
+                                    <Phone className="h-3.5 w-3.5 text-stone-400" />
                                     {booking.customer.phone}
                                 </span>
                             </div>
                             {booking.customer.email && (
                                 <div>
-                                    <span className="text-stone-400 font-medium block uppercase tracking-wider text-[9px]">
+                                    <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px]">
                                         {t('bookings.detailCard.email')}
                                     </span>
-                                    <span className="text-stone-850 break-all mt-0.5 flex items-center gap-1.5">
-                                        <Mail className="h-3.5 w-3.5 text-stone-450" />
+                                    <span className="text-stone-800 break-all mt-0.5 flex items-center gap-1.5 font-medium">
+                                        <Mail className="h-3.5 w-3.5 text-stone-400" />
                                         {booking.customer.email}
                                     </span>
                                 </div>
@@ -146,10 +146,10 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
 
                         {/* Note content */}
                         <div className="flex flex-col justify-start">
-                            <span className="text-stone-400 font-medium block uppercase tracking-wider text-[9px] mb-1">
+                            <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px] mb-1">
                                 {t('bookings.detailCard.notes')}
                             </span>
-                            <div className="flex-1 p-2.5 bg-[#FAF9F5] border border-[#EFEBE4] rounded-lg text-stone-605 italic text-[11px] min-h-16 flex items-center justify-center text-center">
+                            <div className="flex-1 p-3 bg-[#FAF9F5] border border-[#EFEBE4] rounded-xl text-stone-600 font-sans italic text-xs min-h-16 flex items-center justify-center text-center">
                                 {booking.customer.note || t('bookings.detailCard.noNotes')}
                             </div>
                         </div>
@@ -167,8 +167,8 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
                                          [background:repeating-linear-gradient(to_bottom,#EAE4D9_0_6px,transparent_6px_14px)] opacity-80"
                         />
                         {/* Punch holes ticket look */}
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border border-[#EAE4D9]/80" />
-                        <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border border-[#EAE4D9]/80" />
+                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border border-[#EAE4D9]" />
+                        <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border border-[#EAE4D9]" />
                     </div>
                 </div>
 
@@ -176,29 +176,29 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
                 <div className="md:col-span-3 p-5 flex flex-col items-center justify-between text-center border-l md:border-l-0 border-[#F0ECE4] md:pl-2">
                     <div className="w-full space-y-3">
                         <div>
-                            <span className="text-[10px] uppercase font-bold tracking-widest text-amber-800 block">
+                            <span className="font-sans text-[11px] uppercase font-bold tracking-widest text-amber-900 block">
                                 {serviceName || 'Treatment'}
                             </span>
-                            <span className="text-xs text-stone-500 font-medium block mt-0.5">
+                            <span className="font-sans text-xs text-stone-500 font-medium block mt-0.5">
                                 {staffName || t('bookings.detailCard.anyStaff')} (
                                 {booking.totalEstimatedMinutes} {t('bookings.detailCard.minsUnit')})
                             </span>
                         </div>
 
-                        <div className="bg-[#FAF9F5] border border-[#EFEBE4] py-2 px-1.5 rounded-lg">
-                            <span className="text-stone-400 font-semibold block uppercase tracking-wider text-[8px]">
+                        <div className="bg-[#FAF9F5] border border-[#EFEBE4] py-2 px-2 rounded-xl">
+                            <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px]">
                                 {t('bookings.detailCard.time')}
                             </span>
-                            <span className="text-stone-850 font-bold block text-xs mt-0.5">
+                            <span className="font-sans text-stone-900 font-bold block text-xs mt-0.5">
                                 {formatDisplayDate(booking.date)} | {booking.time}
                             </span>
                         </div>
 
                         <div>
-                            <span className="text-stone-400 font-medium block uppercase tracking-wider text-[8px]">
+                            <span className="text-stone-400 font-bold block uppercase tracking-wider text-[9px]">
                                 {t('bookings.detailCard.totalPrice')}
                             </span>
-                            <span className="text-stone-900 font-serif text-lg font-bold block leading-tight">
+                            <span className="font-display text-stone-950 text-xl font-bold block leading-tight">
                                 {formatUsd(booking.totalPrice)}
                             </span>
                         </div>
@@ -207,7 +207,7 @@ export function BookingTicketCard({ booking, serviceName, staffName }: BookingTi
                     {/* Barcode drawing */}
                     <div className="mt-4 w-full">
                         <BarCode code={booking.reference} />
-                        <span className="text-[9px] font-mono text-stone-400 block tracking-widest mt-1">
+                        <span className="text-[10px] font-mono font-bold text-stone-500 block tracking-widest mt-1">
                             {booking.reference}
                         </span>
                     </div>

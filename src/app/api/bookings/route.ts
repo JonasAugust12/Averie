@@ -2,6 +2,7 @@ import { connectToDatabase } from '@libs/mongodb';
 import { requireAdmin } from '@guard/auth-guard';
 import { enrichBookingListItems, loadStaffServiceMaps } from '@server/booking-enrich.server';
 import { Booking } from '@models/booking.model';
+import { buildFlexiblePhoneRegex, extractPhoneDigits, phoneDigitVariants } from '@utils/phone.util';
 import { bookingsListQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../_lib/http';
 
@@ -53,12 +54,26 @@ export async function GET(request: Request) {
             filter.date = dateFilter;
         }
         if (search) {
-            filter.$or = [
-                { reference: { $regex: search, $options: 'i' } },
-                { 'customer.phone': { $regex: search, $options: 'i' } },
-                { 'customer.firstName': { $regex: search, $options: 'i' } },
-                { 'customer.lastName': { $regex: search, $options: 'i' } },
-            ];
+            const trimmedSearch = search.trim();
+            const digits = extractPhoneDigits(trimmedSearch);
+
+            if (digits.length >= 7) {
+                const variants = phoneDigitVariants(digits);
+                const phoneRegexes = variants.map((variant) => buildFlexiblePhoneRegex(variant));
+                filter.$or = [
+                    { reference: { $regex: trimmedSearch, $options: 'i' } },
+                    ...phoneRegexes.map((regex) => ({ 'customer.phone': regex })),
+                    { 'customer.firstName': { $regex: trimmedSearch, $options: 'i' } },
+                    { 'customer.lastName': { $regex: trimmedSearch, $options: 'i' } },
+                ];
+            } else {
+                filter.$or = [
+                    { reference: { $regex: trimmedSearch, $options: 'i' } },
+                    { 'customer.phone': { $regex: trimmedSearch, $options: 'i' } },
+                    { 'customer.firstName': { $regex: trimmedSearch, $options: 'i' } },
+                    { 'customer.lastName': { $regex: trimmedSearch, $options: 'i' } },
+                ];
+            }
         }
 
         await connectToDatabase();

@@ -3,7 +3,17 @@
 import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Award, ArrowLeft, CalendarDays, Mail, Phone, Sparkles, Users } from 'lucide-react';
+import {
+    Award,
+    ArrowLeft,
+    CalendarDays,
+    Mail,
+    Phone,
+    Sparkles,
+    Users,
+    X,
+    ChevronRight,
+} from 'lucide-react';
 import { useAllStaff, useStaffBookings } from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { EmptyState } from '@components/ui';
@@ -82,51 +92,52 @@ export default function StaffSchedulePage() {
     const role = member.specialties[0] ?? t('staffPortal.defaultRole');
 
     return (
-        <div className="space-y-6">
-            <div>
+        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
+            {/* Header and Hero Profile */}
+            <div className="space-y-4">
                 <Link
                     href="/admin/staff"
-                    className="-ml-1.5 inline-flex items-center gap-2 rounded-lg px-1.5 py-2 font-sans text-base font-semibold text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-900"
+                    className="inline-flex items-center gap-2 rounded-xl px-3 py-2 font-sans text-xs font-bold uppercase tracking-wider text-stone-500 transition-all hover:bg-stone-100 hover:text-stone-900 active:scale-98"
                 >
-                    <ArrowLeft className="h-5 w-5 shrink-0" />
-                    {t('staff.title')}
+                    <ArrowLeft className="h-4 w-4 shrink-0" />
+                    <span>{t('staff.title')}</span>
                 </Link>
 
                 <div
-                    className="relative mt-4 overflow-hidden rounded-2xl border bg-white p-4 shadow-sm sm:p-5"
+                    className="relative overflow-hidden rounded-3xl border bg-white p-5 shadow-2xs sm:p-6.5 transition-all"
                     style={{
-                        borderColor: staffColorAlpha(staffColor, 45),
-                        background: `linear-gradient(135deg, ${staffColorAlpha(staffColor, 18)} 0%, #ffffff 55%, #ffffff 100%)`,
+                        borderColor: staffColorAlpha(staffColor, 40),
+                        background: `linear-gradient(135deg, ${staffColorAlpha(staffColor, 14)} 0%, #ffffff 50%, #ffffff 100%)`,
                     }}
                 >
                     <div
                         className="absolute inset-x-0 top-0 h-1"
                         style={{ backgroundColor: staffColor }}
                     />
-                    <div className="pointer-events-none absolute right-0 top-0 translate-x-1/3 -translate-y-1/4 opacity-[0.12]">
-                        <Sparkles className="h-28 w-28" style={{ color: staffColor }} />
+                    <div className="pointer-events-none absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 opacity-[0.08]">
+                        <Sparkles className="h-36 w-36" style={{ color: staffColor }} />
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span
-                            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl font-sans text-base font-black text-white shadow-md sm:h-16 sm:w-16 sm:text-lg"
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                        <div
+                            className="flex h-16 w-16 sm:h-18 sm:w-18 shrink-0 items-center justify-center rounded-2xl font-display text-xl sm:text-2xl font-black text-white shadow-md ring-4 ring-white/80"
                             style={{
                                 backgroundColor: staffColor,
-                                boxShadow: `0 8px 20px ${staffColorAlpha(staffColor, 45)}`,
+                                boxShadow: `0 8px 24px ${staffColorAlpha(staffColor, 40)}`,
                             }}
                         >
                             {initials}
-                        </span>
+                        </div>
                         <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <h1 className="font-display text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+                            <div className="flex flex-wrap items-center gap-2.5">
+                                <h1 className="font-display text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
                                     {displayName}
                                 </h1>
                                 <span
-                                    className="inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-bold uppercase sm:text-[11px]"
+                                    className="inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider shadow-3xs"
                                     style={{
-                                        backgroundColor: staffColorAlpha(staffColor, 22),
-                                        borderColor: staffColorAlpha(staffColor, 40),
+                                        backgroundColor: staffColorAlpha(staffColor, 16),
+                                        borderColor: staffColorAlpha(staffColor, 35),
                                         color: staffColor,
                                     }}
                                 >
@@ -134,24 +145,23 @@ export default function StaffSchedulePage() {
                                     {role}
                                 </span>
                             </div>
-                            <p className="mt-1.5 flex flex-wrap items-center gap-1 font-sans text-sm text-stone-500">
-                                <Phone className="h-3.5 w-3.5 shrink-0" />
-                                <span>{member.phone}</span>
-                                <span className="text-stone-300">·</span>
-                                <Mail className="h-3.5 w-3.5 shrink-0" />
-                                <span className="truncate">{member.email}</span>
-                            </p>
+                            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-sans text-xs sm:text-sm text-stone-500 font-medium">
+                                <span className="inline-flex items-center gap-1.5">
+                                    <Phone className="h-3.5 w-3.5 shrink-0 text-stone-400" />
+                                    <span>{member.phone}</span>
+                                </span>
+                                <span className="hidden sm:inline text-stone-300">·</span>
+                                <span className="inline-flex items-center gap-1.5 truncate">
+                                    <Mail className="h-3.5 w-3.5 shrink-0 text-stone-400" />
+                                    <span className="truncate">{member.email}</span>
+                                </span>
+                            </div>
                             {member.specialties.length > 0 ? (
-                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                <div className="mt-3 flex flex-wrap gap-1.5">
                                     {member.specialties.map((spec) => (
                                         <span
                                             key={spec}
-                                            className="rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
-                                            style={{
-                                                backgroundColor: staffColorAlpha(staffColor, 18),
-                                                borderColor: staffColorAlpha(staffColor, 38),
-                                                color: staffColor,
-                                            }}
+                                            className="rounded-xl border px-2.5 py-1 text-[11px] font-semibold text-stone-700 bg-white/90 border-stone-200/80 shadow-3xs"
                                         >
                                             {spec}
                                         </span>
@@ -163,6 +173,7 @@ export default function StaffSchedulePage() {
                 </div>
             </div>
 
+            {/* Stat Cards */}
             <div className="grid gap-4 sm:grid-cols-2">
                 <BookingStatCard
                     label={t('staff.statsBookings')}
@@ -179,7 +190,8 @@ export default function StaffSchedulePage() {
                 />
             </div>
 
-            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+            {/* Calendar & Upcoming Grid */}
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
                 <StaffCalendar
                     events={calendarEvents}
                     onBookingClick={setSelectedBooking}
@@ -189,25 +201,33 @@ export default function StaffSchedulePage() {
                 />
 
                 <aside
-                    className="flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm"
-                    style={{ borderColor: staffColorAlpha(staffColor, 40) }}
+                    className="flex flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-2xs"
+                    style={{ borderColor: staffColorAlpha(staffColor, 35) }}
                 >
                     <div
                         className="border-b border-stone-100 px-5 py-4"
-                        style={{ backgroundColor: staffColorAlpha(staffColor, 14) }}
+                        style={{ backgroundColor: staffColorAlpha(staffColor, 10) }}
                     >
-                        <h2 className="font-display text-lg font-semibold text-stone-900">
-                            {t('staff.upcomingTitle')}
-                        </h2>
-                        <p className="mt-0.5 font-sans text-xs text-stone-500">
+                        <div className="flex items-center justify-between">
+                            <h2 className="font-display text-lg font-bold text-stone-900">
+                                {t('staff.upcomingTitle')}
+                            </h2>
+                            <span className="inline-flex items-center justify-center rounded-full bg-stone-900 px-2 py-0.5 text-[11px] font-bold text-white shadow-3xs">
+                                {upcomingBookings.length}
+                            </span>
+                        </div>
+                        <p className="mt-0.5 font-sans text-xs text-stone-500 font-medium">
                             {t('staff.upcomingSubtitle')}
                         </p>
                     </div>
-                    <div className="flex-1 space-y-2 overflow-y-auto p-4">
+
+                    <div className="flex-1 space-y-2.5 overflow-y-auto p-4 sm:p-5 max-h-130">
                         {upcomingBookings.length === 0 ? (
-                            <p className="py-8 text-center font-sans text-sm text-stone-400">
-                                {t('staff.upcomingEmpty')}
-                            </p>
+                            <div className="py-12 text-center">
+                                <p className="font-sans text-sm font-medium text-stone-400">
+                                    {t('staff.upcomingEmpty')}
+                                </p>
+                            </div>
                         ) : (
                             upcomingBookings.map((booking) => {
                                 const serviceName = booking.services.map((s) => s.name).join(', ');
@@ -220,16 +240,16 @@ export default function StaffSchedulePage() {
                                         key={booking.id}
                                         type="button"
                                         onClick={() => setSelectedBooking(booking)}
-                                        className="flex w-full items-start gap-3 rounded-xl border border-stone-100 bg-stone-50/40 p-3 text-left transition-colors hover:border-stone-200 hover:bg-stone-50"
+                                        className="group flex w-full items-start gap-3 rounded-2xl border border-stone-100 bg-stone-50/50 p-3.5 text-left transition-all hover:border-stone-200 hover:bg-stone-50/90 hover:shadow-3xs active:scale-98 cursor-pointer"
                                     >
                                         <div
-                                            className="min-w-13 shrink-0 rounded-xl px-2.5 py-2 text-center"
+                                            className="min-w-13 shrink-0 rounded-xl px-2.5 py-2 text-center shadow-3xs border border-white/60"
                                             style={{
-                                                backgroundColor: staffColorAlpha(staffColor, 24),
+                                                backgroundColor: staffColorAlpha(staffColor, 20),
                                             }}
                                         >
                                             <p
-                                                className="font-sans text-[11px] font-black leading-none sm:text-sm"
+                                                className="font-sans text-xs font-black leading-none sm:text-sm"
                                                 style={{ color: staffColor }}
                                             >
                                                 {timePart}
@@ -248,11 +268,11 @@ export default function StaffSchedulePage() {
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-start justify-between gap-2">
                                                 <div className="min-w-0">
-                                                    <p className="truncate font-sans text-sm font-semibold text-stone-800">
+                                                    <p className="truncate font-sans text-sm font-bold text-stone-800 group-hover:text-stone-950 transition-colors">
                                                         {booking.customer.firstName}{' '}
                                                         {booking.customer.lastName}
                                                     </p>
-                                                    <p className="mt-0.5 truncate font-sans text-xs text-stone-500">
+                                                    <p className="mt-0.5 truncate font-sans text-xs font-medium text-stone-500">
                                                         {serviceName}
                                                     </p>
                                                 </div>
@@ -261,9 +281,15 @@ export default function StaffSchedulePage() {
                                                     label={t(`status.${booking.status}`)}
                                                 />
                                             </div>
-                                            <p className="mt-2 font-sans text-[11px] font-medium text-stone-400">
-                                                {booking.date}
-                                            </p>
+                                            <div className="mt-2.5 flex items-center justify-between font-sans text-[11px] font-medium text-stone-400">
+                                                <span>{booking.date}</span>
+                                                <span
+                                                    className="font-semibold"
+                                                    style={{ color: staffColor }}
+                                                >
+                                                    {formatUsd(booking.totalPrice)}
+                                                </span>
+                                            </div>
                                         </div>
                                     </button>
                                 );
@@ -273,57 +299,100 @@ export default function StaffSchedulePage() {
                 </aside>
             </div>
 
+            {/* Selected Booking Quick View Modal */}
             {selectedBooking && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/20 p-4 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-stone-900/40 p-4 backdrop-blur-xs animate-in fade-in duration-200"
                     onClick={(e) => e.target === e.currentTarget && setSelectedBooking(null)}
                 >
                     <div
-                        className="animate-in zoom-in-95 w-full max-w-md space-y-4 rounded-2xl border bg-white p-6 shadow-2xl duration-200"
+                        className="animate-in zoom-in-95 w-full max-w-md space-y-5 rounded-3xl border bg-white p-6 sm:p-7 shadow-2xl duration-200"
                         style={{ borderColor: staffColorAlpha(staffColor, 45) }}
                     >
                         <div
-                            className="-mx-6 -mt-6 mb-2 h-1 rounded-t-2xl"
+                            className="-mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-4 h-1.5 rounded-t-3xl"
                             style={{ backgroundColor: staffColor }}
                         />
                         <div className="flex items-start justify-between gap-3">
                             <div>
-                                <h3 className="font-display text-lg font-semibold text-stone-900">
+                                <span className="font-mono text-xs font-bold text-stone-400 uppercase tracking-wider">
+                                    {t('staff.bookingReference') || 'Booking Ref'}
+                                </span>
+                                <h3 className="font-display text-xl font-bold text-stone-900">
                                     {selectedBooking.reference}
                                 </h3>
                             </div>
-                            <BookingStatusBadge
-                                status={selectedBooking.status}
-                                label={t(`status.${selectedBooking.status}`)}
-                            />
+                            <div className="flex items-center gap-2">
+                                <BookingStatusBadge
+                                    status={selectedBooking.status}
+                                    label={t(`status.${selectedBooking.status}`)}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedBooking(null)}
+                                    className="rounded-xl p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors cursor-pointer"
+                                    aria-label={t('close') || 'Close'}
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </div>
                         </div>
-                        <dl className="space-y-2 font-sans text-sm">
-                            <div className="flex justify-between gap-4">
-                                <dt className="text-stone-400">{t('staff.detailService')}</dt>
-                                <dd className="font-medium text-stone-800">
-                                    {selectedBooking.services.map((s) => s.name).join(', ')}
-                                </dd>
-                            </div>
-                            <div className="flex justify-between gap-4">
-                                <dt className="text-stone-400">{t('staff.detailTime')}</dt>
-                                <dd className="font-medium text-stone-800">
-                                    {selectedBooking.date} · {selectedBooking.time}
-                                </dd>
-                            </div>
-                            <div className="flex justify-between gap-4">
-                                <dt className="text-stone-400">{t('staff.detailPrice')}</dt>
-                                <dd className="font-medium" style={{ color: staffColor }}>
-                                    {formatUsd(selectedBooking.totalPrice)}
-                                </dd>
-                            </div>
-                        </dl>
-                        <div className="flex justify-end">
+
+                        <div className="rounded-2xl border border-stone-100 bg-stone-50/70 p-4">
+                            <dl className="space-y-3 font-sans text-sm">
+                                <div className="flex justify-between gap-4">
+                                    <dt className="text-stone-500 font-medium">
+                                        {t('staff.detailCustomer') || 'Customer'}
+                                    </dt>
+                                    <dd className="font-bold text-stone-900 text-right">
+                                        {selectedBooking.customer.firstName}{' '}
+                                        {selectedBooking.customer.lastName}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between gap-4">
+                                    <dt className="text-stone-500 font-medium">
+                                        {t('staff.detailService')}
+                                    </dt>
+                                    <dd className="font-bold text-stone-800 text-right">
+                                        {selectedBooking.services.map((s) => s.name).join(', ')}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between gap-4">
+                                    <dt className="text-stone-500 font-medium">
+                                        {t('staff.detailTime')}
+                                    </dt>
+                                    <dd className="font-semibold text-stone-800 text-right">
+                                        {selectedBooking.date} · {selectedBooking.time}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between gap-4 border-t border-stone-200/60 pt-2.5">
+                                    <dt className="text-stone-500 font-medium">
+                                        {t('staff.detailPrice')}
+                                    </dt>
+                                    <dd
+                                        className="font-bold text-base"
+                                        style={{ color: staffColor }}
+                                    >
+                                        {formatUsd(selectedBooking.totalPrice)}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div className="flex justify-end gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setSelectedBooking(null)}
+                                className="rounded-xl border border-stone-200/80 bg-white px-4 py-2.5 font-sans text-xs font-bold uppercase tracking-wider text-stone-600 hover:bg-stone-50 active:scale-98 transition-all cursor-pointer shadow-3xs"
+                            >
+                                {t('close') || 'Close'}
+                            </button>
                             <Link
                                 href={`/admin/bookings/${selectedBooking.id}`}
-                                className="font-sans text-sm font-semibold underline-offset-2 hover:underline"
-                                style={{ color: staffColor }}
+                                className="inline-flex items-center gap-1.5 rounded-xl bg-stone-900 px-4 py-2.5 font-sans text-xs font-bold uppercase tracking-wider text-white shadow-3xs hover:bg-stone-800 active:scale-98 transition-all"
                             >
-                                {t('staff.viewBookingDetail')}
+                                <span>{t('staff.viewBookingDetail')}</span>
+                                <ChevronRight className="h-3.5 w-3.5" />
                             </Link>
                         </div>
                     </div>

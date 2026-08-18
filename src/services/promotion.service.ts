@@ -29,7 +29,8 @@ export function useUpdatePromotionSettings() {
     return useAppMutation({
         mutationFn: async (input: UpdatePromotionSettingsInput) =>
             unwrapApiResponse(await updatePromotionSettingsAction(input)),
-        onSuccess: async () => {
+        onSuccess: async (data) => {
+            qc.setQueryData(['salon', 'promotion-settings'], data);
             await qc.invalidateQueries({ queryKey: ['salon', 'promotion-settings'] });
         },
         onError: toastApiError,
@@ -41,7 +42,8 @@ export function useUploadPromotionImage() {
     return useAppMutation({
         mutationFn: async (formData: FormData) =>
             unwrapApiResponse(await uploadPromotionImageAction(formData)),
-        onSuccess: async () => {
+        onSuccess: async (data) => {
+            qc.setQueryData(['salon', 'promotion-settings'], data);
             await qc.invalidateQueries({ queryKey: ['salon', 'promotion-settings'] });
         },
         onError: toastApiError,
@@ -52,7 +54,8 @@ export function useRemovePromotionImage() {
     const qc = useQueryClient();
     return useAppMutation({
         mutationFn: async () => unwrapApiResponse(await removePromotionImageAction()),
-        onSuccess: async () => {
+        onSuccess: async (data) => {
+            qc.setQueryData(['salon', 'promotion-settings'], data);
             await qc.invalidateQueries({ queryKey: ['salon', 'promotion-settings'] });
         },
         onError: toastApiError,

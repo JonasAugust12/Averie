@@ -2,6 +2,7 @@
  * Try multiple Atlas connection strategies (no credentials in output).
  * Usage: node --env-file=.env.local scripts/diagnose-mongodb.mjs
  */
+import './mongo-dns.mjs';
 import mongoose from 'mongoose';
 import { writeFileSync } from 'node:fs';
 

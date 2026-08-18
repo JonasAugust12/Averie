@@ -189,108 +189,127 @@ export default function ScheduleSettingsPage() {
     }
 
     return (
-        <div className="mx-auto max-w-3xl space-y-8">
+        <div className="mx-auto max-w-4xl space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
-                        {t('schedule.settings')}
+                    <h1 className="font-display text-3xl font-bold tracking-tight text-stone-900">
+                        {t('schedule.settings') || 'Schedule Settings'}
                     </h1>
-                    <p className="mt-1 font-sans text-sm text-stone-500">
-                        {t('schedule.settingsSubtitle')}
+                    <p className="mt-1 font-sans text-xs text-stone-500">
+                        {t('schedule.settingsSubtitle') ||
+                            'Configure salon availability, booking rules, time slots, and day-offs'}
                     </p>
                 </div>
-                <Button onClick={handleSave} disabled={saveSettings.isPending}>
+                <Button
+                    onClick={handleSave}
+                    disabled={saveSettings.isPending}
+                    className="rounded-full bg-stone-900 hover:bg-stone-800 text-white px-6 py-2.5 font-sans text-xs font-bold uppercase tracking-wider shadow-xs active:scale-98 transition-all"
+                >
                     {saveSettings.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            {t('schedule.saving') || 'Saving…'}
+                        </>
                     ) : (
-                        t('schedule.save')
+                        t('schedule.save') || 'Save Changes'
                     )}
                 </Button>
             </div>
 
-            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm hover:shadow-xs transition-all duration-300">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1">
-                        <h2 className="font-display text-lg font-bold text-stone-900">
-                            {t('schedule.allowStaffSelection')}
-                        </h2>
-                        <p className="font-sans text-xs text-stone-400 max-w-xl">
-                            {t('schedule.allowStaffSelectionHint')}
-                        </p>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={() =>
-                            setForm((prev) => {
-                                if (!prev) return prev;
-                                return {
-                                    ...prev,
-                                    allowStaffSelection: !prev.allowStaffSelection,
-                                };
-                            })
-                        }
-                        className={cn(
-                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden hover:scale-105 active:scale-95',
-                            form.allowStaffSelection ? 'bg-stone-800' : 'bg-stone-200',
-                        )}
-                        role="switch"
-                        aria-checked={form.allowStaffSelection}
-                    >
-                        <span
+            {/* General Toggles */}
+            <div className="grid gap-4 sm:grid-cols-2">
+                <section className="rounded-3xl border border-stone-200/80 bg-white/90 p-6 shadow-2xs backdrop-blur-xs transition-all duration-300">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                            <h2 className="font-display text-base font-bold text-stone-900">
+                                {t('schedule.allowStaffSelection') || 'Allow Staff Selection'}
+                            </h2>
+                            <p className="font-sans text-xs text-stone-500 leading-relaxed">
+                                {t('schedule.allowStaffSelectionHint') ||
+                                    'When enabled, clients can choose a specific technician during booking'}
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setForm((prev) => {
+                                    if (!prev) return prev;
+                                    return {
+                                        ...prev,
+                                        allowStaffSelection: !prev.allowStaffSelection,
+                                    };
+                                })
+                            }
                             className={cn(
-                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
-                                form.allowStaffSelection ? 'translate-x-6' : 'translate-x-0.5',
+                                'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden active:scale-95',
+                                form.allowStaffSelection ? 'bg-stone-900' : 'bg-stone-200',
                             )}
-                        />
-                    </button>
-                </div>
-            </section>
-
-            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm hover:shadow-xs transition-all duration-300">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1">
-                        <h2 className="font-display text-lg font-bold text-stone-900">
-                            {t('schedule.allowGuestLanguageSwitch')}
-                        </h2>
-                        <p className="font-sans text-xs text-stone-400 max-w-xl">
-                            {t('schedule.allowGuestLanguageSwitchHint')}
-                        </p>
+                            role="switch"
+                            aria-checked={form.allowStaffSelection}
+                        >
+                            <span
+                                className={cn(
+                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out mt-0.5',
+                                    form.allowStaffSelection
+                                        ? 'translate-x-5.5'
+                                        : 'translate-x-0.5',
+                                )}
+                            />
+                        </button>
                     </div>
-                    <button
-                        type="button"
-                        onClick={() =>
-                            setForm((prev) => {
-                                if (!prev) return prev;
-                                return {
-                                    ...prev,
-                                    allowGuestLanguageSwitch: !prev.allowGuestLanguageSwitch,
-                                };
-                            })
-                        }
-                        className={cn(
-                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden hover:scale-105 active:scale-95',
-                            form.allowGuestLanguageSwitch ? 'bg-stone-800' : 'bg-stone-200',
-                        )}
-                        role="switch"
-                        aria-checked={form.allowGuestLanguageSwitch}
-                    >
-                        <span
-                            className={cn(
-                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
-                                form.allowGuestLanguageSwitch ? 'translate-x-6' : 'translate-x-0.5',
-                            )}
-                        />
-                    </button>
-                </div>
-            </section>
+                </section>
 
-            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm space-y-5">
+                <section className="rounded-3xl border border-stone-200/80 bg-white/90 p-6 shadow-2xs backdrop-blur-xs transition-all duration-300">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                            <h2 className="font-display text-base font-bold text-stone-900">
+                                {t('schedule.allowGuestLanguageSwitch') || 'Guest Language Switch'}
+                            </h2>
+                            <p className="font-sans text-xs text-stone-500 leading-relaxed">
+                                {t('schedule.allowGuestLanguageSwitchHint') ||
+                                    'Show language switcher for clients on booking flow'}
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setForm((prev) => {
+                                    if (!prev) return prev;
+                                    return {
+                                        ...prev,
+                                        allowGuestLanguageSwitch: !prev.allowGuestLanguageSwitch,
+                                    };
+                                })
+                            }
+                            className={cn(
+                                'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden active:scale-95',
+                                form.allowGuestLanguageSwitch ? 'bg-stone-900' : 'bg-stone-200',
+                            )}
+                            role="switch"
+                            aria-checked={form.allowGuestLanguageSwitch}
+                        >
+                            <span
+                                className={cn(
+                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out mt-0.5',
+                                    form.allowGuestLanguageSwitch
+                                        ? 'translate-x-5.5'
+                                        : 'translate-x-0.5',
+                                )}
+                            />
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            {/* Weekday Schedule */}
+            <section className="rounded-3xl border border-stone-200/80 bg-white/90 p-6 md:p-8 shadow-2xs backdrop-blur-xs space-y-6">
                 <div>
-                    <h2 className="font-display text-lg font-semibold text-stone-900">
-                        {t('schedule.weekdaySchedule')}
+                    <h2 className="font-display text-lg font-bold text-stone-900">
+                        {t('schedule.weekdaySchedule') || 'Weekly Schedule & Time Slots'}
                     </h2>
-                    <p className="mt-1 font-sans text-xs text-stone-400">
-                        {t('schedule.weekdayScheduleHint')}
+                    <p className="mt-0.5 font-sans text-xs text-stone-500">
+                        {t('schedule.weekdayScheduleHint') ||
+                            'Select a day to configure open status and specific booking time slots'}
                     </p>
                 </div>
 
@@ -307,12 +326,12 @@ export default function ScheduleSettingsPage() {
                                 type="button"
                                 onClick={() => setSelectedWeekday(weekday)}
                                 className={cn(
-                                    'rounded-full border px-4 py-2 font-sans text-sm font-semibold transition-colors',
+                                    'rounded-xl px-4 py-2 font-sans text-xs font-bold uppercase tracking-wider transition-all duration-200',
                                     active
-                                        ? 'border-stone-800 bg-stone-800 text-white'
+                                        ? 'bg-stone-900 text-white shadow-xs'
                                         : day?.isOpen
-                                          ? 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300'
-                                          : 'border-stone-200 bg-stone-50 text-stone-400 line-through hover:border-stone-300',
+                                          ? 'border border-stone-200/80 bg-stone-50/70 text-stone-700 hover:bg-stone-100'
+                                          : 'border border-stone-200/50 bg-stone-50/40 text-stone-400 line-through hover:bg-stone-100/60',
                                 )}
                             >
                                 {t(`schedule.weekdays.${labelKey}`)}
@@ -321,94 +340,108 @@ export default function ScheduleSettingsPage() {
                     })}
                 </div>
 
-                <div className="flex flex-col gap-3 rounded-xl border border-stone-100 bg-stone-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="font-sans text-sm font-semibold text-stone-800">
+                        <p className="font-sans text-xs font-bold uppercase tracking-wider text-stone-800">
                             {t(`schedule.weekdays.${WEEKDAY_I18N_KEYS[selectedWeekday]}`)}
                         </p>
                         <p className="font-sans text-xs text-stone-500">
                             {selectedDay.isOpen
-                                ? t('schedule.dayOpenHint')
-                                : t('schedule.dayClosedHint')}
+                                ? t('schedule.dayOpenHint') ||
+                                  'Salon is open on this day and accepts bookings'
+                                : t('schedule.dayClosedHint') || 'Salon is closed on this day'}
                         </p>
                     </div>
                     <button
                         type="button"
                         onClick={toggleDayOpen}
                         className={cn(
-                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-hidden',
-                            selectedDay.isOpen ? 'bg-stone-800' : 'bg-stone-200',
+                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden active:scale-95',
+                            selectedDay.isOpen ? 'bg-stone-900' : 'bg-stone-200',
                         )}
                         role="switch"
                         aria-checked={selectedDay.isOpen}
                     >
                         <span
                             className={cn(
-                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out mt-0.5',
-                                selectedDay.isOpen ? 'translate-x-6' : 'translate-x-0.5',
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out mt-0.5',
+                                selectedDay.isOpen ? 'translate-x-5.5' : 'translate-x-0.5',
                             )}
                         />
                     </button>
                 </div>
 
                 {!selectedDay.isOpen ? (
-                    <p className="font-sans text-sm italic text-stone-400">
-                        {t('schedule.dayClosed')}
-                    </p>
+                    <div className="rounded-2xl border border-dashed border-stone-200/80 bg-stone-50/40 p-8 text-center">
+                        <p className="font-sans text-xs italic text-stone-400">
+                            {t('schedule.dayClosed') ||
+                                'This day is marked as closed. No booking slots will be generated.'}
+                        </p>
+                    </div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                         {PERIOD_META.map(({ key, icon: Icon }) => (
                             <div
                                 key={key}
-                                className="rounded-2xl border border-stone-200/80 bg-white p-5 shadow-sm"
+                                className="rounded-2xl border border-stone-200/80 bg-stone-50/50 p-5 space-y-4"
                             >
-                                <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                                    <h3 className="flex items-center gap-2 font-sans text-sm font-bold text-stone-800">
-                                        <Icon className="h-4 w-4 text-stone-400" />
+                                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/50 pb-3">
+                                    <h3 className="flex items-center gap-2 font-display text-sm font-bold text-stone-900">
+                                        <Icon className="h-4 w-4 text-stone-500" />
                                         {t(`schedule.periods.${key}`)}
                                     </h3>
-                                    <span className="font-sans text-xs text-stone-400">
+                                    <span className="rounded-full bg-white px-2.5 py-1 font-sans text-[11px] font-semibold text-stone-500 border border-stone-200/60 shadow-2xs">
                                         {t(`schedule.periodRange.${key}`)}
                                     </span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {selectedDay.periodSlots[key].map((time) => {
-                                        const badge = getPeriodSlotBadge(
-                                            key,
-                                            time,
-                                            selectedDay.periodSlots[key],
-                                        );
-                                        return (
-                                            <span
-                                                key={time}
-                                                className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 font-sans text-xs font-medium text-stone-700"
-                                            >
-                                                <span className="flex flex-col leading-tight">
-                                                    <span>{time}</span>
-                                                    {badge === 'open' && (
-                                                        <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
-                                                            {t('schedule.slotOpen')}
-                                                        </span>
-                                                    )}
-                                                    {badge === 'closed' && (
-                                                        <span className="text-[10px] font-semibold uppercase tracking-wider text-red-600">
-                                                            {t('schedule.slotClosed')}
-                                                        </span>
-                                                    )}
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeSlot(key, time)}
-                                                    className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200 hover:text-red-600"
-                                                    aria-label={t('schedule.removeSlot')}
+                                    {selectedDay.periodSlots[key].length === 0 ? (
+                                        <span className="font-sans text-xs italic text-stone-400 py-1">
+                                            No slots added yet
+                                        </span>
+                                    ) : (
+                                        selectedDay.periodSlots[key].map((time) => {
+                                            const badge = getPeriodSlotBadge(
+                                                key,
+                                                time,
+                                                selectedDay.periodSlots[key],
+                                            );
+                                            return (
+                                                <span
+                                                    key={time}
+                                                    className="inline-flex items-center gap-2 rounded-xl border border-stone-200/80 bg-white px-3 py-1.5 font-sans text-xs font-semibold text-stone-800 shadow-2xs"
                                                 >
-                                                    <Trash2 className="h-3 w-3" />
-                                                </button>
-                                            </span>
-                                        );
-                                    })}
+                                                    <span className="flex flex-col leading-tight">
+                                                        <span>{time}</span>
+                                                        {badge === 'open' && (
+                                                            <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-600">
+                                                                {t('schedule.slotOpen') || 'Open'}
+                                                            </span>
+                                                        )}
+                                                        {badge === 'closed' && (
+                                                            <span className="text-[9px] font-bold uppercase tracking-wider text-rose-600">
+                                                                {t('schedule.slotClosed') ||
+                                                                    'Close'}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeSlot(key, time)}
+                                                        className="rounded-md p-1 text-stone-400 hover:bg-stone-100 hover:text-rose-600 transition-colors"
+                                                        aria-label={
+                                                            t('schedule.removeSlot') ||
+                                                            'Remove time slot'
+                                                        }
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </span>
+                                            );
+                                        })
+                                    )}
                                 </div>
-                                <div className="mt-3 space-y-1">
+                                <div className="space-y-1.5 pt-1">
                                     <div className="flex gap-2">
                                         <Input
                                             placeholder={PERIOD_SLOT_PLACEHOLDERS[key]}
@@ -426,21 +459,19 @@ export default function ScheduleSettingsPage() {
                                                 }
                                             }}
                                             onKeyDown={(e) => e.key === 'Enter' && addSlot(key)}
-                                            className="max-w-40 border-neutral-200 bg-stone-50"
+                                            className="max-w-40 rounded-xl border-stone-200/80 bg-white px-3.5 py-2 font-sans text-xs focus:ring-2 focus:ring-stone-100"
                                         />
                                         <Button
                                             type="button"
-                                            variant="outlined"
-                                            size="sm"
                                             onClick={() => addSlot(key)}
-                                            className="border-neutral-200"
+                                            className="rounded-xl bg-stone-900 hover:bg-stone-800 text-white px-4 py-2 font-sans text-xs font-bold uppercase tracking-wider shadow-2xs active:scale-98 transition-all"
                                         >
-                                            <Plus className="h-4 w-4" />
-                                            {t('schedule.addSlot')}
+                                            <Plus className="h-3.5 w-3.5 mr-1" />
+                                            {t('schedule.addSlot') || 'Add Slot'}
                                         </Button>
                                     </div>
                                     {slotErrors[key] ? (
-                                        <p className="font-sans text-xs text-red-600">
+                                        <p className="font-sans text-xs font-medium text-rose-600">
                                             {slotErrors[key]}
                                         </p>
                                     ) : null}
@@ -451,35 +482,44 @@ export default function ScheduleSettingsPage() {
                 )}
             </section>
 
-            <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm">
-                <h2 className="font-display text-lg font-semibold text-stone-900">
-                    {t('schedule.dayOffs')}
-                </h2>
-                <p className="mt-1 font-sans text-xs text-stone-400">{t('schedule.dayOffsHint')}</p>
+            {/* Day-offs Section */}
+            <section className="rounded-3xl border border-stone-200/80 bg-white/90 p-6 md:p-8 shadow-2xs backdrop-blur-xs space-y-6">
+                <div>
+                    <h2 className="font-display text-lg font-bold text-stone-900">
+                        {t('schedule.dayOffs') || 'Special Day-offs & Holidays'}
+                    </h2>
+                    <p className="mt-0.5 font-sans text-xs text-stone-500">
+                        {t('schedule.dayOffsHint') ||
+                            'Set specific closed days or custom holiday closures for the entire salon'}
+                    </p>
+                </div>
 
-                <div className="mt-4 space-y-2">
+                <div className="space-y-2">
                     {form.dayOffs.length === 0 ? (
-                        <p className="font-sans text-sm text-stone-400 italic">
-                            {t('schedule.dayOffsEmpty')}
-                        </p>
+                        <div className="rounded-2xl border border-dashed border-stone-200/80 bg-stone-50/40 p-6 text-center">
+                            <p className="font-sans text-xs italic text-stone-400">
+                                {t('schedule.dayOffsEmpty') || 'No special day-offs scheduled'}
+                            </p>
+                        </div>
                     ) : (
                         form.dayOffs.map((off) => (
                             <div
                                 key={dayOffDisplayId(off)}
-                                className="flex items-center justify-between rounded-xl border border-stone-100 bg-stone-50/50 px-4 py-3"
+                                className="flex items-center justify-between rounded-2xl border border-stone-200/80 bg-stone-50/60 p-4 transition-all"
                             >
                                 <div>
-                                    <p className="font-sans text-sm font-semibold text-stone-800">
+                                    <p className="font-sans text-xs font-bold text-stone-900">
                                         {off.date}
                                     </p>
-                                    <p className="font-sans text-xs text-stone-500">
+                                    <p className="mt-0.5 font-sans text-[11px] font-medium text-stone-500">
                                         {t(`schedule.dayOffScope.${off.scope}`)}
                                     </p>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => removeDayOff(off.id)}
-                                    className="rounded-lg p-2 text-stone-400 hover:bg-red-50 hover:text-red-600"
+                                    className="rounded-xl p-2 text-stone-400 hover:bg-white hover:text-rose-600 hover:shadow-2xs transition-all"
+                                    aria-label="Remove day off"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </button>
@@ -488,21 +528,21 @@ export default function ScheduleSettingsPage() {
                     )}
                 </div>
 
-                <div className="mt-4 flex flex-wrap items-end gap-3">
+                <div className="flex flex-wrap items-end gap-3 pt-2">
                     <div className="flex flex-col gap-1">
-                        <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-500">
-                            {t('schedule.dayOffDate')}
+                        <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
+                            {t('schedule.dayOffDate') || 'Date'}
                         </label>
                         <Input
                             type="date"
                             value={newDayOff.date}
                             onChange={(e) => setNewDayOff((s) => ({ ...s, date: e.target.value }))}
-                            className="border-neutral-200 bg-stone-50"
+                            className="rounded-xl border-stone-200/80 bg-stone-50/70 px-3.5 py-2 font-sans text-xs text-stone-800"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
-                        <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-500">
-                            {t('schedule.dayOffScopeLabel')}
+                        <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
+                            {t('schedule.dayOffScopeLabel') || 'Scope'}
                         </label>
                         <select
                             value={newDayOff.scope}
@@ -512,7 +552,7 @@ export default function ScheduleSettingsPage() {
                                     scope: e.target.value as DayOffScope,
                                 }))
                             }
-                            className="rounded-xl border border-neutral-200 bg-stone-50 px-3 py-2 font-sans text-sm"
+                            className="rounded-xl border border-stone-200/80 bg-stone-50/70 px-3.5 py-2 font-sans text-xs text-stone-800 outline-hidden transition focus:border-stone-400 focus:bg-white focus:ring-2 focus:ring-stone-100"
                         >
                             {DAY_OFF_SCOPE_OPTIONS.map((scope) => (
                                 <option key={scope} value={scope}>
@@ -523,12 +563,11 @@ export default function ScheduleSettingsPage() {
                     </div>
                     <Button
                         type="button"
-                        variant="secondary"
                         onClick={addDayOff}
-                        className="rounded-xl border border-secondary-300 bg-secondary-100 font-semibold text-primary shadow-sm hover:bg-secondary-200"
+                        className="rounded-full bg-stone-900 hover:bg-stone-800 text-white px-5 py-2.5 font-sans text-xs font-bold uppercase tracking-wider shadow-xs active:scale-98 transition-all"
                     >
-                        <Plus className="h-4 w-4" />
-                        {t('schedule.addDayOff')}
+                        <Plus className="h-3.5 w-3.5 mr-1" />
+                        {t('schedule.addDayOff') || 'Add Day Off'}
                     </Button>
                 </div>
             </section>

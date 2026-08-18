@@ -1,5 +1,5 @@
 import type { PromotionSettingsDto } from '@typings/promotion-settings.type';
-import { isPromotionVisible, normalizePromotionDate } from '@utils/promotion.util';
+import { normalizePromotionDate } from '@utils/promotion.util';
 
 type PromotionDoc = {
     enabled?: boolean;
@@ -8,6 +8,7 @@ type PromotionDoc = {
     startDate?: string | null;
     endDate?: string | null;
     hideAfterExpiry?: boolean;
+    showBeforeStartDate?: boolean;
     imageUrl?: string | null;
     imagePublicId?: string | null;
     imageWidth?: number | null;
@@ -31,13 +32,12 @@ export function serializePromotionSettings(
         startDate: normalizePromotionDate(promotion?.startDate ?? null),
         endDate: normalizePromotionDate(promotion?.endDate ?? null),
         hideAfterExpiry: promotion?.hideAfterExpiry ?? true,
+        showBeforeStartDate: promotion?.showBeforeStartDate ?? true,
         imageUrl: optimizePromotionImageUrl(promotion?.imageUrl ?? null),
         imagePublicId: promotion?.imagePublicId ?? null,
         imageWidth: promotion?.imageWidth ?? null,
         imageHeight: promotion?.imageHeight ?? null,
-        visible: false,
     };
 
-    dto.visible = isPromotionVisible(dto);
     return dto;
 }

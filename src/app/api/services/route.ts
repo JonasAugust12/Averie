@@ -8,6 +8,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
+ * @queryParams servicesListQuerySchema
  * @response servicesApiResponseSchema
  * @responseSet common
  * @openapi

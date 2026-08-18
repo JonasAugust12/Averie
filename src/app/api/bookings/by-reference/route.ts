@@ -1,6 +1,5 @@
-import { connectToDatabase } from '@libs/mongodb';
 import { enrichBookingListItem, loadStaffServiceMaps } from '@server/booking-enrich.server';
-import { Booking } from '@models/booking.model';
+import { findBookingByLookupQuery } from '@utils/booking.util';
 import { bookingReferenceQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../../_lib/http';
 
@@ -15,7 +14,7 @@ export const dynamic = 'force-dynamic';
  * /api/bookings/by-reference:
  *   get:
  *     tags: [Booking]
- *     summary: Lookup booking by reference
+ *     summary: Lookup booking by reference or phone
  */
 export async function GET(request: Request) {
     try {
@@ -28,8 +27,7 @@ export async function GET(request: Request) {
             return apiError(parsed.error.issues[0]?.message ?? 'Validation failed', 400);
         }
 
-        await connectToDatabase();
-        const booking = await Booking.findOne({ reference: parsed.data.reference }).lean();
+        const booking = await findBookingByLookupQuery(parsed.data.reference);
 
         if (!booking) {
             return apiError('Booking not found', 404);

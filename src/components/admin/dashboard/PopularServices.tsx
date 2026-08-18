@@ -37,23 +37,24 @@ export function PopularServices({ bookings }: PopularServicesProps) {
 
     if (computedServiceStats.length === 0) {
         return (
-            <section className="rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md">
-                <div className="mb-4 flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-700">
+            <section className="flex h-full flex-col justify-between rounded-2xl border border-stone-200/70 bg-white/90 p-5 sm:p-6 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] backdrop-blur-xs">
+                <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600/10 text-purple-700 shadow-sm">
                         <Star className="h-5 w-5" />
                     </div>
                     <div>
-                        <h3 className="font-display text-lg font-semibold text-stone-900 md:text-[19px]">
+                        <h3 className="font-display text-lg font-bold text-stone-900 md:text-xl">
                             {t('overview.popularServicesTitle')}
                         </h3>
-                        <p className="mt-0.5 font-sans text-[13px] font-medium text-stone-500">
+                        <p className="mt-0.5 font-sans text-xs font-medium text-stone-500">
                             {t('overview.popularServicesSubtitle')}
                         </p>
                     </div>
                 </div>
-                <p className="py-8 text-center font-sans text-sm text-stone-500">
-                    {t('overview.servicesNoData')}
-                </p>
+                <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-stone-200 bg-stone-50/50 py-12 font-sans text-xs text-stone-400">
+                    <Star className="mb-2 h-7 w-7 text-stone-300" />
+                    <span>{t('overview.servicesNoData')}</span>
+                </div>
             </section>
         );
     }
@@ -61,56 +62,63 @@ export function PopularServices({ bookings }: PopularServicesProps) {
     const popularList = [...computedServiceStats].sort((a, b) => b.count - a.count).slice(0, 4);
 
     return (
-        <section className="rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md transition-all">
-            <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-700">
+        <section className="flex h-full flex-col justify-between rounded-2xl border border-stone-200/70 bg-white/90 p-5 sm:p-6 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] backdrop-blur-xs">
+            <div>
+                <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600/10 text-purple-700 shadow-sm">
                         <Star className="h-5 w-5" />
                     </div>
                     <div>
-                        <h3 className="font-display text-lg md:text-[19px] text-stone-900 font-semibold">
+                        <h3 className="font-display text-lg font-bold text-stone-900 md:text-xl">
                             {t('overview.popularServicesTitle')}
                         </h3>
-                        <p className="font-sans text-[13px] text-stone-500 font-medium mt-0.5">
+                        <p className="mt-0.5 font-sans text-xs font-medium text-stone-500">
                             {t('overview.popularServicesSubtitle')}
                         </p>
                     </div>
                 </div>
-            </div>
 
-            <div className="overflow-hidden rounded-xl border border-stone-200/50 bg-white shadow-xs">
-                <table className="w-full font-sans text-sm">
-                    <thead className="border-b border-stone-200/65 bg-stone-50/50 text-left text-neutral-700">
-                        <tr>
-                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-stone-600">
-                                {t('overview.servicesHeaderService')}
-                            </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-center text-stone-600">
-                                {t('overview.servicesHeaderCount')}
-                            </th>
-                            <th className="px-3.5 py-2.5 font-semibold text-[12.5px] uppercase tracking-wider text-right text-stone-600">
-                                {t('overview.servicesHeaderRevenue')}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-stone-200/45">
-                        {popularList.map((service) => (
-                            <tr key={service.id} className="hover:bg-tertiary/20 transition-colors">
-                                <td className="px-3.5 py-2.5">
-                                    <p className="font-semibold text-[14.5px] text-primary-900">
-                                        {service.name}
-                                    </p>
-                                </td>
-                                <td className="px-3.5 py-2.5 text-center font-medium text-[13.5px] text-stone-700">
-                                    {service.count} {t('overview.countBookings')}
-                                </td>
-                                <td className="px-3.5 py-2.5 text-right font-semibold text-[13.5px] text-stone-800">
-                                    {formatUsd(service.revenue)}
-                                </td>
+                <div className="overflow-hidden rounded-xl border border-stone-200/60 bg-white shadow-2xs">
+                    <table className="w-full font-sans text-sm">
+                        <thead className="border-b border-stone-200/70 bg-stone-50/70 text-left">
+                            <tr>
+                                <th className="px-3.5 py-2.5 font-sans text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                                    {t('overview.servicesHeaderService')}
+                                </th>
+                                <th className="px-3.5 py-2.5 text-center font-sans text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                                    {t('overview.servicesHeaderCount')}
+                                </th>
+                                <th className="px-3.5 py-2.5 text-right font-sans text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                                    {t('overview.servicesHeaderRevenue')}
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-stone-100">
+                            {popularList.map((service) => (
+                                <tr
+                                    key={service.id}
+                                    className="transition-colors hover:bg-stone-50/70"
+                                >
+                                    <td className="px-3.5 py-3">
+                                        <p className="font-sans text-[13.5px] font-semibold text-stone-900">
+                                            {service.name}
+                                        </p>
+                                    </td>
+                                    <td className="px-3.5 py-3 text-center">
+                                        <span className="inline-flex rounded-md bg-stone-100 px-2 py-0.5 font-sans text-xs font-medium text-stone-700">
+                                            {service.count} {t('overview.countBookings')}
+                                        </span>
+                                    </td>
+                                    <td className="px-3.5 py-3 text-right">
+                                        <span className="font-sans text-[13.5px] font-bold text-stone-900">
+                                            {formatUsd(service.revenue)}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     );

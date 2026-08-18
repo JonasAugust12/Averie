@@ -31,5 +31,9 @@ export const toggleServiceVisibilitySchema = z.object({
     visible: z.boolean(),
 });
 
+export const servicesListQuerySchema = z.object({
+    all: z.enum(['true', 'false']).optional(),
+});
+
 export type CreateServiceInput = z.infer<typeof createServiceSchema>;
 export type UpdateServiceInput = z.infer<typeof updateServiceSchema>;

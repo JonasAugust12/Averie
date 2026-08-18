@@ -45,19 +45,20 @@ export function AdminAccountSettings() {
     const staffErrors = staffForm.formState.errors;
 
     return (
-        <div className="space-y-6">
-            <section className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white/90 shadow-sm backdrop-blur-sm">
-                <div className="border-b border-stone-100 bg-linear-to-r from-stone-50 to-secondary-50/40 px-6 py-5">
-                    <div className="flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-stone-900 text-white shadow-sm">
-                            <ShieldCheck className="h-5 w-5" />
+        <div className="space-y-8">
+            <section className="overflow-hidden rounded-3xl border border-stone-200/80 bg-white/90 shadow-2xs backdrop-blur-xs">
+                <div className="border-b border-stone-100/80 bg-linear-to-r from-stone-50/80 to-stone-100/40 px-6 py-5">
+                    <div className="flex items-center gap-3.5">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-white shadow-2xs">
+                            <ShieldCheck className="h-5 w-5 text-sand-300" />
                         </span>
                         <div>
-                            <h2 className="font-display text-xl font-semibold text-stone-900">
-                                {t('settingsAccount.changeOwnTitle')}
+                            <h2 className="font-display text-lg font-bold text-stone-900">
+                                {t('settingsAccount.changeOwnTitle') || 'Change your password'}
                             </h2>
-                            <p className="mt-0.5 font-sans text-sm text-stone-500">
-                                {t('settingsAccount.changeOwnSubtitle')}
+                            <p className="mt-0.5 font-sans text-xs text-stone-500">
+                                {t('settingsAccount.changeOwnSubtitle') ||
+                                    'Update the password for your admin account'}
                             </p>
                         </div>
                     </div>
@@ -65,11 +66,13 @@ export function AdminAccountSettings() {
                 <div className="p-6">
                     <ChangePasswordForm
                         labels={{
-                            currentPassword: t('settingsAccount.currentPassword'),
-                            newPassword: t('settingsAccount.newPassword'),
-                            confirmPassword: t('settingsAccount.confirmPassword'),
-                            submit: t('settingsAccount.changeOwnSubmit'),
-                            submitting: t('settingsAccount.submitting'),
+                            currentPassword:
+                                t('settingsAccount.currentPassword') || 'Current password',
+                            newPassword: t('settingsAccount.newPassword') || 'New password',
+                            confirmPassword:
+                                t('settingsAccount.confirmPassword') || 'Confirm new password',
+                            submit: t('settingsAccount.changeOwnSubmit') || 'Update password',
+                            submitting: t('settingsAccount.submitting') || 'Saving…',
                         }}
                         onSubmit={handleChangeOwn}
                         isSubmitting={changePassword.isPending}
@@ -77,32 +80,36 @@ export function AdminAccountSettings() {
                 </div>
             </section>
 
-            <section className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white/90 shadow-sm backdrop-blur-sm">
-                <div className="border-b border-stone-100 bg-linear-to-r from-stone-50 to-tertiary/30 px-6 py-5">
-                    <div className="flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-neutral shadow-sm">
-                            <Users className="h-5 w-5" />
+            <section className="overflow-hidden rounded-3xl border border-stone-200/80 bg-white/90 shadow-2xs backdrop-blur-xs">
+                <div className="border-b border-stone-100/80 bg-linear-to-r from-stone-50/80 to-stone-100/40 px-6 py-5">
+                    <div className="flex items-center gap-3.5">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-white shadow-2xs">
+                            <Users className="h-5 w-5 text-sand-300" />
                         </span>
                         <div>
-                            <h2 className="font-display text-xl font-semibold text-stone-900">
-                                {t('settingsAccount.resetStaffTitle')}
+                            <h2 className="font-display text-lg font-bold text-stone-900">
+                                {t('settingsAccount.resetStaffTitle') || 'Reset staff password'}
                             </h2>
-                            <p className="mt-0.5 font-sans text-sm text-stone-500">
-                                {t('settingsAccount.resetStaffSubtitle')}
+                            <p className="mt-0.5 font-sans text-xs text-stone-500">
+                                {t('settingsAccount.resetStaffSubtitle') ||
+                                    'Set a new password for a staff member without their current password'}
                             </p>
                         </div>
                     </div>
                 </div>
-                <form onSubmit={staffForm.handleSubmit(handleResetStaff)} className="space-y-4 p-6">
+                <form onSubmit={staffForm.handleSubmit(handleResetStaff)} className="space-y-5 p-6">
                     <div className="space-y-1.5">
                         <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
-                            {t('settingsAccount.selectStaff')}
+                            {t('settingsAccount.selectStaff') || 'Staff member'}
                         </label>
                         <select
                             {...staffForm.register('staffId')}
-                            className="w-full rounded-xl border border-stone-200 bg-stone-50/80 px-4 py-3 font-sans text-sm font-medium text-stone-900 outline-none transition focus:border-stone-400 focus:bg-white focus:ring-2 focus:ring-stone-100"
+                            className="w-full rounded-xl border border-stone-200/80 bg-stone-50/70 px-4 py-2.5 font-sans text-sm font-medium text-stone-900 outline-hidden transition focus:border-stone-400 focus:bg-white focus:ring-2 focus:ring-stone-100"
                         >
-                            <option value="">{t('settingsAccount.selectStaffPlaceholder')}</option>
+                            <option value="">
+                                {t('settingsAccount.selectStaffPlaceholder') ||
+                                    'Choose a staff member…'}
+                            </option>
                             {(staffList ?? []).map((member) => (
                                 <option key={member.id} value={member.id}>
                                     {formatUserName(member)} · {member.email}
@@ -118,18 +125,18 @@ export function AdminAccountSettings() {
 
                     <div className="space-y-1.5">
                         <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
-                            {t('settingsAccount.newPassword')}
+                            {t('settingsAccount.newPassword') || 'New password'}
                         </label>
                         <div className="relative">
                             <Input
                                 type={showStaffPassword ? 'text' : 'password'}
-                                className="pr-11 border-stone-200 bg-stone-50/80 focus:bg-white"
+                                className="pr-11 rounded-xl border-stone-200/80 bg-stone-50/70 focus:bg-white focus:border-stone-400 focus:ring-2 focus:ring-stone-100 transition-all"
                                 {...staffForm.register('password')}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowStaffPassword((v) => !v)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors"
                             >
                                 {showStaffPassword ? (
                                     <EyeOff className="h-4 w-4" />
@@ -147,18 +154,18 @@ export function AdminAccountSettings() {
 
                     <div className="space-y-1.5">
                         <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
-                            {t('settingsAccount.confirmPassword')}
+                            {t('settingsAccount.confirmPassword') || 'Confirm new password'}
                         </label>
                         <div className="relative">
                             <Input
                                 type={showStaffConfirm ? 'text' : 'password'}
-                                className="pr-11 border-stone-200 bg-stone-50/80 focus:bg-white"
+                                className="pr-11 rounded-xl border-stone-200/80 bg-stone-50/70 focus:bg-white focus:border-stone-400 focus:ring-2 focus:ring-stone-100 transition-all"
                                 {...staffForm.register('confirmPassword')}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowStaffConfirm((v) => !v)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors"
                             >
                                 {showStaffConfirm ? (
                                     <EyeOff className="h-4 w-4" />
@@ -177,17 +184,17 @@ export function AdminAccountSettings() {
                     <Button
                         type="submit"
                         disabled={resetStaffPassword.isPending}
-                        className="rounded-full px-6 py-2.5 font-sans text-sm font-bold tracking-wide shadow-sm"
+                        className="rounded-full bg-stone-900 hover:bg-stone-800 text-white px-6 py-2.5 font-sans text-xs font-bold uppercase tracking-wider shadow-xs active:scale-98 transition-all"
                     >
                         {resetStaffPassword.isPending ? (
                             <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                {t('settingsAccount.submitting')}
+                                {t('settingsAccount.submitting') || 'Saving…'}
                             </>
                         ) : (
                             <>
                                 <KeyRound className="h-4 w-4" />
-                                {t('settingsAccount.resetStaffSubmit')}
+                                {t('settingsAccount.resetStaffSubmit') || 'Reset staff password'}
                             </>
                         )}
                     </Button>

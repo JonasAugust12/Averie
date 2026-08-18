@@ -51,68 +51,77 @@ export function CategoryDistribution({ bookings }: CategoryDistributionProps) {
     const hasData = categoriesData.some((cat) => cat.count > 0);
 
     return (
-        <div className="flex h-full flex-col rounded-2xl border border-stone-200/50 bg-white p-5 shadow-xs">
-            <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                    <Sparkles className="h-5 w-5 text-primary" />
+        <div className="flex h-full flex-col justify-between rounded-2xl border border-stone-200/70 bg-white/90 p-5 sm:p-6 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] backdrop-blur-xs">
+            <div>
+                <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-800/90 text-amber-50 shadow-sm shadow-amber-900/10">
+                        <Sparkles className="h-5 w-5" />
+                    </div>
+                    <div>
+                        <h3 className="font-display text-lg font-bold text-stone-900 md:text-xl">
+                            {t('overview.categoryChartTitle')}
+                        </h3>
+                        <p className="mt-0.5 font-sans text-xs font-medium text-stone-500">
+                            {t('overview.categoryChartSubtitle')}
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="font-display text-lg font-semibold text-stone-900 md:text-[19px]">
-                        {t('overview.categoryChartTitle')}
-                    </h3>
-                    <p className="mt-0.5 font-sans text-[13px] font-medium text-stone-500">
-                        {t('overview.categoryChartSubtitle')}
-                    </p>
-                </div>
+
+                {!hasData ? (
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-stone-200 bg-stone-50/50 py-12 font-sans text-xs text-stone-400">
+                        <Sparkles className="mb-2 h-7 w-7 text-stone-300" />
+                        <span>{t('overview.categoryNoData')}</span>
+                    </div>
+                ) : (
+                    <div className="space-y-4 pt-1">
+                        {categoriesData.map((cat, idx) => (
+                            <div
+                                key={cat.id}
+                                className="group/item space-y-1.5 rounded-xl p-1.5 -mx-1.5 transition-colors hover:bg-stone-50/80"
+                                onMouseEnter={() => setHoveredBarIdx(idx)}
+                                onMouseLeave={() => setHoveredBarIdx(null)}
+                            >
+                                <div className="flex items-center justify-between text-xs">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <span
+                                            className="h-2 w-2 rounded-full shrink-0"
+                                            style={{ backgroundColor: cat.color }}
+                                        />
+                                        <span className="truncate font-semibold text-stone-800">
+                                            {cat.name}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span className="font-medium text-stone-500 text-[11px]">
+                                            {cat.count} {t('overview.countBookings')}
+                                        </span>
+                                        <span className="rounded-md bg-stone-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-stone-900">
+                                            {cat.percentage}%
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-stone-100">
+                                    <div
+                                        className="h-full rounded-full transition-all duration-500 ease-out"
+                                        style={{
+                                            width: `${Math.max(cat.percentage, 1)}%`,
+                                            backgroundColor: cat.color,
+                                            boxShadow:
+                                                hoveredBarIdx === idx
+                                                    ? '0 0 10px rgba(0,0,0,0.15)'
+                                                    : 'none',
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
-            {!hasData ? (
-                <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-stone-200 bg-stone-50/50 py-12 font-sans text-sm text-stone-500">
-                    {t('overview.categoryNoData')}
-                </div>
-            ) : (
-                <div className="space-y-4 pt-2">
-                    {categoriesData.map((cat, idx) => (
-                        <div
-                            key={cat.id}
-                            className="space-y-1.5"
-                            onMouseEnter={() => setHoveredBarIdx(idx)}
-                            onMouseLeave={() => setHoveredBarIdx(null)}
-                        >
-                            <div className="flex items-center justify-between text-[13px] font-semibold">
-                                <span className="truncate font-medium text-stone-800">
-                                    {cat.name}
-                                </span>
-                                <span className="flex gap-2 font-medium text-stone-500">
-                                    <span>
-                                        {cat.count} {t('overview.countBookings')}
-                                    </span>
-                                    <span className="font-semibold text-stone-900">
-                                        {cat.percentage}%
-                                    </span>
-                                </span>
-                            </div>
-                            <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-200">
-                                <div
-                                    className="h-full rounded-full transition-all duration-500 ease-out"
-                                    style={{
-                                        width: `${Math.max(cat.percentage, 1)}%`,
-                                        backgroundColor: cat.color,
-                                        boxShadow:
-                                            hoveredBarIdx === idx
-                                                ? '0 0 8px rgba(0,0,0,0.1)'
-                                                : 'none',
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            <div className="mt-auto flex items-start gap-2.5 rounded-xl border border-primary-200/30 bg-primary-50/20 p-3 text-[12.5px]">
-                <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary-600/90" />
-                <p className="font-sans font-medium leading-relaxed text-primary-900">
+            <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-stone-200/70 bg-stone-50/70 p-3 text-xs">
+                <Info className="mt-0.5 h-4 w-4 shrink-0 text-stone-500" />
+                <p className="font-sans font-medium leading-relaxed text-stone-600">
                     {t('overview.categoryDistributionTip')}
                 </p>
             </div>

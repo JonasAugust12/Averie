@@ -4,6 +4,7 @@ export { StaffGridSkeleton } from './StaffGridSkeleton';
 export { DashboardSkeleton } from './DashboardSkeleton';
 export { TimeSlotsSkeleton } from './TimeSlotsSkeleton';
 export { ScheduleSettingsSkeleton } from './ScheduleSettingsSkeleton';
+export { PromotionSettingsSkeleton } from './PromotionSettingsSkeleton';
 export { StaffCalendarSkeleton } from './StaffCalendarSkeleton';
 export { StaffPortalPageSkeleton } from './StaffPortalPageSkeleton';
 export { StaffSchedulePageSkeleton } from './StaffSchedulePageSkeleton';

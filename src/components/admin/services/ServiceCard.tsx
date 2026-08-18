@@ -19,18 +19,18 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
     return (
         <div
             className={cn(
-                'group flex items-center justify-between p-5 rounded-2xl border transition-all duration-200',
+                'group flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-200',
                 service.visible
-                    ? 'bg-white border-stone-200/80 shadow-xs hover:shadow-md hover:border-stone-350'
-                    : 'bg-stone-50/60 border-stone-200/45 opacity-65',
+                    ? 'bg-white border-stone-200/80 shadow-2xs hover:shadow-xs hover:border-stone-300'
+                    : 'bg-stone-50/70 border-stone-200/50 opacity-65',
             )}
         >
             {/* Left: Text content details */}
-            <div className="flex-1 min-w-0 mr-6">
+            <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2.5 flex-wrap">
                     <h4
                         className={cn(
-                            'font-sans font-bold text-[15.5px] leading-tight transition-colors',
+                            'font-sans font-bold text-sm sm:text-[15.5px] leading-snug transition-colors',
                             service.visible
                                 ? 'text-stone-900 group-hover:text-stone-950'
                                 : 'text-stone-400 line-through',
@@ -39,65 +39,76 @@ export function ServiceCard({ service, onEdit, onToggle, onDelete }: ServiceCard
                         {service.name}
                     </h4>
                     {!service.visible && (
-                        <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200/40 text-[10.5px] font-extrabold text-stone-400 uppercase tracking-wider">
+                        <span className="px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200/60 text-[10px] font-extrabold text-stone-500 uppercase tracking-wider">
                             {t('services.hidden')}
                         </span>
                     )}
                 </div>
+
                 {service.description && (
-                    <p className="mt-2 font-sans text-[13px] text-stone-500 leading-relaxed line-clamp-2">
+                    <p className="mt-1.5 font-sans text-xs sm:text-[13px] text-stone-500 leading-relaxed line-clamp-2">
                         {service.description}
                     </p>
                 )}
-                {/* Price and Duration in uppercase style sheet inline */}
-                <div className="flex items-center gap-2.5 text-stone-500 font-sans text-xs uppercase font-bold tracking-wider mt-3">
-                    <span className="flex items-center gap-1.5">
+
+                {/* Price and Duration */}
+                <div className="flex items-center gap-3 text-stone-500 font-sans text-xs uppercase font-bold tracking-wider mt-2.5">
+                    <span className="flex items-center gap-1.5 text-stone-500">
                         <Clock className="h-3.5 w-3.5 text-stone-400" />
-                        {service.estimatedMinutes} Min
+                        {service.estimatedMinutes} min
                     </span>
-                    <span className="w-1.5 h-1.5 bg-stone-300 rounded-full shrink-0" />
-                    <span className="text-stone-700">{formatUsd(service.price)}</span>
+                    <span className="w-1 h-1 bg-stone-300 rounded-full shrink-0" />
+                    <span className="font-display font-bold text-stone-900 text-sm tracking-normal normal-case">
+                        {formatUsd(service.price)}
+                    </span>
                 </div>
             </div>
 
-            {/* Right actions: Toggle + Actions split by border line */}
-            <div className="flex items-center gap-4 shrink-0 pl-5 border-l border-stone-200/50">
-                {/* Premium slider toggle */}
-                <button
-                    type="button"
-                    onClick={() => onToggle(service)}
-                    className={cn(
-                        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none',
-                        service.visible ? 'bg-stone-850 bg-[#2b2623]' : 'bg-[#e3e2e1]',
-                    )}
-                    role="switch"
-                    aria-checked={service.visible}
-                    title={service.visible ? t('services.hide') : t('services.show')}
-                >
-                    <span
-                        className={cn(
-                            'pointer-events-none inline-block h-4.5 w-4.5 transform rounded-full bg-white shadow transition duration-300 ease-in-out mt-0.5 ml-0.5',
-                            service.visible ? 'translate-x-5' : 'translate-x-0',
-                        )}
-                    />
-                </button>
+            {/* Right actions: Toggle + Actions */}
+            <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 sm:border-l border-stone-100 sm:pl-4">
+                {/* Visibility label on mobile */}
+                <span className="sm:hidden font-sans text-xs font-semibold text-stone-500">
+                    {service.visible ? t('services.visible') : t('services.hidden')}
+                </span>
 
-                {/* Quick actions (Edit / Delete) */}
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-3">
+                    {/* Luxury slider toggle */}
                     <button
-                        onClick={() => onEdit(service)}
-                        className="h-9 w-9 rounded-lg flex items-center justify-center border border-stone-200/60 bg-white hover:border-stone-400 hover:bg-stone-100 hover:scale-110 active:scale-90 transition-all duration-300 ease-in-out shadow-xs"
-                        title={t('services.edit')}
+                        type="button"
+                        onClick={() => onToggle(service)}
+                        className={cn(
+                            'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-3xs',
+                            service.visible ? 'bg-stone-900' : 'bg-stone-200',
+                        )}
+                        role="switch"
+                        aria-checked={service.visible}
+                        title={service.visible ? t('services.hide') : t('services.show')}
                     >
-                        <Pencil className="h-3.5 w-3.5 text-stone-500" />
+                        <span
+                            className={cn(
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out',
+                                service.visible ? 'translate-x-5' : 'translate-x-0',
+                            )}
+                        />
                     </button>
-                    <button
-                        onClick={() => onDelete(service)}
-                        className="h-9 w-9 rounded-lg flex items-center justify-center border border-stone-200/60 bg-white hover:border-red-300 hover:bg-red-50 hover:scale-110 active:scale-90 transition-all duration-300 ease-in-out shadow-xs"
-                        title={t('services.delete')}
-                    >
-                        <Trash2 className="h-3.5 w-3.5 text-red-500" />
-                    </button>
+
+                    {/* Quick actions (Edit / Delete) */}
+                    <div className="flex items-center gap-1.5">
+                        <button
+                            onClick={() => onEdit(service)}
+                            className="h-8.5 w-8.5 rounded-xl flex items-center justify-center border border-stone-200/80 bg-white hover:border-stone-300 hover:bg-stone-50 active:scale-95 transition-all duration-200 shadow-3xs cursor-pointer text-stone-600 hover:text-stone-900"
+                            title={t('services.edit')}
+                        >
+                            <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                            onClick={() => onDelete(service)}
+                            className="h-8.5 w-8.5 rounded-xl flex items-center justify-center border border-stone-200/80 bg-white hover:border-rose-200 hover:bg-rose-50 active:scale-95 transition-all duration-200 shadow-3xs cursor-pointer text-stone-400 hover:text-rose-600"
+                            title={t('services.delete')}
+                        >
+                            <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

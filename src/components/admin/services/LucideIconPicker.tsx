@@ -39,7 +39,7 @@ export function LucideIconPicker({
     }, [query]);
 
     return (
-        <div className={cn('min-w-0 space-y-3 overflow-hidden', className)}>
+        <div className={cn('min-w-0 space-y-2.5 overflow-hidden', className)}>
             {label ? (
                 <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-500">
                     {label}
@@ -53,19 +53,19 @@ export function LucideIconPicker({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={searchPlaceholder}
-                    className="w-full rounded-xl border border-stone-200/80 bg-stone-50/50 py-2.5 pr-4 pl-10 font-sans text-sm text-stone-800 outline-none transition-all placeholder:text-stone-400 focus:border-stone-300 focus:bg-white focus:ring-2 focus:ring-stone-100"
+                    className="w-full rounded-xl border border-stone-200/80 bg-stone-50/60 py-2.5 pr-4 pl-10 font-sans text-sm text-stone-800 outline-none transition-all placeholder:text-stone-400 focus:border-stone-400 focus:bg-white focus:ring-2 focus:ring-stone-100 shadow-3xs"
                 />
             </div>
 
-            <div className="grid min-w-0 grid-cols-5 gap-2 overflow-hidden overscroll-none sm:grid-cols-8">
+            <div className="grid min-w-0 grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1 overscroll-none sm:grid-cols-8">
                 <button
                     type="button"
                     onClick={() => onChange(null)}
                     className={cn(
-                        'flex h-11 items-center justify-center rounded-xl border text-xs font-semibold transition-all',
+                        'flex h-10 items-center justify-center rounded-xl border text-xs font-semibold transition-all cursor-pointer',
                         value === null
-                            ? 'border-stone-800 bg-stone-800 text-white shadow-sm'
-                            : 'border-stone-200/80 bg-white text-stone-500 hover:border-stone-300 hover:bg-stone-50',
+                            ? 'border-stone-900 bg-stone-900 text-white shadow-3xs'
+                            : 'border-stone-200/80 bg-stone-50/50 text-stone-500 hover:border-stone-300 hover:bg-white',
                     )}
                     title={noneLabel}
                 >
@@ -84,14 +84,14 @@ export function LucideIconPicker({
                             type="button"
                             onClick={() => onChange(iconName)}
                             className={cn(
-                                'flex h-11 items-center justify-center rounded-xl border transition-all hover:scale-105 active:scale-95',
+                                'flex h-10 items-center justify-center rounded-xl border transition-all hover:scale-105 active:scale-95 cursor-pointer',
                                 selected
-                                    ? 'border-stone-800 bg-stone-800 text-white shadow-sm'
-                                    : 'border-stone-200/80 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50',
+                                    ? 'border-stone-900 bg-stone-900 text-white shadow-3xs'
+                                    : 'border-stone-200/80 bg-stone-50/50 text-stone-600 hover:border-stone-300 hover:bg-white',
                             )}
                             title={iconName}
                         >
-                            <Icon className="h-5 w-5" />
+                            <Icon className="h-4.5 w-4.5" />
                         </button>
                     );
                 })}
@@ -99,7 +99,7 @@ export function LucideIconPicker({
 
             {value ? (
                 <p className="font-sans text-xs text-stone-500">
-                    {selectedLabel}: <span className="font-semibold text-stone-700">{value}</span>
+                    {selectedLabel}: <span className="font-semibold text-stone-800">{value}</span>
                 </p>
             ) : null}
         </div>

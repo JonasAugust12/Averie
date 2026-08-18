@@ -12,6 +12,10 @@ export const dynamic = 'force-dynamic';
  *   get:
  *     tags: [Settings]
  *     summary: Get salon promotion settings
+ *     description: |
+ *       Public read of salon_settings.promotion. Landing renders the section when
+ *       `enabled` is true, `imageUrl` is set, and date rules pass (`showBeforeStartDate`,
+ *       `hideAfterExpiry`, optional start/end dates). Computed `visible` is not returned.
  */
 export async function GET() {
     try {

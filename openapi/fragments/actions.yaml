@@ -292,37 +292,13 @@ paths:
         post:
             tags: [Server Actions]
             summary: updatePromotionSettingsAction
-            description: Admin only. Updates salon_settings.promotion text fields, enabled toggle, optional dates, and hideAfterExpiry.
+            description: Admin only. Updates salon_settings.promotion text fields, enabled toggle, optional dates, hideAfterExpiry, and showBeforeStartDate.
             requestBody:
                 required: true
                 content:
                     application/json:
                         schema:
-                            type: object
-                            required: [enabled, title, description, hideAfterExpiry]
-                            properties:
-                                enabled:
-                                    type: boolean
-                                title:
-                                    type: string
-                                    maxLength: 120
-                                description:
-                                    type: string
-                                    maxLength: 500
-                                startDate:
-                                    type: string
-                                    nullable: true
-                                    pattern: '^\d{4}-\d{2}-\d{2}$'
-                                    description: YYYY-MM-DD or null for unbounded start (Option B)
-                                endDate:
-                                    type: string
-                                    nullable: true
-                                    pattern: '^\d{4}-\d{2}-\d{2}$'
-                                    description: YYYY-MM-DD or null for unbounded end (Option B)
-                                hideAfterExpiry:
-                                    type: boolean
-                                    default: true
-                                    description: When true, landing hides the section after endDate passes
+                            $ref: '#/components/schemas/updatePromotionSettingsInputSchema'
             responses:
                 '200':
                     description: Promotion settings updated
