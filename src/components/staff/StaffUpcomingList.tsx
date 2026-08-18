@@ -4,6 +4,7 @@ import { ArrowLeft, Clock } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { BookingStatusBadge } from '@components/admin/bookings';
 import type { BookingListItemDto } from '@typings/booking.type';
+import { staffColorAlpha } from '@utils/staff.util';
 
 interface StaffUpcomingListProps {
     bookings: BookingListItemDto[];
@@ -51,7 +52,7 @@ export function StaffUpcomingList({ bookings, staffColor, onBack }: StaffUpcomin
                             >
                                 <div
                                     className="shrink-0 rounded-xl px-2.5 py-2 text-center min-w-13"
-                                    style={{ backgroundColor: `${staffColor}1a` }}
+                                    style={{ backgroundColor: staffColorAlpha(staffColor, 24) }}
                                 >
                                     <p
                                         className="font-sans text-[11px] sm:text-sm font-black leading-none"
@@ -62,7 +63,7 @@ export function StaffUpcomingList({ bookings, staffColor, onBack }: StaffUpcomin
                                     {ampm && (
                                         <p
                                             className="font-sans text-[9px] font-bold mt-0.5"
-                                            style={{ color: staffColor, opacity: 0.65 }}
+                                            style={{ color: staffColorAlpha(staffColor, 85) }}
                                         >
                                             {ampm}
                                         </p>
@@ -96,9 +97,9 @@ export function StaffUpcomingList({ bookings, staffColor, onBack }: StaffUpcomin
             <div className="flex justify-center py-3">
                 <button
                     onClick={onBack}
-                    className="font-sans text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors flex items-center gap-1.5 py-3 px-4"
+                    className="flex items-center gap-2 px-5 py-3 font-sans text-sm font-semibold text-stone-600 transition-colors hover:text-stone-900"
                 >
-                    <ArrowLeft className="h-3.5 w-3.5" /> {t('staffPortal.backButton')}
+                    <ArrowLeft className="h-4 w-4" /> {t('staffPortal.backButton')}
                 </button>
             </div>
         </div>

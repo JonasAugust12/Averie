@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Plus } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Input } from '@components/ui';
 import { Button } from '@components/common';
@@ -41,6 +41,156 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     );
 }
 
+function normalizeSpecialty(value: string): string {
+    return value.trim().replace(/\s+/g, ' ');
+}
+
+function dedupeSpecialties(items: string[]): string[] {
+    const seen = new Set<string>();
+    return items
+        .map(normalizeSpecialty)
+        .filter(Boolean)
+        .filter((item) => {
+            const key = item.toLowerCase();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+}
+
+function SpecialtiesEditor({
+    specialties,
+    onChange,
+    labels,
+}: {
+    specialties: string[];
+    onChange: (next: string[]) => void;
+    labels: {
+        placeholder: string;
+        add: string;
+        remove: string;
+        empty: string;
+    };
+}) {
+    const [draft, setDraft] = useState('');
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editDraft, setEditDraft] = useState('');
+
+    function addSpecialty() {
+        const value = normalizeSpecialty(draft);
+        if (!value) return;
+        onChange(dedupeSpecialties([...specialties, value]));
+        setDraft('');
+    }
+
+    function removeSpecialty(index: number) {
+        onChange(specialties.filter((_, i) => i !== index));
+        if (editingIndex === index) {
+            setEditingIndex(null);
+            setEditDraft('');
+        }
+    }
+
+    function startEdit(index: number) {
+        setEditingIndex(index);
+        setEditDraft(specialties[index]);
+    }
+
+    function commitEdit() {
+        if (editingIndex === null) return;
+        const value = normalizeSpecialty(editDraft);
+        const next = [...specialties];
+        if (!value) {
+            next.splice(editingIndex, 1);
+        } else {
+            next[editingIndex] = value;
+        }
+        onChange(dedupeSpecialties(next));
+        setEditingIndex(null);
+        setEditDraft('');
+    }
+
+    return (
+        <div className="space-y-3">
+            {specialties.length === 0 ? (
+                <p className="font-sans text-xs text-stone-400 italic">{labels.empty}</p>
+            ) : (
+                <div className="flex flex-wrap gap-2">
+                    {specialties.map((specialty, index) =>
+                        editingIndex === index ? (
+                            <Input
+                                key={`edit-${index}`}
+                                autoFocus
+                                value={editDraft}
+                                onChange={(e) => setEditDraft(e.target.value)}
+                                onBlur={commitEdit}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        commitEdit();
+                                    }
+                                    if (e.key === 'Escape') {
+                                        setEditingIndex(null);
+                                        setEditDraft('');
+                                    }
+                                }}
+                                className="h-9 w-40 border-neutral-200 bg-white text-sm"
+                            />
+                        ) : (
+                            <span
+                                key={`${specialty}-${index}`}
+                                className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 pl-3 pr-1 py-1 font-sans text-sm font-medium text-stone-700"
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => startEdit(index)}
+                                    className="cursor-pointer hover:text-stone-900"
+                                >
+                                    {specialty}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => removeSpecialty(index)}
+                                    className="rounded-full p-1 text-stone-400 hover:bg-stone-200 hover:text-red-600"
+                                    aria-label={labels.remove}
+                                >
+                                    <X className="h-3.5 w-3.5" />
+                                </button>
+                            </span>
+                        ),
+                    )}
+                </div>
+            )}
+
+            <div className="flex gap-2">
+                <Input
+                    placeholder={labels.placeholder}
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addSpecialty();
+                        }
+                    }}
+                    className="border-neutral-200 bg-stone-50 focus:bg-white"
+                />
+                <Button
+                    type="button"
+                    variant="outlined"
+                    size="sm"
+                    onClick={addSpecialty}
+                    disabled={!draft.trim()}
+                    className="shrink-0 border-neutral-200"
+                >
+                    <Plus className="h-4 w-4" />
+                    {labels.add}
+                </Button>
+            </div>
+        </div>
+    );
+}
+
 const emptyForm = (): StaffFormValues => ({
     email: '',
     password: '',
@@ -59,33 +209,30 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
     useAdminFormModalLock();
 
     const [form, setForm] = useState<StaffFormValues>(initial ?? emptyForm());
-    const [specialtiesInput, setSpecialtiesInput] = useState('');
 
     useEffect(() => {
         const base = initial ?? emptyForm();
-        setForm(base);
-        setSpecialtiesInput((base.specialties ?? []).join(', '));
+        setForm({
+            ...base,
+            specialties: dedupeSpecialties(base.specialties ?? []),
+        });
     }, [initial]);
 
     const patch = (partial: Partial<StaffFormValues>) => setForm((f) => ({ ...f, ...partial }));
 
     const handleSave = async () => {
         if (!form.firstName.trim() || !form.lastName.trim()) return;
-        const specialties = specialtiesInput
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean);
         await onSave({
             ...form,
             firstName: form.firstName.trim(),
             lastName: form.lastName.trim(),
-            specialties,
+            specialties: dedupeSpecialties(form.specialties),
         });
     };
 
     return (
         <div
-            className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
+            className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
             <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
@@ -108,14 +255,14 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
 
                 <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
                     <div className="grid grid-cols-2 gap-4">
-                        <Field label={t('staff.firstName') || 'First name'}>
+                        <Field label={t('staff.firstName')}>
                             <Input
                                 value={form.firstName}
                                 onChange={(e) => patch({ firstName: e.target.value })}
                                 className="border-neutral-200 bg-stone-50 focus:bg-white"
                             />
                         </Field>
-                        <Field label={t('staff.lastName') || 'Last name'}>
+                        <Field label={t('staff.lastName')}>
                             <Input
                                 value={form.lastName}
                                 onChange={(e) => patch({ lastName: e.target.value })}
@@ -135,7 +282,7 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     </Field>
 
                     {isNew && (
-                        <Field label={t('staff.password') || 'Password'}>
+                        <Field label={t('staff.password')}>
                             <Input
                                 type="password"
                                 value={form.password ?? ''}
@@ -155,11 +302,15 @@ export function StaffFormModal({ initial, onSave, onClose, isSaving }: StaffForm
                     </Field>
 
                     <Field label={t('staff.specialties')}>
-                        <Input
-                            placeholder={t('staff.specialtiesPlaceholder')}
-                            value={specialtiesInput}
-                            onChange={(e) => setSpecialtiesInput(e.target.value)}
-                            className="border-neutral-200 bg-stone-50 focus:bg-white"
+                        <SpecialtiesEditor
+                            specialties={form.specialties}
+                            onChange={(specialties) => patch({ specialties })}
+                            labels={{
+                                placeholder: t('staff.specialtiesPlaceholder'),
+                                add: t('staff.specialtiesAdd'),
+                                remove: t('staff.specialtiesRemove'),
+                                empty: t('staff.specialtiesEmpty'),
+                            }}
                         />
                     </Field>
 

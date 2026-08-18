@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useCreateBooking } from '@services/booking.service';
+import { CREATE_BOOKING_MIN_LOADING_MS, useCreateBooking } from '@services/booking.service';
 import { useServices } from '@services/service-catalog.service';
 import { useStaff } from '@services/staff.service';
 import { useScheduleSettings } from '@services/schedule.service';
@@ -11,11 +12,13 @@ import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 import { formatUserName, getUserInitials } from '@utils/staff.util';
+import { toastSuccess } from '@utils/toast.util';
 
 export function ReviewStep() {
     const t = useBookingTranslations();
     const router = useRouter();
     const createBooking = useCreateBooking();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { serviceIds, staffPreference, staffId, date, time, customer, setReference, setStep } =
         useBookingStore();
     const { data: services } = useServices();
@@ -37,9 +40,13 @@ export function ReviewStep() {
     async function handleConfirm() {
         if (selectedServices.length === 0 || !date || !time || !customer) return;
         if (staffPreference === 'specific' && !staffId) return;
+        if (isSubmitting) return;
 
-        createBooking.mutate(
-            {
+        setIsSubmitting(true);
+        const startedAt = Date.now();
+
+        try {
+            const data = await createBooking.mutateAsync({
                 serviceIds,
                 staffPreference,
                 staffId: staffPreference === 'specific' ? (staffId ?? undefined) : undefined,
@@ -52,14 +59,23 @@ export function ReviewStep() {
                     email: customer.email || undefined,
                     note: customer.note || undefined,
                 },
-            },
-            {
-                onSuccess: (data) => {
-                    setReference(data.reference);
-                    router.push('/book/confirmation');
-                },
-            },
-        );
+            });
+
+            const remaining = CREATE_BOOKING_MIN_LOADING_MS - (Date.now() - startedAt);
+            if (remaining > 0) {
+                await new Promise<void>((resolve) => {
+                    setTimeout(resolve, remaining);
+                });
+            }
+
+            setReference(data.reference);
+            toastSuccess(t('toasts.bookingCreated'));
+            router.push('/book/confirmation');
+        } catch {
+            // Toast handled by useCreateBooking onError
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     if (selectedServices.length === 0 || !date || !time || !customer) {
@@ -182,16 +198,16 @@ export function ReviewStep() {
                         variant="outlined"
                         className="rounded-full tracking-widest uppercase px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm active:scale-95 transition-all duration-200"
                         onClick={() => setStep(5)}
-                        disabled={createBooking.isPending}
+                        disabled={isSubmitting}
                     >
                         ← {t('back')}
                     </Button>
                     <Button
                         className="rounded-full tracking-widest uppercase px-8 sm:px-10 py-2.5 sm:py-3 text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all duration-200"
                         onClick={handleConfirm}
-                        disabled={createBooking.isPending}
+                        disabled={isSubmitting}
                     >
-                        {createBooking.isPending ? (
+                        {isSubmitting ? (
                             <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
                                 {t('cta.confirm')}

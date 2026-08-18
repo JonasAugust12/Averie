@@ -4,11 +4,13 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
+import type { DatesSetArg, EventClickArg, EventContentArg } from '@fullcalendar/core';
+import { useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { cn } from '@utils/cn.util';
-import type { BookingCalendarEvent } from '@utils/staff-calendar.util';
+import type { BookingCalendarEvent, CalendarDateRange } from '@utils/staff-calendar.util';
+import { calendarRangeFromFullCalendar } from '@utils/staff-calendar.util';
 import type { BookingListItemDto } from '@typings/booking.type';
 import type { UserDto } from '@typings/salon-user.type';
 import { formatUserName, getUserColor } from '@utils/staff.util';
@@ -18,6 +20,9 @@ interface StaffCalendarProps {
     onBookingClick?: (booking: BookingListItemDto) => void;
     initialDate?: string;
     staffList?: UserDto[];
+    onRangeChange?: (range: CalendarDateRange) => void;
+    isLoadingEvents?: boolean;
+    accentColor?: string;
 }
 
 export function StaffCalendar({
@@ -25,9 +30,21 @@ export function StaffCalendar({
     onBookingClick,
     initialDate,
     staffList,
+    onRangeChange,
+    isLoadingEvents = false,
+    accentColor,
 }: StaffCalendarProps) {
     const t = useAdminTranslations();
     const locale = useLocale();
+    const accent = accentColor ?? '#2b2623';
+    const accentMuted = accentColor ?? '#78716c';
+
+    const handleDatesSet = useCallback(
+        (arg: DatesSetArg) => {
+            onRangeChange?.(calendarRangeFromFullCalendar(arg.start, arg.end));
+        },
+        [onRangeChange],
+    );
 
     const handleEventClick = (info: EventClickArg) => {
         const type = info.event.extendedProps.type as string;
@@ -59,17 +76,22 @@ export function StaffCalendar({
     };
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm">
+        <div
+            className={cn(
+                'overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm transition-opacity',
+                isLoadingEvents && 'opacity-60',
+            )}
+        >
             <style>{`
                 .fc {
-                    --fc-button-bg-color: #2b2623;
-                    --fc-button-border-color: #2b2623;
-                    --fc-button-hover-bg-color: #44403c;
-                    --fc-button-hover-border-color: #44403c;
-                    --fc-button-active-bg-color: #78716c;
-                    --fc-button-active-border-color: #78716c;
+                    --fc-button-bg-color: ${accent};
+                    --fc-button-border-color: ${accent};
+                    --fc-button-hover-bg-color: color-mix(in oklab, ${accent} 85%, black);
+                    --fc-button-hover-border-color: color-mix(in oklab, ${accent} 85%, black);
+                    --fc-button-active-bg-color: ${accentMuted};
+                    --fc-button-active-border-color: ${accentMuted};
                     --fc-button-text-color: #ffffff;
-                    --fc-today-bg-color: color-mix(in oklab, #78716c 8%, white);
+                    --fc-today-bg-color: color-mix(in oklab, ${accentMuted} 8%, white);
                     --fc-border-color: #e7e5e4;
                     --fc-page-bg-color: #ffffff;
                     --fc-neutral-bg-color: #fafaf9;
@@ -112,12 +134,12 @@ export function StaffCalendar({
                 }
 
                 .fc .fc-daygrid-day.fc-day-today {
-                    background: linear-gradient(135deg, color-mix(in oklab, #78716c 10%, white) 0%, color-mix(in oklab, #78716c 5%, white) 100%);
+                    background: linear-gradient(135deg, color-mix(in oklab, ${accentMuted} 10%, white) 0%, color-mix(in oklab, ${accentMuted} 5%, white) 100%);
                 }
 
                 .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-                    color: #44403c;
-                    background: rgba(120, 113, 108, 0.15);
+                    color: ${accentMuted};
+                    background: color-mix(in oklab, ${accentMuted} 15%, transparent);
                     width: 24px;
                     height: 24px;
                     display: flex;
@@ -205,6 +227,7 @@ export function StaffCalendar({
                         right: 'dayGridMonth,timeGridWeek',
                     }}
                     events={events}
+                    datesSet={handleDatesSet}
                     eventClick={handleEventClick}
                     eventContent={renderEventContent}
                     eventDisplay="block"

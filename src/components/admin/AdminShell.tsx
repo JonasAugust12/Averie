@@ -18,11 +18,12 @@ import {
 } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { LanguageSwitcher, AdminRouteTransitionLoader } from '@components/shared';
-import { useLogout } from '@services/auth.service';
+import { useLogout, signOut } from '@services/auth.service';
 import { Button } from '@components/common';
 import { AdminNewBookingModal } from '@components/admin/bookings';
 import { useUIStore } from '@stores/ui.store';
 import { cn } from '@utils/cn.util';
+import { toastSuccess } from '@utils/toast.util';
 import { useSession } from 'next-auth/react';
 
 const navItems = [
@@ -31,7 +32,7 @@ const navItems = [
     { href: '/admin/services', icon: Scissors, key: 'services' as const },
     { href: '/admin/staff', icon: Users, key: 'employees' as const },
     { href: '/admin/schedule', icon: Calendar, key: 'schedule' as const },
-    { href: '/admin/settings/schedule', icon: Settings, key: 'settings' as const },
+    { href: '/admin/settings', icon: Settings, key: 'settings' as const },
 ];
 
 interface AdminShellProps {
@@ -49,14 +50,23 @@ export function AdminShell({ children }: AdminShellProps) {
     const isFormModalOpen = useUIStore((s) => s.adminFormModalLocks > 0);
 
     useEffect(() => {
-        if (status === 'unauthenticated') {
+        if (status === 'loading') return;
+        if (status === 'unauthenticated' || session?.user?.role !== 'admin') {
             router.replace('/admin/login');
         }
-    }, [status, router]);
+    }, [status, session?.user?.role, router]);
 
     function handleSignOut() {
         logout.mutate(undefined, {
-            onSuccess: () => router.replace('/admin/login'),
+            onSettled: async () => {
+                try {
+                    await signOut({ redirect: false });
+                } catch (error) {
+                    console.error('[handleSignOut]', error);
+                }
+                toastSuccess(t('toasts.signOutSuccess'));
+                router.replace('/admin/login');
+            },
         });
     }
 
@@ -104,7 +114,12 @@ export function AdminShell({ children }: AdminShellProps) {
                 <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-6">
                     {navItems.map(({ href, icon: Icon, key }) => {
                         const active =
-                            href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+                            href === '/admin/settings'
+                                ? pathname === '/admin/settings' ||
+                                  pathname.startsWith('/admin/settings/')
+                                : href === '/admin'
+                                  ? pathname === '/admin'
+                                  : pathname.startsWith(href);
                         return (
                             <Link
                                 key={href}
@@ -221,22 +236,6 @@ export function AdminShell({ children }: AdminShellProps) {
                             <span className="sm:hidden">Booking</span>
                         </Button>
 
-                        {/* Desktop Profile Info */}
-                        <div className="hidden items-center gap-2 lg:flex">
-                            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-700 font-sans text-xs font-bold text-white shadow-sm">
-                                EV
-                            </span>
-                            <div className="leading-tight">
-                                <p className="font-sans text-sm text-stone-800 font-bold">
-                                    Eleanor Vance
-                                </p>
-                                <p className="font-sans text-xs text-stone-500 font-semibold">
-                                    Admin
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Mobile Sign Out Button */}
                         <button
                             type="button"
                             onClick={handleSignOut}
@@ -252,7 +251,12 @@ export function AdminShell({ children }: AdminShellProps) {
                 <div className="no-scrollbar relative z-20 flex gap-1.5 overflow-x-auto border-b border-stone-200/60 bg-white/80 px-3.5 py-2 shadow-2xs backdrop-blur-md lg:hidden">
                     {navItems.map(({ href, icon: Icon, key }) => {
                         const active =
-                            href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+                            href === '/admin/settings'
+                                ? pathname === '/admin/settings' ||
+                                  pathname.startsWith('/admin/settings/')
+                                : href === '/admin'
+                                  ? pathname === '/admin'
+                                  : pathname.startsWith(href);
                         return (
                             <Link
                                 key={href}
@@ -314,6 +318,9 @@ function titleForPath(pathname: string, t: ReturnType<typeof useAdminTranslation
     }
     if (pathname.startsWith('/admin/staff')) return t('staff.title');
     if (pathname.startsWith('/admin/schedule')) return t('schedule.title');
-    if (pathname.startsWith('/admin/settings')) return t('schedule.settings');
+    if (pathname === '/admin/settings' || pathname === '/admin/settings/') {
+        return t('settingsAccount.pageTitle');
+    }
+    if (pathname.startsWith('/admin/settings/schedule')) return t('schedule.settings');
     return t('overview.heading');
 }

@@ -7,7 +7,7 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import type { BookingListItemDto } from '@typings/booking.type';
 
 interface PopularServicesProps {
-    bookings: BookingListItemDto[] | undefined;
+    bookings: BookingListItemDto[];
 }
 
 export function PopularServices({ bookings }: PopularServicesProps) {
@@ -37,9 +37,24 @@ export function PopularServices({ bookings }: PopularServicesProps) {
 
     if (computedServiceStats.length === 0) {
         return (
-            <div className="rounded-2xl border border-white/50 bg-white/80 p-5 shadow-md backdrop-blur-md text-center text-muted font-sans text-sm">
-                {t('overview.servicesNoData')}
-            </div>
+            <section className="rounded-2xl border border-neutral-200/50 bg-white/95 p-5 shadow-md backdrop-blur-md">
+                <div className="mb-4 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-700">
+                        <Star className="h-5 w-5" />
+                    </div>
+                    <div>
+                        <h3 className="font-display text-lg font-semibold text-stone-900 md:text-[19px]">
+                            {t('overview.popularServicesTitle')}
+                        </h3>
+                        <p className="mt-0.5 font-sans text-[13px] font-medium text-stone-500">
+                            {t('overview.popularServicesSubtitle')}
+                        </p>
+                    </div>
+                </div>
+                <p className="py-8 text-center font-sans text-sm text-stone-500">
+                    {t('overview.servicesNoData')}
+                </p>
+            </section>
         );
     }
 

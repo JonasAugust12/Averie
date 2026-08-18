@@ -1,10 +1,16 @@
 'use client';
 
-import { Loader2, Moon, Sun, Sunset } from 'lucide-react';
+import { useMemo } from 'react';
+import { Moon, Sun, Sunset } from 'lucide-react';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useAdminTranslations } from '@i18n/use-app-translations';
+import { AdminBookingTimeStepSkeleton } from '@components/skeletons';
 import { formatDisplayDate } from '@utils/format.util';
-import { getPeriodForTime } from '@utils/schedule.util';
+import {
+    getPeriodForTime,
+    getWeekdayFromDate,
+    mergeBookingDisplaySlots,
+} from '@utils/schedule.util';
 import { cn } from '@utils/cn.util';
 import type { TimeSlotDto } from '@typings/booking.type';
 
@@ -28,27 +34,31 @@ export function BookingTimeStep({
     const tBook = useBookingTranslations();
     const tAdmin = useAdminTranslations();
 
-    const available = (slots ?? []).filter((s) => s.available);
-    const timePeriods = [
-        {
-            key: 'morning',
-            label: tBook('periods.morning'),
-            icon: Sun,
-            items: available.filter((s) => getPeriodForTime(s.time) === 'morning'),
-        },
-        {
-            key: 'afternoon',
-            label: tBook('periods.afternoon'),
-            icon: Sunset,
-            items: available.filter((s) => getPeriodForTime(s.time) === 'afternoon'),
-        },
-        {
-            key: 'evening',
-            label: tBook('periods.evening'),
-            icon: Moon,
-            items: available.filter((s) => getPeriodForTime(s.time) === 'evening'),
-        },
-    ];
+    const weekday = getWeekdayFromDate(selectedDate);
+
+    const timePeriods = useMemo(() => {
+        const displaySlots = mergeBookingDisplaySlots(slots ?? [], weekday);
+        return [
+            {
+                key: 'morning' as const,
+                label: tBook('periods.morning'),
+                icon: Sun,
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'morning'),
+            },
+            {
+                key: 'afternoon' as const,
+                label: tBook('periods.afternoon'),
+                icon: Sunset,
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'afternoon'),
+            },
+            {
+                key: 'evening' as const,
+                label: tBook('periods.evening'),
+                icon: Moon,
+                items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'evening'),
+            },
+        ];
+    }, [slots, weekday, tBook]);
 
     return (
         <div className="w-full space-y-6">
@@ -69,10 +79,7 @@ export function BookingTimeStep({
             </div>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-12 text-stone-400">
-                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                    <span>{tAdmin('booking.time.loading')}</span>
-                </div>
+                <AdminBookingTimeStepSkeleton />
             ) : (
                 <div className="space-y-5">
                     {timePeriods.map((period) => {
@@ -89,13 +96,47 @@ export function BookingTimeStep({
                                     </p>
                                 ) : (
                                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                                        {period.items.map((s) => {
-                                            const isSelected = selectedTime === s.time;
+                                        {period.items.map((slot) => {
+                                            if (slot.isClosedDisplay) {
+                                                return (
+                                                    <div
+                                                        key={slot.id}
+                                                        aria-disabled
+                                                        className="cursor-not-allowed rounded-xl border border-stone-200 bg-stone-50/60 py-2.5 px-3 font-sans text-xs font-bold text-stone-400 opacity-55 select-none text-center"
+                                                    >
+                                                        <span className="block">{slot.time}</span>
+                                                        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-red-600">
+                                                            {tBook('periods.closed')}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            }
+
+                                            if (!slot.available) {
+                                                const label =
+                                                    slot.lockReason === 'booked'
+                                                        ? tBook('periods.booked')
+                                                        : tBook('periods.unavailable');
+                                                return (
+                                                    <div
+                                                        key={slot.id}
+                                                        aria-disabled
+                                                        className="cursor-not-allowed rounded-xl border border-stone-200 bg-stone-50/60 py-2.5 px-3 font-sans text-xs font-bold text-stone-400 opacity-55 select-none text-center"
+                                                    >
+                                                        <span className="block">{slot.time}</span>
+                                                        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
+                                                            {label}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            }
+
+                                            const isSelected = selectedTime === slot.time;
                                             return (
                                                 <button
-                                                    key={s.id}
+                                                    key={slot.id}
                                                     type="button"
-                                                    onClick={() => onSelectTime(s.time)}
+                                                    onClick={() => onSelectTime(slot.time)}
                                                     className={cn(
                                                         'py-2.5 px-3 rounded-xl font-sans text-xs font-bold transition-all border text-center cursor-pointer',
                                                         isSelected
@@ -103,7 +144,7 @@ export function BookingTimeStep({
                                                             : 'bg-white border-stone-200 text-stone-800 hover:border-stone-400 hover:bg-stone-50',
                                                     )}
                                                 >
-                                                    {s.time}
+                                                    {slot.time}
                                                 </button>
                                             );
                                         })}

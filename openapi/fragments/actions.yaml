@@ -96,6 +96,36 @@ paths:
                 '200':
                     description: Signed out
 
+    /actions/changeOwnPassword:
+        post:
+            tags: [Server Actions]
+            summary: changeOwnPasswordAction
+            description: Admin or staff. Updates the signed-in user's password after verifying the current password (bcrypt).
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [currentPassword, newPassword, confirmPassword]
+                            properties:
+                                currentPassword:
+                                    type: string
+                                    minLength: 1
+                                newPassword:
+                                    type: string
+                                    minLength: 6
+                                confirmPassword:
+                                    type: string
+                                    minLength: 6
+            responses:
+                '200':
+                    description: Password updated
+                '400':
+                    description: Validation failed or current password incorrect
+                '401':
+                    description: Unauthorized
+
     /actions/createServiceCategory:
         post:
             tags: [Server Actions]
@@ -228,10 +258,26 @@ paths:
         post:
             tags: [Server Actions]
             summary: resetStaffPasswordAction
-            description: Admin only.
+            description: Admin only. Sets a new bcrypt password for a staff user without requiring their current password.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [id, password]
+                            properties:
+                                id:
+                                    type: string
+                                    description: Staff user MongoDB id
+                                password:
+                                    type: string
+                                    minLength: 6
             responses:
                 '200':
                     description: Password reset
+                '404':
+                    description: Staff not found
 
     /actions/updateScheduleSettings:
         post:

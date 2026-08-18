@@ -12,11 +12,18 @@ import { cn } from '@utils/cn.util';
 import {
     DAY_OFF_SCOPE_OPTIONS,
     WEEKDAY_ORDER_MON_SUN,
+    dayOffDisplayId,
+    getPeriodForTime,
+    getPeriodSlotBadge,
+    normalizePeriodSlots,
     normalizeTimeInput,
+    PERIOD_SLOT_PLACEHOLDERS,
+    sanitizeDayOffsForSave,
     sortTimes,
 } from '@utils/schedule.util';
 import type { DayOffDto, ScheduleSettingsDto } from '@typings/schedule-settings.type';
 import type { DayOffScope, DayPeriod } from '@typings/salon-common.type';
+import { toastSuccess } from '@utils/toast.util';
 
 const PERIOD_META: { key: DayPeriod; icon: typeof Sun }[] = [
     { key: 'morning', icon: Sun },
@@ -38,13 +45,24 @@ export default function ScheduleSettingsPage() {
         afternoon: '',
         evening: '',
     });
+    const [slotErrors, setSlotErrors] = useState<Partial<Record<DayPeriod, string>>>({});
     const [newDayOff, setNewDayOff] = useState<{ date: string; scope: DayOffScope }>({
         date: '',
         scope: 'full',
     });
 
     useEffect(() => {
-        if (settings) setForm(structuredClone(settings));
+        if (!settings) return;
+        const cloned = structuredClone(settings);
+        cloned.weekdaySchedules = cloned.weekdaySchedules.map((day) => ({
+            ...day,
+            periodSlots: normalizePeriodSlots(day.periodSlots),
+        }));
+        cloned.dayOffs = cloned.dayOffs.map((off) => ({
+            ...off,
+            id: dayOffDisplayId(off),
+        }));
+        setForm(cloned);
     }, [settings]);
 
     const selectedDay =
@@ -78,6 +96,17 @@ export default function ScheduleSettingsPage() {
         const raw = newSlot[period].trim();
         if (!raw) return;
         const time = normalizeTimeInput(raw);
+        const actualPeriod = getPeriodForTime(time);
+        if (actualPeriod !== period) {
+            setSlotErrors((prev) => ({
+                ...prev,
+                [period]: t('schedule.slotWrongPeriod', {
+                    period: t(`schedule.periods.${actualPeriod}`),
+                }),
+            }));
+            return;
+        }
+        setSlotErrors((prev) => ({ ...prev, [period]: undefined }));
         updateSelectedDay((day) => {
             if (day.periodSlots[period].includes(time)) return day;
             return {
@@ -106,7 +135,7 @@ export default function ScheduleSettingsPage() {
         setForm((prev) => {
             if (!prev) return prev;
             const entry: DayOffDto = {
-                id: `do-${Date.now()}`,
+                id: dayOffDisplayId({ date: newDayOff.date, scope: newDayOff.scope }),
                 date: newDayOff.date,
                 scope: newDayOff.scope,
             };
@@ -142,9 +171,13 @@ export default function ScheduleSettingsPage() {
                     await saveSettings.mutateAsync({
                         allowStaffSelection: form.allowStaffSelection,
                         allowGuestLanguageSwitch: form.allowGuestLanguageSwitch,
-                        weekdaySchedules: form.weekdaySchedules,
-                        dayOffs: form.dayOffs,
+                        weekdaySchedules: form.weekdaySchedules.map((day) => ({
+                            ...day,
+                            periodSlots: normalizePeriodSlots(day.periodSlots),
+                        })),
+                        dayOffs: sanitizeDayOffsForSave(form.dayOffs),
                     });
+                    toastSuccess(t('toasts.scheduleSaved'));
                     hideConfirm();
                 } catch (e) {
                     console.error(e);
@@ -329,48 +362,88 @@ export default function ScheduleSettingsPage() {
                                 key={key}
                                 className="rounded-2xl border border-stone-200/80 bg-white p-5 shadow-sm"
                             >
-                                <h3 className="mb-3 flex items-center gap-2 font-sans text-sm font-bold text-stone-800">
-                                    <Icon className="h-4 w-4 text-stone-400" />
-                                    {t(`schedule.periods.${key}`)}
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {selectedDay.periodSlots[key].map((time) => (
-                                        <span
-                                            key={time}
-                                            className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 font-sans text-xs font-medium text-stone-700"
-                                        >
-                                            {time}
-                                            <button
-                                                type="button"
-                                                onClick={() => removeSlot(key, time)}
-                                                className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200 hover:text-red-600"
-                                                aria-label={t('schedule.removeSlot')}
-                                            >
-                                                <Trash2 className="h-3 w-3" />
-                                            </button>
-                                        </span>
-                                    ))}
+                                <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                                    <h3 className="flex items-center gap-2 font-sans text-sm font-bold text-stone-800">
+                                        <Icon className="h-4 w-4 text-stone-400" />
+                                        {t(`schedule.periods.${key}`)}
+                                    </h3>
+                                    <span className="font-sans text-xs text-stone-400">
+                                        {t(`schedule.periodRange.${key}`)}
+                                    </span>
                                 </div>
-                                <div className="mt-3 flex gap-2">
-                                    <Input
-                                        placeholder="09:00 AM"
-                                        value={newSlot[key]}
-                                        onChange={(e) =>
-                                            setNewSlot((s) => ({ ...s, [key]: e.target.value }))
-                                        }
-                                        onKeyDown={(e) => e.key === 'Enter' && addSlot(key)}
-                                        className="max-w-40 border-neutral-200 bg-stone-50"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="outlined"
-                                        size="sm"
-                                        onClick={() => addSlot(key)}
-                                        className="border-neutral-200"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        {t('schedule.addSlot')}
-                                    </Button>
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedDay.periodSlots[key].map((time) => {
+                                        const badge = getPeriodSlotBadge(
+                                            key,
+                                            time,
+                                            selectedDay.periodSlots[key],
+                                        );
+                                        return (
+                                            <span
+                                                key={time}
+                                                className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 font-sans text-xs font-medium text-stone-700"
+                                            >
+                                                <span className="flex flex-col leading-tight">
+                                                    <span>{time}</span>
+                                                    {badge === 'open' && (
+                                                        <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
+                                                            {t('schedule.slotOpen')}
+                                                        </span>
+                                                    )}
+                                                    {badge === 'closed' && (
+                                                        <span className="text-[10px] font-semibold uppercase tracking-wider text-red-600">
+                                                            {t('schedule.slotClosed')}
+                                                        </span>
+                                                    )}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeSlot(key, time)}
+                                                    className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200 hover:text-red-600"
+                                                    aria-label={t('schedule.removeSlot')}
+                                                >
+                                                    <Trash2 className="h-3 w-3" />
+                                                </button>
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                                <div className="mt-3 space-y-1">
+                                    <div className="flex gap-2">
+                                        <Input
+                                            placeholder={PERIOD_SLOT_PLACEHOLDERS[key]}
+                                            value={newSlot[key]}
+                                            onChange={(e) => {
+                                                setNewSlot((s) => ({
+                                                    ...s,
+                                                    [key]: e.target.value,
+                                                }));
+                                                if (slotErrors[key]) {
+                                                    setSlotErrors((prev) => ({
+                                                        ...prev,
+                                                        [key]: undefined,
+                                                    }));
+                                                }
+                                            }}
+                                            onKeyDown={(e) => e.key === 'Enter' && addSlot(key)}
+                                            className="max-w-40 border-neutral-200 bg-stone-50"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outlined"
+                                            size="sm"
+                                            onClick={() => addSlot(key)}
+                                            className="border-neutral-200"
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                            {t('schedule.addSlot')}
+                                        </Button>
+                                    </div>
+                                    {slotErrors[key] ? (
+                                        <p className="font-sans text-xs text-red-600">
+                                            {slotErrors[key]}
+                                        </p>
+                                    ) : null}
                                 </div>
                             </div>
                         ))}
@@ -392,7 +465,7 @@ export default function ScheduleSettingsPage() {
                     ) : (
                         form.dayOffs.map((off) => (
                             <div
-                                key={off.id}
+                                key={dayOffDisplayId(off)}
                                 className="flex items-center justify-between rounded-xl border border-stone-100 bg-stone-50/50 px-4 py-3"
                             >
                                 <div>
@@ -450,9 +523,9 @@ export default function ScheduleSettingsPage() {
                     </div>
                     <Button
                         type="button"
-                        variant="outlined"
+                        variant="secondary"
                         onClick={addDayOff}
-                        className="border-neutral-200"
+                        className="rounded-xl border border-secondary-300 bg-secondary-100 font-semibold text-primary shadow-sm hover:bg-secondary-200"
                     >
                         <Plus className="h-4 w-4" />
                         {t('schedule.addDayOff')}

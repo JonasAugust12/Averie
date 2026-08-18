@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
 import {
     cancelBookingAction,
     createBookingAction,
@@ -12,7 +12,13 @@ import type { BookingListItemDto, PaginatedBookingsDto, TimeSlotDto } from '@typ
 import { useAppMutation } from '@hooks/useAppMutation';
 import type { BookingsListQuery, CreateBookingInput } from '@validations/booking.schema';
 
-export function useBookings(filters: BookingsListQuery) {
+/** Minimum overlay duration when creating a booking (avoids flash on fast networks). */
+export const CREATE_BOOKING_MIN_LOADING_MS = 2000;
+
+export function useBookings(
+    filters: BookingsListQuery,
+    options?: Pick<UseQueryOptions<PaginatedBookingsDto>, 'enabled'>,
+) {
     return useQuery({
         queryKey: ['bookings', filters],
         queryFn: async () => {
@@ -21,6 +27,7 @@ export function useBookings(filters: BookingsListQuery) {
             });
             return unwrapApiResponse(res.data);
         },
+        enabled: options?.enabled,
     });
 }
 
@@ -49,9 +56,14 @@ export function useBookingByReference(reference: string) {
     });
 }
 
-export function useAvailableSlots(date: string | null, serviceIds: string[]) {
+export function useAvailableSlots(
+    date: string | null,
+    serviceIds: string[],
+    staffPreference: 'any' | 'specific' = 'any',
+    staffId: string | null = null,
+) {
     return useQuery({
-        queryKey: ['bookings', 'slots', date, serviceIds],
+        queryKey: ['bookings', 'slots', date, serviceIds, staffPreference, staffId],
         queryFn: async () => {
             const res = await apiClient.get<ApiResponse<{ date: string; slots: TimeSlotDto[] }>>(
                 '/api/bookings/slots',
@@ -59,12 +71,17 @@ export function useAvailableSlots(date: string | null, serviceIds: string[]) {
                     params: {
                         date,
                         serviceIds: serviceIds.join(','),
+                        staffPreference,
+                        ...(staffPreference === 'specific' && staffId ? { staffId } : {}),
                     },
                 },
             );
             return unwrapApiResponse(res.data).slots;
         },
-        enabled: Boolean(date) && serviceIds.length > 0,
+        enabled:
+            Boolean(date) &&
+            serviceIds.length > 0 &&
+            (staffPreference === 'any' || Boolean(staffId)),
     });
 }
 
@@ -73,6 +90,7 @@ export function useCreateBooking() {
     return useAppMutation({
         mutationFn: async (input: CreateBookingInput) =>
             unwrapApiResponse(await createBookingAction(input)),
+        minLoadingMs: CREATE_BOOKING_MIN_LOADING_MS,
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['bookings'] });
         },

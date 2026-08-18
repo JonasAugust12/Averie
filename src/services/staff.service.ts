@@ -7,12 +7,15 @@ import {
 } from '@actions/staff.action';
 import { apiClient } from '@libs/api-client';
 import { unwrapApiResponse } from '@libs/action.util';
-import { toastApiError } from '@utils/toast.util';
+import { toastApiError, toastSuccess } from '@utils/toast.util';
+import { useAdminTranslations } from '@i18n/use-app-translations';
 import type { ApiResponse } from '@typings/api.type';
 import type { BookingListItemDto } from '@typings/booking.type';
 import type { UserDto } from '@typings/salon-user.type';
 import { useAppMutation } from '@hooks/useAppMutation';
 import type { CreateStaffInput, UpdateStaffInput } from '@validations/staff.schema';
+import type { StaffBookingsQuery } from '@validations/booking.schema';
+import type { CalendarDateRange } from '@utils/staff-calendar.util';
 
 export function useStaff(visibleOnly = true) {
     return useQuery({
@@ -30,12 +33,15 @@ export function useAllStaff() {
     return useStaff(false);
 }
 
-export function useStaffBookings(staffId: string) {
+export function useStaffBookings(staffId: string, range?: CalendarDateRange | StaffBookingsQuery) {
     return useQuery({
-        queryKey: ['salon', 'staff', staffId, 'bookings'],
+        queryKey: ['salon', 'staff', staffId, 'bookings', range],
         queryFn: async () => {
             const res = await apiClient.get<ApiResponse<BookingListItemDto[]>>(
                 `/api/staff/${staffId}/bookings`,
+                {
+                    params: range,
+                },
             );
             return unwrapApiResponse(res.data);
         },
@@ -79,9 +85,15 @@ export function useDeleteStaff() {
 }
 
 export function useResetStaffPassword() {
+    const t = useAdminTranslations();
+
     return useAppMutation({
+        loadingMessage: t('settingsAccount.submitting'),
         mutationFn: async ({ id, password }: { id: string; password: string }) =>
             unwrapApiResponse(await resetStaffPasswordAction(id, password)),
+        onSuccess: () => {
+            toastSuccess(t('settingsAccount.resetStaffSuccess'));
+        },
         onError: toastApiError,
     });
 }

@@ -1,4 +1,6 @@
-import { icons, type LucideIcon } from 'lucide-react';
+import { icons, Sparkles, type LucideIcon } from 'lucide-react';
+
+export const DEFAULT_LUCIDE_ICON = Sparkles;
 
 export type LucideIconName = keyof typeof icons;
 
@@ -105,4 +107,12 @@ export function resolveLucideIcon(name: string | null | undefined): LucideIcon |
     }
 
     return icons[name];
+}
+
+/** Returns the Lucide component for `name`, or `fallback` when missing/invalid. */
+export function resolveLucideIconWithFallback(
+    name: string | null | undefined,
+    fallback: LucideIcon = DEFAULT_LUCIDE_ICON,
+): LucideIcon {
+    return resolveLucideIcon(name) ?? fallback;
 }

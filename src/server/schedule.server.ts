@@ -50,19 +50,31 @@ export async function getScheduleSettingsDto(): Promise<ScheduleSettingsDto> {
     return serializeScheduleSettings(settings);
 }
 
-export async function getAvailableSlotsForDateServer(date: string): Promise<TimeSlotDto[]> {
+export async function getAvailableSlotsForDateServer(
+    date: string,
+    options?: {
+        staffPreference?: 'any' | 'specific';
+        staffId?: string;
+    },
+): Promise<TimeSlotDto[]> {
     const settingsDoc = await getSalonSettingsDocument();
     const settingsDto = serializeScheduleSettings(settingsDoc);
     const settings = scheduleSettingsForUtil(settingsDto);
 
     await connectToDatabase();
-    const bookings = await Booking.find({ date, status: 'upcoming' }).lean();
+    const bookings = await Booking.find({ date, status: 'upcoming' })
+        .select('date time status staffId staffPreference')
+        .lean();
 
-    const slots = getAvailableSlotsForDate(date, settings, bookings.map(bookingForScheduleUtil));
+    const slots = getAvailableSlotsForDate(date, settings, bookings.map(bookingForScheduleUtil), {
+        staffPreference: options?.staffPreference ?? 'any',
+        staffId: options?.staffId ?? null,
+    });
 
     return slots.map((slot) => ({
         id: slot.id,
         time: slot.time,
         available: slot.available,
+        ...(slot.lockReason ? { lockReason: slot.lockReason } : {}),
     }));
 }

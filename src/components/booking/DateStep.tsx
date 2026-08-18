@@ -6,12 +6,13 @@ import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { ScheduleSettingsSkeleton } from '@components/skeletons';
+import { DateStepSkeleton } from '@components/skeletons';
 import { formatDisplayDate } from '@utils/format.util';
 import { isDateFullyClosed } from '@utils/schedule.util';
+import { getSalonLocalDateTime, isBookingDateAllowed } from '@utils/booking-schedule.util';
 import { cn } from '@utils/cn.util';
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+const WEEKDAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
 function isoDate(d: Date): string {
     return d.toISOString().slice(0, 10);
@@ -28,11 +29,7 @@ export function DateStep() {
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
     const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
 
-    const today = useMemo(() => {
-        const now = new Date();
-        now.setHours(12, 0, 0, 0);
-        return now;
-    }, []);
+    const todayIso = useMemo(() => getSalonLocalDateTime().isoDate, []);
 
     const cells = useMemo(() => {
         const first = startOfMonth(cursor);
@@ -43,6 +40,7 @@ export function DateStep() {
             day: number;
             inMonth: boolean;
             disabled: boolean;
+            isToday: boolean;
         } | null> = [];
 
         for (let i = 0; i < startPad; i++) list.push(null);
@@ -50,16 +48,22 @@ export function DateStep() {
         for (let day = 1; day <= daysInMonth; day++) {
             const d = new Date(cursor.getFullYear(), cursor.getMonth(), day, 12, 0, 0, 0);
             const iso = isoDate(d);
-            const past = d < today;
             const closed = settings ? isDateFullyClosed(iso, settings) : false;
-            list.push({ iso, day, inMonth: true, disabled: past || closed });
+            const disabled = !isBookingDateAllowed(iso) || closed;
+            list.push({
+                iso,
+                day,
+                inMonth: true,
+                disabled,
+                isToday: iso === todayIso,
+            });
         }
 
         return list;
-    }, [cursor, settings, today]);
+    }, [cursor, settings, todayIso]);
 
     if (isLoading) {
-        return <ScheduleSettingsSkeleton />;
+        return <DateStepSkeleton />;
     }
 
     const monthLabel = cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
@@ -92,8 +96,8 @@ export function DateStep() {
                 </div>
 
                 <div className="mb-3 grid grid-cols-7 gap-1 text-center font-sans text-sm font-semibold tracking-wide text-stone-600 uppercase">
-                    {WEEKDAYS.map((d) => (
-                        <span key={d}>{d}</span>
+                    {WEEKDAY_KEYS.map((key) => (
+                        <span key={key}>{t(`weekdaysShort.${key}`)}</span>
                     ))}
                 </div>
 
@@ -110,24 +114,33 @@ export function DateStep() {
                                 disabled={cell.disabled}
                                 onClick={() => setDate(cell.iso)}
                                 className={cn(
-                                    'relative aspect-square cursor-pointer rounded-full font-sans text-base font-bold transition-all duration-200',
+                                    'relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-full font-sans text-base font-bold transition-all duration-200',
                                     cell.disabled &&
                                         'cursor-not-allowed text-stone-300 line-through',
                                     !cell.disabled &&
                                         !selected &&
+                                        !cell.isToday &&
                                         'text-primary hover:bg-tertiary hover:scale-105',
+                                    !cell.disabled &&
+                                        !selected &&
+                                        cell.isToday &&
+                                        'bg-primary/10 text-primary ring-1 ring-primary/20 hover:bg-primary/15 hover:scale-105',
                                     selected &&
                                         'bg-primary text-neutral shadow-md scale-105 ring-2 ring-primary ring-offset-2',
                                 )}
                             >
-                                {cell.day}
+                                <span>{cell.day}</span>
+                                {cell.isToday && !cell.disabled && !selected ? (
+                                    <span className="mt-0.5 font-sans text-[9px] font-semibold uppercase tracking-wide text-primary/70">
+                                        {t('dateToday')}
+                                    </span>
+                                ) : null}
                             </button>
                         );
                     })}
                 </div>
             </div>
 
-            {/* Mobile-Fixed & Desktop-Static Bottom Action Bar */}
             <div className="fixed sm:static bottom-0 left-0 right-0 z-40 border-t border-stone-300/80 bg-white/95 px-4 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:border-t sm:border-stone-200 sm:bg-background/95 sm:py-5 sm:backdrop-blur-sm sm:shadow-none">
                 <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-2 sm:gap-3">
                     <button

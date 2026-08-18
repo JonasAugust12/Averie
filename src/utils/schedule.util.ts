@@ -1,5 +1,7 @@
 import type { DayOffScope, DayPeriod } from '@typings/salon-common.type';
 import type { BookingListItemDto, TimeSlotDto } from '@typings/booking.type';
+import { isSlotBookedForPreference, isSlotTooSoon } from '@utils/booking-schedule.util';
+import type { SlotLockReason } from '@typings/booking.type';
 import type {
     PeriodSlotsDto,
     ScheduleSettingsDto,
@@ -13,8 +15,11 @@ type ScheduleSettings = Pick<
     ScheduleSettingsDto,
     'weekdaySchedules' | 'dayOffs' | 'allowStaffSelection'
 >;
+type SalonBooking = Pick<
+    BookingListItemDto,
+    'date' | 'time' | 'status' | 'staffId' | 'staffPreference'
+>;
 type TimeSlot = TimeSlotDto;
-type SalonBooking = Pick<BookingListItemDto, 'date' | 'time' | 'status'>;
 
 export const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
@@ -257,22 +262,41 @@ export function getAvailableSlotsForDate(
     date: string,
     settings: ScheduleSettings,
     bookings: SalonBooking[],
+    options?: {
+        staffPreference?: 'any' | 'specific';
+        staffId?: string | null;
+        now?: Date;
+    },
 ): TimeSlot[] {
     if (isDateFullyClosed(date, settings)) return [];
 
+    const staffPreference = options?.staffPreference ?? 'any';
+    const staffId = options?.staffId ?? null;
+    const now = options?.now ?? new Date();
     const offPeriods = getOffPeriodsForDate(date, settings);
-    const bookedTimes = new Set(
-        bookings.filter((b) => b.date === date && b.status !== 'cancelled').map((b) => b.time),
-    );
-
     const weekday = getWeekdayFromDate(date);
+    const dayBookings = bookings.filter((b) => b.date === date && b.status !== 'cancelled');
 
     return getAllConfiguredSlotsForWeekday(settings, weekday)
         .filter((slot) => !offPeriods.includes(getPeriodForTime(slot.time)))
-        .map((slot) => ({
-            ...slot,
-            available: !bookedTimes.has(slot.time),
-        }));
+        .map((slot) => {
+            let available = true;
+            let lockReason: SlotLockReason | undefined;
+
+            if (isSlotBookedForPreference(slot.time, dayBookings, staffPreference, staffId)) {
+                available = false;
+                lockReason = 'booked';
+            } else if (isSlotTooSoon(date, slot.time, now)) {
+                available = false;
+                lockReason = 'too_soon';
+            }
+
+            return {
+                ...slot,
+                available,
+                ...(lockReason ? { lockReason } : {}),
+            };
+        });
 }
 
 export function sortTimes(times: string[]): string[] {
@@ -293,14 +317,12 @@ export function getSalonClosedDisplayTime(weekday: number): string | null {
 
 export type BookingDisplaySlot = TimeSlot & { isClosedDisplay?: boolean };
 
-/** Bookable slots plus one dimmed “closed” slot after last appointment (UI only). */
+/** Bookable slots plus dimmed closed / unavailable entries (UI only). */
 export function mergeBookingDisplaySlots(slots: TimeSlot[], weekday: number): BookingDisplaySlot[] {
     const byTime = new Map<string, BookingDisplaySlot>();
 
     for (const slot of slots) {
-        if (slot.available) {
-            byTime.set(slot.time, { ...slot });
-        }
+        byTime.set(slot.time, { ...slot, isClosedDisplay: false });
     }
 
     const closedTime = getSalonClosedDisplayTime(weekday);
@@ -317,3 +339,59 @@ export function mergeBookingDisplaySlots(slots: TimeSlot[], weekday: number): Bo
 }
 
 export const DAY_OFF_SCOPE_OPTIONS: DayOffScope[] = ['full', 'morning', 'afternoon', 'evening'];
+
+const OBJECT_ID_RE = /^[a-f\d]{24}$/i;
+
+export function isValidObjectId(id: string): boolean {
+    return OBJECT_ID_RE.test(id);
+}
+
+/** Stable client id when Mongo subdocument _id is missing (legacy seed data). */
+export function dayOffDisplayId(off: { id?: string; date: string; scope: string }): string {
+    if (off.id && off.id.length > 0) return off.id;
+    return `local-${off.date}-${off.scope}`;
+}
+
+export function sanitizeDayOffsForSave(
+    dayOffs: Array<{ id: string; date: string; scope: DayOffScope }>,
+): Array<{ date: string; scope: DayOffScope; id?: string }> {
+    return dayOffs.map(({ id, date, scope }) => ({
+        date,
+        scope,
+        ...(isValidObjectId(id) ? { id } : {}),
+    }));
+}
+
+export const PERIOD_SLOT_PLACEHOLDERS: Record<DayPeriod, string> = {
+    morning: '09:00 AM',
+    afternoon: '12:00 PM',
+    evening: '05:00 PM',
+};
+
+/** Re-assign misplaced slot times to the correct period bucket. */
+export function normalizePeriodSlots(slots: PeriodSlots): PeriodSlots {
+    const merged = sortTimes([...slots.morning, ...slots.afternoon, ...slots.evening]);
+    return {
+        morning: merged.filter((time) => getPeriodForTime(time) === 'morning'),
+        afternoon: merged.filter((time) => getPeriodForTime(time) === 'afternoon'),
+        evening: merged.filter((time) => getPeriodForTime(time) === 'evening'),
+    };
+}
+
+export function isTimeInPeriod(time: string, period: DayPeriod): boolean {
+    return getPeriodForTime(time) === period;
+}
+
+export type PeriodSlotBadge = 'open' | 'closed';
+
+export function getPeriodSlotBadge(
+    period: DayPeriod,
+    time: string,
+    periodSlots: string[],
+): PeriodSlotBadge | null {
+    const sorted = sortTimes(periodSlots);
+    if (sorted.length === 0) return null;
+    if (period === 'morning' && sorted[0] === time) return 'open';
+    if (period === 'evening' && sorted[sorted.length - 1] === time) return 'closed';
+    return null;
+}

@@ -14,8 +14,7 @@
     "password": "Mật khẩu",
     "submit": "Đăng nhập",
     "clientHint": "Mọi email/mật khẩu đều qua được mock login khách.",
-    "adminHint": "Dùng admin@averie.local / password",
-    "invalidAdmin": "Sai thông tin admin giả",
+    "invalidAdmin": "Email hoặc mật khẩu không đúng",
     "backHome": "Về trang chủ",
     "brand": "AVERIE"
 }

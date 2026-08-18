@@ -36,17 +36,20 @@
 
 ## 3. ServiceCategory
 
-Phân loại dịch vụ — **chỉ cần tên** (phase 1).
+Phân loại dịch vụ — tên + icon Lucide (optional).
 
 ```typescript
 {
   _id: ObjectId,
   name: string,           // required, trim, max 100
   sortOrder: number,      // optional, default 0 — hiển thị thứ tự
+  icon?: string | null,   // PascalCase Lucide React name, e.g. "Sparkles"
   createdAt: Date,
   updatedAt: Date,
 }
 ```
+
+UI fallback: invalid/missing `icon` → `Sparkles`.
 
 **Indexes:** `{ sortOrder: 1 }`, unique sparse trên `name` (case-insensitive collation nếu cần).
 

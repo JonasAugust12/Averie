@@ -21,9 +21,30 @@ export async function computeBookingTotals(serviceIds: string[]) {
     return { services, totalEstimatedMinutes, totalPrice };
 }
 
-export async function hasSlotConflict(date: string, time: string): Promise<boolean> {
+export async function hasSlotConflict(
+    date: string,
+    time: string,
+    staffPreference: 'any' | 'specific',
+    staffId?: string,
+): Promise<boolean> {
     await connectToDatabase();
-    const existing = await Booking.findOne({ date, time, status: 'upcoming' }).lean();
+
+    if (staffPreference === 'any') {
+        const existing = await Booking.findOne({ date, time, status: 'upcoming' }).lean();
+        return Boolean(existing);
+    }
+
+    if (!staffId || !mongoose.Types.ObjectId.isValid(staffId)) {
+        return true;
+    }
+
+    const existing = await Booking.findOne({
+        date,
+        time,
+        status: 'upcoming',
+        $or: [{ staffPreference: 'any' }, { staffId: new mongoose.Types.ObjectId(staffId) }],
+    }).lean();
+
     return Boolean(existing);
 }
 

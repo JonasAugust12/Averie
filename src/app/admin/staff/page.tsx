@@ -18,6 +18,7 @@ import type { UserDto } from '@typings/salon-user.type';
 import type { CreateStaffInput, UpdateStaffInput } from '@validations/staff.schema';
 
 import type { StaffFormValues } from '@components/admin/staff/StaffFormModal';
+import { toastSuccess } from '@utils/toast.util';
 
 export default function AdminStaffPage() {
     const t = useAdminTranslations();
@@ -84,6 +85,7 @@ export default function AdminStaffPage() {
                 staffProfile: values.color ? { color: values.color } : undefined,
             };
             await createStaff.mutateAsync(input);
+            toastSuccess(t('toasts.staffCreated'));
         } else {
             const input: UpdateStaffInput = {
                 email: values.email,
@@ -96,38 +98,44 @@ export default function AdminStaffPage() {
                 staffProfile: values.color ? { color: values.color } : undefined,
             };
             await updateStaff.mutateAsync({ id: values.id, input });
+            toastSuccess(t('toasts.staffUpdated'));
         }
         setEditing(null);
     }
 
     function handleToggle(member: UserDto) {
+        const hiding = member.visible;
+        const displayName = `${member.firstName} ${member.lastName}`.trim();
         showConfirm({
-            title: member.visible
-                ? t('staff.confirmHideTitle') || 'Hide staff'
-                : t('staff.confirmShowTitle') || 'Show staff',
-            message: `${member.firstName} ${member.lastName}`,
-            confirmText: t('staff.save') || 'Confirm',
-            cancelText: t('staff.cancel') || 'Cancel',
+            title: hiding ? t('staff.confirmHideTitle') : t('staff.confirmShowTitle'),
+            message: hiding
+                ? t('staff.confirmHideMsg', { name: displayName })
+                : t('staff.confirmShowMsg', { name: displayName }),
+            confirmText: hiding ? t('staff.confirmHideBtn') : t('staff.confirmShowBtn'),
+            cancelText: t('staff.cancel'),
             type: 'info',
             onConfirm: async () => {
                 await updateStaff.mutateAsync({
                     id: member.id,
                     input: { visible: !member.visible },
                 });
+                toastSuccess(hiding ? t('toasts.staffHidden') : t('toasts.staffShown'));
                 hideConfirm();
             },
         });
     }
 
     function handleDelete(member: UserDto) {
+        const displayName = `${member.firstName} ${member.lastName}`.trim();
         showConfirm({
-            title: t('staff.confirmDeleteTitle') || 'Xóa nhân viên',
-            message: `${t('staff.confirmDeleteDesc') || 'Bạn có chắc muốn xóa'} "${member.firstName} ${member.lastName}"?`,
-            confirmText: t('staff.delete') || 'Xóa',
-            cancelText: t('staff.cancel') || 'Hủy',
+            title: t('staff.confirmDeleteTitle'),
+            message: t('staff.confirmDeleteMsg', { name: displayName }),
+            confirmText: t('staff.delete'),
+            cancelText: t('staff.cancel'),
             type: 'danger',
             onConfirm: async () => {
                 await deleteStaff.mutateAsync(member.id);
+                toastSuccess(t('toasts.staffDeleted'));
                 hideConfirm();
             },
         });

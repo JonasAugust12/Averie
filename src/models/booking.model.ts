@@ -83,7 +83,18 @@ BookingSchema.index(
     { date: 1, time: 1 },
     {
         unique: true,
-        partialFilterExpression: { status: 'upcoming' },
+        partialFilterExpression: { status: 'upcoming', staffPreference: 'any' },
+    },
+);
+BookingSchema.index(
+    { date: 1, time: 1, staffId: 1 },
+    {
+        unique: true,
+        partialFilterExpression: {
+            status: 'upcoming',
+            staffPreference: 'specific',
+            staffId: { $exists: true },
+        },
     },
 );
 

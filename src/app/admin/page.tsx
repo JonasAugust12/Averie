@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Calendar, ClipboardList, RefreshCw, TrendingUp, Users, Filter } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useBookings } from '@services/booking.service';
@@ -8,6 +8,13 @@ import { useAdminKpis } from '@services/admin.service';
 import { Button } from '@components/common';
 import { DashboardSkeleton } from '@components/skeletons';
 import { formatUsd } from '@utils/format.util';
+import {
+    formatFilterTodayLabel,
+    getDashboardPeriodRange,
+    getPreviousDashboardPeriodRange,
+    type DashboardPeriod,
+} from '@utils/dashboard-period.util';
+import { sortBookingsRecentFirst } from '@utils/dashboard-analytics.util';
 import {
     KpiCard,
     RevenueChart,
@@ -17,26 +24,40 @@ import {
     PopularServices,
 } from '@components/admin/dashboard';
 
-type FilterPeriod = 'today' | 'week' | 'month' | 'year' | 'all';
-
 export default function AdminDashboardPage() {
     const t = useAdminTranslations();
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const [filterPeriod, setFilterPeriod] = useState<FilterPeriod>('all');
+    const [filterPeriod, setFilterPeriod] = useState<DashboardPeriod>('all');
 
-    const { data: kpis, isLoading: kpisLoading, refetch: refetchKpis } = useAdminKpis();
+    const currentRange = useMemo(() => getDashboardPeriodRange(filterPeriod), [filterPeriod]);
+    const previousRange = useMemo(
+        () => getPreviousDashboardPeriodRange(filterPeriod),
+        [filterPeriod],
+    );
+
+    const todayFilterLabel = useMemo(() => formatFilterTodayLabel(new Date()), []);
+
+    const { data: kpis, isLoading: kpisLoading, refetch: refetchKpis } = useAdminKpis(filterPeriod);
     const {
         data: bookingsData,
         isLoading: bookingsLoading,
         refetch: refetchBookings,
-    } = useBookings({ page: 1, limit: 100 });
+    } = useBookings({ page: 1, limit: 100, ...currentRange });
+    const { data: previousBookingsData, refetch: refetchPreviousBookings } = useBookings(
+        { page: 1, limit: 100, ...previousRange },
+        { enabled: filterPeriod !== 'all' && Boolean(previousRange.dateFrom) },
+    );
 
-    const bookings = bookingsData?.items ?? [];
+    const bookings = useMemo(
+        () => sortBookingsRecentFirst(bookingsData?.items ?? []),
+        [bookingsData?.items],
+    );
+    const previousBookings = previousBookingsData?.items ?? [];
 
     const handleRefresh = async () => {
         setIsRefreshing(true);
         try {
-            await Promise.all([refetchKpis(), refetchBookings()]);
+            await Promise.all([refetchKpis(), refetchBookings(), refetchPreviousBookings()]);
         } catch (error) {
             console.error('Failed to refresh dashboard data:', error);
         } finally {
@@ -46,29 +67,65 @@ export default function AdminDashboardPage() {
 
     const isLoading = kpisLoading || bookingsLoading;
 
+    const kpiHints: Record<
+        'appointments' | 'pending' | 'revenue' | 'activeTechs',
+        Record<DashboardPeriod, string>
+    > = {
+        appointments: {
+            today: t('overview.kpiHints.appointments.today'),
+            week: t('overview.kpiHints.appointments.week'),
+            month: t('overview.kpiHints.appointments.month'),
+            year: t('overview.kpiHints.appointments.year'),
+            all: t('overview.kpiHints.appointments.all'),
+        },
+        pending: {
+            today: t('overview.kpiHints.pending.today'),
+            week: t('overview.kpiHints.pending.week'),
+            month: t('overview.kpiHints.pending.month'),
+            year: t('overview.kpiHints.pending.year'),
+            all: t('overview.kpiHints.pending.all'),
+        },
+        revenue: {
+            today: t('overview.kpiHints.revenue.today'),
+            week: t('overview.kpiHints.revenue.week'),
+            month: t('overview.kpiHints.revenue.month'),
+            year: t('overview.kpiHints.revenue.year'),
+            all: t('overview.kpiHints.revenue.all'),
+        },
+        activeTechs: {
+            today: t('overview.kpiHints.activeTechs.today'),
+            week: t('overview.kpiHints.activeTechs.week'),
+            month: t('overview.kpiHints.activeTechs.month'),
+            year: t('overview.kpiHints.activeTechs.year'),
+            all: t('overview.kpiHints.activeTechs.all'),
+        },
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 className="font-display text-2xl text-neutral-955 md:text-3xl font-bold">
+                    <h2 className="font-display text-2xl font-bold text-neutral-955 md:text-3xl">
                         {t('overview.dashboardTitle')}
                     </h2>
-                    <p className="font-sans text-[13.5px] text-stone-500 mt-1 font-medium">
+                    <p className="mt-1 font-sans text-[13.5px] font-medium text-stone-500">
                         {t('overview.dashboardSubtitle')}
                     </p>
                 </div>
-                <div className="flex flex-wrap gap-3 items-center">
-                    <div className="flex items-center gap-2 bg-white border border-stone-200/60 rounded-xl p-1.5 shadow-3xs">
-                        <Filter className="h-3.5 w-3.5 text-stone-500 ml-2" />
-                        <span className="text-[13px] text-stone-605 font-sans font-medium">
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 rounded-xl border border-stone-200/60 bg-white p-1.5 shadow-3xs">
+                        <Filter className="ml-2 h-3.5 w-3.5 text-stone-500" />
+                        <span className="font-sans text-[13px] font-medium text-stone-605">
                             {t('overview.filterLabel')}
                         </span>
                         <select
                             value={filterPeriod}
-                            onChange={(e) => setFilterPeriod(e.target.value as FilterPeriod)}
-                            className="bg-transparent border-0 font-sans text-[13px] font-semibold text-stone-850 focus:ring-0 focus:outline-none cursor-pointer pr-8 py-1 rounded-lg"
+                            onChange={(e) => setFilterPeriod(e.target.value as DashboardPeriod)}
+                            className="cursor-pointer rounded-lg border-0 bg-transparent py-1 pr-8 font-sans text-[13px] font-semibold text-stone-850 focus:ring-0 focus:outline-none"
                         >
-                            <option value="today">{t('overview.filterToday')}</option>
+                            <option value="today">
+                                {t('overview.filterTodayLabel', { date: todayFilterLabel })}
+                            </option>
                             <option value="week">{t('overview.filterWeek')}</option>
                             <option value="month">{t('overview.filterMonth')}</option>
                             <option value="year">{t('overview.filterYear')}</option>
@@ -81,10 +138,10 @@ export default function AdminDashboardPage() {
                         size="sm"
                         disabled={isRefreshing || isLoading}
                         onClick={handleRefresh}
-                        className="gap-2 border-stone-250 bg-white hover:bg-stone-50/50 text-stone-705 relative pr-3 group shadow-3xs font-medium text-[13px]"
+                        className="group relative gap-2 border-stone-250 bg-white pr-3 text-[13px] font-medium text-stone-705 shadow-3xs hover:bg-stone-50/50"
                     >
                         <RefreshCw
-                            className={`h-3.5 w-3.5 text-stone-605 ${isRefreshing ? 'animate-spin' : 'group-hover:rotate-45 transition-transform duration-300'}`}
+                            className={`h-3.5 w-3.5 text-stone-605 ${isRefreshing ? 'animate-spin' : 'transition-transform duration-300 group-hover:rotate-45'}`}
                         />
                         <span>
                             {isRefreshing
@@ -103,28 +160,28 @@ export default function AdminDashboardPage() {
                         <KpiCard
                             label={t('overview.appointmentsCardLabel')}
                             value={String(kpis?.appointments ?? 0)}
-                            hint={kpis?.appointmentsDelta ?? t('overview.appointmentsDeltaAll')}
+                            hint={kpiHints.appointments[filterPeriod]}
                             icon={ClipboardList}
                             color="primary"
                         />
                         <KpiCard
                             label={t('overview.pendingCardLabel')}
                             value={String(kpis?.pending ?? 0)}
-                            hint={kpis?.pendingHint ?? t('overview.pendingHint')}
+                            hint={kpiHints.pending[filterPeriod]}
                             icon={Calendar}
                             color="secondary"
                         />
                         <KpiCard
                             label={t('overview.revenueCardLabel')}
                             value={formatUsd(kpis?.revenue ?? 0)}
-                            hint={kpis?.revenueHint ?? t('overview.revenueHint')}
+                            hint={kpiHints.revenue[filterPeriod]}
                             icon={TrendingUp}
                             color="gold"
                         />
                         <KpiCard
                             label={t('overview.activeTechsCardLabel')}
                             value={String(kpis?.activeTechs ?? 0)}
-                            hint={kpis?.activeTechsHint ?? t('overview.activeTechsHint')}
+                            hint={kpiHints.activeTechs[filterPeriod]}
                             icon={Users}
                             color="tech"
                         />
@@ -132,7 +189,11 @@ export default function AdminDashboardPage() {
 
                     <div className="grid gap-6 lg:grid-cols-3">
                         <div className="lg:col-span-2">
-                            <RevenueChart bookings={bookings} period={filterPeriod} />
+                            <RevenueChart
+                                bookings={bookings}
+                                previousBookings={previousBookings}
+                                period={filterPeriod}
+                            />
                         </div>
                         <CategoryDistribution bookings={bookings} />
                     </div>
@@ -142,7 +203,7 @@ export default function AdminDashboardPage() {
                         <PopularServices bookings={bookings} />
                     </div>
 
-                    <RecentBookingsTable bookings={bookings} isLoading={bookingsLoading} />
+                    <RecentBookingsTable bookings={bookings} />
                 </>
             )}
         </div>

@@ -83,7 +83,7 @@ export function ServiceFormModal({
     return (
         /* Backdrop */
         <div
-            className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
+            className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/20 p-3 backdrop-blur-sm sm:items-center sm:p-4"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
             {/* Panel */}

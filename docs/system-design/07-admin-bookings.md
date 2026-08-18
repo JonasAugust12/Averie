@@ -62,7 +62,7 @@ Không cần "approve" / "reject".
 | `GET /api/bookings/by-reference` | `?ref=`                       | Public (confirmation) |
 | `GET /api/bookings/slots`        | `?date=&serviceIds=`          | Public                |
 
-Dashboard KPIs: `GET /api/admin/kpis` hoặc derive client-side từ bookings list phase 1.
+Dashboard KPIs: `GET /api/admin/kpis?period=today|week|month|year|all` — metrics scoped to the selected period; revenue/active-tech counts use MongoDB `$sum` / `$group` aggregation (API Version 1 compatible, no `distinct`).
 
 ### Mutations
 

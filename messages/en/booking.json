@@ -26,7 +26,19 @@
         "eveningUnavailable": "Evening not available.",
         "openTime": "Open time",
         "closeTime": "Close time",
-        "closed": "Closed"
+        "closed": "Closed",
+        "booked": "Booked",
+        "unavailable": "Unavailable"
+    },
+    "dateToday": "Today",
+    "weekdaysShort": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
     },
     "steps": {
         "service": "Select Service",
@@ -84,5 +96,8 @@
         "waxing": "Waxing",
         "facials": "Facials / Beauty"
     },
-    "closedDay": "Salon Closed"
+    "closedDay": "Salon Closed",
+    "toasts": {
+        "bookingCreated": "Your appointment has been booked successfully!"
+    }
 }

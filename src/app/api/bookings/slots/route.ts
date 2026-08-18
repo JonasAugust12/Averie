@@ -21,14 +21,20 @@ export async function GET(request: Request) {
         const parsed = bookingSlotsQuerySchema.safeParse({
             date: searchParams.get('date'),
             serviceIds: searchParams.get('serviceIds'),
+            staffPreference: searchParams.get('staffPreference') ?? undefined,
+            staffId: searchParams.get('staffId') ?? undefined,
         });
 
         if (!parsed.success) {
             return apiError(parsed.error.issues[0]?.message ?? 'Validation failed', 400);
         }
 
-        const slots = await getAvailableSlotsForDateServer(parsed.data.date);
-        return apiSuccess({ date: parsed.data.date, slots }, 'OK');
+        const { date, staffPreference, staffId } = parsed.data;
+        const slots = await getAvailableSlotsForDateServer(date, {
+            staffPreference,
+            staffId,
+        });
+        return apiSuccess({ date, slots }, 'OK');
     } catch (error) {
         console.error('[GET /api/bookings/slots]', error);
         return apiError('Failed to fetch slots', 500);

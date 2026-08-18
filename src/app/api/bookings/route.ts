@@ -32,6 +32,8 @@ export async function GET(request: Request) {
             limit: searchParams.get('limit') ?? undefined,
             status: searchParams.get('status') ?? undefined,
             date: searchParams.get('date') ?? undefined,
+            dateFrom: searchParams.get('dateFrom') ?? undefined,
+            dateTo: searchParams.get('dateTo') ?? undefined,
             search: searchParams.get('search') ?? undefined,
         });
 
@@ -39,10 +41,17 @@ export async function GET(request: Request) {
             return apiError(parsed.error.issues[0]?.message ?? 'Validation failed', 400);
         }
 
-        const { page, limit, status, date, search } = parsed.data;
+        const { page, limit, status, date, dateFrom, dateTo, search } = parsed.data;
         const filter: Record<string, unknown> = {};
         if (status) filter.status = status;
-        if (date) filter.date = date;
+        if (date) {
+            filter.date = date;
+        } else if (dateFrom || dateTo) {
+            const dateFilter: Record<string, string> = {};
+            if (dateFrom) dateFilter.$gte = dateFrom;
+            if (dateTo) dateFilter.$lte = dateTo;
+            filter.date = dateFilter;
+        }
         if (search) {
             filter.$or = [
                 { reference: { $regex: search, $options: 'i' } },
@@ -54,10 +63,13 @@ export async function GET(request: Request) {
 
         await connectToDatabase();
         const skip = (page - 1) * limit;
-        const [items, total] = await Promise.all([
-            Booking.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-            Booking.countDocuments(filter),
-        ]);
+        const query = Booking.find(filter).skip(skip).limit(limit);
+        if (dateFrom || dateTo) {
+            query.sort({ date: 1, time: 1 });
+        } else {
+            query.sort({ createdAt: -1 });
+        }
+        const [items, total] = await Promise.all([query.lean(), Booking.countDocuments(filter)]);
 
         const maps = await loadStaffServiceMaps();
 

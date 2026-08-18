@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Eye, EyeOff, Shield, Mail, AlertCircle, KeyRound } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -16,6 +17,7 @@ import { loginStaticText } from '@components/landing/styles';
 export default function AdminLoginPage() {
     const t = useAccountTranslations();
     const router = useRouter();
+    const { update: updateSession } = useSession();
     const login = useLogin();
     const [showPassword, setShowPassword] = useState(false);
     const [remember, setRemember] = useState(false);
@@ -31,7 +33,11 @@ export default function AdminLoginPage() {
 
     function onSubmit(data: LoginSchema) {
         login.mutate(data, {
-            onSuccess: () => router.push('/admin'),
+            onSuccess: async () => {
+                await updateSession();
+                router.refresh();
+                router.push('/admin');
+            },
         });
     }
 
@@ -87,7 +93,6 @@ export default function AdminLoginPage() {
                                 />
                                 <input
                                     type="email"
-                                    placeholder="admin@averie.local"
                                     className="w-full bg-transparent px-4 py-3.5 pl-12 font-sans text-base font-semibold text-stone-950 outline-none placeholder:text-stone-400 rounded-[inherit]"
                                     {...register('email')}
                                 />
@@ -136,12 +141,6 @@ export default function AdminLoginPage() {
                                 {t('rememberMe')}
                             </label>
                         </div>
-
-                        <p
-                            className={`font-sans text-xs leading-relaxed text-stone-700 font-medium ${loginStaticText}`}
-                        >
-                            {t('adminHint')}
-                        </p>
 
                         {login.error ? (
                             <div

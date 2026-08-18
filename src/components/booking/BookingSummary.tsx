@@ -2,6 +2,7 @@
 
 import { Check, Clock } from 'lucide-react';
 import { useBookingTranslations } from '@i18n/use-app-translations';
+import { BookingSummarySkeleton } from '@components/skeletons';
 import { useServices } from '@services/service-catalog.service';
 import { useStaff } from '@services/staff.service';
 import { useScheduleSettings } from '@services/schedule.service';
@@ -22,7 +23,7 @@ export function BookingSummary() {
         setStep,
         setStaffPreference,
     } = useBookingStore();
-    const { data: services } = useServices();
+    const { data: services, isLoading: servicesLoading } = useServices();
     const { data: staff } = useStaff();
     const { data: settings } = useScheduleSettings();
     const allowStaffSelection = settings?.allowStaffSelection ?? true;
@@ -47,6 +48,23 @@ export function BookingSummary() {
             setStep(2);
         }
     };
+
+    if (servicesLoading && step === 1) {
+        return (
+            <>
+                <BookingSummarySkeleton />
+                <div className="block animate-pulse border-t border-stone-300 bg-white/95 px-4 py-3 backdrop-blur-xl lg:hidden fixed bottom-0 left-0 right-0 z-40 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)]">
+                    <div className="mx-auto flex max-w-app items-center justify-between gap-3">
+                        <div className="min-w-0 space-y-2">
+                            <div className="h-3 w-28 rounded bg-stone-100" />
+                            <div className="h-6 w-20 rounded bg-stone-200" />
+                        </div>
+                        <div className="h-11 w-32 shrink-0 rounded-full bg-stone-200" />
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>

@@ -39,6 +39,20 @@ export const resetStaffPasswordSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
+export const adminResetStaffPasswordFormSchema = z
+    .object({
+        staffId: z
+            .string()
+            .min(1, 'Select a staff member')
+            .regex(/^[a-f\d]{24}$/i, 'Invalid staff'),
+        password: z.string().min(6, 'Password must be at least 6 characters'),
+        confirmPassword: z.string().min(6, 'Confirm password is required'),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+    });
+
 export const staffIdSchema = z.object({
     id: objectIdSchema,
 });
@@ -49,3 +63,4 @@ export const staffListQuerySchema = z.object({
 
 export type CreateStaffInput = z.infer<typeof createStaffSchema>;
 export type UpdateStaffInput = z.infer<typeof updateStaffSchema>;
+export type AdminResetStaffPasswordFormInput = z.infer<typeof adminResetStaffPasswordFormSchema>;

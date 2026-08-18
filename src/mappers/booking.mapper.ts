@@ -89,17 +89,14 @@ export function bookingForScheduleUtil(doc: {
     date: string;
     time: string;
     status: 'upcoming' | 'cancelled';
+    staffId?: unknown;
+    staffPreference?: 'any' | 'specific';
 }) {
     return {
-        id: '',
-        reference: '',
-        serviceId: '',
-        staffId: 'any' as const,
         date: doc.date,
         time: doc.time,
-        durationMin: 0,
-        price: 0,
-        customer: { firstName: '', lastName: '', phone: '' },
-        status: doc.status === 'cancelled' ? ('cancelled' as const) : ('upcoming' as const),
+        status: doc.status,
+        staffPreference: doc.staffPreference ?? ('any' as const),
+        staffId: doc.staffId ? String(doc.staffId) : undefined,
     };
 }

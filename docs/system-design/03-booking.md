@@ -49,15 +49,25 @@ Danh sách nhân viên: GET `/api/staff?visible=true` (chỉ staff `role: staff`
 **Logic:** tái sử dụng `getAvailableSlotsForDate()` trong `src/utils/schedule.util.ts` — chuyển sang server:
 
 ```
-GET /api/bookings/slots?date=YYYY-MM-DD&serviceIds=id1,id2
+GET /api/bookings/slots?date=YYYY-MM-DD&serviceIds=id1,id2&staffPreference=any|specific&staffId=...
 ```
 
 Server:
 
 1. Load `SalonSettings`
-2. Load bookings `upcoming` cùng `date`
-3. Tính slots available (phase 1: block theo `time` string, chưa per-staff)
-4. Optional: filter slots không đủ `totalEstimatedMinutes` liên tiếp (phase 1.1)
+2. Load bookings `upcoming` cùng `date` (kèm `staffId`, `staffPreference`)
+3. Tính slots available theo nhân viên đã chọn (specific) hoặc toàn salon (any)
+4. Khóa slot đã qua / trong vòng 1 giờ tới (nếu `date` là hôm nay, timezone salon)
+5. Chỉ cho phép `date` trong khoảng hôm nay → +15 ngày
+
+**Quy tắc đặt lịch (guest):**
+
+| Rule                          | Giá trị                                             |
+| ----------------------------- | --------------------------------------------------- |
+| Book trước tối thiểu          | 1 giờ so với giờ salon hiện tại (nếu chọn hôm nay)  |
+| Chọn ngày tối đa              | 15 ngày kể từ hôm nay                               |
+| Slot đã book (specific staff) | Khóa các giờ nhân viên đó đã có lịch `upcoming`     |
+| Slot đã book (any)            | Khóa nếu đã có bất kỳ booking `upcoming` tại giờ đó |
 
 **Response:**
 
@@ -65,9 +75,22 @@ Server:
 {
     "status": 200,
     "message": "OK",
-    "data": [{ "id": "morning-0-0900AM", "time": "09:00 AM", "available": true }]
+    "data": {
+        "date": "2026-08-18",
+        "slots": [
+            {
+                "id": "morning-0-0900AM",
+                "time": "09:00 AM",
+                "available": false,
+                "lockReason": "too_soon"
+            },
+            { "id": "morning-1-0930AM", "time": "09:30 AM", "available": true }
+        ]
+    }
 }
 ```
+
+`lockReason`: `booked` | `too_soon` (optional, khi `available: false`).
 
 ## 5. Step 5 — Thông tin khách
 
@@ -137,6 +160,8 @@ Customer          BookPageView       createBookingAction        MongoDB
 | Case                                 | Xử lý                                                                                |
 | ------------------------------------ | ------------------------------------------------------------------------------------ |
 | Slot vừa bị book                     | 409-style message: "Time no longer available"                                        |
+| Slot quá sớm (< 1 giờ)               | 400: "Selected time must be at least 1 hour from now"                                |
+| Ngày quá xa (> 15 ngày)              | 400: "Selected date is not available for booking"                                    |
 | Service bị ẩn giữa chừng wizard      | Re-validate on submit; báo lỗi quay step 1                                           |
 | `allowStaffSelection` tắt giữa chừng | Server enforce `any`                                                                 |
 | Multi-service                        | Lưu tất cả `serviceIds`; hiển thị tổng giá & thời gian                               |

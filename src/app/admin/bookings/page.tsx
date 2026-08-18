@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Calendar, RotateCcw } from 'lucide-react';
+import { Calendar, RefreshCw, RotateCcw } from 'lucide-react';
 import { useBookings, useCancelBooking, useRestoreBooking } from '@services/booking.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
@@ -11,6 +11,7 @@ import type { BookingStatus } from '@typings/salon-common.type';
 import type { BookingListItemDto } from '@typings/booking.type';
 import { formatUserName } from '@utils/staff.util';
 import { BookingStatCard, BookingFilters, BookingTableRow } from '@components/admin/bookings';
+import { toastSuccess } from '@utils/toast.util';
 
 export default function AdminBookingsPage() {
     const t = useAdminTranslations();
@@ -19,6 +20,7 @@ export default function AdminBookingsPage() {
     const [dateFilter, setDateFilter] = useState('');
     const [page, setPage] = useState(1);
     const [expandedId, setExpandedId] = useState<string | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const limit = 8;
 
     const listFilters = {
@@ -29,7 +31,7 @@ export default function AdminBookingsPage() {
         search: query.trim() || undefined,
     };
 
-    const { data, isLoading } = useBookings(listFilters);
+    const { data, isLoading, refetch } = useBookings(listFilters);
     const { showConfirm, hideConfirm } = useUIStore();
     const cancelBooking = useCancelBooking();
     const restoreBooking = useRestoreBooking();
@@ -49,6 +51,17 @@ export default function AdminBookingsPage() {
 
     const bookings = bookingItems ?? [];
 
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        try {
+            await refetch();
+        } catch (error) {
+            console.error('Failed to refresh bookings:', error);
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
+
     const handleUpdateStatus = (
         booking: BookingListItemDto,
         newStatus: BookingStatus,
@@ -58,21 +71,28 @@ export default function AdminBookingsPage() {
         const isCancelling = newStatus === 'cancelled';
         showConfirm({
             title: isCancelling
-                ? t('bookings.actions.cancelConfirmTitle') || 'Hủy lịch hẹn'
-                : t('bookings.actions.restoreConfirmTitle') || 'Khôi phục lịch hẹn',
+                ? t('bookings.actions.cancelConfirmTitle')
+                : t('bookings.actions.restoreConfirmTitle'),
             message: isCancelling
-                ? t('bookings.actions.cancelConfirmMsg') ||
-                  `Bạn có chắc muốn hủy lịch #${booking.reference}? Khách hàng sẽ được thông báo.`
-                : t('bookings.actions.restoreConfirmMsg') ||
-                  `Khôi phục lịch #${booking.reference} về trạng thái "Sắp tới"?`,
+                ? t('bookings.actions.cancelConfirmMsg', { reference: booking.reference })
+                : t('bookings.actions.restoreConfirmMsg', { reference: booking.reference }),
             confirmText: isCancelling
-                ? t('bookings.actions.confirmCancel') || 'Xác nhận hủy'
-                : t('bookings.actions.confirmRestore') || 'Khôi phục',
-            cancelText: t('bookings.actions.cancelNo') || 'Không',
+                ? t('bookings.actions.confirmCancel')
+                : t('bookings.actions.confirmRestore'),
+            cancelText: t('bookings.actions.cancelNo'),
             type: isCancelling ? 'danger' : 'info',
             onConfirm: () => {
                 const mutation = isCancelling ? cancelBooking : restoreBooking;
-                mutation.mutate(booking.id, { onSuccess: () => hideConfirm() });
+                mutation.mutate(booking.id, {
+                    onSuccess: () => {
+                        toastSuccess(
+                            isCancelling
+                                ? t('toasts.bookingCancelled')
+                                : t('toasts.bookingRestored'),
+                        );
+                        hideConfirm();
+                    },
+                });
             },
         });
     };
@@ -83,11 +103,31 @@ export default function AdminBookingsPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
-                    {t('bookings.title')}
-                </h1>
-                <p className="mt-1 font-sans text-sm text-stone-500">{t('bookings.subtitle')}</p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900">
+                        {t('bookings.title')}
+                    </h1>
+                    <p className="mt-1 font-sans text-sm text-stone-500">
+                        {t('bookings.subtitle')}
+                    </p>
+                </div>
+                <Button
+                    variant="outlined"
+                    size="sm"
+                    disabled={isRefreshing || isLoading}
+                    onClick={handleRefresh}
+                    className="group gap-2 border-stone-250 bg-white pr-3 text-[13px] font-medium text-stone-705 shadow-3xs hover:bg-stone-50/50"
+                >
+                    <RefreshCw
+                        className={`h-3.5 w-3.5 text-stone-605 ${isRefreshing ? 'animate-spin' : 'transition-transform duration-300 group-hover:rotate-45'}`}
+                    />
+                    <span>
+                        {isRefreshing
+                            ? t('overview.buttonRefreshing')
+                            : t('overview.buttonRefresh')}
+                    </span>
+                </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Moon, Sun, Sunset } from 'lucide-react';
 import { useAvailableSlots } from '@services/booking.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { TimeSlotsSkeleton } from '@components/skeletons';
+import { TimeStepSkeleton } from '@components/skeletons';
 import {
     getPeriodForTime,
     getWeekdayFromDate,
@@ -16,8 +16,14 @@ import { cn } from '@utils/cn.util';
 
 export function TimeStep() {
     const t = useBookingTranslations();
-    const { date, time, serviceIds, setTime, setStep } = useBookingStore();
-    const { data: slots, isLoading } = useAvailableSlots(date, serviceIds);
+    const { date, time, serviceIds, staffPreference, staffId, setTime, setStep } =
+        useBookingStore();
+    const { data: slots, isLoading } = useAvailableSlots(
+        date,
+        serviceIds,
+        staffPreference,
+        staffId,
+    );
 
     const weekday = date ? getWeekdayFromDate(date) : 1;
 
@@ -42,8 +48,14 @@ export function TimeStep() {
         ];
     }, [slots, weekday]);
 
+    useEffect(() => {
+        if (!time || !slots) return;
+        const selected = slots.find((s) => s.time === time);
+        if (!selected?.available) setTime(null);
+    }, [slots, time, setTime]);
+
     if (isLoading) {
-        return <TimeSlotsSkeleton />;
+        return <TimeStepSkeleton />;
     }
 
     return (
@@ -71,8 +83,27 @@ export function TimeStep() {
                                             className="cursor-not-allowed rounded-xl border-2 border-stone-200 bg-stone-50/60 px-4 py-3 font-sans text-base font-bold text-stone-400 opacity-55 select-none"
                                         >
                                             <span className="block">{slot.time}</span>
-                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-red-600">
                                                 {t('periods.closed')}
+                                            </span>
+                                        </div>
+                                    );
+                                }
+
+                                if (!slot.available) {
+                                    const label =
+                                        slot.lockReason === 'booked'
+                                            ? t('periods.booked')
+                                            : t('periods.unavailable');
+                                    return (
+                                        <div
+                                            key={slot.id}
+                                            aria-disabled
+                                            className="cursor-not-allowed rounded-xl border-2 border-stone-200 bg-stone-50/60 px-4 py-3 font-sans text-base font-bold text-stone-400 opacity-55 select-none"
+                                        >
+                                            <span className="block">{slot.time}</span>
+                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
+                                                {label}
                                             </span>
                                         </div>
                                     );

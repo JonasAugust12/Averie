@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useAllStaff, useStaffBookings } from '@services/staff.service';
 import { useAdminTranslations, useCommonTranslations } from '@i18n/use-app-translations';
@@ -12,20 +12,38 @@ import {
     StaffNavbar,
     StatChip,
     StaffUpcomingList,
+    StaffChangePasswordModal,
 } from '@components/staff';
-import { StaffCalendarSkeleton } from '@components/skeletons';
-import { buildStaffBookingsCalendarEvents, parseSalonTime } from '@utils/staff-calendar.util';
-import { getUserColor } from '@utils/staff.util';
+import { StaffPortalPageSkeleton } from '@components/skeletons';
+import {
+    buildStaffBookingsCalendarEvents,
+    getDefaultCalendarRange,
+    parseSalonTime,
+    type CalendarDateRange,
+} from '@utils/staff-calendar.util';
+import { getUserColor, staffColorAlpha } from '@utils/staff.util';
+import { toastSuccess } from '@utils/toast.util';
 
 export default function StaffLookupPage() {
     const t = useAdminTranslations();
     const tCommon = useCommonTranslations();
     const showLoading = useUIStore((state) => state.showLoading);
     const hideLoading = useUIStore((state) => state.hideLoading);
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [range, setRange] = useState<CalendarDateRange>(() => getDefaultCalendarRange());
+    const handleRangeChange = useCallback((next: CalendarDateRange) => {
+        setRange((prev) =>
+            prev.dateFrom === next.dateFrom && prev.dateTo === next.dateTo ? prev : next,
+        );
+    }, []);
     const { data: session, status, update } = useSession();
     const staffId = session?.user?.id ?? '';
     const { data: allStaff, isLoading: staffLoading } = useAllStaff();
-    const { data: staffBookings, isLoading: bookingsLoading } = useStaffBookings(staffId);
+    const {
+        data: staffBookings,
+        isLoading: bookingsLoading,
+        isFetching: bookingsFetching,
+    } = useStaffBookings(staffId, range);
 
     const staffProfile = allStaff?.find((s) => s.id === staffId);
     const bookingItems = staffBookings;
@@ -74,12 +92,18 @@ export default function StaffLookupPage() {
         }
     };
 
+    const handleSignOut = async () => {
+        try {
+            await signOut({ redirect: false });
+        } catch (error) {
+            console.error('[handleSignOut]', error);
+        }
+        toastSuccess(t('toasts.signOutSuccess'));
+        window.location.href = '/staff';
+    };
+
     if (status === 'loading' || (session?.user && (staffLoading || bookingsLoading))) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-stone-50">
-                <StaffCalendarSkeleton />
-            </div>
-        );
+        return <StaffPortalPageSkeleton />;
     }
 
     if (!session?.user || session.user.role !== 'staff' || !staffProfile) {
@@ -89,26 +113,51 @@ export default function StaffLookupPage() {
     const staffColor = getUserColor(staffProfile);
 
     return (
-        <div className="min-h-screen bg-stone-50">
-            <StaffNavbar staff={staffProfile} onBack={() => signOut({ callbackUrl: '/staff' })} />
+        <div
+            className="min-h-screen bg-stone-50"
+            style={{
+                background: `linear-gradient(180deg, ${staffColorAlpha(staffColor, 16)} 0%, #fafaf9 180px, #fafaf9 100%)`,
+            }}
+        >
+            <StaffNavbar
+                staff={staffProfile}
+                onBack={handleSignOut}
+                onChangePassword={() => setPasswordModalOpen(true)}
+            />
 
-            <main className="max-w-3xl mx-auto px-3 sm:px-6 py-5 sm:py-8 space-y-5">
+            <StaffChangePasswordModal
+                open={passwordModalOpen}
+                onClose={() => setPasswordModalOpen(false)}
+            />
+
+            <main className="mx-auto max-w-3xl space-y-5 px-3 py-5 sm:px-6 sm:py-8">
                 <StaffProfileCard staff={staffProfile} />
 
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    <StatChip label={t('staff.statsBookings')} count={stats.total} color="stone" />
+                    <StatChip
+                        label={t('staff.statsBookings')}
+                        count={stats.total}
+                        color="stone"
+                        accentColor={staffColor}
+                    />
                     <StatChip label={t('staff.statsUpcoming')} count={stats.upcoming} color="sky" />
                     <StatChip
-                        label={t('bookings.stats.cancelled')}
+                        label={t('staffPortal.statsCancelled')}
                         count={stats.cancelled}
                         color="amber"
                     />
                 </div>
 
-                <div className="rounded-2xl border border-stone-200/80 bg-white shadow-sm overflow-hidden">
-                    <div className="border-b border-stone-100 bg-stone-50/70 px-4 py-3">
-                        <h3 className="font-display text-base sm:text-lg font-bold text-stone-950">
-                            {t('staff.schedule')}
+                <div
+                    className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm"
+                    style={{ borderColor: staffColorAlpha(staffColor, 40) }}
+                >
+                    <div
+                        className="border-b border-stone-100 px-4 py-3"
+                        style={{ backgroundColor: staffColorAlpha(staffColor, 14) }}
+                    >
+                        <h3 className="font-display text-base font-bold text-stone-950 sm:text-lg">
+                            {t('staffPortal.mySchedule')}
                         </h3>
                     </div>
                     <div
@@ -120,14 +169,18 @@ export default function StaffLookupPage() {
                             } as React.CSSProperties
                         }
                     >
-                        <StaffCalendar events={calendarEvents} />
+                        <StaffCalendar
+                            events={calendarEvents}
+                            onRangeChange={handleRangeChange}
+                            isLoadingEvents={bookingsFetching}
+                        />
                     </div>
                 </div>
 
                 <StaffUpcomingList
                     bookings={upcomingBookings}
                     staffColor={staffColor}
-                    onBack={() => signOut({ callbackUrl: '/staff' })}
+                    onBack={handleSignOut}
                 />
             </main>
         </div>

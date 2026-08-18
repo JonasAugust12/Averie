@@ -176,3 +176,35 @@ export const STAFF_ROLE_OPTIONS = [
 
 /** @deprecated Use BookingCalendarEvent */
 export type StaffCalendarEvent = BookingCalendarEvent;
+
+export interface CalendarDateRange {
+    dateFrom: string;
+    dateTo: string;
+}
+
+export function formatIsoDateLocal(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/** FullCalendar `end` is exclusive — convert to inclusive dateTo. */
+export function calendarRangeFromFullCalendar(start: Date, end: Date): CalendarDateRange {
+    const endInclusive = new Date(end);
+    endInclusive.setDate(endInclusive.getDate() - 1);
+    return {
+        dateFrom: formatIsoDateLocal(start),
+        dateTo: formatIsoDateLocal(endInclusive),
+    };
+}
+
+export function getDefaultCalendarRange(): CalendarDateRange {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return {
+        dateFrom: formatIsoDateLocal(start),
+        dateTo: formatIsoDateLocal(end),
+    };
+}

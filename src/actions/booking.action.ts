@@ -9,6 +9,7 @@ import {
     isDuplicateKeyError,
     validateStaffForBooking,
 } from '@utils/booking.util';
+import { validateBookingSchedule } from '@utils/booking-schedule.util';
 import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeBooking } from '@mappers';
@@ -37,13 +38,21 @@ export async function createBookingAction(
             await validateStaffForBooking(data.staffId);
         }
 
-        const slots = await getAvailableSlotsForDateServer(data.date);
+        const scheduleError = validateBookingSchedule({ date: data.date, time: data.time });
+        if (scheduleError) {
+            return apiErrorResult<BookingDto>(scheduleError, 400);
+        }
+
+        const slots = await getAvailableSlotsForDateServer(data.date, {
+            staffPreference: data.staffPreference,
+            staffId: data.staffId,
+        });
         const slot = slots.find((s) => s.time === data.time);
         if (!slot?.available) {
             return apiErrorResult<BookingDto>('Selected time slot is not available', 409);
         }
 
-        if (await hasSlotConflict(data.date, data.time)) {
+        if (await hasSlotConflict(data.date, data.time, data.staffPreference, data.staffId)) {
             return apiErrorResult<BookingDto>('Selected time slot is already booked', 409);
         }
 
@@ -139,7 +148,12 @@ export async function restoreBookingAction(id: string): Promise<ApiResponse<Book
             return apiErrorResult<BookingDto>('Booking not found', 404);
         }
 
-        const conflict = await hasSlotConflict(booking.date, booking.time);
+        const conflict = await hasSlotConflict(
+            booking.date,
+            booking.time,
+            booking.staffPreference,
+            booking.staffId ? String(booking.staffId) : undefined,
+        );
         if (conflict) {
             return apiErrorResult<BookingDto>('Time slot is no longer available', 409);
         }

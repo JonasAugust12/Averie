@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     CalendarPlus,
     CheckCircle2,
@@ -28,6 +28,7 @@ import {
     BookingReviewStep,
     BookingSuccessStep,
 } from '@components/admin/bookings';
+import { toastSuccess } from '@utils/toast.util';
 
 interface AdminNewBookingModalProps {
     isOpen: boolean;
@@ -78,7 +79,18 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
     const [createdReference, setCreatedReference] = useState<string | null>(null);
 
-    const { data: slots, isLoading: slotsLoading } = useAvailableSlots(selectedDate, serviceIds);
+    const { data: slots, isLoading: slotsLoading } = useAvailableSlots(
+        selectedDate,
+        serviceIds,
+        staffPreference,
+        staffId,
+    );
+
+    useEffect(() => {
+        if (!selectedTime || !slots) return;
+        const selected = slots.find((s) => s.time === selectedTime);
+        if (!selected?.available) setSelectedTime('');
+    }, [slots, selectedTime]);
 
     const selectedServicesList = useMemo(
         () => (services ?? []).filter((s) => serviceIds.includes(s.id)),
@@ -169,6 +181,7 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
             },
             {
                 onSuccess: (data) => {
+                    toastSuccess(tAdmin('toasts.bookingCreated'));
                     setCreatedReference(data.reference);
                     setStep(7);
                 },
@@ -188,7 +201,7 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
 
     return (
         <div
-            className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-md animate-in fade-in duration-200 sm:p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-md animate-in fade-in duration-200 sm:p-4"
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
             <div className="relative flex h-full max-h-full w-full max-w-app flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200">

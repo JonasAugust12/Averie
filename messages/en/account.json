@@ -14,8 +14,7 @@
     "password": "Password",
     "submit": "Sign In",
     "clientHint": "Any email/password passes client mock login.",
-    "adminHint": "Use admin@averie.local / password",
-    "invalidAdmin": "Invalid mock admin credentials",
+    "invalidAdmin": "Invalid email or password",
     "backHome": "Back to home",
     "brand": "AVERIE"
 }

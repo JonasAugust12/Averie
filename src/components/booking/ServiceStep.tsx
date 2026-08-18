@@ -5,10 +5,10 @@ import { Check, ChevronDown, Clock, Sparkles } from 'lucide-react';
 import { useServiceCategories, useServices } from '@services/service-catalog.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
-import { ServicesGridSkeleton } from '@components/skeletons';
+import { ServiceStepSkeleton } from '@components/skeletons';
 import { formatUsd } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
-import { resolveLucideIcon } from '@utils/lucide-icon.util';
+import { resolveLucideIconWithFallback } from '@utils/lucide-icon.util';
 
 /** Gradient colour per category (warm neutrals for quiet luxury) */
 const CAT_META: Record<string, { gradient: string; accent: string }> = {
@@ -60,7 +60,7 @@ export function ServiceStep() {
                 items: (services ?? []).filter((s) => s.categoryId === cat.id),
                 meta: {
                     ...meta,
-                    icon: resolveLucideIcon(cat.icon) ?? Sparkles,
+                    icon: resolveLucideIconWithFallback(cat.icon, Sparkles),
                 },
             };
         })
@@ -71,7 +71,7 @@ export function ServiceStep() {
     }
 
     if (isLoading) {
-        return <ServicesGridSkeleton />;
+        return <ServiceStepSkeleton />;
     }
 
     const totalSelected = serviceIds.length;

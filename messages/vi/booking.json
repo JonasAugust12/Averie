@@ -26,7 +26,19 @@
         "eveningUnavailable": "Buổi tối không có lịch trống.",
         "openTime": "Giờ mở cửa",
         "closeTime": "Giờ đóng cửa",
-        "closed": "Đóng cửa"
+        "closed": "Đóng cửa",
+        "booked": "Đã đặt",
+        "unavailable": "Không khả dụng"
+    },
+    "dateToday": "Hôm nay",
+    "weekdaysShort": {
+        "sun": "CN",
+        "mon": "T2",
+        "tue": "T3",
+        "wed": "T4",
+        "thu": "T5",
+        "fri": "T6",
+        "sat": "T7"
     },
     "steps": {
         "service": "Chọn dịch vụ",
@@ -84,5 +96,8 @@
         "waxing": "Waxing",
         "facials": "Facial / Beauty"
     },
-    "closedDay": "Salon đóng cửa"
+    "closedDay": "Salon đóng cửa",
+    "toasts": {
+        "bookingCreated": "Lịch hẹn của bạn đã được đặt thành công!"
+    }
 }

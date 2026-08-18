@@ -9,7 +9,18 @@
                 "summary": "",
                 "description": "",
                 "tags": ["Admin"],
-                "parameters": [],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "period",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/dashboardPeriodSchema",
+                            "default": "all"
+                        },
+                        "example": "example"
+                    }
+                ],
                 "security": [
                     {
                         "sessionCookie": []
@@ -68,7 +79,7 @@
                             "default": 20,
                             "type": "integer",
                             "minimum": 1,
-                            "maximum": 100
+                            "maximum": 500
                         },
                         "example": 1
                     },
@@ -87,10 +98,39 @@
                         "name": "date",
                         "required": false,
                         "schema": {
-                            "type": "string",
-                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/isoDateSchema"
+                                }
+                            ]
                         },
                         "example": "2023-01-01"
+                    },
+                    {
+                        "in": "query",
+                        "name": "dateFrom",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/isoDateSchema"
+                                }
+                            ]
+                        },
+                        "example": "example"
+                    },
+                    {
+                        "in": "query",
+                        "name": "dateTo",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/isoDateSchema"
+                                }
+                            ]
+                        },
+                        "example": "example"
                     },
                     {
                         "in": "query",
@@ -388,7 +428,17 @@
                 "summary": "",
                 "description": "",
                 "tags": ["Services"],
-                "parameters": [],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "all",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "example"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -500,6 +550,32 @@
                 "tags": ["Staff"],
                 "parameters": [
                     {
+                        "in": "query",
+                        "name": "dateFrom",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/isoDateSchema"
+                                }
+                            ]
+                        },
+                        "example": "example"
+                    },
+                    {
+                        "in": "query",
+                        "name": "dateTo",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/isoDateSchema"
+                                }
+                            ]
+                        },
+                        "example": "example"
+                    },
+                    {
                         "in": "path",
                         "name": "id",
                         "required": true,
@@ -525,29 +601,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "$ref": "#/components/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/401"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/404"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/500"
-                    }
-                }
-            }
-        },
-        "/todos": {
-            "get": {
-                "operationId": "get-todos",
-                "summary": "GET todos — read via Route Handler.",
-                "description": "",
-                "tags": ["Todos"],
-                "parameters": [],
-                "responses": {
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
@@ -588,9 +641,6 @@
         },
         {
             "name": "Staff"
-        },
-        {
-            "name": "Todos"
         }
     ],
     "servers": [
@@ -655,6 +705,35 @@
                     }
                 },
                 "required": ["status", "message", "data"]
+            },
+            "adminKpisQuerySchema": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/dashboardPeriodSchema",
+                        "default": "all"
+                    }
+                },
+                "required": ["period"]
+            },
+            "adminResetStaffPasswordFormSchema": {
+                "type": "object",
+                "properties": {
+                    "staffId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[a-f\\d]{24}$"
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 6
+                    },
+                    "confirmPassword": {
+                        "type": "string",
+                        "minLength": 6
+                    }
+                },
+                "required": ["staffId", "password", "confirmPassword"]
             },
             "apiErrorResponseSchema": {
                 "type": "object",
@@ -1023,15 +1102,32 @@
                         "default": 20,
                         "type": "integer",
                         "minimum": 1,
-                        "maximum": 100
+                        "maximum": 500
                     },
                     "status": {
                         "type": "string",
                         "enum": ["upcoming", "cancelled"]
                     },
                     "date": {
-                        "type": "string",
-                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/isoDateSchema"
+                            }
+                        ]
+                    },
+                    "dateFrom": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/isoDateSchema"
+                            }
+                        ]
+                    },
+                    "dateTo": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/isoDateSchema"
+                            }
+                        ]
                     },
                     "search": {
                         "type": "string"
@@ -1103,6 +1199,24 @@
                     }
                 },
                 "required": ["id", "firstName", "lastName"]
+            },
+            "changePasswordSchema": {
+                "type": "object",
+                "properties": {
+                    "currentPassword": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "newPassword": {
+                        "type": "string",
+                        "minLength": 6
+                    },
+                    "confirmPassword": {
+                        "type": "string",
+                        "minLength": 6
+                    }
+                },
+                "required": ["currentPassword", "newPassword", "confirmPassword"]
             },
             "createBookingSchema": {
                 "type": "object",
@@ -1237,16 +1351,9 @@
                 },
                 "required": ["email", "password", "firstName", "lastName", "phone", "specialties"]
             },
-            "createTodoSchema": {
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 200
-                    }
-                },
-                "required": ["title"]
+            "dashboardPeriodSchema": {
+                "type": "string",
+                "enum": ["today", "week", "month", "year", "all"]
             },
             "dayOffDtoSchema": {
                 "type": "object",
@@ -1317,6 +1424,10 @@
                     }
                 },
                 "required": ["health", "mongo", "timestamp"]
+            },
+            "isoDateSchema": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "loginSchema": {
                 "type": "object",
@@ -1463,6 +1574,9 @@
                     "allowStaffSelection": {
                         "type": "boolean"
                     },
+                    "allowGuestLanguageSwitch": {
+                        "type": "boolean"
+                    },
                     "weekdaySchedules": {
                         "type": "array",
                         "items": {
@@ -1484,6 +1598,7 @@
                 "required": [
                     "id",
                     "allowStaffSelection",
+                    "allowGuestLanguageSwitch",
                     "weekdaySchedules",
                     "dayOffs",
                     "updatedAt"
@@ -1671,6 +1786,25 @@
                 },
                 "required": ["status", "message", "data"]
             },
+            "staffBookingsQuerySchema": {
+                "type": "object",
+                "properties": {
+                    "dateFrom": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/isoDateSchema"
+                            }
+                        ]
+                    },
+                    "dateTo": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/isoDateSchema"
+                            }
+                        ]
+                    }
+                }
+            },
             "staffIdSchema": {
                 "type": "object",
                 "properties": {
@@ -1747,16 +1881,6 @@
                 },
                 "required": ["id", "time", "available"]
             },
-            "todoIdSchema": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "minLength": 1
-                    }
-                },
-                "required": ["id"]
-            },
             "toggleServiceVisibilitySchema": {
                 "type": "object",
                 "properties": {
@@ -1770,6 +1894,9 @@
                 "type": "object",
                 "properties": {
                     "allowStaffSelection": {
+                        "type": "boolean"
+                    },
+                    "allowGuestLanguageSwitch": {
                         "type": "boolean"
                     },
                     "weekdaySchedules": {
@@ -1876,19 +2003,6 @@
                                 "$ref": "#/components/schemas/staffProfileSchema"
                             }
                         ]
-                    }
-                }
-            },
-            "updateTodoSchema": {
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 200
-                    },
-                    "completed": {
-                        "type": "boolean"
                     }
                 }
             },

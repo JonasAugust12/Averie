@@ -5,7 +5,7 @@ import { useStaff } from '@services/staff.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { Button } from '@components/common';
-import { StaffGridSkeleton } from '@components/skeletons';
+import { EmployeeStepSkeleton } from '@components/skeletons';
 import { formatUserName, getUserInitials } from '@utils/staff.util';
 import { cn } from '@utils/cn.util';
 
@@ -15,7 +15,7 @@ export function EmployeeStep() {
     const { data: staff, isLoading } = useStaff();
 
     if (isLoading) {
-        return <StaffGridSkeleton />;
+        return <EmployeeStepSkeleton />;
     }
 
     const hasSelection = staffPreference === 'any' || Boolean(staffId);

@@ -11,6 +11,7 @@ import {
     useToggleServiceVisibility,
     useCreateServiceCategory,
     useUpdateServiceCategory,
+    useDeleteServiceCategory,
 } from '@services/service-catalog.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
@@ -23,6 +24,7 @@ import {
 } from '@components/admin/services';
 import type { ServiceDto } from '@typings/service.type';
 import type { ServiceCategoryDto } from '@typings/service-category.type';
+import { toastSuccess } from '@utils/toast.util';
 
 export default function AdminServicesPage() {
     const t = useAdminTranslations();
@@ -35,6 +37,7 @@ export default function AdminServicesPage() {
     const toggleVisibility = useToggleServiceVisibility();
     const createCategory = useCreateServiceCategory();
     const updateCategory = useUpdateServiceCategory();
+    const deleteCategory = useDeleteServiceCategory();
     const { showConfirm, hideConfirm } = useUIStore();
 
     const [query, setQuery] = useState('');
@@ -80,6 +83,7 @@ export default function AdminServicesPage() {
                 estimatedMinutes: svc.estimatedMinutes,
                 visible: svc.visible,
             });
+            toastSuccess(t('toasts.serviceCreated'));
         } else {
             await updateService.mutateAsync({
                 id: svc.id,
@@ -92,6 +96,7 @@ export default function AdminServicesPage() {
                     visible: svc.visible,
                 },
             });
+            toastSuccess(t('toasts.serviceUpdated'));
         }
         setEditing(null);
     }
@@ -103,6 +108,7 @@ export default function AdminServicesPage() {
                 sortOrder: category.sortOrder,
                 icon: category.icon ?? undefined,
             });
+            toastSuccess(t('toasts.categoryCreated'));
         } else {
             await updateCategory.mutateAsync({
                 id: category.id,
@@ -112,21 +118,24 @@ export default function AdminServicesPage() {
                     icon: category.icon,
                 },
             });
+            toastSuccess(t('toasts.categoryUpdated'));
         }
         setCategoryModal(null);
     }
 
     function handleToggle(svc: ServiceDto) {
+        const hiding = svc.visible;
         showConfirm({
-            title: svc.visible
-                ? t('services.confirmHideTitle') || 'Hide service'
-                : t('services.confirmShowTitle') || 'Show service',
-            message: `"${svc.name}"`,
-            confirmText: t('services.save') || 'Confirm',
-            cancelText: t('services.cancel') || 'Cancel',
+            title: hiding ? t('services.confirmHideTitle') : t('services.confirmShowTitle'),
+            message: hiding
+                ? t('services.confirmHideMsg', { name: svc.name })
+                : t('services.confirmShowMsg', { name: svc.name }),
+            confirmText: hiding ? t('services.confirmHideBtn') : t('services.confirmShowBtn'),
+            cancelText: t('services.cancel'),
             type: 'info',
             onConfirm: async () => {
                 await toggleVisibility.mutateAsync({ id: svc.id, visible: !svc.visible });
+                toastSuccess(hiding ? t('toasts.serviceHidden') : t('toasts.serviceShown'));
                 hideConfirm();
             },
         });
@@ -134,13 +143,50 @@ export default function AdminServicesPage() {
 
     function handleDelete(svc: ServiceDto) {
         showConfirm({
-            title: t('services.confirmDeleteTitle') || 'Xóa dịch vụ',
-            message: `${t('services.confirmDeleteDesc') || 'Bạn có chắc muốn xóa'} "${svc.name}"?`,
-            confirmText: t('services.delete') || 'Xóa',
-            cancelText: t('services.cancel') || 'Hủy',
+            title: t('services.confirmDeleteTitle'),
+            message: t('services.confirmDeleteMsg', { name: svc.name }),
+            confirmText: t('services.delete'),
+            cancelText: t('services.cancel'),
             type: 'danger',
             onConfirm: async () => {
                 await deleteService.mutateAsync(svc.id);
+                toastSuccess(t('toasts.serviceDeleted'));
+                hideConfirm();
+            },
+        });
+    }
+
+    function openEditCategory(cat: ServiceCategoryDto) {
+        setCategoryModal(cat);
+    }
+
+    function handleDeleteCategory(cat: ServiceCategoryDto) {
+        const serviceCount = (services ?? []).filter((s) => s.categoryId === cat.id).length;
+
+        if (serviceCount > 0) {
+            showConfirm({
+                title: t('services.confirmDeleteCategoryBlockedTitle'),
+                message: t('services.confirmDeleteCategoryBlockedMsg', {
+                    name: cat.name,
+                    count: serviceCount,
+                }),
+                confirmText: t('services.confirmDeleteCategoryBlockedBtn'),
+                cancelText: t('services.cancel'),
+                type: 'info',
+                onConfirm: hideConfirm,
+            });
+            return;
+        }
+
+        showConfirm({
+            title: t('services.confirmDeleteCategoryTitle'),
+            message: t('services.confirmDeleteCategoryMsg', { name: cat.name }),
+            confirmText: t('services.delete'),
+            cancelText: t('services.cancel'),
+            type: 'danger',
+            onConfirm: async () => {
+                await deleteCategory.mutateAsync(cat.id);
+                toastSuccess(t('toasts.categoryDeleted'));
                 hideConfirm();
             },
         });
@@ -209,6 +255,8 @@ export default function AdminServicesPage() {
                         onEdit={openEdit}
                         onToggle={handleToggle}
                         onDelete={handleDelete}
+                        onEditCategory={() => openEditCategory(cat)}
+                        onDeleteCategory={() => handleDeleteCategory(cat)}
                     />
                 ))}
             </div>

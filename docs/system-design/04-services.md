@@ -16,9 +16,15 @@ Admin có thể:
 
 ### ServiceCategory
 
-| Field | UI             | Admin form |
-| ----- | -------------- | ---------- |
-| name  | Section header | Text input |
+| Field     | UI             | Admin form                           |
+| --------- | -------------- | ------------------------------------ |
+| name      | Section header | Text input                           |
+| icon      | Badge icon     | Lucide icon picker (PascalCase name) |
+| sortOrder | —              | Auto on create                       |
+
+Category header actions: **Add service**, **Edit category**, **Delete category** (blocked when category still has services).
+
+Invalid or missing Lucide icon names fall back to `Sparkles` in the UI.
 
 ### Service
 
@@ -44,15 +50,15 @@ Admin có thể:
 
 ### Mutations (Server Actions)
 
-| Action                          | Mô tả                                                                                    |
-| ------------------------------- | ---------------------------------------------------------------------------------------- |
-| `createServiceCategoryAction`   | Tạo category                                                                             |
-| `updateServiceCategoryAction`   | Đổi tên                                                                                  |
-| `deleteServiceCategoryAction`   | Xóa nếu không còn service (hoặc cascade — quyết định: **block delete** nếu còn services) |
-| `createServiceAction`           | Tạo service                                                                              |
-| `updateServiceAction`           | Sửa service                                                                              |
-| `deleteServiceAction`           | Xóa service                                                                              |
-| `toggleServiceVisibilityAction` | PATCH-style toggle                                                                       |
+| Action                          | Mô tả                                                     |
+| ------------------------------- | --------------------------------------------------------- |
+| `createServiceCategoryAction`   | Tạo category (name, sortOrder, icon)                      |
+| `updateServiceCategoryAction`   | Sửa name / sortOrder / icon                               |
+| `deleteServiceCategoryAction`   | Xóa nếu không còn service (409 khi category còn services) |
+| `createServiceAction`           | Tạo service                                               |
+| `updateServiceAction`           | Sửa service                                               |
+| `deleteServiceAction`           | Xóa service                                               |
+| `toggleServiceVisibilityAction` | PATCH-style toggle                                        |
 
 Tất cả actions yêu cầu **admin session**.
 
@@ -60,9 +66,10 @@ Tất cả actions yêu cầu **admin session**.
 
 Mock hiện tại:
 
-- `ServiceFormModal` — form create/edit
-- `ServiceCategorySection` — group by category
-- `ServiceCard` — card + edit/delete
+- `ServiceFormModal` — form create/edit service
+- `CategoryFormModal` — form create/edit category (name + Lucide icon)
+- `ServiceCategorySection` — group by category; header có edit/delete category
+- `ServiceCard` — card + edit/delete service
   Mock hiện tại dùng `active` — **BE dùng `visible`**. FE sửa label/form khi wire API (không alias ở server).
 
 Fixed categories trong `mocks/salon/data.ts` (`SERVICE_CATEGORIES`) → seed script hoặc admin tạo mới.
@@ -86,7 +93,7 @@ Thay mock hooks trong `salon.service.ts`:
 | `useSaveMockService`   | `useMutation` → `createServiceAction` / `updateServiceAction` |
 | `useDeleteMockService` | `useMutation` → `deleteServiceAction`                         |
 
-Tương tự cho categories.
+Tương tự cho categories (`useCreateServiceCategory`, `useUpdateServiceCategory`, `useDeleteServiceCategory`).
 
 ## 7. i18n
 

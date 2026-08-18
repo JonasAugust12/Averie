@@ -1,7 +1,8 @@
 'use client';
 
-import { Check, Clock, Loader2, Scissors, Search } from 'lucide-react';
+import { Check, Clock, Scissors, Search } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
+import { AdminBookingServiceStepSkeleton } from '@components/skeletons';
 import { formatUsd } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
 import type { ServiceDto } from '@typings/service.type';
@@ -33,6 +34,10 @@ export function BookingServiceStep({
     onCategoryChange,
 }: BookingServiceStepProps) {
     const tAdmin = useAdminTranslations();
+
+    if (isLoading) {
+        return <AdminBookingServiceStepSkeleton />;
+    }
 
     return (
         <div className="space-y-5">
@@ -79,14 +84,7 @@ export function BookingServiceStep({
                 </div>
             </div>
 
-            {isLoading ? (
-                <div className="flex items-center justify-center py-16 text-stone-400">
-                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                    <span className="font-sans text-sm font-semibold">
-                        {tAdmin('booking.service.loading')}
-                    </span>
-                </div>
-            ) : filteredServices.length === 0 ? (
+            {filteredServices.length === 0 ? (
                 <div className="text-center py-16 bg-white rounded-2xl border border-stone-200/80">
                     <Scissors className="h-10 w-10 text-stone-300 mx-auto mb-2" />
                     <p className="font-sans text-sm font-semibold text-stone-600">

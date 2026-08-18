@@ -4,24 +4,24 @@
 
 ### Public GET (Route Handlers)
 
-| Method | Path                         | Mô tả                        |
-| ------ | ---------------------------- | ---------------------------- |
-| GET    | `/api/service-categories`    | Categories + services        |
-| GET    | `/api/services`              | Services list                |
-| GET    | `/api/staff`                 | Staff list (`?visible=true`) |
-| GET    | `/api/settings/schedule`     | Schedule settings            |
-| GET    | `/api/bookings/slots`        | Available slots              |
-| GET    | `/api/bookings/by-reference` | Confirmation lookup          |
-| GET    | `/api/health`                | Health (existing)            |
+| Method | Path                         | Mô tả                                                                         |
+| ------ | ---------------------------- | ----------------------------------------------------------------------------- |
+| GET    | `/api/service-categories`    | Categories + services                                                         |
+| GET    | `/api/services`              | Services list                                                                 |
+| GET    | `/api/staff`                 | Staff list (`?visible=true`)                                                  |
+| GET    | `/api/settings/schedule`     | Schedule settings                                                             |
+| GET    | `/api/bookings/slots`        | Available slots (`date`, `serviceIds`, optional `staffPreference`, `staffId`) |
+| GET    | `/api/bookings/by-reference` | Confirmation lookup                                                           |
+| GET    | `/api/health`                | Health (existing)                                                             |
 
 ### Admin GET
 
-| Method | Path                      | Mô tả                        |
-| ------ | ------------------------- | ---------------------------- |
-| GET    | `/api/bookings`           | Paginated list + filters     |
-| GET    | `/api/bookings/:id`       | Detail                       |
-| GET    | `/api/staff/:id/bookings` | Staff calendar data          |
-| GET    | `/api/admin/kpis`         | Dashboard metrics (optional) |
+| Method | Path                      | Mô tả                                                       |
+| ------ | ------------------------- | ----------------------------------------------------------- |
+| GET    | `/api/bookings`           | Paginated list + filters                                    |
+| GET    | `/api/bookings/:id`       | Detail                                                      |
+| GET    | `/api/staff/:id/bookings` | Staff calendar data                                         |
+| GET    | `/api/admin/kpis`         | Dashboard metrics (`?period=today\|week\|month\|year\|all`) |
 
 ### Server Actions (mutations)
 

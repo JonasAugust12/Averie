@@ -1,6 +1,10 @@
 import { toId, toIso, type IdLike } from '@mappers/shared.mapper';
 import type { ScheduleSettingsDto, WeekdayScheduleDto } from '@typings/schedule-settings.type';
-import { defaultWeekdaySchedules, normalizeWeekdaySchedules } from '@utils/schedule.util';
+import {
+    dayOffDisplayId,
+    defaultWeekdaySchedules,
+    normalizeWeekdaySchedules,
+} from '@utils/schedule.util';
 
 type PeriodSlotsDoc = {
     morning: string[];
@@ -43,7 +47,7 @@ export function serializeScheduleSettings(doc: {
             periodSlots: doc.periodSlots,
         }),
         dayOffs: doc.dayOffs.map((off) => ({
-            id: toId(off._id),
+            id: dayOffDisplayId({ id: toId(off._id), date: off.date, scope: off.scope }),
             date: off.date,
             scope: off.scope as ScheduleSettingsDto['dayOffs'][number]['scope'],
         })),
