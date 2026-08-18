@@ -30,6 +30,22 @@ const WeekdayScheduleSchema = new Schema(
     { _id: false },
 );
 
+const PromotionSettingsSchema = new Schema(
+    {
+        enabled: { type: Boolean, default: false },
+        title: { type: String, default: '', trim: true },
+        description: { type: String, default: '', trim: true },
+        startDate: { type: String, default: null, trim: true },
+        endDate: { type: String, default: null, trim: true },
+        hideAfterExpiry: { type: Boolean, default: true },
+        imageUrl: { type: String, default: null },
+        imagePublicId: { type: String, default: null },
+        imageWidth: { type: Number, default: null },
+        imageHeight: { type: Number, default: null },
+    },
+    { _id: false },
+);
+
 const SalonSettingsSchema = new Schema(
     {
         allowStaffSelection: {
@@ -47,6 +63,10 @@ const SalonSettingsSchema = new Schema(
         dayOffs: {
             type: [DayOffSchema],
             default: [],
+        },
+        promotion: {
+            type: PromotionSettingsSchema,
+            default: () => ({}),
         },
     },
     {

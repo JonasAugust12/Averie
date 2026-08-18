@@ -23,6 +23,14 @@
             "body": "Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and meticulous care in Cohasset.",
             "cta": "Book an Appointment"
         },
+        "promotion": {
+            "eyebrow": "Special Offer",
+            "fallbackTitle": "Limited-Time Promotion",
+            "contextOffer": "An exclusive treat for our guests — available for a limited time.",
+            "contextLocation": "Visit us at our Cohasset salon to redeem in person.",
+            "contextBooking": "Reserve your spot online and mention this offer at check-in.",
+            "cta": "Book an Appointment"
+        },
         "philosophy": {
             "eyebrow": "Our Philosophy",
             "title": "About Us",

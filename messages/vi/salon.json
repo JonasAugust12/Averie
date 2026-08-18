@@ -23,6 +23,14 @@
             "body": "Vẻ đẹp tinh tế. Được chăm chút kỹ lưỡng. Trải nghiệm không gian yên tĩnh và chăm sóc tỉ mỉ tại Cohasset.",
             "cta": "Đặt lịch hẹn"
         },
+        "promotion": {
+            "eyebrow": "Ưu đãi đặc biệt",
+            "fallbackTitle": "Khuyến mãi có thời hạn",
+            "contextOffer": "Quà tặng dành riêng cho khách — chỉ trong thời gian giới hạn.",
+            "contextLocation": "Ghé salon tại Cohasset để nhận ưu đãi trực tiếp.",
+            "contextBooking": "Đặt lịch trực tuyến và nhắc nhân viên về ưu đãi khi check-in.",
+            "cta": "Đặt lịch hẹn"
+        },
         "philosophy": {
             "eyebrow": "Triết lý của chúng tôi",
             "title": "Về Averie",

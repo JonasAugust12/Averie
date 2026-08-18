@@ -4,6 +4,7 @@ import { AppShell } from '@components/layout';
 import {
     LandingHeader,
     LandingHero,
+    LandingPromotion,
     LandingPhilosophy,
     LandingServices,
     LandingTestimonials,
@@ -18,6 +19,7 @@ export function LandingPageView() {
             <LandingHeader />
             <main>
                 <LandingHero />
+                <LandingPromotion />
                 <LandingPhilosophy />
                 <LandingServices />
                 <LandingTestimonials />
