@@ -155,7 +155,7 @@ export function EmployeeStep() {
                                     <div className="mt-2 sm:mt-2.5 flex flex-col items-center gap-0.5 sm:gap-1">
                                         {primarySpecialty ? (
                                             <span
-                                                className="inline-flex items-center gap-1 rounded-full px-2 sm:px-2.5 py-0.5 font-sans text-[9px] sm:text-[11px] font-bold tracking-wide max-w-[130px] sm:max-w-none truncate"
+                                                className="inline-flex items-center gap-1 rounded-full px-2 sm:px-2.5 py-0.5 font-sans text-[9px] sm:text-[11px] font-bold tracking-wide max-w-32.5 sm:max-w-none truncate"
                                                 style={{
                                                     backgroundColor: staffColorAlpha(userColor, 10),
                                                     color: userColor,
