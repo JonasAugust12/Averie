@@ -67,6 +67,14 @@ export function DevToolsGuard() {
     useEffect(() => {
         if (!isGuardEnabled()) return;
 
+        // Console deterrent — only fires when DevTools is open (console is active).
+        // Targets curious non-tech users who might try pasting scripts.
+        console.log('%cStop!', 'font-size:40px;font-weight:bold;color:#c0392b;');
+        console.log(
+            '%cIf someone told you to paste something here, they are scamming you.',
+            'font-size:15px;color:#333;line-height:1.6;',
+        );
+
         const redirect = () => {
             if (redirectedRef.current) return;
             redirectedRef.current = true;
