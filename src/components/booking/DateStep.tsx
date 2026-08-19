@@ -248,9 +248,19 @@ export function DateStep() {
                                             />
                                         ) : null}
 
-                                        {/* Sparkling shine sweep animation for promo dates */}
+                                        {/* Sparkling shine sweep animation for all promo dates with staggered delay */}
                                         {cell.isPromo && !cell.disabled ? (
-                                            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
+                                            <div
+                                                className={cn(
+                                                    'pointer-events-none absolute inset-0 -translate-x-full animate-shine z-10',
+                                                    selected
+                                                        ? 'bg-linear-to-r from-transparent via-white/60 to-transparent'
+                                                        : 'bg-linear-to-r from-transparent via-rose-400/70 to-transparent',
+                                                )}
+                                                style={{
+                                                    animationDelay: `${(cell.day % 4) * 0.75}s`,
+                                                }}
+                                            />
                                         ) : null}
 
                                         <span className="relative z-10">{cell.day}</span>
