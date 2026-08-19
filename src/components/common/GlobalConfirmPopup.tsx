@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { X, AlertTriangle, AlertCircle, Info, XCircle } from 'lucide-react';
 import { cn } from '@utils/cn.util';
 import { usePreventScroll } from '@hooks/usePreventScroll';
@@ -9,6 +10,7 @@ import { useCommonTranslations } from '@i18n/use-app-translations';
 export default function GlobalConfirmPopup() {
     const { confirmPopup, isConfirmLoading, hideConfirm } = useUIStore();
     const t = useCommonTranslations();
+    const isSubmittingRef = useRef(false);
 
     usePreventScroll(!!confirmPopup);
 
@@ -31,10 +33,16 @@ export default function GlobalConfirmPopup() {
     };
 
     const handleConfirm = async () => {
+        if (isSubmittingRef.current) return;
         if (isAlert) {
             handleClose();
         } else {
-            await onConfirm();
+            try {
+                isSubmittingRef.current = true;
+                await onConfirm();
+            } finally {
+                isSubmittingRef.current = false;
+            }
         }
     };
 
@@ -75,7 +83,11 @@ export default function GlobalConfirmPopup() {
             {/* Modal Box */}
             <div
                 className={cn(
-                    'relative bg-white w-full max-w-105 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border flex flex-col overflow-hidden transition-all duration-300',
+                    'relative bg-white w-full max-w-sm sm:max-w-105 flex flex-col overflow-hidden transition-all duration-300',
+                    'rounded-3xl',
+                    'animate-in zoom-in-95 duration-200',
+                    'shadow-[0_20px_50px_rgba(0,0,0,0.12)]',
+                    'border',
                     current.border,
                 )}
             >
@@ -88,7 +100,7 @@ export default function GlobalConfirmPopup() {
                 />
 
                 {/* Top header row with Icon and X button */}
-                <div className="relative flex items-start justify-between p-6 pb-2">
+                <div className="relative flex items-start justify-between p-5 sm:p-6 pb-2">
                     <div
                         className={cn(
                             'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs border border-white/50 backdrop-blur-sm transition-transform duration-500 hover:scale-105',
@@ -109,23 +121,23 @@ export default function GlobalConfirmPopup() {
                 </div>
 
                 {/* Dialog Body */}
-                <div className="relative px-6 py-4">
-                    <h3 className="text-xl font-display text-stone-900 tracking-wide mb-2 leading-snug">
+                <div className="relative px-5 sm:px-6 py-3 sm:py-4">
+                    <h3 className="text-lg sm:text-xl font-display text-stone-900 tracking-wide mb-2 leading-snug">
                         {title}
                     </h3>
-                    <p className="text-[14.5px] font-sans text-stone-500 leading-relaxed font-semibold">
+                    <p className="text-sm sm:text-[14.5px] font-sans text-stone-500 leading-relaxed font-semibold">
                         {message}
                     </p>
                 </div>
 
                 {/* Dialog Actions Footer */}
-                <div className="px-6 py-5 mt-2 flex gap-3 bg-stone-50/50 border-t border-stone-100/50">
+                <div className="px-5 sm:px-6 py-4 sm:py-5 mt-1 flex gap-3 bg-stone-50/50 border-t border-stone-100/50 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-5">
                     {!isAlert && (
                         <button
                             type="button"
                             onClick={handleClose}
                             disabled={isConfirmLoading}
-                            className="flex-1 h-11 inline-flex items-center justify-center gap-2 rounded-full border border-stone-200/80 bg-white font-sans text-sm font-bold text-stone-700 shadow-xs hover:bg-stone-50 hover:border-stone-300 transition-all hover:scale-103 active:scale-97 cursor-pointer disabled:opacity-50"
+                            className="flex-1 h-12 sm:h-11 inline-flex items-center justify-center gap-2 rounded-full border border-stone-200/80 bg-white font-sans text-sm font-bold text-stone-700 shadow-xs hover:bg-stone-50 hover:border-stone-300 transition-all active:scale-97 cursor-pointer disabled:opacity-50"
                         >
                             <XCircle className="w-4 h-4 shrink-0" />
                             <span>{cancelText}</span>
@@ -136,7 +148,7 @@ export default function GlobalConfirmPopup() {
                         onClick={handleConfirm}
                         disabled={isConfirmLoading}
                         className={cn(
-                            'flex-1 h-11 inline-flex items-center justify-center gap-2 rounded-full font-sans text-sm font-bold shadow-sm transition-all hover:scale-103 active:scale-97 cursor-pointer disabled:opacity-50',
+                            'flex-1 h-12 sm:h-11 inline-flex items-center justify-center gap-2 rounded-full font-sans text-sm font-bold shadow-sm transition-all active:scale-97 cursor-pointer disabled:opacity-50',
                             current.buttonBg,
                             isAlert && 'w-full',
                         )}

@@ -3,7 +3,7 @@
 import { X } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useChangeOwnPassword } from '@services/auth.service';
-import { ChangePasswordForm } from '@components/shared/ChangePasswordForm';
+import { ChangePasswordForm } from '@components/shared';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 
 interface StaffChangePasswordModalProps {

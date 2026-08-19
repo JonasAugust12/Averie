@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { RouteLoadingScreen } from '@components/shared/RouteLoadingScreen';
+import { RouteLoadingScreen } from '@components/shared';
 
 export default async function AdminRouteLoading() {
     const t = await getTranslations('common');

@@ -371,7 +371,31 @@
         "statsPending": "Chờ duyệt",
         "upcomingTitle": "Sắp diễn ra",
         "upcomingSubtitle": "Tất cả lịch hẹn sắp tới",
-        "upcomingEmpty": "Không có lịch hẹn sắp tới"
+        "upcomingEmpty": "Không có lịch hẹn sắp tới",
+        "daySlotsModal": {
+            "staffTitle": "Khung Giờ Lịch Làm Nhân Viên",
+            "masterTitle": "Khung Giờ Tất Cả Nhân Viên",
+            "masterSubtitle": "Tổng quan trạng thái các khung giờ của tất cả kỹ thuật viên ngày {date}",
+            "staffSubtitle": "Chi tiết khung giờ làm việc của {name} ngày {date}",
+            "allStaff": "Tất cả nhân viên",
+            "anyStaff": "Kỹ thuật viên bất kỳ",
+            "anyStaffDesc": "Lịch hẹn linh hoạt / chưa gán nhân viên",
+            "selectStaff": "Chọn kỹ thuật viên",
+            "totalSlots": "Tổng mốc giờ",
+            "freeSlots": "Còn trống",
+            "bookedSlots": "Đã đặt lịch",
+            "inProgressSlots": "Đang phục vụ",
+            "closedSlots": "Đóng cửa / Khóa",
+            "allPeriods": "Cả ngày",
+            "quickBook": "Đặt ca nhanh",
+            "bookFor": "Đặt cho {name}",
+            "quickBookTip": "Bấm vào ô khung giờ màu xanh để tạo nhanh lịch hẹn cho khách gọi điện hoặc walk-in.",
+            "noActiveStaff": "Không có kỹ thuật viên nào đang hoạt động trong ngày này.",
+            "legendFree": "Còn trống (Sẵn sàng)",
+            "legendBooked": "Đã đặt (Booked)",
+            "legendInProgress": "Đang phục vụ (Serving)",
+            "legendClosed": "Khóa / Đóng cửa"
+        }
     },
     "services": {
         "title": "Quản lý dịch vụ",

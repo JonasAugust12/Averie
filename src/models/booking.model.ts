@@ -79,13 +79,8 @@ BookingSchema.index({ reference: 1 }, { unique: true });
 BookingSchema.index({ date: 1, time: 1, status: 1 });
 BookingSchema.index({ 'customer.phone': 1 });
 BookingSchema.index({ createdAt: -1 });
-BookingSchema.index(
-    { date: 1, time: 1 },
-    {
-        unique: true,
-        partialFilterExpression: { status: 'upcoming', staffPreference: 'any' },
-    },
-);
+// Unique per exact (date, time, staffId) for specific-staff bookings only.
+// 'any' preference allows multiple bookings at the same slot (salon assigns staff).
 BookingSchema.index(
     { date: 1, time: 1, staffId: 1 },
     {

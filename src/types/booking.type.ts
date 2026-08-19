@@ -25,7 +25,7 @@ export interface BookingDto {
     updatedAt: string;
 }
 
-export type SlotLockReason = 'booked' | 'too_soon';
+export type SlotLockReason = 'booked' | 'too_soon' | 'in_progress';
 
 export interface TimeSlotDto {
     id: string;

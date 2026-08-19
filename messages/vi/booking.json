@@ -40,6 +40,7 @@
         "open": "Mở cửa",
         "closed": "Đóng cửa",
         "booked": "Đã đặt",
+        "inProgress": "Đang phục vụ",
         "unavailable": "Không khả dụng",
         "closingNotice": "Đặt hẹn trực tuyến sẽ đóng trước giờ đóng cửa 1 tiếng. Quý khách cần đặt gấp hoặc hỗ trợ vui lòng gọi hotline {hotline}.",
         "hotline": "781-923-1955"
@@ -138,6 +139,8 @@
     "review": {
         "title": "Xem lại lịch hẹn",
         "subtitle": "Vui lòng kiểm tra lại thông tin chi tiết trước khi xác nhận đặt lịch.",
+        "confirmTitle": "Xác nhận đặt lịch hẹn?",
+        "confirmMessage": "Bạn có chắc chắn muốn gửi yêu cầu đặt lịch hẹn này không?",
         "service": "Dịch vụ đã chọn",
         "employee": "Kỹ thuật viên",
         "date": "Ngày",

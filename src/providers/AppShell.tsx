@@ -1,10 +1,13 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { DevToolsGuard } from '@components/shared/DevToolsGuard';
-import { LoadingOverlay } from '@components/shared/LoadingOverlay';
-import { RouteTransitionLoadingProvider } from '@components/shared/RouteTransitionLoadingProvider';
-import { PublicRouteTransitionLoader } from '@components/shared/RouteTransitionLoader';
+import { DevToolsGuard } from '@guard/DevToolsGuard';
+import {
+    LoadingOverlay,
+    RouteTransitionLoadingProvider,
+    PublicRouteTransitionLoader,
+} from '@components/shared';
+import { GlobalConfirmPopup } from '@components/common';
 
 export function AppShell({ children }: { children: ReactNode }) {
     return (
@@ -12,6 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <DevToolsGuard />
             <LoadingOverlay />
             <PublicRouteTransitionLoader />
+            <GlobalConfirmPopup />
             {children}
         </RouteTransitionLoadingProvider>
     );

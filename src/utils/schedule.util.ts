@@ -1,6 +1,6 @@
 import type { DayOffScope, DayPeriod } from '@typings/salon-common.type';
 import type { BookingListItemDto, TimeSlotDto } from '@typings/booking.type';
-import { isSlotBookedForPreference, isSlotTooSoon } from '@utils/booking-schedule.util';
+import { getSlotBookedLockReason, isSlotTooSoon } from '@utils/booking-schedule.util';
 import type { SlotLockReason } from '@typings/booking.type';
 import type {
     PeriodSlotsDto,
@@ -283,9 +283,15 @@ export function getAvailableSlotsForDate(
             let available = true;
             let lockReason: SlotLockReason | undefined;
 
-            if (isSlotBookedForPreference(slot.time, dayBookings, staffPreference, staffId)) {
+            const bookedReason = getSlotBookedLockReason(
+                slot.time,
+                dayBookings,
+                staffPreference,
+                staffId,
+            );
+            if (bookedReason) {
                 available = false;
-                lockReason = 'booked';
+                lockReason = bookedReason;
             } else if (isSlotTooSoon(date, slot.time, now)) {
                 available = false;
                 lockReason = 'too_soon';

@@ -125,20 +125,33 @@ export function TimeStep() {
                                     const label =
                                         slot.lockReason === 'booked'
                                             ? t('periods.booked')
-                                            : t('periods.unavailable');
+                                            : slot.lockReason === 'in_progress'
+                                              ? t('periods.inProgress')
+                                              : t('periods.unavailable');
+                                    const ribbonBg =
+                                        slot.lockReason === 'in_progress'
+                                            ? 'bg-amber-600/95 text-white'
+                                            : slot.lockReason === 'booked'
+                                              ? 'bg-stone-700/90 text-white'
+                                              : 'bg-stone-400/90 text-white';
                                     return (
                                         <div
                                             key={slot.id}
                                             aria-disabled
-                                            className="relative flex h-13 sm:h-14 cursor-not-allowed items-center justify-center rounded-2xl border-2 border-stone-200 bg-stone-50/60 px-3 font-sans text-stone-400 opacity-55 select-none overflow-hidden"
+                                            className="relative flex h-13 sm:h-14 cursor-not-allowed items-center justify-center rounded-2xl border-2 border-stone-200 bg-stone-50/60 px-3 font-sans text-stone-400 opacity-60 select-none overflow-hidden"
                                         >
-                                            {/* Diagonal Booked/Unavailable Ribbon */}
-                                            <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 overflow-hidden">
-                                                <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-stone-300/90 py-0.5 text-center text-[6.5px] font-semibold uppercase tracking-wider text-stone-700 shadow-2xs">
+                                            {/* Full Diagonal Overlay Banner for Booked/In-Progress/Unavailable */}
+                                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+                                                <div
+                                                    className={cn(
+                                                        'w-[150%] -rotate-20 py-0.5 text-center font-sans text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-widest shadow-xs',
+                                                        ribbonBg,
+                                                    )}
+                                                >
                                                     {label}
                                                 </div>
                                             </div>
-                                            <span className="text-sm sm:text-base font-bold leading-none">
+                                            <span className="text-sm sm:text-base font-bold leading-none opacity-40">
                                                 {slot.time}
                                             </span>
                                         </div>

@@ -33,6 +33,10 @@ import { toastSuccess } from '@utils/toast.util';
 interface AdminNewBookingModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: () => void;
+    initialDate?: string;
+    initialTime?: string;
+    initialStaffId?: string;
 }
 
 type ModalStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -50,7 +54,14 @@ const STEP_TITLES = ['Services', 'Specialist', 'Date', 'Time', 'Customer', 'Revi
 const ADMIN_STEP_DOT_SIZE_PX = 32;
 const ADMIN_STEP_DOT_RADIUS_PX = ADMIN_STEP_DOT_SIZE_PX / 2;
 
-export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalProps) {
+export function AdminNewBookingModal({
+    isOpen,
+    onClose,
+    onSuccess,
+    initialDate,
+    initialTime,
+    initialStaffId,
+}: AdminNewBookingModalProps) {
     const tAdmin = useAdminTranslations();
     const createBooking = useCreateBooking();
     usePreventScroll(isOpen);
@@ -91,6 +102,17 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
         const selected = slots.find((s) => s.time === selectedTime);
         if (!selected?.available) setSelectedTime('');
     }, [slots, selectedTime]);
+
+    useEffect(() => {
+        if (isOpen) {
+            if (initialDate) setSelectedDate(initialDate);
+            if (initialTime) setSelectedTime(initialTime);
+            if (initialStaffId) {
+                setStaffPreference('specific');
+                setStaffId(initialStaffId);
+            }
+        }
+    }, [isOpen, initialDate, initialTime, initialStaffId]);
 
     const selectedServicesList = useMemo(
         () => (services ?? []).filter((s) => serviceIds.includes(s.id)),
@@ -184,6 +206,7 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
                     toastSuccess(tAdmin('toasts.bookingCreated'));
                     setCreatedReference(data.reference);
                     setStep(7);
+                    onSuccess?.();
                 },
             },
         );
@@ -201,10 +224,10 @@ export function AdminNewBookingModal({ isOpen, onClose }: AdminNewBookingModalPr
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-md animate-in fade-in duration-200 sm:p-4"
+            className="fixed inset-0 z-50 lg:absolute lg:inset-0 lg:z-40 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-md animate-in fade-in duration-200 sm:p-4"
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
-            <div className="relative flex h-full max-h-full w-full max-w-app flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="relative flex h-full max-h-[92vh] lg:max-h-[calc(100vh-8rem)] w-full max-w-app flex-col overflow-hidden rounded-3xl border border-stone-300/90 bg-stone-50 shadow-2xl animate-in zoom-in-95 duration-200">
                 {/* Modal Header */}
                 <div className="flex shrink-0 items-center justify-between border-b border-stone-300/70 bg-stone-100 px-6 py-5 lg:px-8 lg:py-6">
                     <div className="flex items-center gap-3">

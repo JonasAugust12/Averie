@@ -17,9 +17,12 @@ import {
 import { useAllStaff, useStaffBookings } from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { EmptyState } from '@components/ui';
-import { StaffCalendar } from '@components/admin/staff';
-import { BookingStatCard } from '@components/admin/bookings';
-import { BookingStatusBadge } from '@components/admin/bookings';
+import { StaffCalendar, StaffDaySlotsModal } from '@components/admin/staff';
+import {
+    BookingStatCard,
+    BookingStatusBadge,
+    AdminNewBookingModal,
+} from '@components/admin/bookings';
 import { StaffSchedulePageSkeleton } from '@components/skeletons';
 import {
     buildStaffBookingsCalendarEvents,
@@ -48,6 +51,8 @@ export default function StaffSchedulePage() {
         isFetching: bookingsFetching,
     } = useStaffBookings(params.id, range);
     const [selectedBooking, setSelectedBooking] = useState<BookingListItemDto | null>(null);
+    const [selectedDateForSlots, setSelectedDateForSlots] = useState<string | null>(null);
+    const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
 
     const member = staffList?.find((s) => s.id === params.id);
     const bookingItems = staffBookings;
@@ -195,6 +200,7 @@ export default function StaffSchedulePage() {
                 <StaffCalendar
                     events={calendarEvents}
                     onBookingClick={setSelectedBooking}
+                    onDateClick={(dateStr) => setSelectedDateForSlots(dateStr)}
                     onRangeChange={handleRangeChange}
                     isLoadingEvents={bookingsFetching}
                     accentColor={staffColor}
@@ -398,6 +404,30 @@ export default function StaffSchedulePage() {
                     </div>
                 </div>
             )}
+
+            {/* Staff Day Slots Modal */}
+            {selectedDateForSlots && member && (
+                <StaffDaySlotsModal
+                    date={selectedDateForSlots}
+                    staff={member}
+                    bookings={bookingItems ?? []}
+                    onClose={() => setSelectedDateForSlots(null)}
+                    onSelectBooking={(booking) => {
+                        setSelectedDateForSlots(null);
+                        setSelectedBooking(booking);
+                    }}
+                    onBookSlot={() => {
+                        setSelectedDateForSlots(null);
+                        setIsNewBookingOpen(true);
+                    }}
+                />
+            )}
+
+            {/* Admin New Booking Modal */}
+            <AdminNewBookingModal
+                isOpen={isNewBookingOpen}
+                onClose={() => setIsNewBookingOpen(false)}
+            />
         </div>
     );
 }

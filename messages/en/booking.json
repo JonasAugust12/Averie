@@ -40,6 +40,7 @@
         "open": "Open",
         "closed": "Closed",
         "booked": "Booked",
+        "inProgress": "Serving",
         "unavailable": "Unavailable",
         "closingNotice": "Online booking closes 1 hour before closing time. Need immediate assistance? Call our hotline at {hotline}.",
         "hotline": "781-923-1955"
@@ -138,6 +139,8 @@
     "review": {
         "title": "Appointment Review",
         "subtitle": "Please take a moment to review your appointment details before confirming.",
+        "confirmTitle": "Confirm your appointment?",
+        "confirmMessage": "Are you sure you want to request this appointment?",
         "service": "Selected Services",
         "employee": "Technician",
         "date": "Date",

@@ -91,6 +91,7 @@ export function bookingForScheduleUtil(doc: {
     status: 'upcoming' | 'cancelled';
     staffId?: unknown;
     staffPreference?: 'any' | 'specific';
+    totalEstimatedMinutes?: number;
 }) {
     return {
         date: doc.date,
@@ -98,5 +99,6 @@ export function bookingForScheduleUtil(doc: {
         status: doc.status,
         staffPreference: doc.staffPreference ?? ('any' as const),
         staffId: doc.staffId ? String(doc.staffId) : undefined,
+        totalEstimatedMinutes: doc.totalEstimatedMinutes,
     };
 }

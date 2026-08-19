@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Gem, Home, MoveLeft } from 'lucide-react';
 import { useCommonTranslations } from '@i18n/use-app-translations';
-import { AmbientBackground } from '@components/shared/AmbientBackground';
+import { AmbientBackground } from '@components/shared';
 import { Button } from '@components/common';
 
 export default function NotFound() {
@@ -46,7 +46,7 @@ export default function NotFound() {
                     <Link href="/">
                         <Button
                             size="lg"
-                            className="min-w-[200px] shadow-md shadow-primary/10 transition-all hover:-translate-y-0.5"
+                            className="min-w-50 shadow-md shadow-primary/10 transition-all hover:-translate-y-0.5"
                         >
                             <Home className="h-5 w-5" />
                             {t('notFound.home')}
@@ -56,7 +56,7 @@ export default function NotFound() {
                     <button
                         type="button"
                         onClick={() => window.history.back()}
-                        className="inline-flex h-11 min-w-[200px] items-center justify-center gap-2 rounded-md border border-primary bg-transparent px-5 text-sm font-medium text-primary transition-all hover:bg-tertiary"
+                        className="inline-flex h-11 min-w-50 items-center justify-center gap-2 rounded-md border border-primary bg-transparent px-5 text-sm font-medium text-primary transition-all hover:bg-tertiary"
                     >
                         <MoveLeft className="h-5 w-5" />
                         {t('notFound.back')}

@@ -20,7 +20,9 @@ import { useStaff } from '@services/staff.service';
 import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
+import { useUIStore } from '@stores/ui.store';
 import { Button } from '@components/common';
+import { RouteLoadingScreen } from '@components/shared';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 import { formatUserName, getUserInitials, getUserColor, staffColorAlpha } from '@utils/staff.util';
 import { toastSuccess } from '@utils/toast.util';
@@ -29,6 +31,7 @@ export function ReviewStep() {
     const t = useBookingTranslations();
     const router = useRouter();
     const createBooking = useCreateBooking();
+    const { showConfirm, hideConfirm } = useUIStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { serviceIds, staffPreference, staffId, date, time, customer, setReference, setStep } =
         useBookingStore();
@@ -54,7 +57,7 @@ export function ReviewStep() {
     const totalPrice = selectedServices.reduce((sum, s) => sum + s.price, 0);
     const totalDuration = selectedServices.reduce((sum, s) => sum + s.estimatedMinutes, 0);
 
-    async function handleConfirm() {
+    async function handleSubmit() {
         if (selectedServices.length === 0 || !date || !time || !customer) return;
         if (staffPreference === 'specific' && !staffId) return;
         if (isSubmitting) return;
@@ -87,12 +90,27 @@ export function ReviewStep() {
 
             setReference(data.reference);
             toastSuccess(t('toasts.bookingCreated'));
-            router.push('/book/confirmation');
+            router.push(`/book/confirmation/${data.id}`);
         } catch {
             // Toast handled by useCreateBooking onError
         } finally {
             setIsSubmitting(false);
         }
+    }
+
+    function handleConfirm() {
+        showConfirm({
+            title: t('review.confirmTitle') || 'Confirm your appointment?',
+            message:
+                t('review.confirmMessage') ||
+                `${formatDisplayDate(date ?? '')} • ${time} — ${selectedServices.map((s) => s.name).join(', ')}`,
+            confirmText: t('cta.confirm'),
+            type: 'info',
+            onConfirm: () => {
+                hideConfirm();
+                return handleSubmit();
+            },
+        });
     }
 
     if (selectedServices.length === 0 || !date || !time || !customer) {
@@ -385,6 +403,18 @@ export function ReviewStep() {
                     </Button>
                 </div>
             </div>
+
+            {/* Luxury Brand Loading Screen while booking is being submitted */}
+            {isSubmitting && (
+                <RouteLoadingScreen
+                    overlay="fullscreen"
+                    message={t('review.submitting') || 'Securing your appointment...'}
+                    hint={
+                        t('review.submittingHint') ||
+                        'Please wait a moment while we confirm your reservation.'
+                    }
+                />
+            )}
         </div>
     );
 }

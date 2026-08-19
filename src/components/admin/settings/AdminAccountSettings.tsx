@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useChangeOwnPassword } from '@services/auth.service';
 import { useAllStaff, useResetStaffPassword } from '@services/staff.service';
-import { ChangePasswordForm } from '@components/shared/ChangePasswordForm';
+import { ChangePasswordForm } from '@components/shared';
 import { Button } from '@components/common';
 import { Input } from '@components/ui';
 import { formatUserName } from '@utils/staff.util';

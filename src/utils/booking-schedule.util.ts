@@ -3,7 +3,9 @@ import type { SlotLockReason } from '@typings/booking.type';
 
 export const BOOKING_MIN_ADVANCE_HOURS = 1;
 export const BOOKING_MAX_DAYS_AHEAD = 15;
-export const SALON_TIMEZONE = process.env.SALON_TIMEZONE ?? 'Asia/Ho_Chi_Minh';
+export const SALON_TIMEZONE = process.env.SALON_TIMEZONE ?? 'America/New_York';
+/** Maximum acceptable wait time (in minutes) for a customer if a previous appointment spills over into their slot. */
+export const MAX_SLOT_WAIT_TOLERANCE_MINUTES = 20;
 
 export type { SlotLockReason };
 
@@ -70,7 +72,46 @@ type ScheduleBooking = {
     status: 'upcoming' | 'cancelled';
     staffPreference?: 'any' | 'specific';
     staffId?: string;
+    /** total estimated minutes for the booking, used for duration-based blocking */
+    totalEstimatedMinutes?: number;
 };
+
+export function getSlotBookedLockReason(
+    time: string,
+    dayBookings: ScheduleBooking[],
+    staffPreference: 'any' | 'specific',
+    staffId?: string | null,
+): SlotLockReason | false {
+    // 'any' preference: salon assigns staff internally — never block calendar slots for customer booking.
+    if (staffPreference === 'any') return false;
+
+    // 'specific' preference: block ONLY if the chosen staff has an overlapping booking specifically for them.
+    if (!staffId) return false;
+    const slotMin = minuteOf(time);
+
+    for (const b of dayBookings) {
+        if (b.status === 'cancelled') continue;
+
+        // ONLY match bookings specifically assigned to this staff member
+        const isSameStaff = b.staffPreference === 'specific' && b.staffId === staffId;
+        if (!isSameStaff) continue;
+
+        const bookingStart = minuteOf(b.time);
+        const bookingEnd = bookingStart + (b.totalEstimatedMinutes ?? 30);
+
+        if (slotMin === bookingStart) {
+            return 'booked';
+        }
+        if (slotMin > bookingStart && slotMin < bookingEnd) {
+            const waitMinutes = bookingEnd - slotMin;
+            if (waitMinutes > MAX_SLOT_WAIT_TOLERANCE_MINUTES) {
+                return 'in_progress';
+            }
+        }
+    }
+
+    return false;
+}
 
 export function isSlotBookedForPreference(
     time: string,
@@ -78,14 +119,5 @@ export function isSlotBookedForPreference(
     staffPreference: 'any' | 'specific',
     staffId?: string | null,
 ): boolean {
-    const atTime = dayBookings.filter((b) => b.time === time);
-    if (atTime.length === 0) return false;
-
-    if (staffPreference === 'any') {
-        return atTime.length > 0;
-    }
-
-    return atTime.some(
-        (b) => b.staffPreference === 'any' || (b.staffId && staffId && b.staffId === staffId),
-    );
+    return Boolean(getSlotBookedLockReason(time, dayBookings, staffPreference, staffId));
 }

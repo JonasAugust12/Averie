@@ -434,7 +434,31 @@
         "statsPending": "Pending",
         "upcomingTitle": "Coming up",
         "upcomingSubtitle": "All upcoming appointments",
-        "upcomingEmpty": "No upcoming appointments"
+        "upcomingEmpty": "No upcoming appointments",
+        "daySlotsModal": {
+            "staffTitle": "Staff Daily Availability",
+            "masterTitle": "Master Daily Availability",
+            "masterSubtitle": "Overview of time slots for all salon technicians on {date}",
+            "staffSubtitle": "Detailed time slot inspection for {name} on {date}",
+            "allStaff": "All Staff",
+            "anyStaff": "Any Specialist",
+            "anyStaffDesc": "Unassigned & flexible technician bookings",
+            "selectStaff": "Select Technician",
+            "totalSlots": "Total Slots",
+            "freeSlots": "Free",
+            "bookedSlots": "Booked",
+            "inProgressSlots": "Serving",
+            "closedSlots": "Closed",
+            "allPeriods": "All Day",
+            "quickBook": "Quick Book",
+            "bookFor": "Book for {name}",
+            "quickBookTip": "Click a green slot to instantly create an appointment for a walk-in or call-in client.",
+            "noActiveStaff": "No active technicians scheduled on this date.",
+            "legendFree": "Free / Bookable",
+            "legendBooked": "Booked",
+            "legendInProgress": "Serving",
+            "legendClosed": "Closed"
+        }
     },
     "promotion": {
         "pageTitle": "Promotion settings",

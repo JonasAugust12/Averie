@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Check, X } from 'lucide-react';
 import { useBookingTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
+import { LanguageSwitcher } from '@components/shared';
 import { useScheduleSettings } from '@services/schedule.service';
 import { useBookingStore, type BookingStep } from '@stores/booking.store';
 import { cn } from '@utils/cn.util';

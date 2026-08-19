@@ -128,20 +128,33 @@ export function BookingTimeStep({
                                                 const label =
                                                     slot.lockReason === 'booked'
                                                         ? tBook('periods.booked')
-                                                        : tBook('periods.unavailable');
+                                                        : slot.lockReason === 'in_progress'
+                                                          ? tBook('periods.inProgress')
+                                                          : tBook('periods.unavailable');
+                                                const ribbonBg =
+                                                    slot.lockReason === 'in_progress'
+                                                        ? 'bg-amber-600/95 text-white'
+                                                        : slot.lockReason === 'booked'
+                                                          ? 'bg-stone-700/90 text-white'
+                                                          : 'bg-stone-400/90 text-white';
                                                 return (
                                                     <div
                                                         key={slot.id}
                                                         aria-disabled
-                                                        className="relative flex h-11 sm:h-12 cursor-not-allowed items-center justify-center rounded-xl border border-stone-200 bg-stone-50/60 px-2 font-sans text-xs font-bold text-stone-400 opacity-55 select-none overflow-hidden"
+                                                        className="relative flex h-11 sm:h-12 cursor-not-allowed items-center justify-center rounded-xl border border-stone-200 bg-stone-50/60 px-2 font-sans text-xs font-bold text-stone-400 opacity-60 select-none overflow-hidden"
                                                     >
-                                                        {/* Diagonal Booked/Unavailable Ribbon */}
-                                                        <div className="pointer-events-none absolute top-0 right-0 h-8 w-8 overflow-hidden">
-                                                            <div className="absolute -right-3 top-1 w-10 rotate-45 bg-stone-300/90 py-px text-center text-[5.5px] font-semibold uppercase tracking-wider text-stone-700 shadow-2xs">
+                                                        {/* Full Diagonal Overlay Banner for Booked/In-Progress/Unavailable */}
+                                                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+                                                            <div
+                                                                className={cn(
+                                                                    'w-[150%] -rotate-20 py-0.5 text-center font-sans text-[7.5px] sm:text-[8.5px] font-black uppercase tracking-widest shadow-xs',
+                                                                    ribbonBg,
+                                                                )}
+                                                            >
                                                                 {label}
                                                             </div>
                                                         </div>
-                                                        <span className="leading-none">
+                                                        <span className="leading-none opacity-40">
                                                             {slot.time}
                                                         </span>
                                                     </div>

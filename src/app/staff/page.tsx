@@ -95,8 +95,8 @@ export default function StaffLookupPage() {
     const handleSignOut = async () => {
         try {
             await signOut({ redirect: false });
-        } catch (error) {
-            console.error('[handleSignOut]', error);
+        } catch {
+            // silent ignore
         }
         toastSuccess(t('toasts.signOutSuccess'));
         window.location.href = '/staff';

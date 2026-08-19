@@ -12,7 +12,7 @@ import { loginSchema, type LoginSchema } from '@validations/auth.schema';
 import { useAccountTranslations } from '@i18n/use-app-translations';
 import { useLogin } from '@services/auth.service';
 import { Button } from '@components/common';
-import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
+import { LanguageSwitcher } from '@components/shared';
 import { loginStaticText } from '@components/landing/styles';
 
 export default function AdminLoginPage() {

@@ -295,7 +295,7 @@ export function AdminShell({ children }: AdminShellProps) {
                     </div>
                     <div
                         data-scroll-lock-root
-                        className="relative z-10 h-full min-h-0 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8"
+                        className="relative h-full min-h-0 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8"
                     >
                         <div className="mx-auto w-full max-w-app">{children}</div>
                     </div>

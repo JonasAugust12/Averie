@@ -16,7 +16,8 @@ import { useBookings } from '@services/booking.service';
 import { useAllStaff } from '@services/staff.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
-import { StaffCalendar } from '@components/admin/staff';
+import { MasterDaySlotsModal, StaffCalendar } from '@components/admin/staff';
+import { AdminNewBookingModal } from '@components/admin/bookings/AdminNewBookingModal';
 import { BookingStatCard } from '@components/admin/bookings';
 import { BookingStatusBadge } from '@components/admin/bookings';
 import { AdminScheduleSkeleton } from '@components/skeletons';
@@ -43,6 +44,13 @@ export default function AdminSchedulePage() {
     const t = useAdminTranslations();
     const [range, setRange] = useState<CalendarDateRange>(() => getDefaultCalendarRange());
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [selectedDateForSlots, setSelectedDateForSlots] = useState<string | null>(null);
+    const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
+    const [initialBookingState, setInitialBookingState] = useState<{
+        date?: string;
+        time?: string;
+        staffId?: string;
+    }>({});
 
     const handleRangeChange = useCallback((next: CalendarDateRange) => {
         setRange((prev) =>
@@ -194,6 +202,7 @@ export default function AdminSchedulePage() {
                 <StaffCalendar
                     events={calendarEvents}
                     onBookingClick={setSelectedBooking}
+                    onDateClick={(dateStr) => setSelectedDateForSlots(dateStr)}
                     staffList={staff}
                     onRangeChange={handleRangeChange}
                     isLoadingEvents={bookingsFetching}
@@ -313,6 +322,40 @@ export default function AdminSchedulePage() {
                     </div>
                 </aside>
             </div>
+
+            {/* Master Daily Slots Availability Modal */}
+            {selectedDateForSlots && staff && (
+                <MasterDaySlotsModal
+                    date={selectedDateForSlots}
+                    staffList={staff}
+                    bookings={bookingItems ?? []}
+                    onClose={() => setSelectedDateForSlots(null)}
+                    onSelectBooking={(b) => setSelectedBooking(b)}
+                    onBookSlot={(dateStr, timeStr, staffIdStr) => {
+                        setInitialBookingState({
+                            date: dateStr,
+                            time: timeStr,
+                            staffId: staffIdStr,
+                        });
+                        setIsNewBookingOpen(true);
+                    }}
+                />
+            )}
+
+            {/* Quick Admin Booking Modal */}
+            <AdminNewBookingModal
+                isOpen={isNewBookingOpen}
+                onClose={() => {
+                    setIsNewBookingOpen(false);
+                    setInitialBookingState({});
+                }}
+                onSuccess={() => {
+                    refetch();
+                }}
+                initialDate={initialBookingState.date}
+                initialTime={initialBookingState.time}
+                initialStaffId={initialBookingState.staffId}
+            />
 
             {selectedBooking && (
                 <div

@@ -63,7 +63,8 @@ export async function getAvailableSlotsForDateServer(
 
     await connectToDatabase();
     const bookings = await Booking.find({ date, status: 'upcoming' })
-        .select('date time status staffId staffPreference')
+        .select('date time status staffId staffPreference totalEstimatedMinutes')
+
         .lean();
 
     const slots = getAvailableSlotsForDate(date, settings, bookings.map(bookingForScheduleUtil), {

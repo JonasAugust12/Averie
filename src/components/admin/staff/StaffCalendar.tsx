@@ -4,6 +4,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import type { DateClickArg } from '@fullcalendar/interaction';
 import type { DatesSetArg, EventClickArg, EventContentArg } from '@fullcalendar/core';
 import { useCallback } from 'react';
 import { useLocale } from 'next-intl';
@@ -18,6 +19,7 @@ import { formatUserName, getUserColor } from '@utils/staff.util';
 interface StaffCalendarProps {
     events: BookingCalendarEvent[];
     onBookingClick?: (booking: BookingListItemDto) => void;
+    onDateClick?: (dateStr: string) => void;
     initialDate?: string;
     staffList?: UserDto[];
     onRangeChange?: (range: CalendarDateRange) => void;
@@ -28,6 +30,7 @@ interface StaffCalendarProps {
 export function StaffCalendar({
     events,
     onBookingClick,
+    onDateClick,
     initialDate,
     staffList,
     onRangeChange,
@@ -246,6 +249,7 @@ export function StaffCalendar({
                     events={events}
                     datesSet={handleDatesSet}
                     eventClick={handleEventClick}
+                    dateClick={(arg: DateClickArg) => onDateClick?.(arg.dateStr)}
                     eventContent={renderEventContent}
                     eventDisplay="block"
                     eventTimeFormat={{

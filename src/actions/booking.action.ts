@@ -5,6 +5,7 @@ import { connectToDatabase } from '@libs/mongodb';
 import {
     computeBookingTotals,
     generateBookingReference,
+    getDuplicateKeyPattern,
     hasSlotConflict,
     isDuplicateKeyError,
     validateStaffForBooking,
@@ -52,11 +53,20 @@ export async function createBookingAction(
             return apiErrorResult<BookingDto>('Selected time slot is not available', 409);
         }
 
-        if (await hasSlotConflict(data.date, data.time, data.staffPreference, data.staffId)) {
+        const { totalEstimatedMinutes, totalPrice } = await computeBookingTotals(data.serviceIds);
+
+        if (
+            await hasSlotConflict(
+                data.date,
+                data.time,
+                data.staffPreference,
+                data.staffId,
+                totalEstimatedMinutes,
+            )
+        ) {
             return apiErrorResult<BookingDto>('Selected time slot is already booked', 409);
         }
 
-        const { totalEstimatedMinutes, totalPrice } = await computeBookingTotals(data.serviceIds);
         const reference = await generateBookingReference(data.date);
 
         await connectToDatabase();
@@ -81,10 +91,18 @@ export async function createBookingAction(
 
         return apiSuccessResult(serializeBooking(created.toObject()), 'Booking created', 201);
     } catch (error) {
+        console.error('[createBookingAction catch]', error);
         if (isDuplicateKeyError(error)) {
+            const pattern = getDuplicateKeyPattern(error);
+            if (pattern && 'reference' in pattern) {
+                console.warn('[createBookingAction] Reference collision, please retry:', pattern);
+                return apiErrorResult<BookingDto>(
+                    'Booking reference conflict, please try again',
+                    409,
+                );
+            }
             return apiErrorResult<BookingDto>('Selected time slot is already booked', 409);
         }
-        console.error('[createBookingAction]', error);
         const message = error instanceof Error ? error.message : 'Failed to create booking';
         if (message.includes('services')) {
             return apiErrorResult<BookingDto>(message, 400);

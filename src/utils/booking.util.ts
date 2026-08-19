@@ -4,6 +4,12 @@ import { Booking, type BookingDocument } from '@models/booking.model';
 import { Service } from '@models/service.model';
 import { User } from '@models/user.model';
 import {
+    getSlotBookedLockReason,
+    MAX_SLOT_WAIT_TOLERANCE_MINUTES,
+} from '@utils/booking-schedule.util';
+import { minuteOf } from '@utils/schedule.util';
+import { bookingForScheduleUtil } from '@mappers/booking.mapper';
+import {
     buildFlexiblePhoneRegex,
     extractPhoneDigits,
     normalizeBookingLookupQuery,
@@ -35,40 +41,75 @@ export async function hasSlotConflict(
     time: string,
     staffPreference: 'any' | 'specific',
     staffId?: string,
+    totalEstimatedMinutes?: number,
 ): Promise<boolean> {
     await connectToDatabase();
 
-    if (staffPreference === 'any') {
-        const existing = await Booking.findOne({ date, time, status: 'upcoming' }).lean();
-        return Boolean(existing);
-    }
+    // 'any' preference: salon assigns staff internally — never a conflict.
+    if (staffPreference === 'any') return false;
 
     if (!staffId || !mongoose.Types.ObjectId.isValid(staffId)) {
+        console.warn('[hasSlotConflict] Invalid staffId, blocking:', staffId);
         return true;
     }
 
-    const existing = await Booking.findOne({
-        date,
-        time,
-        status: 'upcoming',
-        $or: [{ staffPreference: 'any' }, { staffId: new mongoose.Types.ObjectId(staffId) }],
-    }).lean();
+    const rawBookings = await Booking.find({ date, status: 'upcoming' })
+        .select('date time status staffId staffPreference totalEstimatedMinutes')
+        .lean();
 
-    return Boolean(existing);
+    const dayBookings = rawBookings.map(bookingForScheduleUtil);
+
+    // Check 1: does an existing booking block the requested slot?
+    const lockReason = getSlotBookedLockReason(time, dayBookings, staffPreference, staffId);
+    if (lockReason) {
+        return true;
+    }
+
+    // Check 2: forward-spillover — new booking duration overlaps a future existing booking
+    if (totalEstimatedMinutes) {
+        const slotMin = minuteOf(time);
+        const slotEnd = slotMin + totalEstimatedMinutes;
+
+        for (const b of dayBookings) {
+            if (b.status === 'cancelled') continue;
+            const isSameStaff = b.staffPreference === 'specific' && b.staffId === staffId;
+            if (!isSameStaff) continue;
+
+            const bStart = minuteOf(b.time);
+            if (bStart > slotMin && slotEnd > bStart) {
+                const forwardSpillover = slotEnd - bStart;
+                if (forwardSpillover > MAX_SLOT_WAIT_TOLERANCE_MINUTES) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 export async function generateBookingReference(date: string): Promise<string> {
     await connectToDatabase();
     const day = date.replace(/-/g, '');
-    const start = new Date(`${date}T00:00:00.000Z`);
-    const end = new Date(`${date}T23:59:59.999Z`);
 
-    const count = await Booking.countDocuments({
-        createdAt: { $gte: start, $lte: end },
-    });
+    // Generate a unique 4-character alphanumeric reference suffix (e.g. AV-20260820-K8P2)
+    // with MongoDB collision checks to prevent duplicate key index errors.
+    const chars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    for (let attempt = 0; attempt < 10; attempt++) {
+        let suffix = '';
+        for (let i = 0; i < 4; i++) {
+            suffix += chars[Math.floor(Math.random() * chars.length)];
+        }
+        const ref = `AV-${day}-${suffix}`;
+        const exists = await Booking.exists({ reference: ref });
+        if (!exists) {
+            return ref;
+        }
+    }
 
-    const seq = String(count + 1).padStart(4, '0');
-    return `AV-${day}-${seq}`;
+    // Fallback: timestamp-backed 6-character code
+    const fallbackSuffix = Date.now().toString(36).slice(-4).toUpperCase();
+    return `AV-${day}-${fallbackSuffix}`;
 }
 
 export async function validateStaffForBooking(staffId: string) {
@@ -96,6 +137,16 @@ export function isDuplicateKeyError(error: unknown): boolean {
         error instanceof mongoose.mongo.MongoServerError &&
         (error as mongoose.mongo.MongoServerError).code === 11000
     );
+}
+
+export function getDuplicateKeyPattern(error: unknown): Record<string, unknown> | null {
+    if (
+        error instanceof mongoose.mongo.MongoServerError &&
+        (error as mongoose.mongo.MongoServerError).code === 11000
+    ) {
+        return (error as { keyPattern?: Record<string, unknown> }).keyPattern ?? null;
+    }
+    return null;
 }
 
 function escapeRegex(value: string): string {

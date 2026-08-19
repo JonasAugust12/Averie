@@ -56,6 +56,20 @@ export function useBookingByReference(reference: string) {
     });
 }
 
+export function useBookingPublic(id: string) {
+    return useQuery({
+        queryKey: ['bookings', 'public', id],
+        queryFn: async () => {
+            const res = await apiClient.get<ApiResponse<BookingListItemDto>>(
+                `/api/bookings/${id}/public`,
+            );
+            return unwrapApiResponse(res.data);
+        },
+        enabled: Boolean(id),
+        retry: 1,
+    });
+}
+
 export function useAvailableSlots(
     date: string | null,
     serviceIds: string[],

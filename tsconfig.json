@@ -27,6 +27,7 @@
             "@hooks/*": ["./src/hooks/*"],
             "@i18n/*": ["./src/i18n/*"],
             "@libs/*": ["./src/libs/*"],
+            "@guard": ["./src/guard"],
             "@guard/*": ["./src/guard/*"],
             "@server/*": ["./src/server/*"],
             "@mappers": ["./src/mappers"],

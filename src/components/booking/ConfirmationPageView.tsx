@@ -19,7 +19,7 @@ import {
     ShieldCheck,
     CalendarCheck,
 } from 'lucide-react';
-import { useBookingByReference } from '@services/booking.service';
+import { useBookingByReference, useBookingPublic } from '@services/booking.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { BookingChrome } from '@components/booking';
@@ -33,11 +33,28 @@ const SALON_MAP_EMBED_URL =
     'https://maps.google.com/maps?q=Averie%20Nails%20Spa%20Cohasset%20MA&t=&z=17&ie=UTF8&iwloc=&output=embed';
 const SALON_MAP_DIRECTIONS_URL = 'https://maps.app.goo.gl/YCtZW533i3x6BB5QA';
 
-export function ConfirmationPageView() {
+interface ConfirmationPageViewProps {
+    /** MongoDB booking _id — passed when navigating to /book/confirmation/[id] */
+    bookingId?: string;
+}
+
+export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = {}) {
     const t = useBookingTranslations();
     const router = useRouter();
     const { reference, reset } = useBookingStore();
-    const { data: booking, isLoading } = useBookingByReference(reference ?? '');
+
+    // In-session flow: reference is in the store right after booking — use it as primary source.
+    // Browser history revisit: no reference in store, so fetch by bookingId via public API.
+    const { data: bookingByRef, isLoading: isLoadingByRef } = useBookingByReference(
+        reference ?? '',
+    );
+    const { data: bookingById, isLoading: isLoadingById } = useBookingPublic(
+        !reference && bookingId ? bookingId : '',
+    );
+
+    // Prefer reference-based data (faster, already enriched); fall back to ID-based.
+    const booking = bookingByRef ?? bookingById;
+    const isLoading = reference ? isLoadingByRef : isLoadingById;
     const [copied, setCopied] = useState(false);
 
     const activeReference = booking?.reference ?? reference ?? '';
@@ -69,7 +86,7 @@ export function ConfirmationPageView() {
         router.push('/book');
     }
 
-    if (reference && isLoading) {
+    if ((bookingId || reference) && isLoading) {
         return (
             <div className="flex min-h-screen flex-col bg-background pb-36 text-foreground md:pb-12">
                 <BookingChrome step={6} complete />
