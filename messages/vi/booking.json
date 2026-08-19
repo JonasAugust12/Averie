@@ -17,6 +17,17 @@
     "select": "Chọn",
     "anyTechnician": "Bất kỳ kỹ thuật viên nào",
     "anyTechnicianHint": "Chúng tôi sẽ xếp nghệ sĩ trống lịch sớm nhất.",
+    "summary": {
+        "title": "Dịch vụ đã chọn",
+        "emptyTitle": "Trải nghiệm của bạn",
+        "emptyHint": "Chọn một hoặc nhiều dịch vụ để bắt đầu lịch hẹn hoàn hảo.",
+        "continueWithTotal": "Tiếp tục · {total}",
+        "selectToContinue": "Chọn dịch vụ để tiếp tục",
+        "servicesSelected": "Đã chọn {count} dịch vụ",
+        "guarantee": "Cam kết chuẩn mực vệ sinh & tư vấn dịch vụ tận tâm",
+        "hidePreview": "Ẩn chi tiết",
+        "viewPreview": "Xem chi tiết"
+    },
     "duration": "{min} phút",
     "periods": {
         "morning": "Sáng",
@@ -26,9 +37,39 @@
         "eveningUnavailable": "Buổi tối không có lịch trống.",
         "openTime": "Giờ mở cửa",
         "closeTime": "Giờ đóng cửa",
+        "open": "Mở cửa",
         "closed": "Đóng cửa",
         "booked": "Đã đặt",
-        "unavailable": "Không khả dụng"
+        "unavailable": "Không khả dụng",
+        "closingNotice": "Đặt hẹn trực tuyến sẽ đóng trước giờ đóng cửa 1 tiếng. Quý khách cần đặt gấp hoặc hỗ trợ vui lòng gọi hotline {hotline}.",
+        "hotline": "781-923-1955"
+    },
+    "staffSpecialist": {
+        "specializesIn": "Chuyên về {specialty}",
+        "allServices": "Nhận thực hiện mọi dịch vụ salon"
+    },
+    "promoCompanion": {
+        "badge": "Ưu đãi đặc biệt",
+        "limited": "GIỚI HẠN",
+        "activeDates": "Đang có ưu đãi",
+        "perksTitle": "Đặc quyền & Điều khoản áp dụng",
+        "perk1": "Áp dụng cho các dịch vụ chăm sóc móng & làm đẹp theo chương trình",
+        "perk2": "Chỉ áp dụng khi thanh toán trực tiếp tại cửa hàng",
+        "perk3": "Đặt lịch trực tuyến trước để giữ chỗ ưu tiên và áp dụng khi thanh toán",
+        "promoDaysNotice": "Những ngày đánh dấu đang áp dụng ưu đãi đặc biệt"
+    },
+    "serviceStep": {
+        "heading": "Chọn dịch vụ",
+        "subtitle": "Chọn một hoặc nhiều dịch vụ chăm sóc - chúng tôi sẽ chuẩn bị chu đáo theo yêu cầu của bạn.",
+        "searchPlaceholder": "Tìm kiếm dịch vụ theo tên hoặc mô tả…",
+        "allCategories": "Tất cả danh mục",
+        "selectedCount": "Đã chọn {count} dịch vụ",
+        "categoryServicesCount": "{count} dịch vụ",
+        "categorySelectedCount": "Đã chọn {count}",
+        "noSearchResults": "Không tìm thấy dịch vụ nào khớp với \"{query}\"",
+        "clearSearch": "Xóa tìm kiếm",
+        "popularTag": "Phổ biến",
+        "selectedTag": "Đã chọn"
     },
     "dateToday": "Hôm nay",
     "advanceBookingNotice": "Có thể đặt lịch trước tối đa {days} ngày.",
@@ -71,31 +112,64 @@
         "addToCalendar": "Thêm vào lịch"
     },
     "customer": {
+        "title": "Thông tin khách hàng",
+        "subtitle": "Gần hoàn tất - vui lòng để lại thông tin liên hệ để chúng tôi xác nhận lịch hẹn của bạn.",
+        "privacyBadge": "Thông tin của bạn được bảo mật tuyệt đối và chỉ dùng để gửi xác nhận lịch hẹn.",
         "firstName": "Tên",
+        "firstNamePlaceholder": "vd: Mai",
         "lastName": "Họ",
+        "lastNamePlaceholder": "vd: Nguyễn",
         "phone": "Số điện thoại",
-        "email": "Email",
-        "note": "Ghi chú / yêu cầu đặc biệt"
+        "phonePlaceholder": "0912 345 678",
+        "email": "Địa chỉ email",
+        "emailPlaceholder": "mai.nguyen@example.com",
+        "optional": "Không bắt buộc",
+        "note": "Ghi chú & yêu cầu đặc biệt",
+        "notePlaceholder": "Màu sơn yêu thích, độ dài móng, da nhạy cảm hoặc bất kỳ lưu ý nào cho thợ…",
+        "quickTagsTitle": "Gợi ý nhanh",
+        "quickTags": {
+            "firstVisit": "✨ Lần đầu ghé tiệm",
+            "gelRemoval": "💅 Cần tháo gel cũ",
+            "nailArt": "🎨 Có mẫu móng riêng / Vẽ nghệ thuật",
+            "sensitive": "🌿 Da / khóe móng nhạy cảm",
+            "quiet": "🤫 Không gian yên tĩnh"
+        }
     },
     "review": {
-        "service": "Dịch vụ",
+        "title": "Xem lại lịch hẹn",
+        "subtitle": "Vui lòng kiểm tra lại thông tin chi tiết trước khi xác nhận đặt lịch.",
+        "service": "Dịch vụ đã chọn",
         "employee": "Kỹ thuật viên",
         "date": "Ngày",
         "time": "Giờ",
         "duration": "Thời lượng",
         "price": "Giá",
-        "customer": "Khách hàng",
-        "location": "Địa điểm"
+        "customer": "Thông tin khách",
+        "location": "Địa điểm",
+        "notes": "Yêu cầu & Ghi chú đặc biệt",
+        "paymentPolicy": "Không cần thanh toán trước. Bạn sẽ thanh toán trực tiếp tại tiệm sau khi hoàn tất dịch vụ.",
+        "totalEstimate": "Tổng chi phí dự kiến",
+        "totalTime": "Thời gian dự kiến"
     },
     "confirmation": {
         "title": "Yêu cầu đặt lịch của bạn đã được gửi thành công.",
-        "subtitle": "Chỗ của bạn đã được giữ. Chi tiết tham chiếu hiển thị bên dưới (chỉ mock).",
-        "reference": "Mã tham chiếu",
-        "mockNote": "Chỉ là booking giả — chưa lưu máy chủ.",
+        "subtitle": "Chỗ của bạn đã được giữ. Chi tiết lịch hẹn được hiển thị bên dưới.",
+        "reference": "Mã đặt lịch",
+        "copyCode": "Sao chép mã",
+        "copied": "Đã chép!",
+        "appointmentSummary": "Chi tiết lịch hẹn",
+        "salonConcierge": "Thông tin tiệm & Vị trí",
         "visitUs": "Địa chỉ tiệm",
         "addressLine1": "132 Chief Justice Cushing Hwy",
         "addressLine2": "Cohasset, MA 02025",
-        "getDirections": "Mở trên Google Maps"
+        "getDirections": "Mở trên Google Maps",
+        "phone": "Hotline tiệm",
+        "phoneNumber": "(781) 923-1955",
+        "hours": "Giờ mở cửa",
+        "hoursDetail": "T2 - T7: 9:30 AM - 7:00 PM • CN: 10:00 AM - 5:00 PM",
+        "needChanges": "Cần dời lịch hoặc thay đổi dịch vụ?",
+        "callAnytime": "Vui lòng gọi hotline (781) 923-1955 trước ít nhất 2 giờ để được hỗ trợ chu đáo.",
+        "arrivalTip": "Quý khách vui lòng đến trước 5-10 phút để nhận bàn phục vụ và tận hưởng không gian thư giãn của tiệm."
     },
     "categories": {
         "manicurePedicure": "Manicure & Pedicure",

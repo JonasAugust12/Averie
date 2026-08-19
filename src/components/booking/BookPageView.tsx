@@ -75,7 +75,13 @@ export function BookPageView() {
                 <div
                     className={cn(
                         'w-full',
-                        showSidebar ? 'grid gap-8 lg:grid-cols-12' : 'mx-auto max-w-3xl',
+                        showSidebar
+                            ? 'grid gap-8 lg:grid-cols-12'
+                            : step === 3
+                              ? 'mx-auto max-w-5xl xl:max-w-6xl'
+                              : step === 2
+                                ? 'mx-auto max-w-4xl'
+                                : 'mx-auto max-w-3xl',
                     )}
                 >
                     <div className={cn('min-w-0', showSidebar && 'lg:col-span-7 xl:col-span-8')}>

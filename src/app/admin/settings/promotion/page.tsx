@@ -12,6 +12,7 @@ import {
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useUIStore } from '@stores/ui.store';
 import { PromotionSettingsSkeleton } from '@components/skeletons';
+import { PromotionLivePreview } from '@components/admin/promotion';
 import { Button } from '@components/common';
 import { Input } from '@components/ui';
 import { cn } from '@utils/cn.util';
@@ -292,9 +293,21 @@ export default function PromotionSettingsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
-                        {t('promotion.titleLabel') || 'Title'}
-                    </label>
+                    <div className="flex items-center justify-between">
+                        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
+                            {t('promotion.titleLabel') || 'Title'}
+                        </label>
+                        <span
+                            className={cn(
+                                'font-sans text-[11px] font-semibold',
+                                form.title.length >= 110
+                                    ? 'font-bold text-amber-600'
+                                    : 'text-stone-400',
+                            )}
+                        >
+                            {form.title.length}/120
+                        </span>
+                    </div>
                     <Input
                         value={form.title}
                         onChange={(event) => updateForm({ title: event.target.value })}
@@ -308,9 +321,21 @@ export default function PromotionSettingsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
-                        {t('promotion.descriptionLabel') || 'Description'}
-                    </label>
+                    <div className="flex items-center justify-between">
+                        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-stone-600">
+                            {t('promotion.descriptionLabel') || 'Description'}
+                        </label>
+                        <span
+                            className={cn(
+                                'font-sans text-[11px] font-semibold',
+                                form.description.length >= 480
+                                    ? 'font-bold text-amber-600'
+                                    : 'text-stone-400',
+                            )}
+                        >
+                            {form.description.length}/500
+                        </span>
+                    </div>
                     <textarea
                         value={form.description}
                         onChange={(event) => updateForm({ description: event.target.value })}
@@ -527,6 +552,23 @@ export default function PromotionSettingsPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Live Experience Preview Section */}
+            <PromotionLivePreview
+                promotion={{
+                    title: form.title,
+                    description: form.description,
+                    imageUrl: form.imageUrl,
+                    imagePublicId: form.imagePublicId,
+                    imageWidth: form.imageWidth,
+                    imageHeight: form.imageHeight,
+                    startDate: form.startDate,
+                    endDate: form.endDate,
+                    enabled: form.enabled,
+                    hideAfterExpiry: form.hideAfterExpiry,
+                    showBeforeStartDate: form.showBeforeStartDate,
+                }}
+            />
         </div>
     );
 }

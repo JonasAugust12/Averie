@@ -18,7 +18,7 @@
         "description": "Trang bạn đang tìm có thể đã bị di chuyển, xóa hoặc chưa từng tồn tại.",
         "home": "Về trang chủ",
         "back": "Quay lại",
-        "code": "404 — Không tìm thấy trang"
+        "code": "404 - Không tìm thấy trang"
     },
     "fallback": {
         "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại."

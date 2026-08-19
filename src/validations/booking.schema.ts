@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { objectIdSchema } from '@validations/service-category.schema';
 
-/** UI booking wizard — lastName optional for mock flow */
+/** UI booking wizard */
 export const bookingCustomerSchema = z.object({
     firstName: z.string().trim().min(1, 'First name is required'),
-    lastName: z.string().trim().optional().or(z.literal('')),
+    lastName: z.string().trim().min(1, 'Last name is required'),
     phone: z.string().trim().min(7, 'Phone is required'),
     email: z.string().trim().email('Invalid email').optional().or(z.literal('')),
     note: z.string().trim().max(500).optional(),

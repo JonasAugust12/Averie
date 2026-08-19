@@ -2,7 +2,7 @@
     "home": {
         "eyebrow": "Averie",
         "title": "Next.js serverless on Vercel",
-        "description": "Frontend and API Route Handlers share one project and talk to MongoDB Atlas directly — no separate server to host.",
+        "description": "Frontend and API Route Handlers share one project and talk to MongoDB Atlas directly - no separate server to host.",
         "healthTitle": "Health check",
         "stackTitle": "Tech stack",
         "todosTitle": "Demo Todos (MongoDB)",

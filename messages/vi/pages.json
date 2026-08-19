@@ -2,7 +2,7 @@
     "home": {
         "eyebrow": "Averie",
         "title": "Next.js serverless trên Vercel",
-        "description": "Frontend và API Route Handlers dùng chung một project, kết nối MongoDB Atlas trực tiếp — không cần thuê server riêng.",
+        "description": "Frontend và API Route Handlers dùng chung một project, kết nối MongoDB Atlas trực tiếp - không cần thuê server riêng.",
         "healthTitle": "Health check",
         "stackTitle": "Tech stack",
         "todosTitle": "Demo Todos (MongoDB)",

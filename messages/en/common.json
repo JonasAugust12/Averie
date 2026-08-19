@@ -18,7 +18,7 @@
         "description": "The page you're looking for may have been moved, removed, or never existed.",
         "home": "Back to home",
         "back": "Go back",
-        "code": "404 — Page not found"
+        "code": "404 - Page not found"
     },
     "fallback": {
         "unknown": "An unexpected error occurred. Please try again."

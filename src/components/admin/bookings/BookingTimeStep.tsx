@@ -36,8 +36,15 @@ export function BookingTimeStep({
 
     const weekday = getWeekdayFromDate(selectedDate);
 
+    const displaySlots = useMemo(() => {
+        return mergeBookingDisplaySlots(slots ?? [], weekday);
+    }, [slots, weekday]);
+
+    const firstOpenSlotTime = useMemo(() => {
+        return displaySlots.find((s) => !s.isClosedDisplay && s.available)?.time ?? null;
+    }, [displaySlots]);
+
     const timePeriods = useMemo(() => {
-        const displaySlots = mergeBookingDisplaySlots(slots ?? [], weekday);
         return [
             {
                 key: 'morning' as const,
@@ -58,7 +65,7 @@ export function BookingTimeStep({
                 items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'evening'),
             },
         ];
-    }, [slots, weekday, tBook]);
+    }, [displaySlots, tBook]);
 
     return (
         <div className="w-full space-y-6">
@@ -102,11 +109,16 @@ export function BookingTimeStep({
                                                     <div
                                                         key={slot.id}
                                                         aria-disabled
-                                                        className="cursor-not-allowed rounded-xl border border-stone-200 bg-stone-50/60 py-2.5 px-3 font-sans text-xs font-bold text-stone-400 opacity-55 select-none text-center"
+                                                        className="relative flex h-11 sm:h-12 cursor-not-allowed items-center justify-center rounded-xl border border-stone-200 bg-stone-50/60 px-2 font-sans text-xs font-bold text-stone-400 opacity-55 select-none overflow-hidden"
                                                     >
-                                                        <span className="block">{slot.time}</span>
-                                                        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-red-600">
-                                                            {tBook('periods.closed')}
+                                                        {/* Diagonal Closed Ribbon */}
+                                                        <div className="pointer-events-none absolute top-0 right-0 h-8 w-8 overflow-hidden">
+                                                            <div className="absolute -right-3 top-1 w-10 rotate-45 bg-rose-600/90 py-px text-center text-[5.5px] font-bold uppercase tracking-wider text-white shadow-2xs">
+                                                                {tBook('periods.closed')}
+                                                            </div>
+                                                        </div>
+                                                        <span className="leading-none">
+                                                            {slot.time}
                                                         </span>
                                                     </div>
                                                 );
@@ -121,30 +133,54 @@ export function BookingTimeStep({
                                                     <div
                                                         key={slot.id}
                                                         aria-disabled
-                                                        className="cursor-not-allowed rounded-xl border border-stone-200 bg-stone-50/60 py-2.5 px-3 font-sans text-xs font-bold text-stone-400 opacity-55 select-none text-center"
+                                                        className="relative flex h-11 sm:h-12 cursor-not-allowed items-center justify-center rounded-xl border border-stone-200 bg-stone-50/60 px-2 font-sans text-xs font-bold text-stone-400 opacity-55 select-none overflow-hidden"
                                                     >
-                                                        <span className="block">{slot.time}</span>
-                                                        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
-                                                            {label}
+                                                        {/* Diagonal Booked/Unavailable Ribbon */}
+                                                        <div className="pointer-events-none absolute top-0 right-0 h-8 w-8 overflow-hidden">
+                                                            <div className="absolute -right-3 top-1 w-10 rotate-45 bg-stone-300/90 py-px text-center text-[5.5px] font-semibold uppercase tracking-wider text-stone-700 shadow-2xs">
+                                                                {label}
+                                                            </div>
+                                                        </div>
+                                                        <span className="leading-none">
+                                                            {slot.time}
                                                         </span>
                                                     </div>
                                                 );
                                             }
 
                                             const isSelected = selectedTime === slot.time;
+                                            const isOpenSlot = slot.time === firstOpenSlotTime;
+
                                             return (
                                                 <button
                                                     key={slot.id}
                                                     type="button"
                                                     onClick={() => onSelectTime(slot.time)}
                                                     className={cn(
-                                                        'py-2.5 px-3 rounded-xl font-sans text-xs font-bold transition-all border text-center cursor-pointer',
+                                                        'group relative flex h-11 sm:h-12 cursor-pointer items-center justify-center rounded-xl border px-2 font-sans text-xs font-bold transition-all overflow-hidden',
                                                         isSelected
-                                                            ? 'bg-stone-900 border-stone-900 text-white shadow-sm scale-105'
+                                                            ? 'bg-stone-900 border-stone-900 text-white shadow-sm scale-103'
                                                             : 'bg-white border-stone-200 text-stone-800 hover:border-stone-400 hover:bg-stone-50',
                                                     )}
                                                 >
-                                                    {slot.time}
+                                                    {/* Diagonal Ribbon */}
+                                                    {isSelected ? (
+                                                        <div className="pointer-events-none absolute top-0 right-0 h-8 w-8 overflow-hidden">
+                                                            <div className="absolute -right-3 top-1 w-10 rotate-45 bg-white/20 py-px text-center text-[6px] font-bold text-white shadow-2xs">
+                                                                ✓
+                                                            </div>
+                                                        </div>
+                                                    ) : isOpenSlot ? (
+                                                        <div className="pointer-events-none absolute top-0 right-0 h-8 w-8 overflow-hidden">
+                                                            <div className="absolute -right-3 top-1 w-10 rotate-45 bg-emerald-600 py-px text-center text-[6px] font-bold uppercase tracking-wider text-white shadow-2xs">
+                                                                {tBook('periods.open')}
+                                                            </div>
+                                                        </div>
+                                                    ) : null}
+
+                                                    <span className="leading-none">
+                                                        {slot.time}
+                                                    </span>
                                                 </button>
                                             );
                                         })}

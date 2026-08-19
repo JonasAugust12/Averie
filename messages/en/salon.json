@@ -24,19 +24,19 @@
             "cta": "Book an Appointment"
         },
         "promotion": {
-            "eyebrow": "Special Offer",
-            "fallbackTitle": "Limited-Time Promotion",
-            "contextOffer": "An exclusive treat for our guests — available for a limited time.",
-            "contextLocation": "Visit us at our Cohasset salon to redeem in person.",
-            "contextBooking": "Reserve your spot online and mention this offer at check-in.",
+            "eyebrow": "Exclusive Privilege",
+            "fallbackTitle": "Seasonal Salon Promotion",
+            "contextOffer": "Special privilege applicable to signature salon treatments.",
+            "contextLocation": "Applicable exclusively for direct in-store payment at checkout.",
+            "contextBooking": "Reserve online in advance to secure priority scheduling and redeem upon visit.",
             "validPeriod": "Valid period",
             "dateRange": "{start} – {end}",
             "dateFrom": "From {start}",
             "dateUntil": "Until {end}",
-            "limitedRibbon": "Limited Time",
-            "urgentBadge": "Limited-Time Offer",
+            "limitedRibbon": "Limited Offer",
+            "urgentBadge": "Seasonal Privilege",
             "endsSoon": "Ending Soon",
-            "ticker": "✦ SPECIAL OFFER ✦ LIMITED TIME ONLY ✦ EXCLUSIVE LUXURY PROMOTION ✦ BOOK TODAY & SAVE ✦ SANCTUARY OF BEAUTY",
+            "ticker": "✦ EXCLUSIVE PRIVILEGE ✦ LIMITED TIME ONLY ✦ DIRECT IN-STORE PAYMENT ✦ BOOK IN ADVANCE ✦ SANCTUARY OF BEAUTY",
             "cta": "Book Appointment Now"
         },
         "philosophy": {

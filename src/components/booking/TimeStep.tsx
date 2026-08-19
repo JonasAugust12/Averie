@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-import { Moon, Sun, Sunset } from 'lucide-react';
+import { Clock, Moon, Phone, Sun, Sunset } from 'lucide-react';
 import { useAvailableSlots } from '@services/booking.service';
 import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
@@ -27,8 +27,15 @@ export function TimeStep() {
 
     const weekday = date ? getWeekdayFromDate(date) : 1;
 
+    const displaySlots = useMemo(() => {
+        return mergeBookingDisplaySlots(slots ?? [], weekday);
+    }, [slots, weekday]);
+
+    const firstOpenSlotTime = useMemo(() => {
+        return displaySlots.find((s) => !s.isClosedDisplay && s.available)?.time ?? null;
+    }, [displaySlots]);
+
     const periods = useMemo(() => {
-        const displaySlots = mergeBookingDisplaySlots(slots ?? [], weekday);
         return [
             {
                 key: 'morning' as const,
@@ -46,7 +53,7 @@ export function TimeStep() {
                 items: displaySlots.filter((s) => getPeriodForTime(s.time) === 'evening'),
             },
         ];
-    }, [slots, weekday]);
+    }, [displaySlots]);
 
     useEffect(() => {
         if (!time || !slots) return;
@@ -59,7 +66,26 @@ export function TimeStep() {
     }
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-8">
+            {/* Notice banner: Online booking closes 1h before closing + Hotline */}
+            <div className="flex items-start gap-3 rounded-2xl border border-stone-200/80 bg-white/85 p-4 shadow-xs backdrop-blur-xs">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary-100 text-primary border border-secondary-200">
+                    <Clock className="size-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                    <p className="font-sans text-xs sm:text-[13px] leading-relaxed text-stone-600">
+                        {t('periods.closingNotice', { hotline: '' })}{' '}
+                        <a
+                            href="tel:781-923-1955"
+                            className="font-bold text-primary underline underline-offset-2 hover:text-stone-900 transition-colors inline-flex items-center gap-1"
+                        >
+                            <Phone className="size-3 inline" />
+                            781-923-1955
+                        </a>
+                    </p>
+                </div>
+            </div>
+
             {periods.map(({ key, icon: Icon, items: periodItems }) => (
                 <section key={key} className="animate-fade-in-up">
                     <h2 className="mb-4 flex items-center gap-2.5 font-display text-xl font-bold text-primary tracking-wide">
@@ -80,11 +106,16 @@ export function TimeStep() {
                                         <div
                                             key={slot.id}
                                             aria-disabled
-                                            className="cursor-not-allowed rounded-xl border-2 border-stone-200 bg-stone-50/60 px-4 py-3 font-sans text-base font-bold text-stone-400 opacity-55 select-none"
+                                            className="relative flex h-13 sm:h-14 cursor-not-allowed items-center justify-center rounded-2xl border-2 border-stone-200 bg-stone-50/60 px-3 font-sans text-stone-400 opacity-55 select-none overflow-hidden"
                                         >
-                                            <span className="block">{slot.time}</span>
-                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-red-600">
-                                                {t('periods.closed')}
+                                            {/* Diagonal Closed Ribbon */}
+                                            <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 overflow-hidden">
+                                                <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-rose-600/90 py-0.5 text-center text-[6.5px] font-bold uppercase tracking-wider text-white shadow-2xs">
+                                                    {t('periods.closed')}
+                                                </div>
+                                            </div>
+                                            <span className="text-sm sm:text-base font-bold leading-none">
+                                                {slot.time}
                                             </span>
                                         </div>
                                     );
@@ -99,30 +130,54 @@ export function TimeStep() {
                                         <div
                                             key={slot.id}
                                             aria-disabled
-                                            className="cursor-not-allowed rounded-xl border-2 border-stone-200 bg-stone-50/60 px-4 py-3 font-sans text-base font-bold text-stone-400 opacity-55 select-none"
+                                            className="relative flex h-13 sm:h-14 cursor-not-allowed items-center justify-center rounded-2xl border-2 border-stone-200 bg-stone-50/60 px-3 font-sans text-stone-400 opacity-55 select-none overflow-hidden"
                                         >
-                                            <span className="block">{slot.time}</span>
-                                            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
-                                                {label}
+                                            {/* Diagonal Booked/Unavailable Ribbon */}
+                                            <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 overflow-hidden">
+                                                <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-stone-300/90 py-0.5 text-center text-[6.5px] font-semibold uppercase tracking-wider text-stone-700 shadow-2xs">
+                                                    {label}
+                                                </div>
+                                            </div>
+                                            <span className="text-sm sm:text-base font-bold leading-none">
+                                                {slot.time}
                                             </span>
                                         </div>
                                     );
                                 }
 
-                                const selected = time === slot.time;
+                                const isSelected = time === slot.time;
+                                const isOpenSlot = slot.time === firstOpenSlotTime;
+
                                 return (
                                     <button
                                         key={slot.id}
                                         type="button"
                                         onClick={() => setTime(slot.time)}
                                         className={cn(
-                                            'cursor-pointer rounded-xl border-2 px-4 py-3 font-sans text-base font-bold transition-all duration-200 hover:shadow-md hover:scale-103',
-                                            selected
-                                                ? 'border-primary bg-primary text-neutral shadow-md scale-103'
+                                            'group relative flex h-13 sm:h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 font-sans transition-all duration-200 overflow-hidden hover:shadow-md hover:scale-102 active:scale-98',
+                                            isSelected
+                                                ? 'border-primary bg-primary text-neutral shadow-md scale-102'
                                                 : 'border-stone-300 bg-white/70 text-primary hover:border-secondary-400 hover:bg-white/90',
                                         )}
                                     >
-                                        <span className="block">{slot.time}</span>
+                                        {/* Diagonal Ribbon: Selected or Open */}
+                                        {isSelected ? (
+                                            <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 overflow-hidden">
+                                                <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-white/25 py-0.5 text-center text-[7.5px] font-black uppercase tracking-wider text-neutral shadow-2xs">
+                                                    ✓
+                                                </div>
+                                            </div>
+                                        ) : isOpenSlot ? (
+                                            <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 overflow-hidden">
+                                                <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-emerald-600 py-0.5 text-center text-[7.5px] font-black uppercase tracking-wider text-white shadow-2xs">
+                                                    {t('periods.open')}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        <span className="text-sm sm:text-base font-bold leading-none">
+                                            {slot.time}
+                                        </span>
                                     </button>
                                 );
                             })}

@@ -17,6 +17,17 @@
     "select": "Select",
     "anyTechnician": "Any Available Technician",
     "anyTechnicianHint": "We'll match the first open artist.",
+    "summary": {
+        "title": "Your Selection",
+        "emptyTitle": "Curate Your Visit",
+        "emptyHint": "Select one or more services to curate your custom experience.",
+        "continueWithTotal": "Continue · {total}",
+        "selectToContinue": "Select a service to continue",
+        "servicesSelected": "{count, plural, =1 {1 service selected} other {# services selected}}",
+        "guarantee": "Complimentary consultation & sanitation standards guaranteed",
+        "hidePreview": "Hide details",
+        "viewPreview": "View details"
+    },
     "duration": "{min} Min",
     "periods": {
         "morning": "Morning",
@@ -26,9 +37,39 @@
         "eveningUnavailable": "Evening not available.",
         "openTime": "Open time",
         "closeTime": "Close time",
+        "open": "Open",
         "closed": "Closed",
         "booked": "Booked",
-        "unavailable": "Unavailable"
+        "unavailable": "Unavailable",
+        "closingNotice": "Online booking closes 1 hour before closing time. Need immediate assistance? Call our hotline at {hotline}.",
+        "hotline": "781-923-1955"
+    },
+    "staffSpecialist": {
+        "specializesIn": "Specializes in {specialty}",
+        "allServices": "All salon services welcome"
+    },
+    "promoCompanion": {
+        "badge": "Special Promotion",
+        "limited": "LIMITED",
+        "activeDates": "Promotion Active",
+        "perksTitle": "Promotion Terms & Privileges",
+        "perk1": "Applicable to eligible salon services during active period",
+        "perk2": "Applicable exclusively for direct in-store payment at checkout",
+        "perk3": "Reserve online in advance to secure priority scheduling",
+        "promoDaysNotice": "Highlighted dates feature special salon promotions"
+    },
+    "serviceStep": {
+        "heading": "Select Services",
+        "subtitle": "Choose one or more tailored services - we will curate your appointment to your complete selection.",
+        "searchPlaceholder": "Search services by name or description…",
+        "allCategories": "All Categories",
+        "selectedCount": "{count, plural, =1 {1 service selected} other {# services selected}}",
+        "categoryServicesCount": "{count, plural, =1 {1 service} other {# services}}",
+        "categorySelectedCount": "{count} selected",
+        "noSearchResults": "No services found matching \"{query}\"",
+        "clearSearch": "Clear search",
+        "popularTag": "Popular",
+        "selectedTag": "Selected"
     },
     "dateToday": "Today",
     "advanceBookingNotice": "Appointments can be booked up to {days} days in advance.",
@@ -71,31 +112,64 @@
         "addToCalendar": "Add to Calendar"
     },
     "customer": {
+        "title": "Guest Details",
+        "subtitle": "Almost done - please provide your contact details so we can confirm your appointment.",
+        "privacyBadge": "Your privacy is protected. We only use your information for appointment confirmations and important updates.",
         "firstName": "First name",
+        "firstNamePlaceholder": "e.g. Sarah",
         "lastName": "Last name",
+        "lastNamePlaceholder": "e.g. Jenkins",
         "phone": "Phone number",
-        "email": "Email",
-        "note": "Note / special request"
+        "phonePlaceholder": "(781) 000-0000",
+        "email": "Email address",
+        "emailPlaceholder": "sarah.jenkins@example.com",
+        "optional": "Optional",
+        "note": "Special requests & preferences",
+        "notePlaceholder": "Preferred polish shade, nail length, sensitivities, or anything we should know…",
+        "quickTagsTitle": "Quick Preferences",
+        "quickTags": {
+            "firstVisit": "✨ First-time visit",
+            "gelRemoval": "💅 Gel removal needed",
+            "nailArt": "🎨 Custom nail art / reference photo",
+            "sensitive": "🌿 Sensitive skin / cuticles",
+            "quiet": "🤫 Quiet appointment"
+        }
     },
     "review": {
-        "service": "Service",
+        "title": "Appointment Review",
+        "subtitle": "Please take a moment to review your appointment details before confirming.",
+        "service": "Selected Services",
         "employee": "Technician",
         "date": "Date",
         "time": "Time",
         "duration": "Duration",
         "price": "Price",
-        "customer": "Customer",
-        "location": "Location"
+        "customer": "Guest Details",
+        "location": "Location",
+        "notes": "Special Requests & Preferences",
+        "paymentPolicy": "No upfront payment required. You'll pay at the salon upon completion.",
+        "totalEstimate": "Total Estimate",
+        "totalTime": "Total Duration"
     },
     "confirmation": {
         "title": "Your appointment has been requested successfully.",
-        "subtitle": "We've reserved your place. A confirmation note is shown below (mock only).",
-        "reference": "Reference",
-        "mockNote": "Mock booking only — not saved to a server.",
-        "visitUs": "Visit us",
+        "subtitle": "We've reserved your place. A confirmation summary is detailed below.",
+        "reference": "Booking Reference",
+        "copyCode": "Copy Code",
+        "copied": "Copied!",
+        "appointmentSummary": "Appointment Summary",
+        "salonConcierge": "Salon Concierge & Location",
+        "visitUs": "Visit Our Salon",
         "addressLine1": "132 Chief Justice Cushing Hwy",
         "addressLine2": "Cohasset, MA 02025",
-        "getDirections": "Open in Google Maps"
+        "getDirections": "Open in Google Maps",
+        "phone": "Salon Hotline",
+        "phoneNumber": "(781) 923-1955",
+        "hours": "Opening Hours",
+        "hoursDetail": "Mon - Sat: 9:30 AM - 7:00 PM • Sun: 10:00 AM - 5:00 PM",
+        "needChanges": "Need to reschedule or modify?",
+        "callAnytime": "Please call our front desk directly at (781) 923-1955 at least 2 hours in advance.",
+        "arrivalTip": "Please arrive 5-10 minutes prior to your scheduled time to check in and enjoy our relaxing atmosphere."
     },
     "categories": {
         "manicurePedicure": "Manicure & Pedicure",

@@ -24,19 +24,19 @@
             "cta": "Đặt lịch hẹn"
         },
         "promotion": {
-            "eyebrow": "Ưu đãi đặc biệt",
-            "fallbackTitle": "Khuyến mãi có thời hạn",
-            "contextOffer": "Quà tặng dành riêng cho khách — chỉ trong thời gian giới hạn.",
-            "contextLocation": "Ghé salon tại Cohasset để nhận ưu đãi trực tiếp.",
-            "contextBooking": "Đặt lịch trực tuyến và nhắc nhân viên về ưu đãi khi check-in.",
+            "eyebrow": "Đặc quyền ưu đãi",
+            "fallbackTitle": "Ưu đãi dịch vụ mùa này",
+            "contextOffer": "Đặc quyền áp dụng cho các dịch vụ chăm sóc cao cấp tại salon.",
+            "contextLocation": "Chỉ áp dụng khi thanh toán trực tiếp tại cửa hàng.",
+            "contextBooking": "Đặt lịch trực tuyến trước để giữ chỗ ưu tiên và áp dụng khi thanh toán.",
             "validPeriod": "Thời gian áp dụng",
             "dateRange": "{start} – {end}",
             "dateFrom": "Từ {start}",
             "dateUntil": "Đến {end}",
-            "limitedRibbon": "Có hạn",
-            "urgentBadge": "Ưu đãi có hạn",
+            "limitedRibbon": "Ưu đãi có hạn",
+            "urgentBadge": "Đặc quyền có hạn",
             "endsSoon": "Sắp kết thúc",
-            "ticker": "✦ ƯU ĐÃI ĐẶC BIỆT ✦ SỐ LƯỢNG CÓ HẠN ✦ ĐẶT LỊCH NGAY HÔM NAY ✦ TRẢI NGHIỆM KHÔNG GIAN CAO CẤP",
+            "ticker": "✦ ĐẶC QUYỀN ƯU ĐÃI ✦ SỐ LƯỢNG CÓ HẠN ✦ THANH TOÁN TRỰC TIẾP TẠI CỬA HÀNG ✦ ĐẶT LỊCH NGAY ✦ KHÔNG GIAN CAO CẤP",
             "cta": "Đặt lịch ngay"
         },
         "philosophy": {

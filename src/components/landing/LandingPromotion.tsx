@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import Image from 'next/image';
-import { ArrowRight, CalendarHeart, MapPin, Sparkles } from 'lucide-react';
+import { ArrowRight, CalendarCheck, Gem, Sparkles, Store } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { usePromotionSettings } from '@services/promotion.service';
@@ -92,14 +92,14 @@ export function LandingPromotion() {
                         <span>{t('landing.promotion.eyebrow')}</span>
                     </div>
 
-                    <h2 className={cn('mt-4', landingTitle)}>
+                    <h2 className={cn('mt-4 line-clamp-2', landingTitle)}>
                         {promotion.title || t('landing.promotion.fallbackTitle')}
                     </h2>
 
                     {promotion.description ? (
                         <p
                             className={cn(
-                                'mt-3.5 md:mt-4 max-w-lg',
+                                'mt-3.5 md:mt-4 max-w-lg line-clamp-4 wrap-break-word',
                                 landingBody,
                                 'text-secondary-600',
                             )}
@@ -108,26 +108,36 @@ export function LandingPromotion() {
                         </p>
                     ) : null}
 
+                    {/* Quiet Luxury Key Highlights */}
                     <ul
                         className={cn(
-                            'mt-5 md:mt-6 space-y-2.5 md:space-y-3 text-left',
+                            'mt-5 md:mt-6 space-y-3 sm:space-y-3.5 text-left w-full max-w-lg',
                             landingStaticText,
                         )}
                     >
-                        <li className="flex items-start gap-2.5 md:gap-3 font-sans text-sm text-secondary-600 md:text-base">
-                            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-nude" aria-hidden />
-                            <span>{t('landing.promotion.contextOffer')}</span>
+                        <li className="flex items-start gap-3 font-sans text-sm text-secondary-700 md:text-base">
+                            <span className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg border border-primary02/25 bg-primary02/10 text-primary02 shadow-2xs">
+                                <Sparkles className="size-3.5 sm:size-4" aria-hidden />
+                            </span>
+                            <span className="pt-0.5 leading-snug">
+                                {t('landing.promotion.contextOffer')}
+                            </span>
                         </li>
-                        <li className="flex items-start gap-2.5 md:gap-3 font-sans text-sm text-secondary-600 md:text-base">
-                            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-nude" aria-hidden />
-                            <span>{t('landing.promotion.contextLocation')}</span>
+                        <li className="flex items-start gap-3 font-sans text-sm text-secondary-700 md:text-base">
+                            <span className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg border border-nude/30 bg-nude/10 text-nude shadow-2xs">
+                                <Store className="size-3.5 sm:size-4" aria-hidden />
+                            </span>
+                            <span className="pt-0.5 leading-snug">
+                                {t('landing.promotion.contextLocation')}
+                            </span>
                         </li>
-                        <li className="flex items-start gap-2.5 md:gap-3 font-sans text-sm text-secondary-600 md:text-base">
-                            <CalendarHeart
-                                className="mt-0.5 h-4 w-4 shrink-0 text-nude"
-                                aria-hidden
-                            />
-                            <span>{t('landing.promotion.contextBooking')}</span>
+                        <li className="flex items-start gap-3 font-sans text-sm text-secondary-700 md:text-base">
+                            <span className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg border border-stone-200/90 bg-stone-100/90 text-stone-700 shadow-2xs">
+                                <CalendarCheck className="size-3.5 sm:size-4" aria-hidden />
+                            </span>
+                            <span className="pt-0.5 leading-snug">
+                                {t('landing.promotion.contextBooking')}
+                            </span>
                         </li>
                     </ul>
 
@@ -174,7 +184,7 @@ export function LandingPromotion() {
 
                 <FadeIn delay={0.1} className="flex md:col-span-7 md:justify-end">
                     <div className="relative mx-auto w-full min-w-60 max-w-105 md:mx-0">
-                        {/* Celebratory floating accents & sparkles */}
+                        {/* Celebratory luxury floating accents & sparkles */}
                         <div
                             className="pointer-events-none absolute -top-5 -left-5 z-20 animate-float-slow text-primary02 drop-shadow-md"
                             aria-hidden
@@ -185,14 +195,14 @@ export function LandingPromotion() {
                             className="pointer-events-none absolute -bottom-4 -right-4 z-20 animate-float-slow-reverse text-nude drop-shadow-md"
                             aria-hidden
                         >
-                            <Sparkles className="h-6 w-6" />
+                            <Gem className="h-6 w-6" />
                         </div>
                         <div
-                            className="pointer-events-none absolute top-8 -right-5 z-20 animate-confetti-float text-amber-500/80 drop-shadow-xs"
+                            className="pointer-events-none absolute top-8 -right-5 z-20 animate-confetti-float text-rose-500/80 drop-shadow-xs"
                             aria-hidden
                         >
-                            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2l2.4 7.4h7.6l-6.2 4.5 2.4 7.4-6.2-4.5-6.2 4.5 2.4-7.4-6.2-4.5h7.6z" />
+                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                             </svg>
                         </div>
                         <div
@@ -200,8 +210,8 @@ export function LandingPromotion() {
                             style={{ animationDelay: '1.2s' }}
                             aria-hidden
                         >
-                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8 12 2" />
+                            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                             </svg>
                         </div>
 

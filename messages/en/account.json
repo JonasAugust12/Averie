@@ -9,7 +9,7 @@
     "adminSubtitle": "Authorized Access Only",
     "adminAccess": "Admin Access",
     "rememberMe": "Remember me",
-    "securityNote": "Secure mock gate — not real authentication.",
+    "securityNote": "Secure mock gate - not real authentication.",
     "email": "Email Address",
     "password": "Password",
     "submit": "Sign In",
