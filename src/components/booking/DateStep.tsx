@@ -240,7 +240,7 @@ export function DateStep() {
                                         {cell.isPromo && !cell.disabled ? (
                                             <div
                                                 className={cn(
-                                                    'pointer-events-none absolute top-0 right-0 left-0 h-0.5',
+                                                    'pointer-events-none absolute top-0 right-0 left-0 h-0.5 z-10',
                                                     selected
                                                         ? 'bg-linear-to-r from-transparent via-rose-300 to-transparent'
                                                         : 'bg-linear-to-r from-transparent via-rose-500 to-transparent',
@@ -248,30 +248,35 @@ export function DateStep() {
                                             />
                                         ) : null}
 
-                                        <span>{cell.day}</span>
+                                        {/* Sparkling shine sweep animation for promo dates */}
+                                        {cell.isPromo && !cell.disabled ? (
+                                            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
+                                        ) : null}
+
+                                        <span className="relative z-10">{cell.day}</span>
 
                                         {/* Promo / Today Indicators (kept visible when selected) */}
                                         {cell.isPromo && !cell.disabled ? (
                                             <span
                                                 className={cn(
-                                                    'mt-0.5 inline-flex items-center gap-0.5 text-[7.5px] font-extrabold uppercase tracking-wider leading-none',
+                                                    'relative z-10 mt-0.5 inline-flex items-center gap-0.5 text-[6px] sm:text-[7.5px] font-extrabold uppercase tracking-tight sm:tracking-wider leading-none max-w-full px-0.5 truncate',
                                                     selected ? 'text-rose-200' : 'text-rose-700',
                                                 )}
                                             >
                                                 <Sparkles
                                                     className={cn(
-                                                        'size-2 animate-pulse',
+                                                        'size-1.5 sm:size-2 shrink-0 animate-pulse',
                                                         selected
                                                             ? 'text-rose-200'
                                                             : 'text-rose-500',
                                                     )}
                                                 />
-                                                PROMO
+                                                <span className="truncate">PROMO</span>
                                             </span>
                                         ) : cell.isToday && !cell.disabled ? (
                                             <span
                                                 className={cn(
-                                                    'mt-0.5 font-sans text-[8px] sm:text-[9px] font-bold uppercase tracking-wider leading-none',
+                                                    'relative z-10 mt-0.5 font-sans text-[7.5px] sm:text-[9px] font-bold uppercase tracking-wider leading-none truncate',
                                                     selected ? 'text-amber-200' : 'text-primary/80',
                                                 )}
                                             >
@@ -382,6 +387,7 @@ export function DateStep() {
                                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                     />
                                     <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                                    <div className="pointer-events-none absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/35 to-transparent z-10" />
                                 </div>
                             ) : null}
 

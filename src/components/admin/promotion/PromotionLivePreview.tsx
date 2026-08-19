@@ -336,6 +336,7 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                                         </span>
                                                     </div>
                                                 )}
+                                                <div className="pointer-events-none absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/35 to-transparent z-10" />
                                             </div>
                                         </div>
                                     </div>
