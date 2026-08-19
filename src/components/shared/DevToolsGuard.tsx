@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import DisableDevtool from 'disable-devtool';
 
 const DEFAULT_REDIRECT_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 // Threshold for detecting detached/undocked DevTools window on desktop
@@ -55,10 +56,11 @@ function isBlockedShortcut(event: KeyboardEvent): boolean {
  * Client-side deterrent only — does not replace server-side API auth.
  * Enabled in production when NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=true.
  *
- * Strategy:
- * - Mobile devices: ONLY block context menu and keyboard shortcuts (zero false-positive risk).
- *   Mobile users cannot open browser DevTools from their phone, so active polling is pointless.
- * - Desktop: Poll window size gap with a high threshold + multi-strike grace period.
+ * Two-layer strategy:
+ * Layer 1 — disable-devtool (npm): uses multiple detection probes
+ *   (RegToString, DefineId, Size, DateToString, FuncToString, Debugger, Performance).
+ * Layer 2 — custom guard: window size gap polling + keyboard shortcut blocking + console warning.
+ *   Mobile devices skip active polling to avoid false positives from natural resize gestures.
  */
 export function DevToolsGuard() {
     const redirectedRef = useRef(false);
@@ -66,6 +68,18 @@ export function DevToolsGuard() {
 
     useEffect(() => {
         if (!isGuardEnabled()) return;
+
+        // ── Layer 1: disable-devtool ──────────────────────────────────────────
+        // Uses multiple browser probes (regex, DOM id, size, date/func toString,
+        // debugger timing, performance). Complementary to our custom layer below.
+        DisableDevtool({
+            url: REDIRECT_URL,
+            disableMenu: false, // right-click handled by Layer 2 to avoid double-listener
+            interval: 1000,
+            clearIntervalWhenDevOpenTrigger: true,
+        });
+
+        // ── Layer 2: custom guard ─────────────────────────────────────────────
 
         // Console deterrent — only fires when DevTools is open (console is active).
         // Targets curious non-tech users who might try pasting scripts.
