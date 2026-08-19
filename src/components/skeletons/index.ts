@@ -10,6 +10,7 @@ export { StaffPortalPageSkeleton } from './StaffPortalPageSkeleton';
 export { StaffSchedulePageSkeleton } from './StaffSchedulePageSkeleton';
 export { AdminScheduleSkeleton } from './AdminScheduleSkeleton';
 export { BookingDetailSkeleton } from './BookingDetailSkeleton';
+export { BookingConfirmationSkeleton } from './BookingConfirmationSkeleton';
 export {
     AdminBookingServiceStepSkeleton,
     AdminBookingStaffStepSkeleton,

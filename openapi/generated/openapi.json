@@ -892,15 +892,8 @@
                         "minLength": 1
                     },
                     "lastName": {
-                        "anyOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "string",
-                                "enum": [""]
-                            }
-                        ]
+                        "type": "string",
+                        "minLength": 1
                     },
                     "phone": {
                         "type": "string",
@@ -923,7 +916,7 @@
                         "maxLength": 500
                     }
                 },
-                "required": ["firstName", "phone"]
+                "required": ["firstName", "lastName", "phone"]
             },
             "bookingDetailApiResponseSchema": {
                 "type": "object",

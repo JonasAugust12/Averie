@@ -24,7 +24,7 @@ import { useBookingTranslations } from '@i18n/use-app-translations';
 import { useBookingStore } from '@stores/booking.store';
 import { BookingChrome } from '@components/booking';
 import { Button } from '@components/common';
-import { BookingDetailSkeleton } from '@components/skeletons';
+import { BookingConfirmationSkeleton } from '@components/skeletons';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
 import { formatUserName, deriveInitials } from '@utils/staff.util';
 import { toastSuccess } from '@utils/toast.util';
@@ -73,8 +73,8 @@ export function ConfirmationPageView() {
         return (
             <div className="flex min-h-screen flex-col bg-background pb-36 text-foreground md:pb-12">
                 <BookingChrome step={6} complete />
-                <div className="mx-auto w-full max-w-5xl px-4 py-12">
-                    <BookingDetailSkeleton />
+                <div className="mx-auto flex w-full max-w-app flex-1 flex-col items-center px-4 py-6 sm:px-6 sm:py-10 md:max-w-5xl lg:max-w-6xl">
+                    <BookingConfirmationSkeleton />
                 </div>
             </div>
         );
