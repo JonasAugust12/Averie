@@ -82,7 +82,7 @@ export const bookingsListQuerySchema = z
     .object({
         page: z.coerce.number().int().min(1).default(1),
         limit: z.coerce.number().int().min(1).max(500).default(20),
-        status: z.enum(['upcoming', 'cancelled']).optional(),
+        status: z.enum(['upcoming', 'completed', 'cancelled']).optional(),
         date: isoDateSchema.optional(),
         dateFrom: isoDateSchema.optional(),
         dateTo: isoDateSchema.optional(),

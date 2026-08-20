@@ -112,7 +112,10 @@ export default function AdminBookingDetailPage() {
             </button>
 
             <div className="flex w-full flex-col items-center gap-4 text-center">
-                <BookingStatusBadge status={booking.status} label={t(`status.${booking.status}`)} />
+                <BookingStatusBadge
+                    status={booking.displayStatus}
+                    label={t(`status.${booking.displayStatus}`)}
+                />
                 <div>
                     <h1 className="font-display text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
                         {t('bookings.detail')}

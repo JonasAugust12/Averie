@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { ArrowLeft, Award, KeyRound, Mail, Phone, Sparkles } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
+import { LanguageSwitcher } from '@components/shared';
 import type { UserDto } from '@typings/salon-user.type';
 import { formatUserName, getUserColor, getUserInitials, staffColorAlpha } from '@utils/staff.util';
 

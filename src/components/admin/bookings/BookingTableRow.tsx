@@ -122,7 +122,10 @@ export function BookingTableRow({
 
                 {/* Status Badge */}
                 <td className="px-5 py-4 text-center whitespace-nowrap align-middle">
-                    <BookingStatusBadge status={b.status} label={t(`status.${b.status}`)} />
+                    <BookingStatusBadge
+                        status={b.displayStatus}
+                        label={t(`status.${b.displayStatus}`)}
+                    />
                 </td>
 
                 {/* Actions */}

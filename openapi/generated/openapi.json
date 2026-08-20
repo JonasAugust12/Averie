@@ -89,7 +89,7 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "enum": ["upcoming", "cancelled"]
+                            "enum": ["upcoming", "completed", "cancelled"]
                         },
                         "example": "upcoming"
                     },
@@ -1024,6 +1024,10 @@
                         "type": "string",
                         "enum": ["upcoming", "cancelled"]
                     },
+                    "displayStatus": {
+                        "type": "string",
+                        "enum": ["upcoming", "completed", "cancelled"]
+                    },
                     "cancelledAt": {
                         "type": "string"
                     },
@@ -1045,6 +1049,7 @@
                     "totalPrice",
                     "customer",
                     "status",
+                    "displayStatus",
                     "createdAt",
                     "updatedAt"
                 ]
@@ -1105,6 +1110,10 @@
                         "type": "string",
                         "enum": ["upcoming", "cancelled"]
                     },
+                    "displayStatus": {
+                        "type": "string",
+                        "enum": ["upcoming", "completed", "cancelled"]
+                    },
                     "cancelledAt": {
                         "type": "string"
                     },
@@ -1136,11 +1145,30 @@
                     "totalPrice",
                     "customer",
                     "status",
+                    "displayStatus",
                     "createdAt",
                     "updatedAt",
                     "staff",
                     "services"
                 ]
+            },
+            "bookingListStatsSchema": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "upcoming": {
+                        "type": "integer"
+                    },
+                    "cancelled": {
+                        "type": "integer"
+                    },
+                    "completed": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["total", "upcoming", "cancelled", "completed"]
             },
             "bookingReferenceQuerySchema": {
                 "type": "object",
@@ -1200,7 +1228,7 @@
                     },
                     "status": {
                         "type": "string",
-                        "enum": ["upcoming", "cancelled"]
+                        "enum": ["upcoming", "completed", "cancelled"]
                     },
                     "date": {
                         "allOf": [
@@ -1591,9 +1619,12 @@
                     },
                     "limit": {
                         "type": "integer"
+                    },
+                    "stats": {
+                        "$ref": "#/components/schemas/bookingListStatsSchema"
                     }
                 },
-                "required": ["items", "total", "page", "limit"]
+                "required": ["items", "total", "page", "limit", "stats"]
             },
             "periodSlotsDtoSchema": {
                 "type": "object",

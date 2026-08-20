@@ -6,6 +6,7 @@ import type {
     BookingStaffSummaryDto,
     StaffServiceMaps,
 } from '@typings/booking.type';
+import { getBookingDisplayStatus } from '@utils/booking-schedule.util';
 
 export function serializeBooking(doc: {
     _id: IdLike;
@@ -47,6 +48,7 @@ export function serializeBooking(doc: {
             note: doc.customer.note ?? undefined,
         },
         status: doc.status,
+        displayStatus: getBookingDisplayStatus(doc),
         cancelledAt: toOptionalIso(doc.cancelledAt),
         createdAt: toIso(doc.createdAt),
         updatedAt: toIso(doc.updatedAt),

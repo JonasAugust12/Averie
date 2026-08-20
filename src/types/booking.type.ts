@@ -1,4 +1,8 @@
-import type { BookingStatus, StaffPreference } from '@typings/salon-common.type';
+import type {
+    BookingDisplayStatus,
+    BookingStatus,
+    StaffPreference,
+} from '@typings/salon-common.type';
 
 export interface BookingCustomerDto {
     firstName: string;
@@ -20,6 +24,7 @@ export interface BookingDto {
     totalPrice: number;
     customer: BookingCustomerDto;
     status: BookingStatus;
+    displayStatus: BookingDisplayStatus;
     cancelledAt?: string;
     createdAt: string;
     updatedAt: string;
@@ -51,6 +56,13 @@ export interface BookingListItemDto extends BookingDto {
     services: BookingServiceSummaryDto[];
 }
 
+export interface BookingListStatsDto {
+    total: number;
+    upcoming: number;
+    cancelled: number;
+    completed: number;
+}
+
 export type StaffServiceMaps = {
     staffById: Map<string, BookingStaffSummaryDto>;
     serviceById: Map<string, BookingServiceSummaryDto>;
@@ -61,4 +73,5 @@ export interface PaginatedBookingsDto {
     total: number;
     page: number;
     limit: number;
+    stats: BookingListStatsDto;
 }

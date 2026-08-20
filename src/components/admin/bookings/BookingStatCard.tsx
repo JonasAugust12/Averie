@@ -6,7 +6,7 @@ interface BookingStatCardProps {
     label: string;
     count: number;
     icon: LucideIcon;
-    variant: 'pending' | 'confirmed' | 'rejected' | 'cancelled';
+    variant: 'pending' | 'confirmed' | 'completed' | 'rejected' | 'cancelled';
     className?: string;
     accentColor?: string;
 }
@@ -22,6 +22,11 @@ const variants = {
         card: 'border-stone-200/80 bg-white/90 text-stone-900',
         icon: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
         label: 'text-emerald-800',
+    },
+    completed: {
+        card: 'border-stone-200/80 bg-white/90 text-stone-900',
+        icon: 'bg-sky-50 text-sky-700 border border-sky-200/60',
+        label: 'text-sky-800',
     },
     rejected: {
         card: 'border-stone-200/80 bg-white/90 text-stone-900',

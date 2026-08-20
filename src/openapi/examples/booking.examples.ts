@@ -50,6 +50,7 @@ export const bookingExample = {
     totalPrice: 80,
     customer: bookingCustomerExample,
     status: 'upcoming' as const,
+    displayStatus: 'upcoming' as const,
     createdAt: EXAMPLE_TIMESTAMP,
     updatedAt: EXAMPLE_TIMESTAMP,
 };
@@ -74,4 +75,10 @@ export const paginatedBookingsDataExample = {
     total: 1,
     page: 1,
     limit: 20,
+    stats: {
+        total: 42,
+        upcoming: 28,
+        completed: 9,
+        cancelled: 5,
+    },
 };

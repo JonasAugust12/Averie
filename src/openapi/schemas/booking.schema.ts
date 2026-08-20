@@ -26,6 +26,7 @@ export const bookingDtoSchema = z.object({
     totalPrice: z.number(),
     customer: bookingCustomerDtoSchema,
     status: z.enum(['upcoming', 'cancelled']),
+    displayStatus: z.enum(['upcoming', 'completed', 'cancelled']),
     cancelledAt: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -54,11 +55,19 @@ export const bookingListItemDtoSchema = bookingDtoSchema.extend({
     services: z.array(bookingServiceSummarySchema),
 });
 
+export const bookingListStatsSchema = z.object({
+    total: z.number().int(),
+    upcoming: z.number().int(),
+    cancelled: z.number().int(),
+    completed: z.number().int(),
+});
+
 export const paginatedBookingsDataSchema = z.object({
     items: z.array(bookingListItemDtoSchema),
     total: z.number().int(),
     page: z.number().int(),
     limit: z.number().int(),
+    stats: bookingListStatsSchema,
 });
 
 export const bookingSlotsDataSchema = z.object({

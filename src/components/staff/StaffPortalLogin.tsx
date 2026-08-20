@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AlertCircle, Eye, EyeOff, KeyRound, Mail, Shield } from 'lucide-react';
 import { useAdminTranslations, useAccountTranslations } from '@i18n/use-app-translations';
-import { LanguageSwitcher } from '@components/shared/LanguageSwitcher';
+import { LanguageSwitcher } from '@components/shared';
 import { Button } from '@components/common';
 import { loginStaticText } from '@components/landing/styles';
 

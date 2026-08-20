@@ -2,12 +2,38 @@ import { connectToDatabase } from '@libs/mongodb';
 import { requireAdmin } from '@guard/auth-guard';
 import { enrichBookingListItems, loadStaffServiceMaps } from '@server/booking-enrich.server';
 import { Booking } from '@models/booking.model';
+import type { BookingDocument } from '@models/booking.model';
+import type { BookingDisplayStatus } from '@typings/salon-common.type';
+import type { BookingListStatsDto } from '@typings/booking.type';
+import { getBookingDisplayStatus } from '@utils/booking-schedule.util';
 import { buildFlexiblePhoneRegex, extractPhoneDigits, phoneDigitVariants } from '@utils/phone.util';
 import { bookingsListQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../_lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+type BookingLeanDoc = BookingDocument & { createdAt?: Date; updatedAt?: Date };
+
+function applyDisplayStatusFilter<
+    T extends { status: 'upcoming' | 'cancelled'; date: string; time: string },
+>(bookings: T[], status: BookingDisplayStatus | undefined): T[] {
+    if (!status) return bookings;
+    return bookings.filter((booking) => getBookingDisplayStatus(booking) === status);
+}
+
+function buildBookingStats(
+    bookings: { status: 'upcoming' | 'cancelled'; date: string; time: string }[],
+): BookingListStatsDto {
+    return bookings.reduce<BookingListStatsDto>(
+        (stats, booking) => {
+            stats.total += 1;
+            stats[getBookingDisplayStatus(booking)] += 1;
+            return stats;
+        },
+        { total: 0, upcoming: 0, cancelled: 0, completed: 0 },
+    );
+}
 
 /**
  * @queryParams bookingsListQuerySchema
@@ -44,7 +70,6 @@ export async function GET(request: Request) {
 
         const { page, limit, status, date, dateFrom, dateTo, search } = parsed.data;
         const filter: Record<string, unknown> = {};
-        if (status) filter.status = status;
         if (date) {
             filter.date = date;
         } else if (dateFrom || dateTo) {
@@ -78,13 +103,17 @@ export async function GET(request: Request) {
 
         await connectToDatabase();
         const skip = (page - 1) * limit;
-        const query = Booking.find(filter).skip(skip).limit(limit);
+        const query = Booking.find(filter);
         if (dateFrom || dateTo) {
             query.sort({ date: 1, time: 1 });
         } else {
             query.sort({ createdAt: -1 });
         }
-        const [items, total] = await Promise.all([query.lean(), Booking.countDocuments(filter)]);
+        const allMatching = (await query.lean()) as BookingLeanDoc[];
+        const stats = buildBookingStats(allMatching);
+        const filteredItems = applyDisplayStatusFilter(allMatching, status);
+        const total = filteredItems.length;
+        const items = filteredItems.slice(skip, skip + limit);
 
         const maps = await loadStaffServiceMaps();
 
@@ -94,6 +123,7 @@ export async function GET(request: Request) {
                 total,
                 page,
                 limit,
+                stats,
             },
             'OK',
         );

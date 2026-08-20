@@ -1,4 +1,5 @@
 import { minuteOf } from '@utils/schedule.util';
+import type { BookingDisplayStatus, BookingStatus } from '@typings/salon-common.type';
 import type { SlotLockReason } from '@typings/booking.type';
 
 export const BOOKING_MIN_ADVANCE_HOURS = 1;
@@ -64,6 +65,19 @@ export function validateBookingSchedule(input: { date: string; time: string }): 
         return 'Selected time must be at least 1 hour from now';
     }
     return null;
+}
+
+export function getBookingDisplayStatus(
+    booking: { status: BookingStatus; date: string; time: string },
+    now = new Date(),
+): BookingDisplayStatus {
+    if (booking.status === 'cancelled') return 'cancelled';
+
+    const { isoDate: today, minutes: nowMinutes } = getSalonLocalDateTime(now);
+    if (booking.date < today) return 'completed';
+    if (booking.date > today) return 'upcoming';
+
+    return minuteOf(booking.time) < nowMinutes ? 'completed' : 'upcoming';
 }
 
 type ScheduleBooking = {

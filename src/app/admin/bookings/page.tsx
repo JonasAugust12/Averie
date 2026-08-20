@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
     Calendar,
+    CheckCircle2,
     Plus,
     RefreshCw,
     RotateCcw,
@@ -16,7 +17,7 @@ import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
 import { BookingsTableSkeleton } from '@components/skeletons';
 import { useUIStore } from '@stores/ui.store';
-import type { BookingStatus } from '@typings/salon-common.type';
+import type { BookingDisplayStatus, BookingStatus } from '@typings/salon-common.type';
 import type { BookingListItemDto } from '@typings/booking.type';
 import { formatUserName } from '@utils/staff.util';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
@@ -34,7 +35,7 @@ import { toastSuccess } from '@utils/toast.util';
 export default function AdminBookingsPage() {
     const t = useAdminTranslations();
     const [query, setQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState<'all' | BookingStatus>('all');
+    const [statusFilter, setStatusFilter] = useState<'all' | BookingDisplayStatus>('all');
     const [dateFilter, setDateFilter] = useState('');
     const [page, setPage] = useState(1);
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -59,14 +60,7 @@ export default function AdminBookingsPage() {
     const total = data?.total ?? 0;
     const totalPages = Math.max(1, Math.ceil(total / limit));
 
-    const stats = useMemo(() => {
-        const items = bookingItems ?? [];
-        return {
-            upcoming: items.filter((b) => b.status === 'upcoming').length,
-            cancelled: items.filter((b) => b.status === 'cancelled').length,
-            total,
-        };
-    }, [bookingItems, total]);
+    const stats = data?.stats ?? { total: 0, upcoming: 0, completed: 0, cancelled: 0 };
 
     const bookings = bookingItems ?? [];
 
@@ -161,12 +155,18 @@ export default function AdminBookingsPage() {
             </div>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <BookingStatCard
                     label={t('bookings.stats.upcoming')}
                     count={stats.upcoming}
                     icon={Calendar}
                     variant="confirmed"
+                />
+                <BookingStatCard
+                    label={t('bookings.stats.completed')}
+                    count={stats.completed}
+                    icon={CheckCircle2}
+                    variant="completed"
                 />
                 <BookingStatCard
                     label={t('bookings.stats.cancelled')}
@@ -277,8 +277,8 @@ export default function AdminBookingsPage() {
                                     {b.reference}
                                 </span>
                                 <BookingStatusBadge
-                                    status={b.status}
-                                    label={t(`status.${b.status}`)}
+                                    status={b.displayStatus}
+                                    label={t(`status.${b.displayStatus}`)}
                                 />
                             </div>
 
