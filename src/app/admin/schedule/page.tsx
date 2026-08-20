@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useBookings } from '@services/booking.service';
 import { useAllStaff } from '@services/staff.service';
+import { usePromotionSettings } from '@services/promotion.service';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { Button } from '@components/common';
 import { MasterDaySlotsModal, StaffCalendar } from '@components/admin/staff';
@@ -29,6 +30,8 @@ import {
 } from '@utils/staff-calendar.util';
 import { formatUsd } from '@utils/format.util';
 import { formatUserName, getUserColor, staffColorAlpha } from '@utils/staff.util';
+import { resolvePromotionColor } from '@mappers/promotion.mapper';
+import { isPromotionVisible } from '@utils/promotion.util';
 import type { BookingListItemDto } from '@typings/booking.type';
 import type { UserDto } from '@typings/salon-user.type';
 
@@ -70,18 +73,22 @@ export default function AdminSchedulePage() {
         dateTo: range.dateTo,
     });
     const { data: staff, isLoading: staffLoading } = useAllStaff();
+    const { data: promotion } = usePromotionSettings();
     const [selectedBooking, setSelectedBooking] = useState<BookingListItemDto | null>(null);
 
     const bookingItems = bookingsData?.items;
 
     const calendarEvents = useMemo(() => {
         if (!staff) return [];
+        const activePromo = promotion && isPromotionVisible(promotion) ? promotion : null;
+        const promoColor = activePromo ? resolvePromotionColor(activePromo.color) : undefined;
         return buildAllBookingsCalendarEvents(
             bookingItems ?? [],
             staff,
             t('overview.anyTechnician') || 'Any',
+            promoColor,
         );
-    }, [bookingItems, staff, t]);
+    }, [bookingItems, staff, t, promotion]);
 
     const upcomingBookings = useMemo(() => {
         const today = new Date();

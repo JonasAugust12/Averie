@@ -18,6 +18,12 @@ export const updatePromotionSettingsSchema = z
         endDate: optionalDateSchema,
         hideAfterExpiry: z.boolean().default(true),
         showBeforeStartDate: z.boolean().default(true),
+        color: z
+            .string()
+            .regex(/^#[0-9a-fA-F]{6}$/, 'Color must be a valid 6-digit hex e.g. #b91c1c')
+            .nullable()
+            .optional()
+            .default(null),
     })
     .refine(
         (data) => {

@@ -292,13 +292,22 @@ paths:
         post:
             tags: [Server Actions]
             summary: updatePromotionSettingsAction
-            description: Admin only. Updates salon_settings.promotion text fields, enabled toggle, optional dates, hideAfterExpiry, and showBeforeStartDate.
+            description: Admin only. Updates salon_settings.promotion text fields, enabled toggle, optional dates, hideAfterExpiry, showBeforeStartDate, and accent color.
             requestBody:
                 required: true
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/updatePromotionSettingsInputSchema'
+                            type: object
+                            allOf:
+                                - $ref: '#/components/schemas/updatePromotionSettingsInputSchema'
+                            properties:
+                                color:
+                                    type: string
+                                    nullable: true
+                                    pattern: '^#[0-9a-fA-F]{6}$'
+                                    description: 'Hex promotion accent color e.g. #b91c1c; null = default red'
+                                    example: '#b91c1c'
             responses:
                 '200':
                     description: Promotion settings updated

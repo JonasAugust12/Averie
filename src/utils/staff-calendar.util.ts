@@ -93,6 +93,7 @@ export function buildAllBookingsCalendarEvents(
     bookings: BookingListItemDto[],
     staffList: UserDto[],
     anyStaffLabel = 'Any',
+    promotionColor?: string,
 ): BookingCalendarEvent[] {
     const staffColorMap = new Map(staffList.map((s) => [s.id, getUserColor(s)]));
 
@@ -100,10 +101,15 @@ export function buildAllBookingsCalendarEvents(
         const customerName = `${b.customer.firstName} ${b.customer.lastName}`.trim();
         const serviceName = bookingServiceNames(b);
         const staffName = bookingStaffLabel(b, staffList, anyStaffLabel);
-        const staffColor =
-            b.staffId && b.staffPreference === 'specific'
-                ? staffColorMap.get(b.staffId)
-                : undefined;
+
+        let staffColor: string | undefined;
+        if (b.staffPreference === 'specific' && b.staffId) {
+            staffColor = staffColorMap.get(b.staffId);
+        } else if (b.staffPreference === 'any' && b.status === 'upcoming' && promotionColor) {
+            // Use the configured promotion color for flexible bookings during promo periods
+            staffColor = promotionColor;
+        }
+
         return bookingToCalendarEvent(b, serviceName, `${customerName} (${staffName})`, staffColor);
     });
 }
@@ -125,27 +131,41 @@ export function buildStaffBookingsCalendarEvents(
 export { deriveInitials } from '@utils/staff.util';
 
 export const STAFF_COLOR_OPTIONS = [
-    '#78716c',
-    '#44403c',
-    '#c0957f',
-    '#b45309',
-    '#0ea5e9',
+    '#b91c1c',
+    '#dc2626',
+    '#ef4444',
+    '#f43f5e',
+    '#e11d48',
+    '#be123c',
+    '#9f1239',
+    '#db2777',
+    '#ec4899',
+    '#f472b6',
+    '#d946ef',
+    '#c084fc',
+    '#a855f7',
+    '#8b5cf6',
+    '#7c3aed',
+    '#6366f1',
+    '#4f46e5',
+    '#3b82f6',
     '#2563eb',
+    '#1d4ed8',
+    '#0ea5e9',
+    '#06b6d4',
     '#0891b2',
     '#0d9488',
     '#10b981',
+    '#059669',
+    '#16a34a',
     '#65a30d',
+    '#84cc16',
+    '#eab308',
     '#f59e0b',
+    '#d97706',
     '#ea580c',
-    '#ef4444',
-    '#e11d48',
-    '#db2777',
-    '#8b5cf6',
-    '#6366f1',
-    '#7c3aed',
-    '#ec4899',
-    '#14b8a6',
-    '#1d4ed8',
+    '#c0957f',
+    '#78716c',
 ] as const;
 
 export function normalizeStaffHex(color?: string): string {

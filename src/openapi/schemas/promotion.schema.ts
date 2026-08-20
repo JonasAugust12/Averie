@@ -25,6 +25,10 @@ export const promotionSettingsDtoSchema = z.object({
     imagePublicId: z.string().nullable(),
     imageWidth: z.number().nullable(),
     imageHeight: z.number().nullable(),
+    color: z
+        .string()
+        .nullable()
+        .describe('Hex promotion accent color, e.g. #b91c1c. Null = default red.'),
 });
 
 export const updatePromotionSettingsInputSchema = z.object({
@@ -35,6 +39,7 @@ export const updatePromotionSettingsInputSchema = z.object({
     endDate: z.string().nullable(),
     hideAfterExpiry: z.boolean(),
     showBeforeStartDate: z.boolean(),
+    color: z.string().nullable().optional().describe('Hex color e.g. #b91c1c; null = default red'),
 });
 
 export const promotionSettingsApiResponseSchema = z

@@ -12,7 +12,7 @@ import {
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { useUIStore } from '@stores/ui.store';
 import { PromotionSettingsSkeleton } from '@components/skeletons';
-import { PromotionLivePreview } from '@components/admin/promotion';
+import { PromotionColorPicker, PromotionLivePreview } from '@components/admin/promotion';
 import { Button } from '@components/common';
 import { Input } from '@components/ui';
 import { cn } from '@utils/cn.util';
@@ -32,6 +32,7 @@ function buildSavePayload(
         endDate: patch.endDate !== undefined ? patch.endDate : form.endDate,
         hideAfterExpiry: patch.hideAfterExpiry ?? form.hideAfterExpiry,
         showBeforeStartDate: patch.showBeforeStartDate ?? form.showBeforeStartDate,
+        color: patch.color !== undefined ? patch.color : form.color,
     };
 }
 
@@ -392,6 +393,42 @@ export default function PromotionSettingsPage() {
                     </div>
                 </div>
 
+                {/* Promotion Accent Color */}
+                <div className="space-y-2.5 rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4">
+                    <div className="space-y-0.5">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-wider text-stone-800">
+                            Promotion Color
+                        </h3>
+                        <p className="font-sans text-[11px] text-stone-500">
+                            Choose an accent color for the promotion banner, calendar highlights,
+                            and booking card. Default: red.
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3 mb-1">
+                        <span
+                            className="h-8 w-8 shrink-0 rounded-full border-2 border-white shadow-sm ring-1 ring-stone-200"
+                            style={{ backgroundColor: form.color ?? '#b91c1c' }}
+                            aria-hidden
+                        />
+                        <span className="font-mono text-xs text-stone-600 font-semibold uppercase">
+                            {form.color ?? '#b91c1c'}
+                        </span>
+                        {form.color ? (
+                            <button
+                                type="button"
+                                onClick={() => updateForm({ color: null })}
+                                className="ml-auto font-sans text-[11px] text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                            >
+                                Reset to default
+                            </button>
+                        ) : null}
+                    </div>
+                    <PromotionColorPicker
+                        value={form.color}
+                        onChange={(color) => updateForm({ color })}
+                    />
+                </div>
+
                 <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-0.5">
                         <h3 className="font-sans text-xs font-bold uppercase tracking-wider text-stone-800">
@@ -567,6 +604,7 @@ export default function PromotionSettingsPage() {
                     enabled: form.enabled,
                     hideAfterExpiry: form.hideAfterExpiry,
                     showBeforeStartDate: form.showBeforeStartDate,
+                    color: form.color,
                 }}
             />
         </div>

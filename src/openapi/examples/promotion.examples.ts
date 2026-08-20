@@ -11,6 +11,7 @@ export const promotionSettingsExample = {
     imagePublicId: 'Averie/promotion/spring-glow',
     imageWidth: 1200,
     imageHeight: 800,
+    color: '#b91c1c',
 };
 
 export const updatePromotionSettingsInputExample = {
@@ -21,4 +22,5 @@ export const updatePromotionSettingsInputExample = {
     endDate: '2026-03-31',
     hideAfterExpiry: true,
     showBeforeStartDate: true,
+    color: '#b91c1c',
 };

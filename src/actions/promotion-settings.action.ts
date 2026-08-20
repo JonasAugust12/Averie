@@ -25,6 +25,7 @@ function promotionUpdatePayload(input: UpdatePromotionSettingsInput) {
         'promotion.endDate': input.endDate ?? null,
         'promotion.hideAfterExpiry': input.hideAfterExpiry,
         'promotion.showBeforeStartDate': input.showBeforeStartDate,
+        'promotion.color': input.color ?? null,
     };
 }
 

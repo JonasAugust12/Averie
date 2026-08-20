@@ -26,6 +26,7 @@ import {
     isBookingDateAllowed,
 } from '@utils/booking-schedule.util';
 import { cn } from '@utils/cn.util';
+import { resolvePromotionColor } from '@mappers/promotion.mapper';
 
 const WEEKDAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
@@ -50,6 +51,7 @@ export function DateStep() {
     const isPromoActive = Boolean(promotion?.enabled);
     const promoStartIso = promotion?.startDate ? promotion.startDate.slice(0, 10) : null;
     const promoEndIso = promotion?.endDate ? promotion.endDate.slice(0, 10) : null;
+    const promoColor = resolvePromotionColor(promotion?.color);
 
     const isPromoDate = useMemo(() => {
         return (iso: string) => {
@@ -221,42 +223,42 @@ export function DateStep() {
                                                 'text-stone-800 bg-stone-50/50 hover:bg-secondary-100/60 hover:text-primary hover:scale-105 active:scale-95',
                                             !cell.disabled &&
                                                 !selected &&
-                                                cell.isPromo &&
-                                                'bg-rose-50/90 text-rose-950 border border-rose-200/90 hover:bg-rose-100 hover:border-rose-300 hover:scale-105 active:scale-95 shadow-2xs',
-                                            !cell.disabled &&
-                                                !selected &&
                                                 cell.isToday &&
                                                 !cell.isPromo &&
                                                 'bg-primary/10 text-primary ring-1.5 ring-primary/30 hover:bg-primary/15 hover:scale-105 active:scale-95',
                                             selected &&
-                                                !cell.isPromo &&
-                                                'bg-primary text-neutral shadow-md shadow-primary/25 scale-105 ring-2 ring-primary ring-offset-2',
-                                            selected &&
-                                                cell.isPromo &&
-                                                'bg-primary text-neutral shadow-md shadow-rose-900/30 scale-105 ring-2 ring-rose-400 ring-offset-2',
+                                                'bg-primary text-neutral shadow-md scale-105 ring-offset-2',
                                         )}
+                                        style={
+                                            !cell.disabled && !selected && cell.isPromo
+                                                ? {
+                                                      backgroundColor: `${promoColor}18`,
+                                                      border: `1px solid ${promoColor}50`,
+                                                      color: '#1c1917',
+                                                  }
+                                                : selected && cell.isPromo
+                                                  ? {
+                                                        boxShadow: `0 4px 12px ${promoColor}50`,
+                                                        outline: `2px solid ${promoColor}`,
+                                                        outlineOffset: '2px',
+                                                    }
+                                                  : undefined
+                                        }
                                     >
                                         {/* Subtle promo glow line */}
                                         {cell.isPromo && !cell.disabled ? (
                                             <div
-                                                className={cn(
-                                                    'pointer-events-none absolute top-0 right-0 left-0 h-0.5 z-10',
-                                                    selected
-                                                        ? 'bg-linear-to-r from-transparent via-rose-300 to-transparent'
-                                                        : 'bg-linear-to-r from-transparent via-rose-500 to-transparent',
-                                                )}
+                                                className="pointer-events-none absolute top-0 right-0 left-0 h-0.5 z-10"
+                                                style={{
+                                                    background: `linear-gradient(to right, transparent, ${promoColor}cc, transparent)`,
+                                                }}
                                             />
                                         ) : null}
 
                                         {/* Sparkling shine sweep animation for all promo dates with staggered delay */}
                                         {cell.isPromo && !cell.disabled ? (
                                             <div
-                                                className={cn(
-                                                    'pointer-events-none absolute inset-0 -translate-x-full animate-shine z-10',
-                                                    selected
-                                                        ? 'bg-linear-to-r from-transparent via-white/60 to-transparent'
-                                                        : 'bg-linear-to-r from-transparent via-rose-400/70 to-transparent',
-                                                )}
+                                                className="pointer-events-none absolute inset-0 -translate-x-full animate-shine z-10 bg-linear-to-r from-transparent via-white/60 to-transparent"
                                                 style={{
                                                     animationDelay: `${(cell.day % 4) * 0.75}s`,
                                                 }}
@@ -270,16 +272,14 @@ export function DateStep() {
                                             <span
                                                 className={cn(
                                                     'relative z-10 mt-0.5 inline-flex items-center gap-0.5 text-[6px] sm:text-[7.5px] font-extrabold uppercase tracking-tight sm:tracking-wider leading-none max-w-full px-0.5 truncate',
-                                                    selected ? 'text-rose-200' : 'text-rose-700',
                                                 )}
+                                                style={{ color: selected ? '#fff' : promoColor }}
                                             >
                                                 <Sparkles
-                                                    className={cn(
-                                                        'size-1.5 sm:size-2 shrink-0 animate-pulse',
-                                                        selected
-                                                            ? 'text-rose-200'
-                                                            : 'text-rose-500',
-                                                    )}
+                                                    className="size-1.5 sm:size-2 shrink-0 animate-pulse"
+                                                    style={{
+                                                        color: selected ? '#fff' : promoColor,
+                                                    }}
                                                 />
                                                 <span className="truncate">{t('promoLabel')}</span>
                                             </span>
@@ -309,8 +309,16 @@ export function DateStep() {
                         </div>
                         {isPromoActive ? (
                             <div className="flex items-center gap-1.5">
-                                <span className="size-2.5 rounded-full bg-rose-500 ring-1 ring-rose-400" />
-                                <span className="font-bold text-rose-800">{t('promoTag')}</span>
+                                <span
+                                    className="size-2.5 rounded-full ring-1"
+                                    style={{
+                                        backgroundColor: promoColor,
+                                        boxShadow: `0 0 0 1px ${promoColor}80`,
+                                    }}
+                                />
+                                <span className="font-bold" style={{ color: promoColor }}>
+                                    {t('promoTag')}
+                                </span>
                             </div>
                         ) : null}
                         <div className="flex items-center gap-1.5">
@@ -334,30 +342,42 @@ export function DateStep() {
 
                 {/* Companion Promotion Card (Desktop Right Col, Mobile Stacked Below) */}
                 {isPromoActive && promotion ? (
-                    <div className="lg:col-span-6 relative flex flex-col justify-between rounded-3xl border border-rose-200/80 bg-linear-to-b from-white via-rose-50/20 to-stone-50/90 p-5 sm:p-7 lg:p-8 shadow-xl shadow-rose-950/5 backdrop-blur-md overflow-hidden animate-fade-in-up">
-                        {/* Top Ruby Red Luxury Accent Bar */}
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-red-600 via-rose-500 to-red-600" />
-
-                        {/* Ambient decorative red/rose luxury glow */}
+                    <div
+                        className="lg:col-span-6 relative flex flex-col justify-between rounded-3xl border bg-linear-to-b from-white via-stone-50/20 to-stone-50/90 p-5 sm:p-7 lg:p-8 shadow-xl shadow-stone-950/5 backdrop-blur-md overflow-hidden animate-fade-in-up"
+                        style={{ borderColor: `${promoColor}50` }}
+                    >
+                        {/* Top Promo Accent Bar */}
                         <div
-                            className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-red-500/15 blur-3xl"
-                            aria-hidden
-                        />
-                        <div
-                            className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-rose-600/15 blur-3xl"
-                            aria-hidden
-                        />
-                        <div
-                            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-72 rounded-full bg-red-400/5 blur-3xl"
-                            aria-hidden
+                            className="absolute top-0 left-0 right-0 h-1"
+                            style={{
+                                background: `linear-gradient(to right, color-mix(in srgb, ${promoColor} 80%, black), ${promoColor}, color-mix(in srgb, ${promoColor} 80%, black))`,
+                            }}
                         />
 
-                        {/* Corner Ribbon with shine sweep (expanded geometry to prevent clipping) */}
+                        {/* Ambient decorative glow */}
+                        <div
+                            className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full blur-3xl"
+                            style={{ backgroundColor: `${promoColor}25` }}
+                            aria-hidden
+                        />
+                        <div
+                            className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full blur-3xl"
+                            style={{ backgroundColor: `${promoColor}25` }}
+                            aria-hidden
+                        />
+
+                        {/* Corner Ribbon with shine sweep */}
                         <div
                             className="pointer-events-none absolute right-0 top-0 z-20 h-32 w-32 overflow-hidden"
                             aria-hidden
                         >
-                            <div className="absolute top-7 -right-10 w-44 rotate-45 overflow-hidden bg-linear-to-r from-red-700 via-rose-600 to-red-700 py-1.5 text-center text-[10px] font-extrabold uppercase tracking-[0.18em] text-white shadow-md shadow-rose-950/25">
+                            <div
+                                className="absolute top-7 -right-10 w-44 rotate-45 overflow-hidden py-1.5 text-center text-[10px] font-extrabold uppercase tracking-[0.18em] text-white shadow-md"
+                                style={{
+                                    background: `linear-gradient(to right, color-mix(in srgb, ${promoColor} 90%, black), ${promoColor}, color-mix(in srgb, ${promoColor} 90%, black))`,
+                                    boxShadow: `0 4px 12px ${promoColor}40`,
+                                }}
+                            >
                                 <div className="absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
                                 {t('promoCompanion.limited') || 'LIMITED'}
                             </div>
@@ -366,15 +386,24 @@ export function DateStep() {
                         {/* Top Content Section */}
                         <div className="space-y-4 sm:space-y-5">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-200/90 bg-rose-50/95 px-3.5 py-1 font-sans text-xs font-bold text-rose-800 uppercase tracking-wider shadow-2xs">
-                                    <Sparkles className="size-3 text-rose-600 animate-pulse" />
+                                <div
+                                    className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 font-sans text-xs font-bold text-white uppercase tracking-wider shadow-2xs"
+                                    style={{ backgroundColor: promoColor, borderColor: promoColor }}
+                                >
+                                    <Sparkles className="size-3 animate-pulse" />
                                     <span>{t('promoCompanion.badge') || 'Special Promotion'}</span>
                                 </div>
                                 {periodLabel ? (
                                     <div className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/80 bg-white/90 px-3 py-1 font-sans text-xs font-semibold text-stone-700 shadow-2xs">
                                         <span className="relative flex h-2 w-2">
-                                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-                                            <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-600" />
+                                            <span
+                                                className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                                                style={{ backgroundColor: promoColor }}
+                                            />
+                                            <span
+                                                className="relative inline-flex h-2 w-2 rounded-full"
+                                                style={{ backgroundColor: promoColor }}
+                                            />
                                         </span>
                                         <CalendarHeart className="size-3.5 text-stone-500" />
                                         <span className="truncate">{periodLabel}</span>
@@ -412,7 +441,7 @@ export function DateStep() {
                         {/* Bottom Perks & Terms Section */}
                         <div className="mt-6 rounded-2xl border border-stone-200/80 bg-stone-50/80 p-4 sm:p-5 space-y-3 shadow-2xs">
                             <div className="flex items-center gap-2">
-                                <Gem className="size-3.5 text-rose-500" />
+                                <Gem className="size-3.5" style={{ color: promoColor }} />
                                 <p className="font-display text-xs font-bold uppercase tracking-wider text-stone-700">
                                     {t('promoCompanion.perksTitle') ||
                                         'Promotion Terms & Privileges'}
@@ -420,7 +449,14 @@ export function DateStep() {
                             </div>
                             <ul className="space-y-2.5 text-xs text-stone-700">
                                 <li className="flex items-start gap-2.5">
-                                    <span className="flex size-5.5 shrink-0 items-center justify-center rounded-md border border-rose-200/80 bg-rose-50 text-rose-600 shadow-2xs">
+                                    <span
+                                        className="flex size-5.5 shrink-0 items-center justify-center rounded-md border shadow-2xs"
+                                        style={{
+                                            backgroundColor: `${promoColor}18`,
+                                            borderColor: `${promoColor}40`,
+                                            color: promoColor,
+                                        }}
+                                    >
                                         <Sparkles className="size-3" />
                                     </span>
                                     <span className="pt-0.5 leading-snug">

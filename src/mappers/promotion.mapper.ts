@@ -13,6 +13,7 @@ type PromotionDoc = {
     imagePublicId?: string | null;
     imageWidth?: number | null;
     imageHeight?: number | null;
+    color?: string | null;
 };
 
 function optimizePromotionImageUrl(url: string | null | undefined): string | null {
@@ -37,7 +38,18 @@ export function serializePromotionSettings(
         imagePublicId: promotion?.imagePublicId ?? null,
         imageWidth: promotion?.imageWidth ?? null,
         imageHeight: promotion?.imageHeight ?? null,
+        color: promotion?.color ?? null,
     };
 
     return dto;
+}
+
+export const PROMOTION_COLOR_FALLBACK = '#b91c1c';
+
+/**
+ * Returns the configured promotion color, or the default red fallback.
+ */
+export function resolvePromotionColor(color: string | null | undefined): string {
+    if (color && /^#[0-9a-fA-F]{6}$/.test(color)) return color;
+    return PROMOTION_COLOR_FALLBACK;
 }

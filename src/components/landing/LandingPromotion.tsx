@@ -7,6 +7,7 @@ import { useLocale } from 'next-intl';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { usePromotionSettings } from '@services/promotion.service';
 import { formatPromotionDate, shouldRenderPromotionSection } from '@utils/promotion.util';
+import { resolvePromotionColor } from '@mappers/promotion.mapper';
 import { cn } from '@utils/cn.util';
 import { FadeIn, PillLink } from '@components/landing';
 import {
@@ -56,6 +57,7 @@ export function LandingPromotion() {
         promotion.imageWidth && promotion.imageHeight
             ? `${promotion.imageWidth} / ${promotion.imageHeight}`
             : '4 / 5';
+    const promoColor = resolvePromotionColor(promotion.color);
 
     return (
         <section
@@ -186,7 +188,8 @@ export function LandingPromotion() {
                     <div className="relative mx-auto w-full min-w-60 max-w-105 md:mx-0">
                         {/* Celebratory luxury floating accents & sparkles */}
                         <div
-                            className="pointer-events-none absolute -top-5 -left-5 z-20 animate-float-slow text-primary02 drop-shadow-md"
+                            className="pointer-events-none absolute -top-5 -left-5 z-20 animate-float-slow drop-shadow-md"
+                            style={{ color: promoColor }}
                             aria-hidden
                         >
                             <Sparkles className="h-7 w-7" />
@@ -198,7 +201,8 @@ export function LandingPromotion() {
                             <Gem className="h-6 w-6" />
                         </div>
                         <div
-                            className="pointer-events-none absolute top-8 -right-5 z-20 animate-confetti-float text-rose-500/80 drop-shadow-xs"
+                            className="pointer-events-none absolute top-8 -right-5 z-20 animate-confetti-float drop-shadow-xs"
+                            style={{ color: `${promoColor}cc` }}
                             aria-hidden
                         >
                             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -215,17 +219,34 @@ export function LandingPromotion() {
                             </svg>
                         </div>
 
-                        {/* Dual luxury ambient glow */}
-                        <div className="absolute -inset-4 -z-10 rounded-4xl bg-linear-to-br from-primary02/20 via-nude/25 to-primary01/20 blur-xl animate-ambient-pulse" />
+                        {/* Ambient glow — tinted by promo color */}
+                        <div
+                            className="absolute -inset-4 -z-10 rounded-4xl blur-xl animate-ambient-pulse"
+                            style={{
+                                background: `radial-gradient(ellipse at 60% 40%, ${promoColor}35 0%, ${promoColor}15 45%, transparent 75%)`,
+                            }}
+                        />
 
                         {/* Card Frame */}
-                        <div className="relative overflow-hidden rounded-[1.75rem] border border-stone-200/90 bg-white p-2 shadow-[0_20px_44px_-16px_rgba(58,48,39,0.22)]">
+                        <div
+                            className="relative overflow-hidden rounded-[1.75rem] bg-white p-2"
+                            style={{
+                                border: `1px solid ${promoColor}30`,
+                                boxShadow: `0 20px 44px -16px ${promoColor}30, 0 0 0 1px rgba(58,48,39,0.06)`,
+                            }}
+                        >
                             {/* Corner Limited Ribbon with shine sweep */}
                             <div
                                 className="pointer-events-none absolute right-0 top-0 z-20 h-28 w-28 overflow-hidden"
                                 aria-hidden
                             >
-                                <div className="relative -right-8 top-6 w-38 rotate-45 overflow-hidden bg-linear-to-r from-red-700 via-red-600 to-red-700 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_4px_12px_rgba(185,28,28,0.35)]">
+                                <div
+                                    className="relative -right-8 top-6 w-38 rotate-45 overflow-hidden py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white"
+                                    style={{
+                                        boxShadow: `0 4px 12px ${promoColor}55`,
+                                        background: `linear-gradient(to right, color-mix(in srgb, ${promoColor} 90%, black), ${promoColor}, color-mix(in srgb, ${promoColor} 90%, black))`,
+                                    }}
+                                >
                                     <div className="absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
                                     {t('landing.promotion.limitedRibbon')}
                                 </div>

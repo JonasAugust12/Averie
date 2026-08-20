@@ -12,4 +12,6 @@ export interface PromotionSettingsDto {
     imagePublicId: string | null;
     imageWidth: number | null;
     imageHeight: number | null;
+    /** Hex color accent for the promotion UI. Null falls back to the default red (#b91c1c). */
+    color: string | null;
 }

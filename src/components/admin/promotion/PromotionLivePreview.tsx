@@ -17,6 +17,7 @@ import {
 import { useLocale } from 'next-intl';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { formatPromotionDate, isPromotionVisible } from '@utils/promotion.util';
+import { resolvePromotionColor } from '@mappers/promotion.mapper';
 import { cn } from '@utils/cn.util';
 import type { PromotionSettingsDto } from '@typings/promotion-settings.type';
 
@@ -32,6 +33,7 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
     const locale = useLocale();
     const [previewTab, setPreviewTab] = useState<'landing' | 'booking'>('landing');
     const [viewport, setViewport] = useState<'desktop' | 'mobile'>('desktop');
+    const promoColor = resolvePromotionColor(promotion.color);
 
     const isVisibleNow = useMemo(() => isPromotionVisible(promotion), [promotion]);
 
@@ -310,7 +312,12 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                         <div className="relative overflow-hidden rounded-[1.75rem] border border-stone-200/90 bg-white p-2 shadow-[0_20px_44px_-16px_rgba(58,48,39,0.22)]">
                                             {/* Corner Limited Ribbon with shine sweep */}
                                             <div className="pointer-events-none absolute right-0 top-0 z-20 h-28 w-28 overflow-hidden">
-                                                <div className="relative -right-8 top-6 w-38 rotate-45 overflow-hidden bg-linear-to-r from-red-700 via-red-600 to-red-700 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_4px_12px_rgba(185,28,28,0.35)]">
+                                                <div
+                                                    className="relative -right-8 top-6 w-38 rotate-45 overflow-hidden py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white"
+                                                    style={{
+                                                        background: `linear-gradient(to right, color-mix(in srgb, ${promoColor} 90%, black), ${promoColor}, color-mix(in srgb, ${promoColor} 90%, black))`,
+                                                    }}
+                                                >
                                                     <div className="absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
                                                     {t('promotion.limitedRibbon') || 'LIMITED'}
                                                 </div>
@@ -372,7 +379,14 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                             <span className="font-display text-xs font-bold uppercase tracking-wider text-stone-800">
                                                 August 2026
                                             </span>
-                                            <span className="font-sans text-[10px] font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
+                                            <span
+                                                className="font-sans text-[10px] font-semibold px-2 py-0.5 rounded-full border"
+                                                style={{
+                                                    color: promoColor,
+                                                    backgroundColor: `${promoColor}18`,
+                                                    borderColor: `${promoColor}40`,
+                                                }}
+                                            >
                                                 ✦ {t('promotion.previewCalendarSample')}
                                             </span>
                                         </div>
@@ -396,16 +410,27 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                                         className={cn(
                                                             'relative flex aspect-square flex-col items-center justify-center rounded-xl font-sans text-xs font-bold overflow-hidden transition-all',
                                                             isPromoDay
-                                                                ? 'text-rose-900 bg-rose-50/90 border border-rose-200 ring-1 ring-rose-200/70 shadow-2xs'
+                                                                ? 'text-stone-900'
                                                                 : 'text-stone-800 bg-stone-50/60',
                                                         )}
+                                                        style={
+                                                            isPromoDay
+                                                                ? {
+                                                                      backgroundColor: `${promoColor}18`,
+                                                                      border: `1px solid ${promoColor}50`,
+                                                                  }
+                                                                : undefined
+                                                        }
                                                     >
                                                         {isPromoDay ? (
                                                             <div className="pointer-events-none absolute inset-0 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/40 to-transparent" />
                                                         ) : null}
                                                         <span className="relative z-10">{day}</span>
                                                         {isPromoDay ? (
-                                                            <span className="relative z-10 font-sans text-[7px] font-extrabold uppercase text-rose-600">
+                                                            <span
+                                                                className="relative z-10 font-sans text-[7px] font-extrabold uppercase"
+                                                                style={{ color: promoColor }}
+                                                            >
                                                                 Promo
                                                             </span>
                                                         ) : isToday ? (
@@ -421,7 +446,10 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
 
                                     {/* Notice */}
                                     <div className="mt-4 rounded-xl bg-stone-50 border border-stone-200/80 p-2.5 text-[11px] text-stone-600">
-                                        <span className="font-semibold text-rose-700">
+                                        <span
+                                            className="font-semibold"
+                                            style={{ color: promoColor }}
+                                        >
                                             {t('promotion.previewHighlightNotice')}
                                         </span>
                                     </div>
@@ -434,23 +462,43 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                         viewport === 'mobile' ? 'w-full' : 'lg:col-span-6',
                                     )}
                                 >
-                                    {/* Top Red Bar */}
-                                    <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-red-600 via-rose-500 to-red-600" />
+                                    {/* Top Promo Accent Bar */}
+                                    <div
+                                        className="absolute top-0 left-0 right-0 h-1"
+                                        style={{
+                                            background: `linear-gradient(to right, color-mix(in srgb, ${promoColor} 80%, black), ${promoColor}, color-mix(in srgb, ${promoColor} 80%, black))`,
+                                        }}
+                                    />
 
                                     <div className="flex flex-col flex-1 justify-between">
                                         <div>
                                             {/* Header */}
                                             <div className="flex items-center justify-between gap-2">
-                                                <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-200/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-700">
-                                                    <Sparkles className="size-3 text-rose-500 animate-pulse" />
+                                                <span
+                                                    className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                                                    style={{
+                                                        backgroundColor: promoColor,
+                                                        borderColor: promoColor,
+                                                    }}
+                                                >
+                                                    <Sparkles className="size-3 animate-pulse" />
                                                     {t('promotion.limitedRibbon') || 'LIMITED'}
                                                 </span>
                                                 <div className="flex items-center gap-1.5">
                                                     <span className="relative flex h-2 w-2">
-                                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-                                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
+                                                        <span
+                                                            className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                                                            style={{ backgroundColor: promoColor }}
+                                                        />
+                                                        <span
+                                                            className="relative inline-flex h-2 w-2 rounded-full"
+                                                            style={{ backgroundColor: promoColor }}
+                                                        />
                                                     </span>
-                                                    <span className="font-sans text-[9px] font-bold uppercase tracking-wider text-rose-600">
+                                                    <span
+                                                        className="font-sans text-[9px] font-bold uppercase tracking-wider"
+                                                        style={{ color: promoColor }}
+                                                    >
                                                         {t('promotion.activePromoPill') ||
                                                             'Active Offer'}
                                                     </span>
@@ -506,7 +554,14 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                             </div>
                                             <ul className="space-y-2 text-left">
                                                 <li className="flex items-start gap-2 font-sans text-[10px] sm:text-[11px] text-stone-700">
-                                                    <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-rose-200/80 bg-rose-50 text-rose-600 shadow-2xs">
+                                                    <span
+                                                        className="flex size-5 shrink-0 items-center justify-center rounded-md border shadow-2xs"
+                                                        style={{
+                                                            backgroundColor: `${promoColor}18`,
+                                                            borderColor: `${promoColor}40`,
+                                                            color: promoColor,
+                                                        }}
+                                                    >
                                                         <Sparkles className="size-2.5" />
                                                     </span>
                                                     <span className="pt-0.5 leading-snug">
@@ -514,7 +569,7 @@ export function PromotionLivePreview({ promotion }: PromotionLivePreviewProps) {
                                                     </span>
                                                 </li>
                                                 <li className="flex items-start gap-2 font-sans text-[10px] sm:text-[11px] text-stone-700">
-                                                    <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-nude/40 bg-nude/15 text-stone-800 shadow-2xs">
+                                                    <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-stone-300/80 bg-white text-stone-800 shadow-2xs">
                                                         <Store className="size-2.5" />
                                                     </span>
                                                     <span className="pt-0.5 leading-snug">

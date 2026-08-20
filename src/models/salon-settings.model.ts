@@ -43,6 +43,7 @@ const PromotionSettingsSchema = new Schema(
         imagePublicId: { type: String, default: null },
         imageWidth: { type: Number, default: null },
         imageHeight: { type: Number, default: null },
+        color: { type: String, default: null },
     },
     { _id: false },
 );
