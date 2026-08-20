@@ -221,7 +221,30 @@ Demo stub (dev):
 
 ---
 
-## 8. Checklist khi thêm tính năng mới
+## 8. Bảo mật & Chống Reverse Engineering
+
+Dự án trang bị các lớp bảo mật bổ sung cho môi trường production:
+
+### 8.1 DevTools Guard (`src/guard/DevToolsGuard.tsx`)
+
+- **Dual-layer detection**:
+    - Layer 1 (`disable-devtool`): dùng nhiều phương pháp kiểm tra (regex, DOM id, debugger, performance probes).
+    - Layer 2 (custom guard): theo dõi khoảng cách kích thước cửa sổ (`outerWidth` - `innerWidth`), chặn các phím tắt phổ biến (`F12`, `Ctrl+Shift+I/J/C`, `Ctrl+U`), vô hiệu hóa menu chuột phải (`contextmenu`), và in cảnh báo lừa đảo trong console.
+- **Tối ưu Mobile**: Tự động bỏ qua active polling trên thiết bị cảm ứng để tránh false-positive từ thao tác vuốt/xoay màn hình tự nhiên của khách hàng.
+- **Cấu hình**: Bật qua `NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=true` (chỉ chạy ở `NODE_ENV=production`) và tùy chỉnh `NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL`.
+
+### 8.2 Response Obfuscation (`src/server/encryption.server.ts` & `src/utils/decryption.client.ts`)
+
+- **Mục tiêu**: Ngăn người dùng thông thường soi Network Tab để đọc raw JSON data từ các GET Route Handlers.
+- **Thuật toán**: AES-256-GCM với random 12-byte IV cho mỗi response.
+- **Bật/Tắt qua ENV**:
+    - Backend: `ENABLE_OBFUSCATION=1` + `OBFUSCATION_SECRET=...`
+    - Frontend: `NEXT_PUBLIC_ENABLE_OBFUSCATION=true` (key fragments trong `decryption.client.ts` ghép lại khớp với secret).
+- **Tính trong suốt**: Tự động mã hóa ở `apiSuccess()` và giải mã ở Axios interceptor (`apiClient`), hoàn toàn trong suốt đối với lớp TanStack Query (`@services/*`).
+
+---
+
+## 9. Checklist khi thêm tính năng mới
 
 1. **Đọc dữ liệu?** → `GET` Route Handler + hook trong `@services` gọi `apiClient`.
 2. **Ghi / sửa / xóa?** → Server Action + Zod + hook `@services` gọi action.
@@ -232,7 +255,7 @@ Demo stub (dev):
 
 ---
 
-## 9. Tài liệu liên quan
+## 10. Tài liệu liên quan
 
 | File                                               | Nội dung                                           |
 | -------------------------------------------------- | -------------------------------------------------- |

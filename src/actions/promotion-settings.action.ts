@@ -4,7 +4,7 @@ import { connectToDatabase } from '@libs/mongodb';
 import { requireAdmin } from '@guard/auth-guard';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializePromotionSettings } from '@mappers/promotion.mapper';
-import { deleteCloudinaryImage, uploadPromotionImage } from '@libs/cloudinary.server';
+import { deleteCloudinaryImage, uploadPromotionImage } from '@server/cloudinary.server';
 import { getSalonSettingsDocument } from '@server/schedule.server';
 import { SalonSettings } from '@models/salon-settings.model';
 import type { ApiResponse } from '@typings/api.type';

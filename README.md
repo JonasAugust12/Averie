@@ -56,6 +56,9 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
     - Clean, focused portal for technicians to check daily assigned appointments without admin privileges.
 - **Role-Based Authentication (RBAC)**:
     - Built with Auth.js (NextAuth v5 beta), bcrypt password hashing, and role-based route protection (`admin`, `staff`) enforced by Next.js Edge Middleware.
+- **DevTools Protection & Response Obfuscation**:
+    - Dual-layer DevTools detection (`DevToolsGuard.tsx`) combining `disable-devtool` library probes, window gap polling, shortcut blocking, and automatic redirect in production (`NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=true`).
+    - AES-256-GCM response obfuscation for GET Route Handlers (`ENABLE_OBFUSCATION=1`), encrypting server payloads on Node.js and decrypting transparently on the browser via Axios response interceptors (`NEXT_PUBLIC_ENABLE_OBFUSCATION=true`).
 - **Multi-Language Support**:
     - Seamless English (`en`) and Vietnamese (`vi`) internationalization powered by `next-intl` and server-action cookie synchronization.
 - **Automated API Documentation**:
@@ -355,12 +358,17 @@ CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 ```
 
-### Security & Production Guards
+### Security & Production Protection
 
 ```env
 PRODUCTION_BROWSER_SOURCE_MAPS=false
 NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=false
 NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+# Response Obfuscation (AES-256-GCM)
+ENABLE_OBFUSCATION=1
+OBFUSCATION_SECRET=your-44-character-random-secret
+NEXT_PUBLIC_ENABLE_OBFUSCATION=true
 ```
 
 ## CI/CD

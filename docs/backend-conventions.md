@@ -132,6 +132,15 @@ type ApiResponse<T> = {
 - Error: `apiError(msg, 400)` / `apiErrorResult(msg, 400)`.
 - HTTP status code = `body.status` (Route Handlers).
 
+### 4.1 Response Obfuscation (AES-256-GCM)
+
+Để ngăn người tò mò dùng Network / DevTools đọc trực tiếp JSON API response từ GET Route Handlers:
+
+- **Server-side**: Khi `ENABLE_OBFUSCATION=1`, `apiSuccess()` (`src/app/api/_lib/http.ts`) tự mã hóa payload `data` thành chuỗi base64 dạng `iv.authTag.ciphertext` thông qua `@server/encryption.server.ts` (dùng Node.js `crypto` AES-256-GCM + random 12-byte IV).
+- **Client-side**: Khi `NEXT_PUBLIC_ENABLE_OBFUSCATION=true`, `apiClient` (`src/libs/api-client.ts` - Axios interceptor) tự động giải mã `data` bằng Web Crypto API (`src/utils/decryption.client.ts`) trước khi dữ liệu đi vào TanStack Query hooks.
+- **Error responses**: `apiError()` **không bao giờ mã hóa** — giúp client đọc và hiển thị thông báo lỗi bình thường.
+- **Server Actions**: Không đi qua Route Handler HTTP response public nên không cần obfuscate.
+
 OpenAPI mô tả đúng envelope: `status`, `message`, `data` — xem `*ApiResponseSchema` trong `@openapi/schemas`.
 
 ---

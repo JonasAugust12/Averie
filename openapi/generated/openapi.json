@@ -1708,6 +1708,11 @@
                     "imageHeight": {
                         "type": "number",
                         "nullable": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Hex promotion accent color, e.g. #b91c1c. Null = default red."
                     }
                 },
                 "required": [
@@ -1721,7 +1726,8 @@
                     "imageUrl",
                     "imagePublicId",
                     "imageWidth",
-                    "imageHeight"
+                    "imageHeight",
+                    "color"
                 ]
             },
             "resetStaffPasswordSchema": {
@@ -2140,6 +2146,11 @@
                     },
                     "showBeforeStartDate": {
                         "type": "boolean"
+                    },
+                    "color": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Hex color e.g. #b91c1c; null = default red"
                     }
                 },
                 "required": [
@@ -2179,6 +2190,12 @@
                     "showBeforeStartDate": {
                         "type": "boolean",
                         "default": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "nullable": true,
+                        "default": null
                     }
                 },
                 "required": [
