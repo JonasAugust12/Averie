@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { encryptedStorage } from '@utils/encrypted-storage.client';
 
 interface PreferencesState {
     language: 'en' | 'vi';
@@ -24,7 +25,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
         }),
         {
             name: 'averie-preferences',
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => encryptedStorage),
         },
     ),
 );

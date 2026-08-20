@@ -242,6 +242,12 @@ Dự án trang bị các lớp bảo mật bổ sung cho môi trường producti
     - Frontend: `NEXT_PUBLIC_ENABLE_OBFUSCATION=true` (key fragments trong `decryption.client.ts` ghép lại khớp với secret).
 - **Tính trong suốt**: Tự động mã hóa ở `apiSuccess()` và giải mã ở Axios interceptor (`apiClient`), hoàn toàn trong suốt đối với lớp TanStack Query (`@services/*`).
 
+### 8.3 Encrypted Zustand Storage (`src/utils/encrypted-storage.client.ts`)
+
+- **Mục tiêu**: Mã hóa thông tin lưu tạm ở client (`localStorage`), đặc biệt là thông tin cá nhân khách hàng trong draft booking (`averie-booking-draft`) và cài đặt giao diện (`averie-preferences`).
+- **Cấu hình**: Bật qua `NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION=true`.
+- **Hoạt động**: Cung cấp custom `StateStorage` cho Zustand `persist` middleware. Khi bật, dữ liệu ghi vào `localStorage` được mã hóa AES-256-GCM qua Web Crypto API. Khi tắt hoặc khi đọc dữ liệu không mã hóa cũ, hệ thống tự động fallback an toàn.
+
 ---
 
 ## 9. Checklist khi thêm tính năng mới

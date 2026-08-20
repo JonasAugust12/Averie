@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { BookingCustomerInput } from '@validations/booking.schema';
+import { encryptedStorage } from '@utils/encrypted-storage.client';
 
 export type BookingStep = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -68,6 +69,7 @@ export const useBookingStore = create<BookingState>()(
         }),
         {
             name: 'averie-booking-draft',
+            storage: createJSONStorage(() => encryptedStorage),
             partialize: (state) => ({
                 customer: state.customer
                     ? {
