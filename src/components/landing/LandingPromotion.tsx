@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react';
 import Image from 'next/image';
-import { ArrowRight, CalendarCheck, Gem, Sparkles, Store } from 'lucide-react';
+// Note: CalendarCheck and Store can be re-imported when re-enabling promotion context list
+import { ArrowRight, Gem, Sparkles } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useSalonTranslations } from '@i18n/use-app-translations';
 import { usePromotionSettings } from '@services/promotion.service';
@@ -111,7 +112,7 @@ export function LandingPromotion() {
                     ) : null}
 
                     {/* Quiet Luxury Key Highlights */}
-                    <ul
+                    {/* <ul
                         className={cn(
                             'mt-5 md:mt-6 space-y-3 sm:space-y-3.5 text-left w-full max-w-lg',
                             landingStaticText,
@@ -141,10 +142,10 @@ export function LandingPromotion() {
                                 {t('landing.promotion.contextBooking')}
                             </span>
                         </li>
-                    </ul>
+                    </ul> */}
 
                     {/* Combined Urgency CTA and Validity Period centered on mobile */}
-                    <div className="mt-6 md:mt-8 flex w-full flex-col items-center gap-2.5 sm:w-auto sm:flex-row sm:items-center">
+                    <div className="mt-5 sm:mt-6 md:mt-7 flex w-full flex-col items-center gap-2.5 sm:w-auto sm:flex-row sm:items-center">
                         <PillLink
                             href="/book"
                             className="group relative flex h-11.5 sm:h-12.5 w-full max-w-xs items-center justify-center gap-2 overflow-hidden px-6 sm:px-8 text-xs sm:text-sm font-semibold tracking-wider shadow-[0_8px_20px_-4px_rgba(43,38,35,0.3)] transition-all duration-300 hover:shadow-[0_12px_28px_-6px_rgba(43,38,35,0.4)] sm:w-auto sm:max-w-none"
@@ -165,8 +166,14 @@ export function LandingPromotion() {
                                 )}
                             >
                                 <span className="relative flex h-2 w-2 shrink-0 sm:h-2.5 sm:w-2.5">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary02 opacity-75" />
-                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-primary02 sm:h-2.5 sm:w-2.5" />
+                                    <span
+                                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                                        style={{ backgroundColor: promoColor }}
+                                    />
+                                    <span
+                                        className="relative inline-flex h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5"
+                                        style={{ backgroundColor: promoColor }}
+                                    />
                                 </span>
                                 <div className="flex flex-row items-center gap-1.5 text-left sm:flex-col sm:items-start sm:gap-0">
                                     <span className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-nude sm:tracking-[0.16em]">
