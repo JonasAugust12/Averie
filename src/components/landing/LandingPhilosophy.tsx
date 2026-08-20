@@ -52,7 +52,7 @@ export function LandingPhilosophy() {
                     <div className={`absolute -top-3 left-4 z-20 ${landingStaticText}`}>
                         <div className="inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1.5 shadow-md backdrop-blur-md">
                             <span className="font-sans text-xs font-semibold text-third tracking-wide">
-                                The Averie Ritual
+                                {t('landing.philosophy.ritualBadge')}
                             </span>
                         </div>
                     </div>

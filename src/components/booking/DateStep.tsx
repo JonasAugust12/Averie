@@ -281,7 +281,7 @@ export function DateStep() {
                                                             : 'text-rose-500',
                                                     )}
                                                 />
-                                                <span className="truncate">PROMO</span>
+                                                <span className="truncate">{t('promoLabel')}</span>
                                             </span>
                                         ) : cell.isToday && !cell.disabled ? (
                                             <span
@@ -310,11 +310,7 @@ export function DateStep() {
                         {isPromoActive ? (
                             <div className="flex items-center gap-1.5">
                                 <span className="size-2.5 rounded-full bg-rose-500 ring-1 ring-rose-400" />
-                                <span className="font-bold text-rose-800">
-                                    {t('promoCompanion.promoDaysNotice')
-                                        ? 'Special Promo'
-                                        : 'Promo'}
-                                </span>
+                                <span className="font-bold text-rose-800">{t('promoTag')}</span>
                             </div>
                         ) : null}
                         <div className="flex items-center gap-1.5">

@@ -23,8 +23,7 @@ export function EmployeeStep() {
     return (
         <div className="w-full space-y-6 sm:space-y-10">
             <p className="font-sans text-[15px] sm:text-[16px] text-stone-700 font-medium leading-relaxed max-w-md">
-                Select your preferred technician, or let us match you with whoever is best suited to
-                your services.
+                {t('employeeStep.subtitle')}
             </p>
 
             <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-4 md:gap-5">

@@ -99,12 +99,13 @@ export function LandingHero() {
                                 className={`absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-full border border-white/80 bg-white/90 px-4 py-2 shadow-md backdrop-blur-md ${landingStaticText}`}
                             >
                                 <div className="flex items-center gap-2">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
                                     <span className="font-sans text-xs font-semibold tracking-wide text-third">
-                                        Sanctuary of Calm
+                                        {t('landing.hero.sanctuaryBadge')}
                                     </span>
                                 </div>
                                 <span className="font-sans text-[11px] font-medium text-nude uppercase tracking-wider">
-                                    Est. Cohasset
+                                    {t('landing.hero.established')}
                                 </span>
                             </div>
                         </div>

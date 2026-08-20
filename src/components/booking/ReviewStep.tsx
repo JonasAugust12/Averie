@@ -151,7 +151,7 @@ export function ReviewStep() {
             <div className="text-center sm:text-left">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200/70 mb-2">
                     <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Final Step • Ready to Reserve
+                    {t('review.finalStepTag')}
                 </div>
                 <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-primary">
                     {t('review.title') || 'Appointment Review'}
@@ -288,7 +288,7 @@ export function ReviewStep() {
                             </span>
                             <div className="min-w-0">
                                 <p className="font-sans text-[11px] text-stone-400 font-medium uppercase tracking-wider">
-                                    Full Name
+                                    {t('review.fullName')}
                                 </p>
                                 <p className="font-sans text-sm font-semibold text-primary truncate">
                                     {customer.firstName} {customer.lastName}
@@ -302,7 +302,7 @@ export function ReviewStep() {
                             </span>
                             <div className="min-w-0">
                                 <p className="font-sans text-[11px] text-stone-400 font-medium uppercase tracking-wider">
-                                    Phone Number
+                                    {t('review.phoneNumber')}
                                 </p>
                                 <p className="font-sans text-sm font-semibold text-primary truncate">
                                     {customer.phone}
@@ -317,7 +317,7 @@ export function ReviewStep() {
                                 </span>
                                 <div className="min-w-0">
                                     <p className="font-sans text-[11px] text-stone-400 font-medium uppercase tracking-wider">
-                                        Email Address
+                                        {t('review.emailAddress')}
                                     </p>
                                     <p className="font-sans text-sm font-semibold text-primary truncate">
                                         {customer.email}
@@ -362,7 +362,7 @@ export function ReviewStep() {
                         </span>
                         <div className="mt-1 flex items-center gap-1.5 text-xs text-stone-600 font-medium">
                             <Clock className="size-3.5 text-stone-400" />
-                            <span>{totalDuration} mins estimated time</span>
+                            <span>{t('review.estimatedTime', { min: totalDuration })}</span>
                         </div>
                     </div>
                     <div className="text-right">

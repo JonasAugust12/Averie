@@ -121,8 +121,12 @@ export function ServiceStep() {
                 <div className="pointer-events-none absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-primary01/10 blur-2xl" />
 
                 <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
+                    <div className="space-y-1.5">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-50/80 px-3 py-1 font-sans text-xs font-semibold text-emerald-800 shadow-2xs">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                            <span>{t('step1Notice')}</span>
+                        </div>
+                        <div className="flex items-center gap-2 pt-1">
                             <span className="flex size-6 sm:size-7 items-center justify-center rounded-full bg-stone-900 text-white shadow-2xs">
                                 <Gem className="size-3 sm:size-3.5 text-rose-300" />
                             </span>

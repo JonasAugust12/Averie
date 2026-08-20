@@ -16,9 +16,13 @@ import {
 } from '@components/landing/styles';
 
 const cards = [
-    { key: 'mani' as const, image: '/salon/manicure_pedicure.jpg', tag: 'Hands & Feet' },
-    { key: 'facial' as const, image: '/salon/dermalogica_facials.jpg', tag: 'Dermalogica' },
-    { key: 'wax' as const, image: '/salon/enhancements_waxing.jpg', tag: 'Gentle Care' },
+    { key: 'mani' as const, image: '/salon/manicure_pedicure.jpg', tagKey: 'handsFeet' as const },
+    {
+        key: 'facial' as const,
+        image: '/salon/dermalogica_facials.jpg',
+        tagKey: 'dermalogica' as const,
+    },
+    { key: 'wax' as const, image: '/salon/enhancements_waxing.jpg', tagKey: 'gentleCare' as const },
 ];
 
 export function LandingServices() {
@@ -61,7 +65,7 @@ export function LandingServices() {
                                 <div
                                     className={`absolute top-3 left-3 rounded-full border border-white/80 bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-third shadow-xs backdrop-blur-md ${landingStaticText}`}
                                 >
-                                    {card.tag}
+                                    {t(`landing.services.tags.${card.tagKey}`)}
                                 </div>
                             </div>
 
@@ -110,7 +114,7 @@ export function LandingServices() {
                                 <div
                                     className={`absolute top-3.5 left-3.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-third shadow-xs backdrop-blur-md ${landingStaticText}`}
                                 >
-                                    {card.tag}
+                                    {t(`landing.services.tags.${card.tagKey}`)}
                                 </div>
                             </div>
                             <div className="flex flex-1 flex-col pt-5">

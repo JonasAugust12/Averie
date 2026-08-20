@@ -113,7 +113,7 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
 
                     <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200/70 mb-2.5">
                         <CalendarCheck className="size-3.5" />
-                        Booking Request Received
+                        {t('confirmation.requestReceived')}
                     </div>
 
                     <h1 className="font-display text-2.5xl sm:text-3.5xl md:text-4xl font-bold tracking-tight text-primary">
@@ -303,7 +303,7 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
                                 </span>
                                 <div className="mt-0.5 flex items-center gap-1 text-[11px] text-stone-600 font-medium">
                                     <Clock className="size-3 text-stone-400" />
-                                    <span>{totalDuration} mins estimated time</span>
+                                    <span>{t('review.estimatedTime', { min: totalDuration })}</span>
                                 </div>
                             </div>
                             <div className="text-right">

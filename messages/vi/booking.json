@@ -136,11 +136,24 @@
             "quiet": "🤫 Không gian yên tĩnh"
         }
     },
+    "step1Notice": "Không cần thanh toán trước. Bạn sẽ thanh toán trực tiếp tại tiệm sau khi hoàn tất dịch vụ.",
+    "employeeStep": {
+        "subtitle": "Chọn kỹ thuật viên bạn yêu thích, hoặc để chúng tôi xếp người phù hợp nhất với dịch vụ của bạn."
+    },
+    "promoLabel": "ƯU ĐÃI",
+    "promoTag": "Ưu đãi đặc biệt",
     "review": {
         "title": "Xem lại lịch hẹn",
         "subtitle": "Vui lòng kiểm tra lại thông tin chi tiết trước khi xác nhận đặt lịch.",
         "confirmTitle": "Xác nhận đặt lịch hẹn?",
         "confirmMessage": "Bạn có chắc chắn muốn gửi yêu cầu đặt lịch hẹn này không?",
+        "finalStepTag": "Bước cuối • Sẵn sàng đặt lịch",
+        "submitting": "Đang gửi yêu cầu đặt lịch...",
+        "submittingHint": "Vui lòng chờ trong giây lát để hệ thống xác nhận lịch hẹn của bạn.",
+        "estimatedTime": "Thời gian dự kiến {min} phút",
+        "fullName": "Họ và tên",
+        "phoneNumber": "Số điện thoại",
+        "emailAddress": "Địa chỉ email",
         "service": "Dịch vụ đã chọn",
         "employee": "Kỹ thuật viên",
         "date": "Ngày",
@@ -157,6 +170,8 @@
     "confirmation": {
         "title": "Yêu cầu đặt lịch của bạn đã được gửi thành công.",
         "subtitle": "Chỗ của bạn đã được giữ. Chi tiết lịch hẹn được hiển thị bên dưới.",
+        "requestReceived": "Đã nhận yêu cầu đặt lịch",
+        "estimatedTime": "Thời gian dự kiến {min} phút",
         "reference": "Mã đặt lịch",
         "copyCode": "Sao chép mã",
         "copied": "Đã chép!",

@@ -43,7 +43,7 @@ export function LandingTestimonials() {
             <div className="relative z-10">
                 <FadeIn className="mb-8 text-center md:mb-10">
                     <div className={landingEyebrow}>
-                        <span>Client Love</span>
+                        <span>{t('landing.testimonials.eyebrow')}</span>
                     </div>
                     <h2 className={`mt-3 ${landingTitle}`}>{t('landing.testimonials.title')}</h2>
                 </FadeIn>
@@ -83,7 +83,7 @@ export function LandingTestimonials() {
                                             {t(`landing.testimonials.reviews.${key}.author`)}
                                         </p>
                                         <p className="font-sans text-[11px] text-muted">
-                                            Averie Member
+                                            {t('landing.testimonials.memberTag')}
                                         </p>
                                     </div>
                                 </div>

@@ -21,10 +21,12 @@
             "eyebrow": "Nail • Facial • Làm đẹp",
             "title": "Averie",
             "body": "Vẻ đẹp tinh tế. Được chăm chút kỹ lưỡng. Trải nghiệm không gian yên tĩnh và chăm sóc tỉ mỉ tại Cohasset.",
-            "cta": "Đặt lịch hẹn"
+            "cta": "Đặt lịch hẹn",
+            "sanctuaryBadge": "Không gian yên bình",
+            "established": "Tại Cohasset"
         },
         "promotion": {
-            "eyebrow": "Đặc quyền ưu đãi",
+            "eyebrow": "Khuyến mãi",
             "fallbackTitle": "Ưu đãi dịch vụ mùa này",
             "contextOffer": "Đặc quyền áp dụng cho các dịch vụ chăm sóc cao cấp tại salon.",
             "contextLocation": "Chỉ áp dụng khi thanh toán trực tiếp tại cửa hàng.",
@@ -41,6 +43,7 @@
         },
         "philosophy": {
             "eyebrow": "Triết lý của chúng tôi",
+            "ritualBadge": "Trải nghiệm Averie",
             "title": "Về Averie",
             "body": "Tại Averie, chúng tôi tạo nên một không gian ấm áp, nơi vẻ đẹp, sự thư giãn và sự chăm sóc tận tâm hòa quyện để mang đến cho bạn những trải nghiệm trọn vẹn. Ngay từ khi bước chân vào, chúng tôi mong muốn bạn cảm nhận được sự thư thái và chăm sóc chu đáo trong từng khoảnh khắc. Mỗi chi tiết từ không gian thân thiện, dễ chịu đến chất lượng dịch vụ đều được chúng tôi chăm chút tỉ mỉ, nhằm mang đến một trải nghiệm cá nhân hóa, thoải mái và đáng nhớ.",
             "cta": "Khám phá"
@@ -50,6 +53,11 @@
             "title": "Dịch vụ của chúng tôi",
             "subtitle": "Liệu trình cá nhân hoá cho kết quả bền và thư giãn thuần khiết.",
             "book": "Đặt dịch vụ →",
+            "tags": {
+                "handsFeet": "Tay & Chân",
+                "dermalogica": "Dermalogica",
+                "gentleCare": "Chăm sóc dịu nhẹ"
+            },
             "items": {
                 "mani": {
                     "title": "Manicure & Pedicure",
@@ -107,6 +115,8 @@
             "tools": "Dụng cụ chăm sóc móng"
         },
         "testimonials": {
+            "eyebrow": "Đánh giá từ khách hàng",
+            "memberTag": "Thành viên Averie",
             "title": "Khách hàng nói gì",
             "reviews": {
                 "rev1": {

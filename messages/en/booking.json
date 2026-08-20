@@ -136,11 +136,24 @@
             "quiet": "🤫 Quiet appointment"
         }
     },
+    "step1Notice": "No upfront payment required. You'll pay at the salon upon completion.",
+    "employeeStep": {
+        "subtitle": "Select your preferred technician, or let us match you with whoever is best suited to your services."
+    },
+    "promoLabel": "PROMO",
+    "promoTag": "Special Promo",
     "review": {
         "title": "Appointment Review",
         "subtitle": "Please take a moment to review your appointment details before confirming.",
         "confirmTitle": "Confirm your appointment?",
         "confirmMessage": "Are you sure you want to request this appointment?",
+        "finalStepTag": "Final Step • Ready to Reserve",
+        "submitting": "Securing your appointment...",
+        "submittingHint": "Please wait a moment while we confirm your reservation.",
+        "estimatedTime": "{min} mins estimated time",
+        "fullName": "Full Name",
+        "phoneNumber": "Phone Number",
+        "emailAddress": "Email Address",
         "service": "Selected Services",
         "employee": "Technician",
         "date": "Date",
@@ -157,6 +170,8 @@
     "confirmation": {
         "title": "Your appointment has been requested successfully.",
         "subtitle": "We've reserved your place. A confirmation summary is detailed below.",
+        "requestReceived": "Booking Request Received",
+        "estimatedTime": "{min} mins estimated time",
         "reference": "Booking Reference",
         "copyCode": "Copy Code",
         "copied": "Copied!",

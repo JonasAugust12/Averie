@@ -21,10 +21,12 @@
             "eyebrow": "Nails • Facials • Beauty",
             "title": "Averie",
             "body": "Refined beauty. Thoughtfully crafted. Experience a sanctuary of calm and meticulous care in Cohasset.",
-            "cta": "Book an Appointment"
+            "cta": "Book an Appointment",
+            "sanctuaryBadge": "Sanctuary of Calm",
+            "established": "Est. Cohasset"
         },
         "promotion": {
-            "eyebrow": "Exclusive Privilege",
+            "eyebrow": "Promotion",
             "fallbackTitle": "Seasonal Salon Promotion",
             "contextOffer": "Special privilege applicable to signature salon treatments.",
             "contextLocation": "Applicable exclusively for direct in-store payment at checkout.",
@@ -41,6 +43,7 @@
         },
         "philosophy": {
             "eyebrow": "Our Philosophy",
+            "ritualBadge": "The Averie Ritual",
             "title": "About Us",
             "body": "At Averie, we’ve created a welcoming space where beauty, comfort, and thoughtful care come together. From the moment you arrive, our goal is to help you feel relaxed and well cared for. Every detail, from our inviting atmosphere to the quality of our services, is thoughtfully considered to make your visit feel personal, comfortable, and enjoyable.",
             "cta": "Explore"
@@ -50,6 +53,11 @@
             "title": "Our services",
             "subtitle": "Tailored treatments designed for lasting results and pure relaxation.",
             "book": "Book Service",
+            "tags": {
+                "handsFeet": "Hands & Feet",
+                "dermalogica": "Dermalogica",
+                "gentleCare": "Gentle Care"
+            },
             "items": {
                 "mani": {
                     "title": "Manicure & Pedicure",
@@ -107,6 +115,8 @@
             "tools": "Nail care tools"
         },
         "testimonials": {
+            "eyebrow": "Client Love",
+            "memberTag": "Averie Member",
             "title": "What our clients say",
             "reviews": {
                 "rev1": {
