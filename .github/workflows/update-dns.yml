@@ -1,0 +1,35 @@
+name: update-dns
+
+on:
+    workflow_dispatch:
+        inputs:
+            domain_name:
+                description: 'Domain name on Name.com'
+                required: false
+                default: 'averienails.com'
+            vercel_a_record_ip:
+                description: 'Vercel A record IP for root domain (@)'
+                required: false
+                default: '216.198.79.1'
+            vercel_www_cname:
+                description: 'Vercel CNAME target for www'
+                required: false
+                default: 'e757ec4ce3482132.vercel-dns-017.com'
+
+jobs:
+    update-dns:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Update DNS on Name.com
+              run: |
+                  pip install requests
+                  python scripts/update_vercel_dns.py
+              env:
+                  NAME_COM_USERNAME: ${{ secrets.NAME_COM_USERNAME }}
+                  NAME_COM_TOKEN: ${{ secrets.NAME_COM_TOKEN }}
+                  DOMAIN_NAME: ${{ inputs.domain_name }}
+                  VERCEL_A_RECORD_IP: ${{ inputs.vercel_a_record_ip }}
+                  VERCEL_WWW_CNAME: ${{ inputs.vercel_www_cname }}
