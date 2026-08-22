@@ -460,6 +460,50 @@ Two design decisions are worth knowing before changing anything there:
 Full setup walkthrough, including every secret and variable the pipeline reads:
 [docs/deployment-bizfly.md](docs/deployment-bizfly.md).
 
+### Bizfly logs & debugging
+
+Start with the failing **GitHub Actions** run (`Actions → deploy`). The deploy
+job already prints Ansible output; if the container healthcheck fails, the playbook
+dumps the **last 80 lines** of `averie-web` into the workflow log before any
+rollback attempt.
+
+When you need the server directly, SSH as **`root`** (Bizfly default — see
+[docs/deployment-bizfly.md](docs/deployment-bizfly.md)):
+
+```bash
+ssh -i ~/.ssh/averie root@<SERVER_HOST>
+```
+
+| What you need               | Where to look                                              |
+| --------------------------- | ---------------------------------------------------------- |
+| Stack status                | `sudo docker compose -f /opt/averie/docker-compose.yml ps` |
+| App (Next.js)               | `sudo docker logs -f averie-web`                           |
+| Nginx reverse proxy         | `sudo docker logs -f averie-nginx`                         |
+| Runtime secrets (0600)      | `/opt/averie/app.env` — rendered on each deploy            |
+| Nginx config                | `/opt/averie/nginx/nginx.conf`                             |
+| TLS renewal                 | `/var/log/averie-certbot.log`                              |
+| First-boot SSH / cloud-init | `sudo tail -100 /var/log/cloud-init-output.log`            |
+
+Common quick checks:
+
+```bash
+# Health from inside the server (MongoDB must be reachable)
+curl -s -H "Host: bizfly.averienails.com" http://127.0.0.1/api/health | jq
+
+# Follow both containers
+sudo docker compose -f /opt/averie/docker-compose.yml logs -f averie-web averie-nginx
+```
+
+Typical failures:
+
+- **`Permission denied (publickey)`** on deploy → wrong `SERVER_USER` (must be
+  `root` on Bizfly) or stale SSH key; see deployment-bizfly.md troubleshooting.
+- **Healthcheck / `bad auth`** → Atlas credentials or missing `/averie` in
+  `MONGODB_URI`; run `pnpm db:check` locally with the same URI as the GitHub
+  secret.
+- **502 from Nginx** → `averie-web` crashed or not on `averie_network`; check
+  `docker logs averie-web`.
+
 ## Related Documentation
 
 For deeper details on architectural guidelines, design system tokens, and agent workflows, see:

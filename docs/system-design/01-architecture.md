@@ -131,8 +131,14 @@ src/
 
 ## 7. Deployment & env
 
+**Vercel (mặc định):** serverless — biến môi trường theo [`.env.example`](../../.env.example).
+
+**Bizfly Cloud (self-hosted):** một server, image từ GitHub Actions, Ansible cấu hình host.
+Log và debug: [README — Bizfly logs](../../README.md#bizfly-logs--debugging),
+[deployment-bizfly.md](../deployment-bizfly.md).
+
 ```env
-MONGODB_URI=...
+MONGODB_URI=mongodb+srv://.../averie?...   # bắt buộc có /averie
 AUTH_SECRET=...              # hoặc NEXTAUTH_SECRET
 AUTH_URL=http://localhost:3000
 NEXT_PUBLIC_APP_URL=http://localhost:3000

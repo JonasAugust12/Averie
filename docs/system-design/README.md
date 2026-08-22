@@ -1,6 +1,6 @@
 # Averie — System Design
 
-Tài liệu thiết kế hệ thống trước khi triển khai qua OpenSpec + Superpowers
+Tài liệu thiết kế hệ thống trước khi triển khai qua OpenSpec + Superpowers.
 
 ## Mục đích
 
@@ -83,5 +83,24 @@ Khi sẵn sàng `/opsx-propose`, đề xuất dùng một trong các tên sau:
 ## Liên quan
 
 - [docs/overview.md](../overview.md) — convention dự án
+- [docs/deployment-bizfly.md](../deployment-bizfly.md) — triển khai Bizfly Cloud
+- [README.md — Bizfly logs & debugging](../../README.md#bizfly-logs--debugging) — xem log trên server
 - [openspec/config.yaml](../../openspec/config.yaml) — context AI + backend rules
 - UI reference: `docs/stitch/` (Stitch mockups)
+
+## Bizfly — logs & vận hành
+
+Production self-hosted chạy trên **một server Bizfly** (Docker + Nginx). Log và debug:
+
+| Cần xem                  | Lệnh / vị trí                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| Deploy CI                | GitHub **Actions → deploy** (Ansible + 80 dòng log container khi healthcheck fail) |
+| SSH                      | `ssh -i ~/.ssh/averie root@<SERVER_HOST>` — user mặc định Bizfly là **root**       |
+| Trạng thái stack         | `sudo docker compose -f /opt/averie/docker-compose.yml ps`                         |
+| App Next.js              | `sudo docker logs -f averie-web`                                                   |
+| Nginx                    | `sudo docker logs -f averie-nginx`                                                 |
+| Secrets runtime          | `/opt/averie/app.env` (render mỗi lần deploy)                                      |
+| cloud-init (SSH lần đầu) | `sudo tail -100 /var/log/cloud-init-output.log`                                    |
+| Health nội bộ            | `curl -s -H "Host: bizfly.averienails.com" http://127.0.0.1/api/health`            |
+
+Chi tiết setup, secrets và troubleshooting: [deployment-bizfly.md](../deployment-bizfly.md).
