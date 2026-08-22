@@ -22,6 +22,7 @@ This repository contains the interactive customer booking engine, real-time staf
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-0B1220?style=for-the-badge&logo=cloudinary&logoColor=3448C5)
 ![Scalar](https://img.shields.io/badge/Scalar-0F172A?style=for-the-badge&logo=swagger&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Bizfly Cloud](https://img.shields.io/badge/Bizfly_Cloud-0066CC?style=for-the-badge&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-0F172A?style=for-the-badge&logo=githubactions&logoColor=2088FF)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Terraform](https://img.shields.io/badge/Terraform-844FBA?style=for-the-badge&logo=terraform&logoColor=white)
