@@ -85,7 +85,10 @@ jobs:
                   build-args: |
                       NEXT_PUBLIC_APP_URL=${{ vars.NEXT_PUBLIC_APP_URL || format('https://{0}', vars.APP_VHOST || 'bizfly.averienails.com') }}
                       NEXT_PUBLIC_ROUTE_LOADING_MIN_MS=${{ vars.NEXT_PUBLIC_ROUTE_LOADING_MIN_MS || '1200' }}
-                      NEXT_PUBLIC_ENABLE_OBFUSCATION=${{ vars.NEXT_PUBLIC_ENABLE_OBFUSCATION || 'false' }}
+                      # Derived from ENABLE_OBFUSCATION, never set on its own: the app
+                      # requires the client and server flags to agree, and two
+                      # independent switches for one feature is a trap.
+                      NEXT_PUBLIC_ENABLE_OBFUSCATION=${{ (vars.ENABLE_OBFUSCATION == '1' || vars.ENABLE_OBFUSCATION == 'true') && 'true' || 'false' }}
                       NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION=${{ vars.NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION || 'false' }}
                       NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD=${{ vars.NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD || 'false' }}
                       NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL=${{ vars.NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL }}

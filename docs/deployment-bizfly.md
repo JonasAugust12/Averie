@@ -9,6 +9,60 @@ server, one image repository, one hostname (`bizfly.averienails.com` by default)
 
 ---
 
+## 0. Setup checklist
+
+Follow this order — each step produces a value the next one needs. Later
+sections explain the why; this is the what.
+
+**On Bizfly** (`manage.bizflycloud.vn`)
+
+- [ ] **Tài khoản → Bảo mật** → create an **Application Credential**. Keep the ID
+      and secret.
+- [ ] Same page → create a **Simple Storage access key / secret key** pair.
+- [ ] Note the **Project ID** from the project selector. It is a 32-hex tenant
+      id and doubles as the container registry namespace — but it is _not_ the
+      application credential id, which looks identical.
+- [ ] **Simple Storage → Tạo bucket** → `averie-terraform-state`, location `hcm`,
+      ACL private, storage class **STANDARD**. Region and storage class cannot be
+      changed later (§4.2).
+- [ ] **Container Registry → Tạo repository** → `averie-web`, private.
+- [ ] Open that repository, copy the **push command**, and keep the **namespace**
+      — the 32-hex segment between the host and the repository name.
+- [ ] **Container Registry → Token** → create a pull/push token.
+
+**On your machine** (the only local command in the whole process)
+
+- [ ] `ssh-keygen -t ed25519 -C "averie-deploy" -f ~/.ssh/averie -N ""`
+
+**On MongoDB Atlas**
+
+- [ ] Nothing yet — you need the server IP first (step below).
+
+**On GitHub** — `Settings → Secrets and variables → Actions`
+
+- [ ] Add every secret in §6.
+- [ ] Add every required variable in §6. Skip `SERVER_HOST`; `infra-create`
+      writes it.
+- [ ] Create the `GH_ADMIN_PAT` fine-grained token: this repository only,
+      **Variables: read and write** + **Actions: read and write**.
+
+**Run it**
+
+- [ ] `Actions → infra-create → Run workflow`, `run_deploy` ticked.
+- [ ] The moment the summary prints an IP: Atlas → **Network Access** → add it.
+      Without this `/api/health` returns 503, the container never turns healthy,
+      and the first deploy fails with no previous image to roll back to.
+- [ ] If that first deploy failed on the healthcheck, run `deploy` again now that
+      Atlas allows the address.
+- [ ] Open `http://bizfly.averienails.com`.
+- [ ] `Actions → infra-tls → Run workflow` with an email address to switch to
+      HTTPS.
+
+From then on: push to `main` to ship, and use the `infra-*` buttons (§9) for the
+server lifecycle.
+
+---
+
 ## 1. Architecture
 
 ```
@@ -75,7 +129,7 @@ billing-plan concepts directly, so that is what is used.
 | Path                                      | Purpose                                         |
 | ----------------------------------------- | ----------------------------------------------- |
 | `Dockerfile`                              | Multi-stage build, Next.js standalone output    |
-| `terraform/`                              | Server, firewall, SSH key, registry repository  |
+| `terraform/`                              | Server, firewall, SSH key                       |
 | `ansible/`                                | Docker install, Nginx + app stack, TLS          |
 | `.github/actions/terraform-setup/`        | Shared Terraform init for the infra workflows   |
 | `.github/actions/ansible-setup/`          | Shared Ansible + SSH + inventory setup          |
@@ -250,7 +304,6 @@ has no permission scope for repository variables.
 | `ENABLE_API_DOCS`                       | `0`                                | no       |
 | `NEXT_PUBLIC_APP_URL`                   | `https://bizfly.averienails.com`   | no       |
 | `NEXT_PUBLIC_ROUTE_LOADING_MIN_MS`      | `1200`                             | no       |
-| `NEXT_PUBLIC_ENABLE_OBFUSCATION`        | `false`                            | no       |
 | `NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION` | `false`                            | no       |
 | `NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD`     | `false`                            | no       |
 | `NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL`     | a URL                              | no       |
@@ -283,32 +336,37 @@ variable that is missing.
 Every variable the source actually reads is wired. `NEXT_RUNTIME` is set by
 Next.js itself, and `NODE_ENV` / `PORT` / `HOSTNAME` are set by the image.
 
-| Variable                                | Where it is set               |
-| --------------------------------------- | ----------------------------- |
-| `NEXT_PUBLIC_APP_URL`                   | build arg                     |
-| `NEXT_PUBLIC_ROUTE_LOADING_MIN_MS`      | build arg                     |
-| `NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION` | build arg                     |
-| `NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD`     | build arg                     |
-| `NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL`     | build arg                     |
-| `PRODUCTION_BROWSER_SOURCE_MAPS`        | build arg                     |
-| `NEXT_PUBLIC_ENABLE_OBFUSCATION`        | build arg **and** `app.env`   |
-| `CLOUDINARY_CLOUD_NAME`                 | build arg **and** `app.env`   |
-| `AUTH_SECRET`                           | `app.env`                     |
-| `NEXTAUTH_SECRET`                       | `app.env`, only when provided |
-| `AUTH_SESSION_MAX_AGE_SECONDS`          | `app.env`                     |
-| `MONGODB_URI`                           | `app.env`                     |
-| `MONGODB_DEBUG`                         | `app.env`                     |
-| `MONGODB_DNS_SERVERS`                   | `app.env`, only when provided |
-| `ENABLE_OBFUSCATION`                    | `app.env`                     |
-| `OBFUSCATION_SECRET`                    | `app.env`                     |
-| `CLOUDINARY_API_KEY` / `_API_SECRET`    | `app.env`                     |
-| `SALON_TIMEZONE`                        | `app.env`                     |
-| `ENABLE_API_DOCS`                       | `app.env`                     |
+| Variable                                | Where it is set                   |
+| --------------------------------------- | --------------------------------- |
+| `NEXT_PUBLIC_APP_URL`                   | build arg                         |
+| `NEXT_PUBLIC_ROUTE_LOADING_MIN_MS`      | build arg                         |
+| `NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION` | build arg                         |
+| `NEXT_PUBLIC_ENABLE_DEVTOOLS_GUARD`     | build arg                         |
+| `NEXT_PUBLIC_DEVTOOLS_REDIRECT_URL`     | build arg                         |
+| `PRODUCTION_BROWSER_SOURCE_MAPS`        | build arg                         |
+| `NEXT_PUBLIC_ENABLE_OBFUSCATION`        | derived from `ENABLE_OBFUSCATION` |
+| `CLOUDINARY_CLOUD_NAME`                 | build arg **and** `app.env`       |
+| `AUTH_SECRET`                           | `app.env`                         |
+| `NEXTAUTH_SECRET`                       | `app.env`, only when provided     |
+| `AUTH_SESSION_MAX_AGE_SECONDS`          | `app.env`                         |
+| `MONGODB_URI`                           | `app.env`                         |
+| `MONGODB_DEBUG`                         | `app.env`                         |
+| `MONGODB_DNS_SERVERS`                   | `app.env`, only when provided     |
+| `ENABLE_OBFUSCATION`                    | `app.env`                         |
+| `OBFUSCATION_SECRET`                    | `app.env`                         |
+| `CLOUDINARY_API_KEY` / `_API_SECRET`    | `app.env`                         |
+| `SALON_TIMEZONE`                        | `app.env`                         |
+| `ENABLE_API_DOCS`                       | `app.env`                         |
 
-`NEXT_PUBLIC_ENABLE_OBFUSCATION` and `CLOUDINARY_CLOUD_NAME` appear twice
-because the client bundle needs them at build time while server code reads them
-at runtime. `AUTH_URL` and `AUTH_TRUST_HOST` are derived from `APP_VHOST` and
-`ENABLE_TLS`, so there is nothing to configure for them.
+`CLOUDINARY_CLOUD_NAME` appears twice
+because the client bundle needs it at build time while server code reads it at
+runtime.
+
+Three values are derived, not configured: `AUTH_URL` and `AUTH_TRUST_HOST` come
+from `APP_VHOST` and `ENABLE_TLS`, and `NEXT_PUBLIC_ENABLE_OBFUSCATION` comes
+from `ENABLE_OBFUSCATION`. The app requires the client and server obfuscation
+flags to agree, so exposing two switches for one feature would only let them
+drift apart.
 
 **Not needed on the server:** `MONGODB_USERNAME`, `MONGODB_PASSWORD` (only
 `scripts/diagnose-mongodb.mjs` reads them) and `NEXTAUTH_URL` (nothing reads it —
