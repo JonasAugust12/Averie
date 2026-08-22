@@ -99,6 +99,15 @@ resource "bizflycloud_server" "web" {
     # The image is pinned by ID; a Bizfly image refresh would otherwise force a
     # rebuild of the whole server. Recreate deliberately instead.
     ignore_changes = [os_id]
+
+    # cloud-init writes authorized_keys once, at first boot. Rotating
+    # ssh_public_key replaces the key resource but leaves a running server
+    # holding the old key forever — and `ssh_key` here is only the key's *name*,
+    # which does not change, so Terraform would otherwise report no diff at all
+    # and the deploy would fail with "Permission denied (publickey)".
+    # A server is therefore tied to the key it booted with: rotating the key
+    # rebuilds it. The app keeps no local state, so this is cheap.
+    replace_triggered_by = [bizflycloud_ssh_key.deploy]
   }
 }
 

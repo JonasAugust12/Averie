@@ -459,6 +459,29 @@ next inherits your hostname.
 
 ---
 
+### Rotating the deploy key
+
+`SSH_PUBLIC_KEY` and the `SSH_PRIVATE_KEY` secret must always be halves of the
+same pair, and changing them **rebuilds the server**.
+
+cloud-init writes `authorized_keys` once, at first boot. Nothing — not Terraform,
+not the Bizfly console — re-keys a machine that is already running. The Terraform
+config models that honestly with `replace_triggered_by` on the key resource, so a
+rotation destroys and recreates the server rather than leaving it unreachable
+with a stale key. The app holds no local state, so the cost is a few minutes and
+a new IP (which `infra-create` writes back into `SERVER_HOST` and DNS).
+
+To rotate:
+
+```bash
+ssh-keygen -t ed25519 -C "averie-deploy" -f ~/.ssh/averie -N ""
+```
+
+Update **both** halves in GitHub — the `SSH_PUBLIC_KEY` variable from
+`~/.ssh/averie.pub` and the `SSH_PRIVATE_KEY` secret from `~/.ssh/averie` — then
+run `infra-create`. Updating only one is the most common way to lock yourself
+out; `deploy` catches it before connecting and prints both fingerprints.
+
 ### infra-tls
 
 Runs once. It verifies that `APP_VHOST` resolves to `SERVER_HOST` and that the
