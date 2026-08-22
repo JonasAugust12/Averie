@@ -137,14 +137,12 @@ variable "ssh_allowed_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "manage_container_registry" {
-  description = "Create the Bizfly Container Registry repository from Terraform. Set false if it already exists."
-  type        = bool
-  default     = true
-}
-
 variable "container_registry_name" {
-  description = "Repository name inside Bizfly Container Registry."
+  description = <<-EOT
+    Repository name inside Bizfly Container Registry. Reported as an output for
+    reference only — the repository is created by hand in the console because
+    the provider's bizflycloud_container_registry resource panics (see main.tf).
+  EOT
   type        = string
   default     = "averie-web"
 }

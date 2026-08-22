@@ -103,11 +103,16 @@ resource "bizflycloud_server" "web" {
 }
 
 # -----------------------------------------------------------------------------
-# Container Registry repository the pipeline pushes into.
+# Container Registry
+#
+# NOT managed here, deliberately. `bizflycloud_container_registry` is broken in
+# provider v0.3.9 (the latest): all four CRUD functions assert
+# `m.(*gobizfly.Client)` while the provider's ConfigureFunc returns
+# `*CombinedConfig`, so the plugin panics the moment the resource is applied.
+# Every other resource in this file uses the correct
+# `meta.(*CombinedConfig).gobizflyClient()`.
+#
+# Create the repository once in the console instead — you have to open it anyway
+# to copy the namespace out of the push command and to mint a pull token.
+# Re-check this when a provider release after v0.3.9 appears.
 # -----------------------------------------------------------------------------
-resource "bizflycloud_container_registry" "app" {
-  count = var.manage_container_registry ? 1 : 0
-
-  name   = var.container_registry_name
-  public = false
-}

@@ -126,7 +126,12 @@ top of that.
 ### 4.3 Container Registry
 
 `Container Registry → Tạo repository` → name `averie-web`, private.
-(Or let Terraform create it: `manage_container_registry = true`.)
+
+Do this **before** running `infra-create`. Terraform does not manage the
+repository: `bizflycloud_container_registry` is broken in provider v0.3.9 (the
+latest) — all four of its CRUD functions assert the wrong type for the provider
+client, so the plugin panics on apply. Creating it by hand costs one click and
+you have to open this page anyway for the namespace and the token.
 
 Open the repository and copy the **push command**. It looks like:
 

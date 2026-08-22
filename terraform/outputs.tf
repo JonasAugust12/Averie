@@ -33,6 +33,6 @@ output "ansible_inventory_line" {
 }
 
 output "container_registry_name" {
-  description = "Container Registry repository used by the pipeline."
-  value       = var.manage_container_registry ? bizflycloud_container_registry.app[0].name : var.container_registry_name
+  description = "Container Registry repository the pipeline pushes into (created in the console, not by Terraform)."
+  value       = var.container_registry_name
 }
