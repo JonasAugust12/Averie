@@ -2,8 +2,9 @@
 
 [![Lint](https://github.com/JonasAugust12/Averie/actions/workflows/lint.yml/badge.svg)](https://github.com/JonasAugust12/Averie/actions/workflows/lint.yml)
 [![Commit Lint](https://github.com/JonasAugust12/Averie/actions/workflows/commit-lint.yml/badge.svg)](https://github.com/JonasAugust12/Averie/actions/workflows/commit-lint.yml)
+[![Deploy](https://github.com/JonasAugust12/Averie/actions/workflows/deploy.yml/badge.svg)](https://github.com/JonasAugust12/Averie/actions/workflows/deploy.yml)
 
-Averie is a quiet-luxury nail salon and beauty care platform built on Next.js App Router. It is designed as a unified fullstack monolith where both the rich client experience (customer booking, staff schedule calendar, and administrative control center) and the serverless backend API / Server Actions coexist within a single cohesive project ready for Vercel deployment.
+Averie is a quiet-luxury nail salon and beauty care platform built on Next.js App Router. It is designed as a unified fullstack monolith where both the rich client experience (customer booking, staff schedule calendar, and administrative control center) and the serverless backend API / Server Actions coexist within a single cohesive project. It deploys either to Vercel or, self-hosted, to a single Bizfly Cloud server driven entirely from GitHub Actions.
 
 This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
 
@@ -22,6 +23,10 @@ This repository contains the interactive customer booking engine, real-time staf
 ![Scalar](https://img.shields.io/badge/Scalar-0F172A?style=for-the-badge&logo=swagger&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-0F172A?style=for-the-badge&logo=githubactions&logoColor=2088FF)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-844FBA?style=for-the-badge&logo=terraform&logoColor=white)
+![Ansible](https://img.shields.io/badge/Ansible-1A1918?style=for-the-badge&logo=ansible&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
 ## What Averie Is
 
@@ -143,7 +148,10 @@ All Route Handlers and Server Actions return a standardized response shape:
 - **Package Manager**: pnpm 10
 - **Code Quality**: ESLint 9 (Flat Config), Prettier
 - **Git Hooks**: Husky, lint-staged, Commitlint (Conventional Commits)
-- **CI/CD**: GitHub Actions (`lint.yml`, `commit-lint.yml`)
+- **CI/CD**: GitHub Actions — lint, build, deploy, and the full server lifecycle
+- **Container**: Multi-stage Dockerfile producing a Next.js standalone runtime
+- **Infrastructure**: Terraform (Bizfly provider) for the server, Ansible for host configuration
+- **Edge**: Nginx reverse proxy with optional Let's Encrypt TLS
 
 ## Product Routes at a Glance
 
@@ -202,12 +210,20 @@ The application routes are organized under [`src/app`](./src/app):
 
 ```text
 .
-├── .github/workflows/        # GitHub Actions CI workflows (lint, commit-lint)
+├── .github/
+│   ├── actions/              # Composite actions shared by the workflows
+│   │   ├── ansible-setup/    # Ansible, deploy key, inventory, SSH readiness
+│   │   └── terraform-setup/  # Terraform, remote-state backend, credentials
+│   └── workflows/            # Lint, commit-lint, deploy, DNS, infra lifecycle
+├── ansible/                  # Docker install, Nginx + app stack, TLS issuance
+│   ├── group_vars/           # Non-secret defaults; CI overrides what it needs
+│   └── templates/            # docker-compose, nginx.conf, runtime env file
+├── terraform/                # Bizfly server, firewall, SSH key
 ├── docs/                     # Architectural documentation, conventions, and guides
 ├── messages/                 # i18n translation dictionaries (en, vi)
 ├── openapi/                  # Generated OpenAPI schema definition
 ├── public/                   # Static assets, branding logos, icons
-├── scripts/                  # Database diagnosis, connection test, and seed scripts
+├── scripts/                  # Database scripts and the Name.com DNS updater
 ├── src/
 │   ├── actions/              # Next.js Server Actions (mutations & writes)
 │   ├── app/                  # App Router layouts, pages, and API Route Handlers
@@ -238,6 +254,7 @@ The application routes are organized under [`src/app`](./src/app):
 │   ├── instrumentation.ts    # Next.js server runtime instrumentation hook
 │   ├── middleware.ts         # Edge RBAC route protection
 │   └── next.config.ts        # Next.js configuration
+├── Dockerfile                # Multi-stage build to a Next.js standalone runtime
 ├── next-openapi-gen.config.json # OpenAPI generation config
 └── package.json              # Dependencies and scripts
 ```
@@ -377,7 +394,9 @@ NEXT_PUBLIC_ENABLE_STORAGE_ENCRYPTION=true
 
 ## CI/CD
 
-GitHub Actions workflows are configured in [`.github/workflows`](./.github/workflows):
+GitHub Actions workflows are configured in [`.github/workflows`](./.github/workflows).
+
+### Quality gates
 
 - `lint.yml`
     - Runs on `push` and `pull_request`
@@ -390,6 +409,57 @@ GitHub Actions workflows are configured in [`.github/workflows`](./.github/workf
     - Enforces Conventional Commits on all commits and Pull Requests
     - Validates PR title and commit messages (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `revert`)
 
+### Delivery
+
+- `deploy.yml`
+    - Runs on every push to `main`, or on demand with an existing `image_tag` to redeploy without rebuilding
+    - Builds the image and pushes it to Bizfly Container Registry as `main-<short-sha>`
+    - Runs the Ansible playbooks over SSH, then waits on the container healthcheck
+    - Rolls back to the previously running image if the new one never turns healthy
+
+### Server lifecycle
+
+Each of these is a button under `Actions`. They share a concurrency group, so two
+can never apply at once.
+
+| Workflow            | What it does                                                                      |
+| ------------------- | --------------------------------------------------------------------------------- |
+| `infra-create`      | Applies the Terraform, writes `SERVER_HOST`, updates DNS, can chain into `deploy` |
+| `infra-start`       | Powers a stopped server on and repairs `SERVER_HOST` / DNS if the IP moved        |
+| `infra-stop`        | Powers off, keeping the disk, the IP and the firewall                             |
+| `infra-destroy`     | Deletes the server; keeps the container registry unless told otherwise            |
+| `infra-tls`         | Issues the Let's Encrypt certificate and switches Nginx to HTTPS                  |
+| `update-bizfly-dns` | Re-points the subdomain by hand when needed                                       |
+
+## Deployment
+
+Averie runs on either of two targets from the same codebase.
+
+**Vercel** — the default serverless path. Nothing extra is required beyond the
+environment variables in [`.env.example`](./.env.example). Its apex and `www`
+DNS records are managed by `update-dns.yml`, which is kept separate from
+`update-bizfly-dns.yml` so the two targets can never edit each other's records.
+
+**Bizfly Cloud** — self-hosted: one server running the app container behind
+Nginx, image built in CI and pulled from Bizfly Container Registry, with
+Terraform describing the infrastructure and Ansible configuring the host.
+Everything is driven from the Actions tab; the only local command in the whole
+process is generating the deploy SSH key.
+
+Two design decisions are worth knowing before changing anything there:
+
+- **Secrets are never baked into the image.** Only `NEXT_PUBLIC_*` values and
+  `CLOUDINARY_CLOUD_NAME` are build arguments — they end up in the browser bundle
+  regardless. `MONGODB_URI`, `AUTH_SECRET` and the Cloudinary API keys are
+  rendered into `/opt/averie/app.env` (mode 0600, root-owned) at deploy time, so
+  pulling the image reveals none of them.
+- **Terraform state lives in Bizfly Simple Storage**, not on anyone's laptop. An
+  Actions runner is wiped after every run, so remote state is what lets the
+  lifecycle buttons see the same infrastructure.
+
+Full setup walkthrough, including every secret and variable the pipeline reads:
+[docs/deployment-bizfly.md](docs/deployment-bizfly.md).
+
 ## Related Documentation
 
 For deeper details on architectural guidelines, design system tokens, and agent workflows, see:
@@ -398,7 +468,11 @@ For deeper details on architectural guidelines, design system tokens, and agent 
 - [Backend Conventions & Rules](docs/backend-conventions.md)
 - [Advanced Workflow & Design System](docs/advanced-workflow.md)
 - [Working with Stitch MCP](docs/working-with-stitch.md)
+- [Deploying on Bizfly Cloud](docs/deployment-bizfly.md)
+- [What the Ansible playbooks put on the server](ansible/README.md)
 
 ## Summary
 
 Averie delivers a complete, production-ready beauty salon management and booking ecosystem. By coupling Next.js 15 App Router with a structured division between Route Handlers (queries) and Server Actions (mutations), MongoDB serverless connection pooling, FullCalendar technician scheduling, and a quiet-luxury design system, Averie achieves a high-performance monolith with low operational overhead.
+
+The same codebase ships either to Vercel or to a single self-hosted Bizfly server, where creating, pausing, deploying to and tearing down the infrastructure are all buttons in the Actions tab rather than commands anyone has to remember.
