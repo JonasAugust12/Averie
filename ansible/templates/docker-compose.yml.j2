@@ -31,9 +31,9 @@ services:
       - {{ app_container }}
     ports:
       - "80:80"
-{%- if enable_tls %}
+{% if enable_tls | default(false) | bool %}
       - "443:443"
-{%- endif %}
+{% endif %}
     volumes:
       - {{ app_dir }}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - {{ app_dir }}/certbot/www:/var/www/certbot:ro

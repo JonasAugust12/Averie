@@ -4,6 +4,12 @@
   become: yes
 
   tasks:
+      - name: CONFIG | Ansible remote tmp directory
+        file:
+            path: '{{ ansible_env.HOME }}/.ansible/tmp'
+            state: directory
+            mode: '1777'
+
       - name: PRE-CHECK | Is Docker already present
         command: docker --version
         register: docker_binary_check
