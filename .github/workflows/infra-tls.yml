@@ -65,6 +65,7 @@ jobs:
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
                   server_host: ${{ vars.SERVER_HOST }}
                   server_user: ${{ vars.SERVER_USER || 'ubuntu' }}
+                  ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
 
             - name: Issue the certificate
               working-directory: ansible
