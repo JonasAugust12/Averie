@@ -183,6 +183,6 @@ jobs:
                     echo "3. If deploy SSH fails, on the server check \`sudo tail -50 /var/log/averie-bootstrap.log\`."
                     echo ""
                     echo '```bash'
-                    echo "ssh -i ~/.ssh/averie ubuntu@${{ steps.tf.outputs.public_ip }}"
+                    echo "ssh -i ~/.ssh/averie root@${{ steps.tf.outputs.public_ip }}"
                     echo '```'
                   } >> $GITHUB_STEP_SUMMARY

@@ -123,7 +123,7 @@ variable "network_plan" {
 # Access
 # -----------------------------------------------------------------------------
 variable "ssh_public_key" {
-  description = "Contents of the SSH public key allowed to log in as ubuntu (ssh-ed25519 AAAA...)."
+  description = "Contents of the SSH public key allowed to log in as root (ssh-ed25519 or ssh-rsa AAAA...)."
   type        = string
 }
 

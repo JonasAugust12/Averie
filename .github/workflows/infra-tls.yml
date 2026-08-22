@@ -64,7 +64,7 @@ jobs:
               with:
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
                   server_host: ${{ vars.SERVER_HOST }}
-                  server_user: ${{ vars.SERVER_USER || 'ubuntu' }}
+                  server_user: ${{ vars.SERVER_USER || 'root' }}
                   ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
 
             - name: Issue the certificate

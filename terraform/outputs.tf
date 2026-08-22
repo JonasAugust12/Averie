@@ -26,7 +26,7 @@ output "ssh_key_name" {
 output "ansible_inventory_line" {
   description = "Paste-ready inventory entry for ansible/inventory.ini."
   value = format(
-    "%s ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/%s.pem",
+    "%s ansible_user=root ansible_ssh_private_key_file=~/.ssh/%s.pem",
     try(bizflycloud_server.web.default_public_ipv4[0].ip_address, "SERVER_IP"),
     var.project_name
   )

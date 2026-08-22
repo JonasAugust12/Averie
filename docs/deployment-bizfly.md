@@ -219,6 +219,10 @@ GitHub Actions and Terraform expect the pair you generate locally. Legacy
 `ssh-rsa` keys are often rejected by Ubuntu 24.04 unless both sides negotiate
 special algorithms — ed25519 avoids that entirely.
 
+Bizfly Cloud's default SSH user is **`root`**, not `ubuntu` (see Bizfly docs on
+keypair login). The deploy pipeline connects as `root` unless you override
+`SERVER_USER`.
+
 The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
 `SSH_PUBLIC_KEY` variable. Nothing else about the deployment needs a terminal.
 
@@ -300,7 +304,7 @@ has no permission scope for repository variables.
 | `BIZFLY_REGISTRY_NAMESPACE`             | `c9e4fdedcbe641cf90bb1f58c0e641a8` | **yes**  |
 | `BIZFLY_REGISTRY_HOST`                  | `cr-hn-1.bizflycloud.vn`           | no       |
 | `BIZFLY_REGISTRY_REPOSITORY`            | `averie-web`                       | no       |
-| `SERVER_USER`                           | `ubuntu`                           | no       |
+| `SERVER_USER`                           | `root`                             | no       |
 | `APP_VHOST`                             | `bizfly.averienails.com`           | no       |
 | `ENABLE_TLS`                            | `false` → `true` after §8          | no       |
 | `CLOUDINARY_CLOUD_NAME`                 | your cloud name                    | no       |
@@ -493,26 +497,29 @@ out; `deploy` catches it before connecting and prints both fingerprints.
 Read the deploy log carefully — the two cases look similar but mean different
 things:
 
-| Step in `deploy`                                              | Meaning                                                                   | What to do                                                                   |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **Check the key pair matches** fails                          | `SSH_PRIVATE_KEY` and `SSH_PUBLIC_KEY` in GitHub are not the same pair    | Fix both halves in GitHub (see above), then `infra-destroy` → `infra-create` |
-| **Check the key pair matches** passes, **Wait for SSH** fails | GitHub's pair is consistent, but the VM does not have that public key yet | Wait for bootstrap (~1–2 min; deploy retries up to ~5 min), or rebuild       |
+| Step in `deploy`                                              | Meaning                                                                | What to do                                                                   |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Check the key pair matches** fails                          | `SSH_PRIVATE_KEY` and `SSH_PUBLIC_KEY` in GitHub are not the same pair | Fix both halves in GitHub (see above), then `infra-destroy` → `infra-create` |
+| **Check the key pair matches** passes, **Wait for SSH** fails | GitHub's pair is consistent, but login still fails                     | See checklist below                                                          |
 
-The second case usually means **Bizfly never ran the cloud-config YAML** (their
-`user_data` field expects a **shell script**) or you are using a legacy
-`ssh-rsa` key. The repo now ships `terraform/bootstrap.sh.tftpl`, which writes
-`SSH_PUBLIC_KEY` into `/home/ubuntu/.ssh/authorized_keys` at first boot.
+The second case is usually one of:
+
+- **`SERVER_USER` is wrong** — Bizfly's default SSH user is **`root`**, not
+  `ubuntu`. Delete the `SERVER_USER` variable if it says `ubuntu`, or set it to
+  `root`.
+- **Bootstrap did not run** — Bizfly `user_data` expects a shell script, not
+  cloud-config YAML. The repo ships `terraform/bootstrap.sh.tftpl`, which writes
+  `SSH_PUBLIC_KEY` into `/root/.ssh/authorized_keys` at first boot.
+- **Legacy `ssh-rsa` key** — prefer ed25519 keys you generate locally.
 
 **Fix when the pair check passes but SSH still fails after ~5 minutes:**
 
-1. In GitHub, confirm `SSH_PUBLIC_KEY` is one line copied from `~/.ssh/averie.pub`
-   (starts with `ssh-ed25519`, no extra quotes).
-2. Locally: `ssh-keygen -y -f ~/.ssh/averie` must print the same key type and
-   base64 as `SSH_PUBLIC_KEY`.
-3. Run `infra-destroy` (destroys server, firewall, **and** the Bizfly SSH key).
-4. Run `infra-create` again — this recreates everything from the current
-   `SSH_PUBLIC_KEY`.
-5. Whitelist the new IP in MongoDB Atlas before deploy finishes.
+1. Set **`SERVER_USER` to `root`** (or delete the variable to use the default).
+2. Confirm **`SSH_PUBLIC_KEY`** is one line from your `.pub` file (no extra quotes).
+3. **Push latest `main`**, then `infra-destroy` → `infra-create` (server must be
+   recreated to run the bootstrap script).
+4. Whitelist the new IP in MongoDB Atlas before deploy finishes.
+5. On the server (via Bizfly console if needed): `sudo tail -50 /var/log/averie-bootstrap.log`
 
 If you destroyed the server in the Bizfly console by hand but left the SSH key
 or Terraform state behind, always prefer `infra-destroy` from Actions so state
@@ -547,7 +554,7 @@ usually easier to read from the failing workflow run, which already dumps the
 last 80 lines of the container on a failed deploy, but for anything deeper:
 
 ```bash
-ssh -i ~/.ssh/averie ubuntu@<SERVER_HOST>
+ssh -i ~/.ssh/averie root@<SERVER_HOST>
 ```
 
 ```bash

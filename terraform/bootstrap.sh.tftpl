@@ -5,11 +5,10 @@ set -euxo pipefail
 exec >> /var/log/averie-bootstrap.log 2>&1
 echo "=== averie bootstrap started $(date -Is) ==="
 
-install -d -m 700 -o ubuntu -g ubuntu /home/ubuntu/.ssh
-AUTH=/home/ubuntu/.ssh/authorized_keys
+install -d -m 700 /root/.ssh
+AUTH=/root/.ssh/authorized_keys
 touch "$AUTH"
 chmod 600 "$AUTH"
-chown ubuntu:ubuntu "$AUTH"
 
 DEPLOY_KEY=${ssh_public_key_json}
 if ! grep -qxF "$DEPLOY_KEY" "$AUTH" 2>/dev/null; then
