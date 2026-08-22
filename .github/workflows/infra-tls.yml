@@ -88,13 +88,18 @@ jobs:
                     echo "::warning::Could not set ENABLE_TLS. Set it to true by hand."
                   fi
 
+            # The certificate is already issued by this point, so a token that
+            # cannot dispatch must not turn the whole run red.
             - name: Redeploy with HTTPS
               if: inputs.redeploy && steps.setvar.outputs.updated == 'true'
               env:
                   GH_TOKEN: ${{ secrets.GH_ADMIN_PAT }}
               run: |
-                  gh workflow run deploy.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"
-                  echo "Deploy dispatched — Nginx will switch to HTTPS once it finishes."
+                  if gh workflow run deploy.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"; then
+                    echo "Deploy dispatched — Nginx will switch to HTTPS once it finishes."
+                  else
+                    echo "::warning::Could not dispatch deploy — the token needs Actions: read and write. Run it by hand."
+                  fi
 
             - name: Summary
               if: always()

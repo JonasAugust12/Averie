@@ -131,13 +131,18 @@ jobs:
                   SERVER_IP: ${{ steps.tf.outputs.public_ip }}
                   RECORD_TTL: '300'
 
+            # The server already exists by this point, so a token that cannot
+            # dispatch must not turn the whole run red.
             - name: Trigger deploy
               if: inputs.run_deploy && env.GH_ADMIN_PAT != ''
               env:
                   GH_TOKEN: ${{ secrets.GH_ADMIN_PAT }}
               run: |
-                  gh workflow run deploy.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"
-                  echo "Deploy workflow dispatched."
+                  if gh workflow run deploy.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"; then
+                    echo "Deploy workflow dispatched."
+                  else
+                    echo "::warning::Could not dispatch deploy — the token needs Actions: read and write. Run it by hand."
+                  fi
 
             - name: Summary
               if: always()
