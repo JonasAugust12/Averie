@@ -84,6 +84,7 @@ runs:
                 exit 1
               fi
               echo "Key pair matches: $(ssh-keygen -lf /dev/stdin <<<"$DERIVED")"
+              echo "ANSIBLE_PAIR_VERIFIED=true" >> "$GITHUB_ENV"
 
         - name: Generate inventory
           shell: bash
@@ -108,6 +109,10 @@ runs:
               SERVER_USER: ${{ inputs.server_user }}
           run: |
               # A freshly created server may still be booting when this runs.
+              # cloud-init also writes authorized_keys once at first boot; until
+              # it finishes, sshd may answer with Permission denied even when the
+              # GitHub key pair is correct.
+              PAIR_VERIFIED="${ANSIBLE_PAIR_VERIFIED:-false}"
               for i in $(seq 1 30); do
                 OUT=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 \
                           -o BatchMode=yes -i ~/.ssh/averie \
@@ -116,12 +121,23 @@ runs:
                   exit 0
                 }
 
-                # Rejected credentials never become accepted credentials. Stop
-                # instead of burning five minutes on a certain failure.
                 if grep -qi "permission denied\|no supported authentication" <<<"$OUT"; then
+                  if [[ "${PAIR_VERIFIED}" == "true" && "$i" -lt 30 ]]; then
+                    echo "Attempt $i/30 — SSH is up but the key is not accepted yet (cloud-init may still be running)..."
+                    sleep 10
+                    continue
+                  fi
+
                   echo "::error::${SERVER_USER}@${SERVER_HOST} refused the deploy key: $OUT"
-                  echo "::error::The private key in SSH_PRIVATE_KEY is not the one on the server."
-                  echo "::error::Compare it with SSH_PUBLIC_KEY — see the key-pair check earlier in this job."
+                  if [[ "${PAIR_VERIFIED}" == "true" ]]; then
+                    echo "::error::SSH_PRIVATE_KEY and SSH_PUBLIC_KEY match each other in GitHub, but the server does not accept that key."
+                    echo "::error::Usually the Bizfly SSH key named averie-deploy drifted from SSH_PUBLIC_KEY."
+                    echo "::error::Fix: run infra-destroy, then infra-create again (rebuilds server + SSH key from current SSH_PUBLIC_KEY)."
+                    echo "::error::Also verify Bizfly Console → SSH Keys → averie-deploy matches the SSH_PUBLIC_KEY variable."
+                  else
+                    echo "::error::The private key in SSH_PRIVATE_KEY is not the one on the server."
+                    echo "::error::Compare it with SSH_PUBLIC_KEY — see the key-pair check earlier in this job."
+                  fi
                   exit 1
                 fi
 

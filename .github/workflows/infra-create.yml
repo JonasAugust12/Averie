@@ -83,6 +83,18 @@ jobs:
                     -var="root_disk_size=${{ inputs.root_disk_size }}" \
                     -var="server_state=running"
 
+            - name: Verify deploy SSH key in state
+              working-directory: terraform
+              run: |
+                  echo "SSH key Terraform registered with Bizfly:"
+                  terraform state show bizflycloud_ssh_key.deploy | grep -E '^\s+(name|public_key)\s+=' || true
+                  FP=$(terraform state show bizflycloud_ssh_key.deploy 2>/dev/null \
+                    | sed -n 's/.*public_key.*= "\(ssh-[^ ]* [^ ]*\).*/\1/p' \
+                    | head -1)
+                  if [[ -n "$FP" ]]; then
+                    echo "Fingerprint: $(ssh-keygen -lf /dev/stdin <<<"$FP")"
+                  fi
+
             - name: Read outputs
               id: tf
               working-directory: terraform

@@ -87,7 +87,9 @@ resource "bizflycloud_server" "web" {
   billing_plan          = var.billing_plan
   state                 = var.server_state
 
-  user_data = file("${path.module}/cloud-init.yaml")
+  user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
+    ssh_public_key = trimspace(var.ssh_public_key)
+  })
 
   # Free public IPv4 WAN interface, protected by the firewall above.
   default_public_ipv4 {
@@ -100,8 +102,8 @@ resource "bizflycloud_server" "web" {
     # rebuild of the whole server. Recreate deliberately instead.
     ignore_changes = [os_id]
 
-    # cloud-init writes authorized_keys once, at first boot. Rotating
-    # ssh_public_key replaces the key resource but leaves a running server
+    # cloud-init writes authorized_keys once, at first boot (see cloud-init.yaml.tftpl).
+    # Rotating ssh_public_key replaces the key resource but leaves a running server
     # holding the old key forever — and `ssh_key` here is only the key's *name*,
     # which does not change, so Terraform would otherwise report no diff at all
     # and the deploy would fail with "Permission denied (publickey)".

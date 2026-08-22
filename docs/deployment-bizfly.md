@@ -482,6 +482,37 @@ Update **both** halves in GitHub — the `SSH_PUBLIC_KEY` variable from
 run `infra-create`. Updating only one is the most common way to lock yourself
 out; `deploy` catches it before connecting and prints both fingerprints.
 
+### `Permission denied (publickey)` after a fresh `infra-create`
+
+Read the deploy log carefully — the two cases look similar but mean different
+things:
+
+| Step in `deploy`                                              | Meaning                                                                   | What to do                                                                   |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Check the key pair matches** fails                          | `SSH_PRIVATE_KEY` and `SSH_PUBLIC_KEY` in GitHub are not the same pair    | Fix both halves in GitHub (see above), then `infra-destroy` → `infra-create` |
+| **Check the key pair matches** passes, **Wait for SSH** fails | GitHub's pair is consistent, but the VM does not have that public key yet | Wait for cloud-init (deploy retries up to ~5 min), or rebuild                |
+
+The second case usually means the Bizfly SSH key named `averie-deploy` drifted
+from the `SSH_PUBLIC_KEY` variable — Terraform thought the named key was
+current, but the platform injected something else at boot. cloud-init now writes
+`SSH_PUBLIC_KEY` into `authorized_keys` explicitly so a rebuild fixes it even when
+Bizfly's attachment is wrong.
+
+**Fix when the pair check passes but SSH still fails after ~5 minutes:**
+
+1. In GitHub, confirm `SSH_PUBLIC_KEY` is one line copied from `~/.ssh/averie.pub`
+   (starts with `ssh-ed25519`, no extra quotes).
+2. Locally: `ssh-keygen -y -f ~/.ssh/averie` must print the same key type and
+   base64 as `SSH_PUBLIC_KEY`.
+3. Run `infra-destroy` (destroys server, firewall, **and** the Bizfly SSH key).
+4. Run `infra-create` again — this recreates everything from the current
+   `SSH_PUBLIC_KEY`.
+5. Whitelist the new IP in MongoDB Atlas before deploy finishes.
+
+If you destroyed the server in the Bizfly console by hand but left the SSH key
+or Terraform state behind, always prefer `infra-destroy` from Actions so state
+and the cloud stay aligned.
+
 ### infra-tls
 
 Runs once. It verifies that `APP_VHOST` resolves to `SERVER_HOST` and that the

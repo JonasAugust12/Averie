@@ -1,6 +1,14 @@
 #cloud-config
 # Minimal bootstrap. Docker, Nginx and the app stack are installed by Ansible
 # so the same playbooks work on a server created outside Terraform.
+#
+# ssh_authorized_keys is written here explicitly because Bizfly's ssh_key
+# attachment can drift from Terraform state (named key updated in the API but
+# old material still injected, or the reverse). cloud-init runs once at first
+# boot and is the source of truth for which key may log in as ubuntu.
+ssh_authorized_keys:
+    - ${ssh_public_key}
+
 package_update: true
 package_upgrade: false
 
