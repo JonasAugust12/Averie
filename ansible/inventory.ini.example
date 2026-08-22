@@ -1,0 +1,8 @@
+# Copy to inventory.ini and replace SERVER_IP with the `public_ip` Terraform output.
+# CI generates this file on the fly from the SERVER_HOST GitHub variable.
+
+[web]
+SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/averie
+
+[web:vars]
+ansible_python_interpreter=/usr/bin/python3

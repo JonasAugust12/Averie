@@ -1,0 +1,12 @@
+.terraform/
+# .terraform.lock.hcl is intentionally NOT ignored - commit it so every run
+# resolves the same provider build.
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+terraform.tfvars
+*.auto.tfvars
+backend.hcl
+override.tf
+override.tf.json

@@ -1,0 +1,39 @@
+---
+# =============================================================================
+# Averie — single-server deployment settings.
+# Secrets are NOT stored here; CI passes them with `-e` (see .github/workflows).
+# =============================================================================
+
+app_name: averie
+app_dir: /opt/averie
+docker_network: averie_network
+
+app_container: averie-web
+nginx_container: averie-nginx
+
+# Bizfly Container Registry.
+# The console shows the full push command for your repository, e.g.
+#   docker push cr-hn-1.bizflycloud.vn/<namespace>/<repo>:<tag>
+# Copy the host and the <namespace> segment from there; CI overrides both.
+registry_host: cr-hn-1.bizflycloud.vn
+registry_namespace: ''
+registry_repository: averie-web
+registry_image: '{{ registry_host }}/{{ registry_namespace }}/{{ registry_repository }}'
+
+# Overridden per run: -e image_tag=main-<sha>
+image_tag: latest
+
+app_port: 3000
+
+# Public hostnames served by Nginx. `app_vhost` is the canonical one.
+app_vhost: bizfly.averienails.com
+extra_vhosts: []
+
+# TLS via Let's Encrypt. Leave false until DNS points at this server, then run
+# `ansible-playbook issue_cert.yml` once and flip this to true.
+enable_tls: false
+letsencrypt_email: ''
+
+# How long to wait for the container healthcheck before rolling back.
+health_retries: 20
+health_delay: 15

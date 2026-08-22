@@ -1,0 +1,38 @@
+#cloud-config
+# Minimal bootstrap. Docker, Nginx and the app stack are installed by Ansible
+# so the same playbooks work on a server created outside Terraform.
+package_update: true
+package_upgrade: false
+
+packages:
+    - python3
+    - python3-pip
+    - ca-certificates
+    - curl
+    - gnupg
+
+timezone: Asia/Ho_Chi_Minh
+
+write_files:
+    - path: /etc/sysctl.d/99-averie.conf
+      content: |
+          net.core.somaxconn = 1024
+          vm.overcommit_memory = 1
+
+    - path: /usr/local/bin/averie-ensure-swap.sh
+      permissions: '0755'
+      content: |
+          #!/bin/sh
+          # The 1 GB flavours ship without swap. A small swapfile keeps image
+          # pulls and Node from being OOM-killed under burst load.
+          set -e
+          [ -f /swapfile ] && exit 0
+          fallocate -l 2G /swapfile
+          chmod 600 /swapfile
+          mkswap /swapfile
+          swapon /swapfile
+          echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
+runcmd:
+    - [/usr/local/bin/averie-ensure-swap.sh]
+    - [sysctl, --system]

@@ -1,0 +1,51 @@
+# Managed by Ansible ({{ app_dir }}/docker-compose.yml) - do not edit by hand.
+services:
+  {{ app_container }}:
+    image: {{ custom_image | default(registry_image + ':' + image_tag) }}
+    container_name: {{ app_container }}
+    restart: always
+    env_file:
+      - ./app.env
+    # Never published on the host - Nginx reaches it over {{ docker_network }}.
+    expose:
+      - "{{ app_port }}"
+    networks:
+      - {{ docker_network }}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:{{ app_port }}/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  {{ nginx_container }}:
+    image: nginx:alpine
+    container_name: {{ nginx_container }}
+    restart: always
+    depends_on:
+      - {{ app_container }}
+    ports:
+      - "80:80"
+{%- if enable_tls %}
+      - "443:443"
+{%- endif %}
+    volumes:
+      - {{ app_dir }}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - {{ app_dir }}/certbot/www:/var/www/certbot:ro
+      - {{ app_dir }}/certbot/conf:/etc/letsencrypt:ro
+    networks:
+      - {{ docker_network }}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  {{ docker_network }}:
+    external: true

@@ -26,6 +26,8 @@ function cloudinaryRemotePatterns(): NonNullable<NextConfig['images']>['remotePa
 }
 
 const nextConfig: NextConfig = {
+    // Emits .next/standalone (self-contained node server) for the Docker image.
+    output: 'standalone',
     reactStrictMode: true,
     poweredByHeader: false,
     productionBrowserSourceMaps: process.env.PRODUCTION_BROWSER_SOURCE_MAPS === 'true',

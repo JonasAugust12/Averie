@@ -1,0 +1,35 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is git-ignored.
+
+# --- Account -----------------------------------------------------------------
+bizfly_auth_method = "application_credential"
+bizfly_region_name = "HoChiMinh"
+bizfly_project_id  = "your-project-id"
+
+# Credentials are read from the environment, never from this file:
+#   export BIZFLYCLOUD_APPLICATION_CREDENTIAL_ID=...
+#   export BIZFLYCLOUD_APPLICATION_CREDENTIAL_SECRET=...
+
+# --- Server ------------------------------------------------------------------
+project_name      = "averie"
+availability_zone = "HCM1"
+
+# 1c_1g | 1c_2g | 2c_2g | 2c_4g
+flavor_name     = "1c_2g"
+server_category = "basic"
+root_disk_type  = "HDD"
+root_disk_size  = 20
+
+os_distribution = "Ubuntu"
+os_version      = "24.04 x64"
+
+billing_plan = "on_demand"
+network_plan = "free_datatransfer"
+
+# --- Access ------------------------------------------------------------------
+# ssh-keygen -t ed25519 -C "averie-deploy" -f ~/.ssh/averie
+# Paste the contents of ~/.ssh/averie.pub here.
+ssh_public_key = "ssh-ed25519 AAAA... averie-deploy"
+
+# --- Registry ----------------------------------------------------------------
+manage_container_registry = true
+container_registry_name   = "averie-web"

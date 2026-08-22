@@ -1,0 +1,91 @@
+name: update-bizfly-dns
+run-name: "DNS: ${{ inputs.subdomain || 'bizfly' }}.${{ inputs.domain_name || 'averienails.com' }} -> ${{ inputs.server_ip || vars.SERVER_HOST }}"
+
+# Points a single subdomain at the Bizfly server. Deliberately separate from
+# update-dns.yml so the Vercel apex/www records stay untouched while the Bizfly
+# deployment is being tested.
+on:
+    workflow_dispatch:
+        inputs:
+            domain_name:
+                description: 'Zone on Name.com'
+                required: false
+                default: 'averienails.com'
+                type: string
+            subdomain:
+                description: 'Host inside the zone (never the apex)'
+                required: false
+                default: 'bizfly'
+                type: string
+            server_ip:
+                description: 'Bizfly server IPv4. Leave empty to use the SERVER_HOST repository variable.'
+                required: false
+                type: string
+            record_ttl:
+                description: 'TTL in seconds'
+                required: false
+                default: '300'
+                type: string
+
+concurrency:
+    group: update-bizfly-dns
+    cancel-in-progress: false
+
+jobs:
+    update-dns:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+
+            - name: Install dependencies
+              run: pip install requests
+
+            - name: Resolve target IP
+              id: target
+              env:
+                  INPUT_IP: ${{ inputs.server_ip }}
+                  FALLBACK_IP: ${{ vars.SERVER_HOST }}
+              run: |
+                  IP="${INPUT_IP:-$FALLBACK_IP}"
+                  if [[ -z "$IP" ]]; then
+                    echo "::error::No IP given. Pass server_ip, or set the SERVER_HOST repository variable."
+                    exit 1
+                  fi
+                  echo "ip=$IP" >> $GITHUB_OUTPUT
+
+            - name: Update DNS on Name.com
+              run: python scripts/update_bizfly_subdomain_dns.py
+              env:
+                  NAME_COM_USERNAME: ${{ secrets.NAME_COM_USERNAME }}
+                  NAME_COM_TOKEN: ${{ secrets.NAME_COM_TOKEN }}
+                  DOMAIN_NAME: ${{ inputs.domain_name || 'averienails.com' }}
+                  SUBDOMAIN: ${{ inputs.subdomain || 'bizfly' }}
+                  SERVER_IP: ${{ steps.target.outputs.ip }}
+                  RECORD_TTL: ${{ inputs.record_ttl || '300' }}
+
+            - name: Verify resolution
+              continue-on-error: true
+              run: |
+                  FQDN="${{ inputs.subdomain || 'bizfly' }}.${{ inputs.domain_name || 'averienails.com' }}"
+                  echo "Querying 8.8.8.8 for $FQDN (propagation can take up to the previous TTL)..."
+                  dig +short "@8.8.8.8" "$FQDN" A || true
+
+            - name: Summary
+              if: always()
+              run: |
+                  {
+                    echo "## 🌐 DNS"
+                    echo "| | |"
+                    echo "| --- | --- |"
+                    echo "| **Record** | \`${{ inputs.subdomain || 'bizfly' }}.${{ inputs.domain_name || 'averienails.com' }}\` |"
+                    echo "| **Type** | \`A\` |"
+                    echo "| **Answer** | \`${{ steps.target.outputs.ip }}\` |"
+                    echo "| **TTL** | \`${{ inputs.record_ttl || '300' }}\` |"
+                    echo "| **Result** | \`${{ job.status }}\` |"
+                  } >> $GITHUB_STEP_SUMMARY

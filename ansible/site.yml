@@ -1,0 +1,9 @@
+---
+# Full provision + deploy. Safe to re-run; install_docker.yml is idempotent.
+#
+#   ansible-playbook site.yml \
+#     -e image_tag=main-abc1234 \
+#     -e registry_username=... -e registry_password=... \
+#     -e mongodb_uri=... -e auth_secret=...
+- import_playbook: install_docker.yml
+- import_playbook: deploy_app.yml
