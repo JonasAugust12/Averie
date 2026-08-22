@@ -1,6 +1,6 @@
 # Averie — System Design
 
-Tài liệu thiết kế hệ thống trước khi triển khai qua OpenSpec + Superpowers
+Tài liệu thiết kế hệ thống trước khi triển khai qua OpenSpec + Superpowers.
 
 ## Mục đích
 
