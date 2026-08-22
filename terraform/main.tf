@@ -87,8 +87,9 @@ resource "bizflycloud_server" "web" {
   billing_plan          = var.billing_plan
   state                 = var.server_state
 
-  user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
-    ssh_public_key = trimspace(var.ssh_public_key)
+  # Bizfly runs user_data as a shell script, not cloud-config — see bootstrap.sh.tftpl.
+  user_data = templatefile("${path.module}/bootstrap.sh.tftpl", {
+    ssh_public_key_json = jsonencode(trimspace(var.ssh_public_key))
   })
 
   # Free public IPv4 WAN interface, protected by the firewall above.
@@ -102,7 +103,7 @@ resource "bizflycloud_server" "web" {
     # rebuild of the whole server. Recreate deliberately instead.
     ignore_changes = [os_id]
 
-    # cloud-init writes authorized_keys once, at first boot (see cloud-init.yaml.tftpl).
+    # bootstrap.sh writes authorized_keys once, at first boot (see bootstrap.sh.tftpl).
     # Rotating ssh_public_key replaces the key resource but leaves a running server
     # holding the old key forever — and `ssh_key` here is only the key's *name*,
     # which does not change, so Terraform would otherwise report no diff at all

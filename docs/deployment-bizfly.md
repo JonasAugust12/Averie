@@ -213,6 +213,12 @@ debug with, so it stays on your machine:
 ssh-keygen -t ed25519 -C "averie-deploy" -f ~/.ssh/averie -N ""
 ```
 
+Use **ed25519**, not the RSA key Bizfly generates in the console
+(`Generated-by-Nova`). That platform key is for emergency console access only;
+GitHub Actions and Terraform expect the pair you generate locally. Legacy
+`ssh-rsa` keys are often rejected by Ubuntu 24.04 unless both sides negotiate
+special algorithms — ed25519 avoids that entirely.
+
 The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
 `SSH_PUBLIC_KEY` variable. Nothing else about the deployment needs a terminal.
 
@@ -228,8 +234,8 @@ The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
 | `2c_4g` | 2    | 4 GB | 40 GB | 396.700 đ   |
 
 Default is `1c_2g`. `1c_1g` also works — the image is built in CI, so the server
-only pulls and runs it — but 1 GB leaves very little headroom; cloud-init adds a
-2 GB swapfile to compensate. `server_category = "basic"` is the Shared CPU line.
+only pulls and runs it — but 1 GB leaves very little headroom; the bootstrap script
+adds a 2 GB swapfile to compensate. `server_category = "basic"` is the Shared CPU line.
 
 ---
 
@@ -464,8 +470,8 @@ next inherits your hostname.
 `SSH_PUBLIC_KEY` and the `SSH_PRIVATE_KEY` secret must always be halves of the
 same pair, and changing them **rebuilds the server**.
 
-cloud-init writes `authorized_keys` once, at first boot. Nothing — not Terraform,
-not the Bizfly console — re-keys a machine that is already running. The Terraform
+The bootstrap script writes `authorized_keys` once, at first boot. Nothing — not
+Terraform, not the Bizfly console — re-keys a machine that is already running. The Terraform
 config models that honestly with `replace_triggered_by` on the key resource, so a
 rotation destroys and recreates the server rather than leaving it unreachable
 with a stale key. The app holds no local state, so the cost is a few minutes and
@@ -490,13 +496,12 @@ things:
 | Step in `deploy`                                              | Meaning                                                                   | What to do                                                                   |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | **Check the key pair matches** fails                          | `SSH_PRIVATE_KEY` and `SSH_PUBLIC_KEY` in GitHub are not the same pair    | Fix both halves in GitHub (see above), then `infra-destroy` → `infra-create` |
-| **Check the key pair matches** passes, **Wait for SSH** fails | GitHub's pair is consistent, but the VM does not have that public key yet | Wait for cloud-init (deploy retries up to ~5 min), or rebuild                |
+| **Check the key pair matches** passes, **Wait for SSH** fails | GitHub's pair is consistent, but the VM does not have that public key yet | Wait for bootstrap (~1–2 min; deploy retries up to ~5 min), or rebuild       |
 
-The second case usually means the Bizfly SSH key named `averie-deploy` drifted
-from the `SSH_PUBLIC_KEY` variable — Terraform thought the named key was
-current, but the platform injected something else at boot. cloud-init now writes
-`SSH_PUBLIC_KEY` into `authorized_keys` explicitly so a rebuild fixes it even when
-Bizfly's attachment is wrong.
+The second case usually means **Bizfly never ran the cloud-config YAML** (their
+`user_data` field expects a **shell script**) or you are using a legacy
+`ssh-rsa` key. The repo now ships `terraform/bootstrap.sh.tftpl`, which writes
+`SSH_PUBLIC_KEY` into `/home/ubuntu/.ssh/authorized_keys` at first boot.
 
 **Fix when the pair check passes but SSH still fails after ~5 minutes:**
 
