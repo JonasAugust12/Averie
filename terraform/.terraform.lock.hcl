@@ -5,6 +5,7 @@ provider "registry.terraform.io/bizflycloud/bizflycloud" {
   version     = "0.3.9"
   constraints = "~> 0.3.9"
   hashes = [
+    "h1:LEqc9gauKDMTjTlzNxzgDYV94aaxG3Rlfwj9dUYtiU8=",
     "h1:uZwQnUtwAgraD644B/l7HTDDmbCeJlZz6+E2tEAs8tA=",
     "zh:05a5bdeed58dfb78e4535c2c1387c9672e81d1183183c4cb92a104de06732518",
     "zh:48989641ef3d596e66c912f1a887c171fd951f4a145181d9e567924018b674d3",

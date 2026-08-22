@@ -97,6 +97,22 @@ variable "billing_plan" {
   default     = "on_demand"
 }
 
+variable "server_state" {
+  description = <<-EOT
+    Power state of the server. The infra-stop / infra-start workflows flip this
+    and re-apply; the provider issues a start/stop call rather than rebuilding.
+    A stopped server keeps its disk and its public IP, and keeps billing for
+    storage.
+  EOT
+  type        = string
+  default     = "running"
+
+  validation {
+    condition     = contains(["running", "stopped"], var.server_state)
+    error_message = "server_state must be running or stopped."
+  }
+}
+
 variable "network_plan" {
   description = "Network plan: free_datatransfer or free_bandwidth."
   type        = string

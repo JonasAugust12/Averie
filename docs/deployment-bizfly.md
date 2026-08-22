@@ -72,14 +72,21 @@ billing-plan concepts directly, so that is what is used.
 
 ## 3. Files
 
-| Path                                      | Purpose                                        |
-| ----------------------------------------- | ---------------------------------------------- |
-| `Dockerfile`                              | Multi-stage build, Next.js standalone output   |
-| `terraform/`                              | Server, firewall, SSH key, registry repository |
-| `ansible/`                                | Docker install, Nginx + app stack, TLS         |
-| `.github/workflows/deploy.yml`            | Build → push → deploy                          |
-| `.github/workflows/update-bizfly-dns.yml` | Point `bizfly.averienails.com` at the server   |
-| `scripts/update_bizfly_subdomain_dns.py`  | Name.com API client for that one record        |
+| Path                                      | Purpose                                         |
+| ----------------------------------------- | ----------------------------------------------- |
+| `Dockerfile`                              | Multi-stage build, Next.js standalone output    |
+| `terraform/`                              | Server, firewall, SSH key, registry repository  |
+| `ansible/`                                | Docker install, Nginx + app stack, TLS          |
+| `.github/actions/terraform-setup/`        | Shared Terraform init for the infra workflows   |
+| `.github/actions/ansible-setup/`          | Shared Ansible + SSH + inventory setup          |
+| `.github/workflows/infra-create.yml`      | Create the server, set `SERVER_HOST`, fix DNS   |
+| `.github/workflows/infra-stop.yml`        | Power off, keep the disk and the IP             |
+| `.github/workflows/infra-start.yml`       | Power back on, repair `SERVER_HOST` and DNS     |
+| `.github/workflows/infra-destroy.yml`     | Delete the server, keep the registry            |
+| `.github/workflows/infra-tls.yml`         | Issue the certificate and switch Nginx to HTTPS |
+| `.github/workflows/deploy.yml`            | Build → push → deploy                           |
+| `.github/workflows/update-bizfly-dns.yml` | Point `bizfly.averienails.com` at the server    |
+| `scripts/update_bizfly_subdomain_dns.py`  | Name.com API client for that one record         |
 
 `next.config.ts` gained `output: 'standalone'` — required for the runtime image.
 
@@ -95,7 +102,7 @@ billing-plan concepts directly, so that is what is used.
 Also note your **Project ID** from the project selector — it goes into
 `bizfly_project_id`.
 
-### 4.2 Simple Storage bucket (Terraform state)
+### 4.2 Simple Storage bucket (Terraform state) — required
 
 `Simple Storage → Tạo bucket`
 
@@ -106,8 +113,15 @@ Also note your **Project ID** from the project selector — it goes into
 Then on the same security page create a **Simple Storage access key / secret
 key** pair. These are S3 credentials, separate from the application credential.
 
-Skip this whole section if you are happy with local state — comment out the
-`backend "s3"` block in `terraform/versions.tf`.
+This is not optional once the infra workflows are in use. An Actions runner is
+wiped after every run, so local state would vanish the moment `infra-create`
+finished — `infra-stop` and `infra-destroy` would then find nothing to act on,
+and the next `infra-create` would build a _second_ server instead of reusing the
+first. Remote state is what makes the four buttons see the same infrastructure.
+
+Locking uses the backend's own `.tflock` object, so two runs cannot apply at
+once. The `averie-infra` concurrency group in the workflows is a second guard on
+top of that.
 
 ### 4.3 Container Registry
 
@@ -132,12 +146,16 @@ literal string `BIZFLY`. With an application credential instead, the username is
 
 ### 4.4 SSH key
 
-Generate the deploy key locally — the private half goes into GitHub, the public
-half into Terraform:
+This is the one command you run locally, once. Generating a keypair inside CI
+would mean either printing a private key into a log or never having a copy to
+debug with, so it stays on your machine:
 
 ```bash
 ssh-keygen -t ed25519 -C "averie-deploy" -f ~/.ssh/averie -N ""
 ```
+
+The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
+`SSH_PUBLIC_KEY` variable. Nothing else about the deployment needs a terminal.
 
 ### 4.5 Server sizing
 
@@ -158,33 +176,16 @@ only pulls and runs it — but 1 GB leaves very little headroom; cloud-init adds
 
 ## 5. Provision the server
 
-```bash
-cd terraform
-cp terraform.tfvars.example terraform.tfvars   # fill in project_id + ssh_public_key
-cp backend.hcl.example backend.hcl             # fill in bucket name
-```
+Everything runs from `Actions`. There is no Terraform or Ansible to install, no
+`terraform.tfvars` to fill in, and no inventory file to maintain — the workflows
+build all of that on the runner from the secrets and variables in §6.
 
-```bash
-export BIZFLYCLOUD_APPLICATION_CREDENTIAL_ID=...
-export BIZFLYCLOUD_APPLICATION_CREDENTIAL_SECRET=...
-export AWS_ACCESS_KEY_ID=<simple-storage-access-key>
-export AWS_SECRET_ACCESS_KEY=<simple-storage-secret-key>
-```
+Configure §6 first, then run `infra-create` (§9). It applies the Terraform,
+writes the new IP into the `SERVER_HOST` variable, updates DNS, and can chain
+straight into `deploy`.
 
-```bash
-terraform init -backend-config=backend.hcl
-```
-
-```bash
-terraform plan
-```
-
-```bash
-terraform apply
-```
-
-Take `public_ip` from the outputs — it becomes the `SERVER_HOST` repository
-variable and the DNS A record.
+The `terraform` and `ansible` directories are the source of truth for _what_
+gets built; you never invoke them by hand.
 
 ---
 
@@ -207,6 +208,11 @@ variable and the DNS A record.
 | `NEXTAUTH_SECRET`          | optional — see the note below                      |
 | `NAME_COM_USERNAME`        | Name.com API username (DNS workflow)               |
 | `NAME_COM_TOKEN`           | Name.com API token (DNS workflow)                  |
+| `BIZFLY_APPCRED_ID`        | application credential ID (infra workflows)        |
+| `BIZFLY_APPCRED_SECRET`    | application credential secret                      |
+| `TF_STATE_ACCESS_KEY`      | Simple Storage access key for the state bucket     |
+| `TF_STATE_SECRET_KEY`      | Simple Storage secret key                          |
+| `GH_ADMIN_PAT`             | optional — see the note below                      |
 
 `NAME_COM_*` already exist if `update-dns.yml` was used for Vercel.
 
@@ -214,6 +220,12 @@ variable and the DNS A record.
 reads it **before** `AUTH_SECRET`. Set it only to reuse an existing deployment's
 session cookies; if you set both to different values, `NEXTAUTH_SECRET` wins.
 Leave it unset and `AUTH_SECRET` is used — the env file then omits it entirely.
+
+`GH_ADMIN_PAT` is a fine-grained PAT on this repository with **Variables: write**
+(add **Actions: write** if you also want `infra-create` to dispatch `deploy`).
+Without it the infra workflows still work — they just print the new IP and warn
+that `SERVER_HOST` has to be updated by hand. `GITHUB_TOKEN` cannot do this; it
+has no permission scope for repository variables.
 
 ### Variables (tab "Variables")
 
@@ -241,9 +253,25 @@ Leave it unset and `AUTH_SECRET` is used — the env file then omits it entirely
 | `MONGODB_DEBUG`                         | `0`                                | no       |
 | `MONGODB_DNS_SERVERS`                   | `8.8.8.8,1.1.1.1`                  | no       |
 
+The infra workflows need these as well — all plain configuration, none secret:
+
+| Name                 | Example                         | Required |
+| -------------------- | ------------------------------- | -------- |
+| `TF_STATE_BUCKET`    | `averie-terraform-state`        | **yes**  |
+| `BIZFLY_PROJECT_ID`  | project UUID from the console   | **yes**  |
+| `SSH_PUBLIC_KEY`     | contents of `~/.ssh/averie.pub` | **yes**  |
+| `TF_STATE_ENDPOINT`  | `https://hcm.ss.bfcplatform.vn` | no       |
+| `TF_STATE_REGION`    | `hcm`                           | no       |
+| `BIZFLY_REGION_NAME` | `HoChiMinh`                     | no       |
+| `DNS_ZONE`           | `averienails.com`               | no       |
+| `DNS_SUBDOMAIN`      | `bizfly`                        | no       |
+
+`SERVER_HOST` is the one variable you do not have to maintain by hand when
+`GH_ADMIN_PAT` is set — `infra-create` and `infra-start` write it for you.
+
 Everything marked "no" falls back to a sensible default inside the workflow.
-The deploy fails fast with a clear message if `SERVER_HOST` or
-`BIZFLY_REGISTRY_NAMESPACE` is missing.
+Each workflow fails before touching anything, naming the exact secret or
+variable that is missing.
 
 ### Full coverage against the app's `process.env` reads
 
@@ -305,27 +333,99 @@ no-op after the first run) and then brings the stack up. It waits for the
 container healthcheck (`/api/health`, which pings MongoDB) and **rolls back to
 the previously running image** if it never turns healthy.
 
-Then switch to HTTPS — once DNS resolves and port 80 answers:
+Then switch to HTTPS: `Actions → infra-tls → Run workflow`, giving an email for
+the Let's Encrypt account. It refuses to run unless DNS already resolves to
+`SERVER_HOST` and the site answers on port 80, so a misconfigured attempt cannot
+burn Let's Encrypt rate limits. On success it installs the renewal cron, sets
+`ENABLE_TLS=true`, and redeploys so Nginx starts redirecting 80 → 443.
 
-```bash
-cd ansible
-ansible-playbook issue_cert.yml -e letsencrypt_email=you@example.com
-```
-
-Set the `ENABLE_TLS` repository variable to `true` and re-run the deploy. Nginx
-then redirects 80 → 443 and a cron job renews the certificate twice a day.
+Renewal is a cron job on the server — there is nothing recurring to click.
 
 ---
 
-## 9. Operating it
+## 9. The infrastructure buttons
 
-Redeploy an older image without rebuilding: `Actions → deploy → Run workflow` and
-put an existing tag (e.g. `main-9045a20`) in `image_tag`.
+Everything is a button under `Actions`. The `infra-*` workflows share the
+`averie-infra` concurrency group, so two of them can never apply at once.
 
-On the server:
+| Workflow            | What it does                                                                      |
+| ------------------- | --------------------------------------------------------------------------------- |
+| `infra-create`      | `terraform apply`. Sets `SERVER_HOST`, fixes DNS, optionally dispatches `deploy`. |
+| `infra-start`       | Powers a stopped server on, repairs `SERVER_HOST`/DNS if the IP moved.            |
+| `infra-stop`        | Powers off. Disk, IP and firewall are kept; compute billing stops.                |
+| `infra-destroy`     | Deletes the server. Keeps the registry unless you ask otherwise.                  |
+| `infra-tls`         | Issues the certificate, sets `ENABLE_TLS`, redeploys over HTTPS.                  |
+| `deploy`            | Build, push, roll out. Also runs on every push to `main`.                         |
+| `update-bizfly-dns` | Re-point the subdomain by hand if you ever need to.                               |
+
+### infra-create
+
+Inputs are `flavor_name` (the four sizes from §4.5), `availability_zone`,
+`root_disk_size`, plus two toggles for updating DNS and chaining into `deploy`.
+
+Re-running it is safe. Terraform reconciles against the state in Simple Storage,
+so a second run on an existing server changes only what the inputs changed —
+picking a different `flavor_name`, for instance, resizes in place rather than
+building a second machine.
+
+### infra-stop / infra-start
+
+Both work by flipping `server_state` and re-applying; the provider issues a
+start/stop call rather than rebuilding anything. A stopped server still costs
+storage, so this is for pausing, not for saving the full bill — that is what
+`infra-destroy` is for.
+
+`infra-start` compares the IP against `SERVER_HOST` and only touches the variable
+and DNS when it actually changed. It then polls `/api/health` for up to three
+minutes; the containers restart on their own because the stack is set to
+`restart: always`, so no redeploy is normally needed.
+
+### infra-destroy
+
+Requires typing `destroy` into the `confirm` input — anything else aborts before
+Terraform runs.
+
+**The container registry is kept by default.** Destroying it would delete every
+image ever pushed, including the one a later `infra-create` would want to
+redeploy, so the default path destroys only the server, firewall and SSH key via
+`-target`. Deleting the registry as well is a separate opt-in checkbox.
+
+`remove_dns` defaults to true: it deletes the subdomain's A record. Leaving a
+record pointed at an address you no longer own means whoever Bizfly hands it to
+next inherits your hostname.
+
+---
+
+### infra-tls
+
+Runs once. It verifies that `APP_VHOST` resolves to `SERVER_HOST` and that the
+site answers on port 80 _before_ calling Let's Encrypt — a failed challenge
+counts against a weekly rate limit, so it is worth failing early instead.
+
+---
+
+## 10. Day-to-day
+
+| I want to…                  | Do this                                                |
+| --------------------------- | ------------------------------------------------------ |
+| Ship a change               | Push to `main`                                         |
+| Roll back to an older image | `deploy` → put an existing tag in `image_tag`          |
+| Pause the server overnight  | `infra-stop`, then `infra-start`                       |
+| Resize it                   | `infra-create` with a different `flavor_name`          |
+| Move it to another zone     | `infra-destroy`, then `infra-create` with the new zone |
+| Stop paying                 | `infra-destroy`                                        |
+
+Rolling back does not need a rebuild — the registry keeps every `main-<sha>` tag,
+and `deploy` skips the build step when you name an existing one.
+
+### When you do need a shell
+
+The only thing you still hold locally is the deploy key from §4.4. Logs are
+usually easier to read from the failing workflow run, which already dumps the
+last 80 lines of the container on a failed deploy, but for anything deeper:
 
 ```bash
-ssh -i ~/.ssh/averie ubuntu@$SERVER_HOST
+ssh -i ~/.ssh/averie ubuntu@<SERVER_HOST>
 ```
 
 ```bash
@@ -336,4 +436,5 @@ sudo docker compose -f /opt/averie/docker-compose.yml ps
 sudo docker logs -f averie-web
 ```
 
-Ansible runs from a laptop too — see [ansible/README.md](../ansible/README.md).
+[ansible/README.md](../ansible/README.md) describes what the playbooks put on the
+server and where each file lives.

@@ -1,0 +1,124 @@
+name: infra-destroy
+run-name: 'Infra destroy (registry kept: ${{ !inputs.destroy_registry }})'
+
+# Deletes the server permanently. The container registry repository is kept by
+# default — destroying it would delete every image ever pushed, including the
+# one a later infra-create would want to redeploy.
+on:
+    workflow_dispatch:
+        inputs:
+            confirm:
+                description: 'Type "destroy" to confirm'
+                required: true
+                type: string
+            destroy_registry:
+                description: 'ALSO delete the container registry and every image in it'
+                required: false
+                default: false
+                type: boolean
+            remove_dns:
+                description: 'Remove the subdomain A record'
+                required: false
+                default: true
+                type: boolean
+
+concurrency:
+    group: averie-infra
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    destroy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Verify confirmation
+              env:
+                  CONFIRM: ${{ inputs.confirm }}
+              run: |
+                  if [[ "$CONFIRM" != "destroy" ]]; then
+                    echo "::error::Confirmation text must be exactly \"destroy\". Nothing was changed."
+                    exit 1
+                  fi
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Terraform setup
+              uses: ./.github/actions/terraform-setup
+              with:
+                  appcred_id: ${{ secrets.BIZFLY_APPCRED_ID }}
+                  appcred_secret: ${{ secrets.BIZFLY_APPCRED_SECRET }}
+                  state_access_key: ${{ secrets.TF_STATE_ACCESS_KEY }}
+                  state_secret_key: ${{ secrets.TF_STATE_SECRET_KEY }}
+                  state_bucket: ${{ vars.TF_STATE_BUCKET }}
+                  state_endpoint: ${{ vars.TF_STATE_ENDPOINT || 'https://hcm.ss.bfcplatform.vn' }}
+                  state_region: ${{ vars.TF_STATE_REGION || 'hcm' }}
+                  project_id: ${{ vars.BIZFLY_PROJECT_ID }}
+                  ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
+                  region_name: ${{ vars.BIZFLY_REGION_NAME || 'HoChiMinh' }}
+
+            - name: Show what is in state
+              working-directory: terraform
+              run: terraform state list
+
+            - name: Terraform destroy (server, firewall, SSH key)
+              if: ${{ !inputs.destroy_registry }}
+              working-directory: terraform
+              # -target is deliberate here: it is the only way to leave the
+              # registry repository (and its images) untouched.
+              run: |
+                  terraform destroy -auto-approve \
+                    -target=bizflycloud_server.web \
+                    -target=bizflycloud_firewall.web \
+                    -target=bizflycloud_ssh_key.deploy
+
+            - name: Terraform destroy (everything, registry included)
+              if: ${{ inputs.destroy_registry }}
+              working-directory: terraform
+              run: terraform destroy -auto-approve
+
+            - name: Set up Python
+              if: inputs.remove_dns
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+
+            - name: Remove the subdomain A record
+              if: inputs.remove_dns
+              continue-on-error: true
+              run: |
+                  pip install requests
+                  python scripts/update_bizfly_subdomain_dns.py
+              env:
+                  NAME_COM_USERNAME: ${{ secrets.NAME_COM_USERNAME }}
+                  NAME_COM_TOKEN: ${{ secrets.NAME_COM_TOKEN }}
+                  DOMAIN_NAME: ${{ vars.DNS_ZONE || 'averienails.com' }}
+                  SUBDOMAIN: ${{ vars.DNS_SUBDOMAIN || 'bizfly' }}
+                  DELETE_RECORD: '1'
+
+            - name: Summary
+              if: always()
+              run: |
+                  {
+                    echo "## 🗑️ Infrastructure destroyed"
+                    echo ""
+                    echo "| | |"
+                    echo "| --- | --- |"
+                    echo "| **Server / firewall / SSH key** | deleted |"
+                    if [[ "${{ inputs.destroy_registry }}" == "true" ]]; then
+                      echo "| **Container registry** | **deleted, images gone** |"
+                    else
+                      echo "| **Container registry** | kept |"
+                    fi
+                    echo "| **DNS record removed** | \`${{ inputs.remove_dns }}\` |"
+                    echo "| **Result** | \`${{ job.status }}\` |"
+                    echo ""
+                    echo "⚠️ This cannot be undone. \`infra-create\` builds a fresh server with a new IP."
+                    echo ""
+                    if [[ "${{ inputs.remove_dns }}" != "true" ]]; then
+                      echo "The A record still points at an IP that is no longer yours — remove it,"
+                      echo "or Bizfly may hand that address to someone else."
+                    fi
+                  } >> $GITHUB_STEP_SUMMARY

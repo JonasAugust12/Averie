@@ -1,0 +1,115 @@
+name: Terraform setup
+description: >-
+    Installs Terraform, writes the Bizfly Simple Storage backend config, exports
+    the provider and state credentials, and runs `terraform init`. Subsequent
+    steps in the calling job can run plan/apply/destroy directly.
+
+inputs:
+    appcred_id:
+        description: Bizfly application credential ID
+        required: true
+    appcred_secret:
+        description: Bizfly application credential secret
+        required: true
+    state_access_key:
+        description: Simple Storage access key (S3 API) holding the Terraform state
+        required: true
+    state_secret_key:
+        description: Simple Storage secret key
+        required: true
+    state_bucket:
+        description: Simple Storage bucket name
+        required: true
+    state_endpoint:
+        description: Simple Storage S3 endpoint
+        required: false
+        default: https://hcm.ss.bfcplatform.vn
+    state_region:
+        description: Simple Storage region
+        required: false
+        default: hcm
+    project_id:
+        description: Bizfly project (tenant) ID
+        required: true
+    ssh_public_key:
+        description: Public half of the deploy key, for bizflycloud_ssh_key
+        required: true
+    region_name:
+        description: Bizfly region — HaNoi or HoChiMinh
+        required: false
+        default: HoChiMinh
+
+runs:
+    using: composite
+    steps:
+        - name: Validate configuration
+          shell: bash
+          run: |
+              missing=()
+              [[ -n "${{ inputs.appcred_id }}" ]]       || missing+=("secret BIZFLY_APPCRED_ID")
+              [[ -n "${{ inputs.appcred_secret }}" ]]   || missing+=("secret BIZFLY_APPCRED_SECRET")
+              [[ -n "${{ inputs.state_access_key }}" ]] || missing+=("secret TF_STATE_ACCESS_KEY")
+              [[ -n "${{ inputs.state_secret_key }}" ]] || missing+=("secret TF_STATE_SECRET_KEY")
+              [[ -n "${{ inputs.state_bucket }}" ]]     || missing+=("variable TF_STATE_BUCKET")
+              [[ -n "${{ inputs.project_id }}" ]]       || missing+=("variable BIZFLY_PROJECT_ID")
+              [[ -n "${{ inputs.ssh_public_key }}" ]]   || missing+=("variable SSH_PUBLIC_KEY")
+
+              if (( ${#missing[@]} )); then
+                for item in "${missing[@]}"; do
+                  echo "::error::Missing $item"
+                done
+                echo "::error::See docs/deployment-bizfly.md section 6."
+                exit 1
+              fi
+
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v3
+          with:
+              terraform_version: '~1.10'
+              terraform_wrapper: false
+
+        - name: Export credentials
+          shell: bash
+          env:
+              APPCRED_ID: ${{ inputs.appcred_id }}
+              APPCRED_SECRET: ${{ inputs.appcred_secret }}
+              STATE_ACCESS_KEY: ${{ inputs.state_access_key }}
+              STATE_SECRET_KEY: ${{ inputs.state_secret_key }}
+              PROJECT_ID: ${{ inputs.project_id }}
+              SSH_PUBLIC_KEY: ${{ inputs.ssh_public_key }}
+              REGION_NAME: ${{ inputs.region_name }}
+          run: |
+              {
+                echo "BIZFLYCLOUD_APPLICATION_CREDENTIAL_ID=${APPCRED_ID}"
+                echo "BIZFLYCLOUD_APPLICATION_CREDENTIAL_SECRET=${APPCRED_SECRET}"
+                echo "AWS_ACCESS_KEY_ID=${STATE_ACCESS_KEY}"
+                echo "AWS_SECRET_ACCESS_KEY=${STATE_SECRET_KEY}"
+                echo "TF_VAR_bizfly_project_id=${PROJECT_ID}"
+                echo "TF_VAR_bizfly_region_name=${REGION_NAME}"
+                echo "TF_VAR_ssh_public_key=${SSH_PUBLIC_KEY}"
+                echo "TF_IN_AUTOMATION=1"
+                echo "TF_INPUT=0"
+              } >> "$GITHUB_ENV"
+
+        - name: Write backend config
+          shell: bash
+          working-directory: terraform
+          env:
+              STATE_BUCKET: ${{ inputs.state_bucket }}
+              STATE_REGION: ${{ inputs.state_region }}
+              STATE_ENDPOINT: ${{ inputs.state_endpoint }}
+          run: |
+              cat > backend.hcl <<CFG
+              bucket = "${STATE_BUCKET}"
+              region = "${STATE_REGION}"
+
+              endpoints = {
+                s3 = "${STATE_ENDPOINT}"
+              }
+              CFG
+              cat backend.hcl
+
+        - name: Terraform init
+          shell: bash
+          working-directory: terraform
+          run: terraform init -backend-config=backend.hcl -lockfile=readonly

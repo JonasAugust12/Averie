@@ -1,0 +1,118 @@
+name: infra-tls
+run-name: "Issue TLS certificate for ${{ vars.APP_VHOST || 'bizfly.averienails.com' }}"
+
+# One-off: obtain a Let's Encrypt certificate, install the renewal cron, flip
+# ENABLE_TLS to true, and redeploy so Nginx starts serving HTTPS.
+#
+# Prerequisites: the server is up (infra-create), DNS resolves to it, and the
+# stack answers on port 80 (deploy).
+on:
+    workflow_dispatch:
+        inputs:
+            letsencrypt_email:
+                description: "Email for the Let's Encrypt account (expiry notices)"
+                required: true
+                type: string
+            redeploy:
+                description: 'Redeploy afterwards so Nginx picks up HTTPS'
+                required: false
+                default: true
+                type: boolean
+
+concurrency:
+    group: averie-infra
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    issue:
+        runs-on: ubuntu-latest
+        env:
+            GH_ADMIN_PAT: ${{ secrets.GH_ADMIN_PAT }}
+            VHOST: ${{ vars.APP_VHOST || 'bizfly.averienails.com' }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Check the site answers on port 80
+              env:
+                  SERVER_HOST: ${{ vars.SERVER_HOST }}
+              run: |
+                  if [[ -z "${SERVER_HOST}" ]]; then
+                    echo "::error::SERVER_HOST is not set. Run infra-create first."
+                    exit 1
+                  fi
+
+                  RESOLVED=$(getent hosts "$VHOST" | awk '{print $1}' | head -1)
+                  if [[ "$RESOLVED" != "$SERVER_HOST" ]]; then
+                    echo "::error::$VHOST resolves to '${RESOLVED:-nothing}' but the server is $SERVER_HOST."
+                    echo "::error::Run update-bizfly-dns and wait for propagation before issuing a certificate."
+                    exit 1
+                  fi
+
+                  CODE=$(curl -s -o /dev/null -w '%{http_code}' "http://$VHOST/api/health" || echo 000)
+                  if [[ "$CODE" == "000" ]]; then
+                    echo "::error::No answer on http://$VHOST. Run the deploy workflow first."
+                    exit 1
+                  fi
+                  echo "$VHOST answers with HTTP $CODE — ready for the ACME challenge."
+
+            - name: Ansible setup
+              uses: ./.github/actions/ansible-setup
+              with:
+                  ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  server_host: ${{ vars.SERVER_HOST }}
+                  server_user: ${{ vars.SERVER_USER || 'ubuntu' }}
+
+            - name: Issue the certificate
+              working-directory: ansible
+              env:
+                  ANSIBLE_FORCE_COLOR: '1'
+              run: |
+                  ansible-playbook issue_cert.yml \
+                    -e "letsencrypt_email=${{ inputs.letsencrypt_email }}" \
+                    -e "app_vhost=$VHOST"
+
+            - name: Set ENABLE_TLS
+              id: setvar
+              if: env.GH_ADMIN_PAT != ''
+              env:
+                  GH_TOKEN: ${{ secrets.GH_ADMIN_PAT }}
+              run: |
+                  if gh variable set ENABLE_TLS --body "true" --repo "${{ github.repository }}"; then
+                    echo "updated=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "updated=false" >> $GITHUB_OUTPUT
+                    echo "::warning::Could not set ENABLE_TLS. Set it to true by hand."
+                  fi
+
+            - name: Redeploy with HTTPS
+              if: inputs.redeploy && steps.setvar.outputs.updated == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.GH_ADMIN_PAT }}
+              run: |
+                  gh workflow run deploy.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"
+                  echo "Deploy dispatched — Nginx will switch to HTTPS once it finishes."
+
+            - name: Summary
+              if: always()
+              run: |
+                  {
+                    echo "## 🔒 TLS"
+                    echo ""
+                    echo "| | |"
+                    echo "| --- | --- |"
+                    echo "| **Host** | \`${{ env.VHOST }}\` |"
+                    echo "| **ENABLE_TLS set** | \`${{ steps.setvar.outputs.updated || 'skipped - no GH_ADMIN_PAT' }}\` |"
+                    echo "| **Redeploy dispatched** | \`${{ inputs.redeploy }}\` |"
+                    echo "| **Result** | \`${{ job.status }}\` |"
+                    echo ""
+                    echo "Renewal runs twice a day from cron on the server; there is nothing recurring to click."
+                    if [[ "${{ steps.setvar.outputs.updated }}" != "true" ]]; then
+                      echo ""
+                      echo "Set the \`ENABLE_TLS\` repository variable to \`true\` and re-run \`deploy\`"
+                      echo "to finish switching Nginx over."
+                    fi
+                  } >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,72 @@
+name: infra-stop
+run-name: 'Infra stop'
+
+# Powers the server off without deleting it. The root disk, the public IP and
+# the firewall all survive; only the compute charge stops. Use infra-destroy to
+# actually remove the server.
+on:
+    workflow_dispatch:
+
+concurrency:
+    group: averie-infra
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    stop:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Terraform setup
+              uses: ./.github/actions/terraform-setup
+              with:
+                  appcred_id: ${{ secrets.BIZFLY_APPCRED_ID }}
+                  appcred_secret: ${{ secrets.BIZFLY_APPCRED_SECRET }}
+                  state_access_key: ${{ secrets.TF_STATE_ACCESS_KEY }}
+                  state_secret_key: ${{ secrets.TF_STATE_SECRET_KEY }}
+                  state_bucket: ${{ vars.TF_STATE_BUCKET }}
+                  state_endpoint: ${{ vars.TF_STATE_ENDPOINT || 'https://hcm.ss.bfcplatform.vn' }}
+                  state_region: ${{ vars.TF_STATE_REGION || 'hcm' }}
+                  project_id: ${{ vars.BIZFLY_PROJECT_ID }}
+                  ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
+                  region_name: ${{ vars.BIZFLY_REGION_NAME || 'HoChiMinh' }}
+
+            - name: Check the server exists
+              id: check
+              working-directory: terraform
+              run: |
+                  if ! terraform state list | grep -q '^bizflycloud_server\.web$'; then
+                    echo "::warning::No server in state — nothing to stop."
+                    echo "found=false" >> $GITHUB_OUTPUT
+                    exit 0
+                  fi
+                  echo "found=true" >> $GITHUB_OUTPUT
+
+            - name: Terraform apply (stopped)
+              if: steps.check.outputs.found == 'true'
+              working-directory: terraform
+              run: terraform apply -auto-approve -var="server_state=stopped"
+
+            - name: Summary
+              if: always()
+              run: |
+                  {
+                    echo "## 🛑 Server stopped"
+                    echo ""
+                    if [[ "${{ steps.check.outputs.found }}" != "true" ]]; then
+                      echo "No server was found in the Terraform state — nothing to do."
+                    else
+                      echo "The server is powered off. Its root disk, public IP and firewall are kept,"
+                      echo "so \`infra-start\` brings it back at the same address."
+                      echo ""
+                      echo "Storage is still billed while stopped. Use \`infra-destroy\` to stop paying entirely."
+                    fi
+                    echo ""
+                    echo "| | |"
+                    echo "| --- | --- |"
+                    echo "| **Result** | \`${{ job.status }}\` |"
+                  } >> $GITHUB_STEP_SUMMARY

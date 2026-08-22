@@ -11,6 +11,8 @@ Environment:
     SUBDOMAIN           Host inside the zone, e.g. bizfly
     SERVER_IP           IPv4 address of the Bizfly server
     RECORD_TTL          Optional, defaults to 300
+    DELETE_RECORD       Optional; "1"/"true" removes the A record instead of
+                        upserting it. SERVER_IP is then not required.
 """
 
 import base64
@@ -102,6 +104,36 @@ def upsert_record(
     return False
 
 
+def delete_record(
+    domain: str,
+    headers: dict[str, str],
+    records: list[dict],
+    host: str,
+    record_type: str,
+) -> bool:
+    existing = [
+        r for r in records if r.get("host") == host and r.get("type") == record_type
+    ]
+    fqdn = f"{host}.{domain}"
+
+    if not existing:
+        print(f"No {record_type} record for {fqdn} - nothing to delete.")
+        return True
+
+    ok = True
+    for record in existing:
+        url = f"{API_ROOT}/domains/{domain}/records/{record['id']}"
+        response = requests.delete(url, headers=headers, timeout=30)
+
+        if response.status_code in (200, 204):
+            print(f"Deleted {record_type} {fqdn} -> {record.get('answer')}")
+        else:
+            print(f"Failed to delete {fqdn}: {response.status_code} {response.text}")
+            ok = False
+
+    return ok
+
+
 def warn_on_conflicts(records: list[dict], host: str, domain: str) -> None:
     """A CNAME or AAAA on the same host would shadow the A record we just set."""
     for record in records:
@@ -120,9 +152,18 @@ def main() -> None:
     server_ip = os.getenv("SERVER_IP", "").strip()
     ttl = int(os.getenv("RECORD_TTL", "300"))
 
+    deleting = os.getenv("DELETE_RECORD", "").strip().lower() in ("1", "true", "yes")
+
     if not subdomain:
         print("SUBDOMAIN must not be empty - this script never edits the apex record.")
         sys.exit(1)
+
+    if deleting:
+        headers = get_auth_headers()
+        records = fetch_records(domain, headers)
+        if not delete_record(domain, headers, records, subdomain, "A"):
+            sys.exit(1)
+        return
 
     if not server_ip:
         print("Missing SERVER_IP environment variable.")

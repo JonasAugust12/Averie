@@ -85,7 +85,7 @@ resource "bizflycloud_server" "web" {
   ssh_key               = bizflycloud_ssh_key.deploy.name
   network_plan          = var.network_plan
   billing_plan          = var.billing_plan
-  state                 = "running"
+  state                 = var.server_state
 
   user_data = file("${path.module}/cloud-init.yaml")
 

@@ -1,0 +1,89 @@
+name: Ansible setup
+description: >-
+    Installs Ansible with the community.docker collection, writes the deploy SSH
+    key, and generates the inventory from the SERVER_HOST variable. Subsequent
+    steps in the calling job can run `ansible-playbook` from the `ansible`
+    directory.
+
+inputs:
+    ssh_private_key:
+        description: Private half of the deploy key
+        required: true
+    server_host:
+        description: Public IP of the Bizfly server
+        required: true
+    server_user:
+        description: Login user on the server
+        required: false
+        default: ubuntu
+
+runs:
+    using: composite
+    steps:
+        - name: Validate configuration
+          shell: bash
+          run: |
+              missing=()
+              [[ -n "${{ inputs.ssh_private_key }}" ]] || missing+=("secret SSH_PRIVATE_KEY")
+              [[ -n "${{ inputs.server_host }}" ]]     || missing+=("variable SERVER_HOST")
+
+              if (( ${#missing[@]} )); then
+                for item in "${missing[@]}"; do
+                  echo "::error::Missing $item"
+                done
+                echo "::error::Run the infra-create workflow first, or see docs/deployment-bizfly.md section 6."
+                exit 1
+              fi
+
+        - name: Install Ansible
+          shell: bash
+          run: |
+              python3 -m pip install --upgrade pip
+              python3 -m pip install "ansible-core>=2.16" docker
+              ansible-galaxy collection install community.docker
+
+        - name: Configure SSH
+          shell: bash
+          env:
+              SSH_PRIVATE_KEY: ${{ inputs.ssh_private_key }}
+              SERVER_HOST: ${{ inputs.server_host }}
+          run: |
+              mkdir -p ~/.ssh
+              printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/averie
+              chmod 600 ~/.ssh/averie
+              ssh-keyscan -H "${SERVER_HOST}" >> ~/.ssh/known_hosts 2>/dev/null
+
+        - name: Generate inventory
+          shell: bash
+          working-directory: ansible
+          env:
+              SERVER_HOST: ${{ inputs.server_host }}
+              SERVER_USER: ${{ inputs.server_user }}
+          run: |
+              {
+                echo "[web]"
+                echo "${SERVER_HOST} ansible_user=${SERVER_USER} ansible_ssh_private_key_file=~/.ssh/averie"
+                echo ""
+                echo "[web:vars]"
+                echo "ansible_python_interpreter=/usr/bin/python3"
+              } > inventory.ini
+              cat inventory.ini
+
+        - name: Wait for SSH
+          shell: bash
+          env:
+              SERVER_HOST: ${{ inputs.server_host }}
+              SERVER_USER: ${{ inputs.server_user }}
+          run: |
+              # A freshly created server may still be booting when this runs.
+              for i in $(seq 1 30); do
+                if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ~/.ssh/averie \
+                     "${SERVER_USER}@${SERVER_HOST}" "echo ok" >/dev/null 2>&1; then
+                  echo "SSH is up."
+                  exit 0
+                fi
+                echo "Attempt $i/30 — waiting for SSH..."
+                sleep 10
+              done
+              echo "::error::Could not reach ${SERVER_HOST} over SSH after 5 minutes."
+              exit 1

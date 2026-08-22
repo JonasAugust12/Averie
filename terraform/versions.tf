@@ -14,11 +14,10 @@ terraform {
   # State lives in Bizfly Simple Storage (S3-compatible).
   # Locking uses the native .tflock object (Terraform >= 1.10) — no DynamoDB.
   #
-  # Bucket name / endpoint are supplied via partial config so nothing
-  # environment-specific is committed:
-  #     terraform init -backend-config=backend.hcl
-  #
-  # To run with local state instead, comment out this whole `backend` block.
+  # This is partial config. The bucket, region and endpoint are written into a
+  # backend.hcl by .github/actions/terraform-setup from repository variables, so
+  # nothing environment-specific is committed and every workflow run reconciles
+  # against the same state.
   # ---------------------------------------------------------------------------
   backend "s3" {
     key          = "averie/terraform.tfstate"
@@ -39,9 +38,7 @@ provider "bizflycloud" {
   region_name = var.bizfly_region_name
   project_id  = var.bizfly_project_id
 
-  # Credentials come from environment variables so they never touch the repo:
-  #   auth_method = "password"
-  #     BIZFLYCLOUD_EMAIL / BIZFLYCLOUD_PASSWORD
-  #   auth_method = "application_credential"
-  #     BIZFLYCLOUD_APPLICATION_CREDENTIAL_ID / BIZFLYCLOUD_APPLICATION_CREDENTIAL_SECRET
+  # Credentials come from BIZFLYCLOUD_APPLICATION_CREDENTIAL_ID and
+  # BIZFLYCLOUD_APPLICATION_CREDENTIAL_SECRET, exported from GitHub secrets by
+  # .github/actions/terraform-setup. They never touch the repo.
 }

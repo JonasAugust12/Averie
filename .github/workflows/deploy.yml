@@ -115,40 +115,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Install Ansible
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install "ansible-core>=2.16" docker
-                  ansible-galaxy collection install community.docker
-
-            - name: Configure SSH
-              env:
-                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-                  SERVER_HOST: ${{ vars.SERVER_HOST }}
-              run: |
-                  if [[ -z "${SERVER_HOST}" ]]; then
-                    echo "::error::Repository variable SERVER_HOST is not set (use the public_ip Terraform output)."
-                    exit 1
-                  fi
-                  mkdir -p ~/.ssh
-                  printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/averie
-                  chmod 600 ~/.ssh/averie
-                  ssh-keyscan -H "${SERVER_HOST}" >> ~/.ssh/known_hosts 2>/dev/null
-
-            - name: Generate inventory
-              working-directory: ansible
-              env:
-                  SERVER_HOST: ${{ vars.SERVER_HOST }}
-                  SERVER_USER: ${{ vars.SERVER_USER || 'ubuntu' }}
-              run: |
-                  {
-                    echo "[web]"
-                    echo "${SERVER_HOST} ansible_user=${SERVER_USER} ansible_ssh_private_key_file=~/.ssh/averie"
-                    echo ""
-                    echo "[web:vars]"
-                    echo "ansible_python_interpreter=/usr/bin/python3"
-                  } > inventory.ini
-                  cat inventory.ini
+            - name: Ansible setup
+              uses: ./.github/actions/ansible-setup
+              with:
+                  ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  server_host: ${{ vars.SERVER_HOST }}
+                  server_user: ${{ vars.SERVER_USER || 'ubuntu' }}
 
             # Extra vars go through a JSON file rather than a shell command line
             # so secrets containing quotes or spaces cannot break the invocation.

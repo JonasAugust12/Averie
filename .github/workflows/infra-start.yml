@@ -1,0 +1,142 @@
+name: infra-start
+run-name: 'Infra start'
+
+# Powers a stopped server back on. The public IP is normally preserved, but the
+# workflow re-reads it and repairs SERVER_HOST and DNS if it did change.
+on:
+    workflow_dispatch:
+        inputs:
+            update_dns:
+                description: 'Re-point the subdomain if the IP changed'
+                required: false
+                default: true
+                type: boolean
+
+concurrency:
+    group: averie-infra
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    start:
+        runs-on: ubuntu-latest
+        env:
+            GH_ADMIN_PAT: ${{ secrets.GH_ADMIN_PAT }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Terraform setup
+              uses: ./.github/actions/terraform-setup
+              with:
+                  appcred_id: ${{ secrets.BIZFLY_APPCRED_ID }}
+                  appcred_secret: ${{ secrets.BIZFLY_APPCRED_SECRET }}
+                  state_access_key: ${{ secrets.TF_STATE_ACCESS_KEY }}
+                  state_secret_key: ${{ secrets.TF_STATE_SECRET_KEY }}
+                  state_bucket: ${{ vars.TF_STATE_BUCKET }}
+                  state_endpoint: ${{ vars.TF_STATE_ENDPOINT || 'https://hcm.ss.bfcplatform.vn' }}
+                  state_region: ${{ vars.TF_STATE_REGION || 'hcm' }}
+                  project_id: ${{ vars.BIZFLY_PROJECT_ID }}
+                  ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
+                  region_name: ${{ vars.BIZFLY_REGION_NAME || 'HoChiMinh' }}
+
+            - name: Check the server exists
+              id: check
+              working-directory: terraform
+              run: |
+                  if ! terraform state list | grep -q '^bizflycloud_server\.web$'; then
+                    echo "::error::No server in state. Run infra-create first."
+                    exit 1
+                  fi
+
+            - name: Terraform apply (running)
+              working-directory: terraform
+              run: terraform apply -auto-approve -var="server_state=running"
+
+            - name: Read outputs
+              id: tf
+              working-directory: terraform
+              run: |
+                  IP=$(terraform output -raw public_ip 2>/dev/null || true)
+                  if [[ -z "$IP" || "$IP" == "null" ]]; then
+                    echo "::error::Terraform produced no public IP."
+                    exit 1
+                  fi
+                  echo "public_ip=$IP" >> $GITHUB_OUTPUT
+                  if [[ "$IP" == "${{ vars.SERVER_HOST }}" ]]; then
+                    echo "changed=false" >> $GITHUB_OUTPUT
+                    echo "IP unchanged: $IP"
+                  else
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                    echo "IP changed: ${{ vars.SERVER_HOST }} -> $IP"
+                  fi
+
+            - name: Update SERVER_HOST repository variable
+              id: setvar
+              if: steps.tf.outputs.changed == 'true' && env.GH_ADMIN_PAT != ''
+              env:
+                  GH_TOKEN: ${{ secrets.GH_ADMIN_PAT }}
+                  IP: ${{ steps.tf.outputs.public_ip }}
+              run: |
+                  if gh variable set SERVER_HOST --body "$IP" --repo "${{ github.repository }}"; then
+                    echo "updated=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "updated=false" >> $GITHUB_OUTPUT
+                    echo "::warning::Could not set SERVER_HOST. Set it to $IP by hand."
+                  fi
+
+            - name: Set up Python
+              if: inputs.update_dns && steps.tf.outputs.changed == 'true'
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+
+            - name: Re-point the subdomain
+              if: inputs.update_dns && steps.tf.outputs.changed == 'true'
+              run: |
+                  pip install requests
+                  python scripts/update_bizfly_subdomain_dns.py
+              env:
+                  NAME_COM_USERNAME: ${{ secrets.NAME_COM_USERNAME }}
+                  NAME_COM_TOKEN: ${{ secrets.NAME_COM_TOKEN }}
+                  DOMAIN_NAME: ${{ vars.DNS_ZONE || 'averienails.com' }}
+                  SUBDOMAIN: ${{ vars.DNS_SUBDOMAIN || 'bizfly' }}
+                  SERVER_IP: ${{ steps.tf.outputs.public_ip }}
+                  RECORD_TTL: '300'
+
+            - name: Wait for the app to answer
+              continue-on-error: true
+              env:
+                  IP: ${{ steps.tf.outputs.public_ip }}
+                  VHOST: ${{ vars.APP_VHOST || 'bizfly.averienails.com' }}
+              run: |
+                  echo "Containers restart on their own (restart: always). Polling for up to 3 minutes..."
+                  for i in $(seq 1 18); do
+                    CODE=$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $VHOST" "http://$IP/api/health" || echo 000)
+                    if [[ "$CODE" == "200" ]]; then
+                      echo "App is answering (HTTP $CODE)."
+                      exit 0
+                    fi
+                    echo "Attempt $i/18 — HTTP $CODE"
+                    sleep 10
+                  done
+                  echo "::warning::App did not answer within 3 minutes. Run the deploy workflow to redeploy it."
+
+            - name: Summary
+              if: always()
+              run: |
+                  {
+                    echo "## ▶️ Server started"
+                    echo ""
+                    echo "| | |"
+                    echo "| --- | --- |"
+                    echo "| **Public IP** | \`${{ steps.tf.outputs.public_ip }}\` |"
+                    echo "| **IP changed** | \`${{ steps.tf.outputs.changed }}\` |"
+                    echo "| **SERVER_HOST updated** | \`${{ steps.setvar.outputs.updated || 'not needed' }}\` |"
+                    echo "| **Result** | \`${{ job.status }}\` |"
+                    echo ""
+                    echo "Containers come back on their own — the stack is set to \`restart: always\`."
+                    echo "If the site does not answer, run the \`deploy\` workflow."
+                  } >> $GITHUB_STEP_SUMMARY
