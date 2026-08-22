@@ -75,5 +75,8 @@ MongoDB is unreachable. Check that the Atlas cluster allows the server's IP
 registry token is wrong. Confirm both against the push command shown in the
 Bizfly console.
 
+`Could not load 'yaml' callback plugin` → fixed in repo: `ansible.cfg` uses
+`ansible.builtin.default` (the `yaml` callback was removed from ansible-core 2.16+).
+
 Nginx up but 502 → the app container is not on `averie_network`, or it crashed
 after passing its healthcheck. `docker logs averie-web` on the server.

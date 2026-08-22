@@ -96,8 +96,8 @@ jobs:
                     echo "Key type: $(awk '{print $1}' <<<"$FP")"
                   fi
                   echo ""
-                  echo "Bootstrap script ships authorized_keys via shell user_data (bootstrap.sh.tftpl)."
-                  head -18 bootstrap.sh.tftpl
+                  echo "cloud-init user_data (cloud-init.yaml.tftpl):"
+                  head -22 cloud-init.yaml.tftpl
 
             - name: Read outputs
               id: tf
@@ -180,7 +180,7 @@ jobs:
                     echo ""
                     echo "1. Whitelist \`${{ steps.tf.outputs.public_ip }}\` in MongoDB Atlas → Network Access."
                     echo "2. Run the \`deploy\` workflow if it was not dispatched above."
-                    echo "3. If deploy SSH fails, on the server check \`sudo tail -50 /var/log/averie-bootstrap.log\`."
+                    echo "3. If deploy SSH fails, check cloud-init: \`sudo tail -50 /var/log/cloud-init-output.log\`."
                     echo ""
                     echo '```bash'
                     echo "ssh -i ~/.ssh/averie root@${{ steps.tf.outputs.public_ip }}"

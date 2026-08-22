@@ -223,6 +223,12 @@ Bizfly Cloud's default SSH user is **`root`**, not `ubuntu` (see Bizfly docs on
 keypair login). The deploy pipeline connects as `root` unless you override
 `SERVER_USER`.
 
+**Why not force `ubuntu`?** Some Ubuntu cloud images use an `ubuntu` sudo user,
+but Bizfly injects keypairs for **`root`** and their docs show `root@WAN_IP`. The
+playbooks already run with `become: yes`, so using `root` over SSH does not
+weaken the model — it matches the platform. Override `SERVER_USER` only if you
+add a custom bootstrap user yourself.
+
 The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
 `SSH_PUBLIC_KEY` variable. Nothing else about the deployment needs a terminal.
 
@@ -238,8 +244,8 @@ The private half becomes the `SSH_PRIVATE_KEY` secret, the public half the
 | `2c_4g` | 2    | 4 GB | 40 GB | 396.700 đ   |
 
 Default is `1c_2g`. `1c_1g` also works — the image is built in CI, so the server
-only pulls and runs it — but 1 GB leaves very little headroom; the bootstrap script
-adds a 2 GB swapfile to compensate. `server_category = "basic"` is the Shared CPU line.
+only pulls and runs it — but 1 GB leaves very little headroom; cloud-init adds a
+2 GB swapfile to compensate. `server_category = "basic"` is the Shared CPU line.
 
 ---
 
@@ -474,7 +480,7 @@ next inherits your hostname.
 `SSH_PUBLIC_KEY` and the `SSH_PRIVATE_KEY` secret must always be halves of the
 same pair, and changing them **rebuilds the server**.
 
-The bootstrap script writes `authorized_keys` once, at first boot. Nothing — not
+The cloud-init config writes `authorized_keys` once, at first boot. Nothing — not
 Terraform, not the Bizfly console — re-keys a machine that is already running. The Terraform
 config models that honestly with `replace_triggered_by` on the key resource, so a
 rotation destroys and recreates the server rather than leaving it unreachable
@@ -507,9 +513,8 @@ The second case is usually one of:
 - **`SERVER_USER` is wrong** — Bizfly's default SSH user is **`root`**, not
   `ubuntu`. Delete the `SERVER_USER` variable if it says `ubuntu`, or set it to
   `root`.
-- **Bootstrap did not run** — Bizfly `user_data` expects a shell script, not
-  cloud-config YAML. The repo ships `terraform/bootstrap.sh.tftpl`, which writes
-  `SSH_PUBLIC_KEY` into `/root/.ssh/authorized_keys` at first boot.
+- **cloud-init did not finish** — check `/var/log/cloud-init-output.log` on the
+  server. The repo ships `terraform/cloud-init.yaml.tftpl` (keys on `root`).
 - **Legacy `ssh-rsa` key** — prefer ed25519 keys you generate locally.
 
 **Fix when the pair check passes but SSH still fails after ~5 minutes:**
@@ -517,9 +522,9 @@ The second case is usually one of:
 1. Set **`SERVER_USER` to `root`** (or delete the variable to use the default).
 2. Confirm **`SSH_PUBLIC_KEY`** is one line from your `.pub` file (no extra quotes).
 3. **Push latest `main`**, then `infra-destroy` → `infra-create` (server must be
-   recreated to run the bootstrap script).
+   recreated to pick up new `user_data`).
 4. Whitelist the new IP in MongoDB Atlas before deploy finishes.
-5. On the server (via Bizfly console if needed): `sudo tail -50 /var/log/averie-bootstrap.log`
+5. On the server: `sudo tail -50 /var/log/cloud-init-output.log`
 
 If you destroyed the server in the Bizfly console by hand but left the SSH key
 or Terraform state behind, always prefer `infra-destroy` from Actions so state

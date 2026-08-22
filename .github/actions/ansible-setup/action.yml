@@ -110,8 +110,8 @@ runs:
               SERVER_USER: ${{ inputs.server_user }}
           run: |
               # A freshly created server may still be booting when this runs.
-              # bootstrap.sh (user_data) writes authorized_keys at first boot; until
-              # it finishes, sshd may answer with Permission denied even when the
+              # cloud-init writes authorized_keys once at first boot; until it
+              # finishes, sshd may answer with Permission denied even when the
               # GitHub key pair is correct.
               PAIR_VERIFIED="${ANSIBLE_PAIR_VERIFIED:-false}"
               # Legacy ssh-rsa keys (e.g. Bizfly "Generated-by-Nova") need explicit
@@ -131,7 +131,7 @@ runs:
 
                 if grep -qi "permission denied\|no supported authentication" <<<"$OUT"; then
                   if [[ "${PAIR_VERIFIED}" == "true" && "$i" -lt 30 ]]; then
-                    echo "Attempt $i/30 — SSH is up but the key is not accepted yet (bootstrap script may still be running)..."
+                    echo "Attempt $i/30 — SSH is up but the key is not accepted yet (cloud-init may still be running)..."
                     sleep 10
                     continue
                   fi
@@ -142,7 +142,7 @@ runs:
                     echo "::error::Bizfly Cloud default login user is root — set SERVER_USER=root (or delete SERVER_USER if it is ubuntu)."
                     echo "::error::If using a legacy ssh-rsa key, prefer ed25519 (see docs/deployment-bizfly.md §4.4)."
                     echo "::error::Otherwise push latest main, run infra-destroy, then infra-create again."
-                    echo "::error::On the server, check: sudo tail -50 /var/log/averie-bootstrap.log"
+                    echo "::error::On the server, check: sudo tail -50 /var/log/cloud-init-output.log"
                   else
                     echo "::error::The private key in SSH_PRIVATE_KEY is not the one on the server."
                     echo "::error::Compare it with SSH_PUBLIC_KEY — see the key-pair check earlier in this job."
