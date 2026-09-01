@@ -378,6 +378,7 @@
         "settings": "Schedule settings",
         "settingsSubtitle": "Configure hours per weekday (Mon–Sun), time slots and day-offs",
         "save": "Save settings",
+        "saving": "Saving…",
         "weekdaySchedule": "Hours by weekday",
         "weekdayScheduleHint": "Select a day (Mon–Sun) and configure open/close time slots for that day only",
         "dayOpenHint": "Salon accepts bookings on this day",

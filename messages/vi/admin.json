@@ -315,6 +315,7 @@
         "settings": "Cài đặt lịch",
         "settingsSubtitle": "Cấu hình giờ theo từng ngày (T2–CN), khung giờ và ngày nghỉ",
         "save": "Lưu cài đặt",
+        "saving": "Đang lưu…",
         "weekdaySchedule": "Giờ theo ngày trong tuần",
         "weekdayScheduleHint": "Chọn ngày (T2–CN) và cấu hình khung giờ mở/đóng riêng cho từng ngày",
         "dayOpenHint": "Tiệm nhận đặt lịch vào ngày này",

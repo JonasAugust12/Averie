@@ -35,6 +35,14 @@ export const metadata: Metadata = {
         locale: 'en_US',
         type: 'website',
     },
+    icons: {
+        icon: [
+            { url: '/icons/icon.png', sizes: '192x192', type: 'image/png' },
+            { url: '/icons/logo_round.png', sizes: '512x512', type: 'image/png' },
+        ],
+        shortcut: '/icons/icon.png',
+        apple: '/icons/icon.png',
+    },
     twitter: {
         card: 'summary_large_image',
         title: 'Averie | Nails • Facials • Beauty',

@@ -35,6 +35,15 @@ const WEEKDAY_I18N_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as c
 
 export default function ScheduleSettingsPage() {
     const t = useAdminTranslations();
+
+    // Safe translation resolution helper to prevent runtime MISSING_MESSAGE crashes
+    const safeT = (key: string, fallback: string) => {
+        try {
+            return t(key) || fallback;
+        } catch {
+            return fallback;
+        }
+    };
     const { data: settings, isLoading } = useScheduleSettings();
     const { showConfirm, hideConfirm, setConfirmLoading } = useUIStore();
     const saveSettings = useUpdateScheduleSettings();
@@ -209,10 +218,10 @@ export default function ScheduleSettingsPage() {
                     {saveSettings.isPending ? (
                         <>
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            {t('schedule.saving') || 'Saving…'}
+                            {safeT('schedule.saving', 'Saving…')}
                         </>
                     ) : (
-                        t('schedule.save') || 'Save Changes'
+                        safeT('schedule.save', 'Save Changes')
                     )}
                 </Button>
             </div>

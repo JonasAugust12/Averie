@@ -102,9 +102,16 @@
         "complete": "Hoàn tất bước 7"
     },
     "paused": {
-        "title": "Tạm ngưng đặt lịch online",
-        "body": "Hiện chúng tôi chưa nhận đặt lịch trực tuyến. Vui lòng gọi điện hoặc quay lại sau.",
-        "ctaHome": "Về trang chủ"
+        "badge": "Thông báo dịch vụ",
+        "statusTag": "Tạm ngưng đặt lịch online",
+        "title": "Hệ thống đặt lịch đang tạm dừng",
+        "body": "Để đảm bảo chất lượng phục vụ chu đáo nhất, dịch vụ đặt lịch trực tuyến tạm thời ngưng tiếp nhận cuộc hẹn mới. Quý khách vui lòng gọi hotline trực tiếp hoặc ghé tiệm để được hỗ trợ giữ chỗ nhanh nhất.",
+        "hotlineTitle": "Hotline đặt lịch",
+        "callNow": "Gọi ngay",
+        "directions": "Chỉ đường đến Salon",
+        "hours": "T2 - T7: 9:30 AM - 7:00 PM • CN: 10:00 AM - 5:00 PM",
+        "address": "132 Chief Justice Cushing Hwy, Cohasset, MA",
+        "ctaHome": "Trở về trang chủ"
     },
     "cta": {
         "toEmployee": "Bước tiếp",

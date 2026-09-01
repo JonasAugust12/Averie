@@ -102,9 +102,16 @@
         "complete": "Step 7 Complete"
     },
     "paused": {
-        "title": "Online booking unavailable",
-        "body": "We're temporarily not accepting online appointments. Please call us or check back soon.",
-        "ctaHome": "Back to home"
+        "badge": "Service Announcement",
+        "statusTag": "Online Booking Paused",
+        "title": "Online Reservations Temporarily Paused",
+        "body": "To maintain our high standard of personalized care, online appointments are temporarily paused. Please call our hotline directly or visit us to reserve your preferred time slot.",
+        "hotlineTitle": "Reservation Hotline",
+        "callNow": "Call Now",
+        "directions": "Get Directions",
+        "hours": "Mon - Sat: 9:30 AM - 7:00 PM • Sun: 10:00 AM - 5:00 PM",
+        "address": "132 Chief Justice Cushing Hwy, Cohasset, MA",
+        "ctaHome": "Return to Home Page"
     },
     "cta": {
         "toEmployee": "Next Step",
