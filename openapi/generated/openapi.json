@@ -1813,6 +1813,9 @@
                     "allowGuestLanguageSwitch": {
                         "type": "boolean"
                     },
+                    "bookingEnabled": {
+                        "type": "boolean"
+                    },
                     "weekdaySchedules": {
                         "type": "array",
                         "items": {
@@ -1835,6 +1838,7 @@
                     "id",
                     "allowStaffSelection",
                     "allowGuestLanguageSwitch",
+                    "bookingEnabled",
                     "weekdaySchedules",
                     "dayOffs",
                     "updatedAt"
@@ -2244,6 +2248,9 @@
                         "type": "boolean"
                     },
                     "allowGuestLanguageSwitch": {
+                        "type": "boolean"
+                    },
+                    "bookingEnabled": {
                         "type": "boolean"
                     },
                     "weekdaySchedules": {
