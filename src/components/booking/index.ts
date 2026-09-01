@@ -7,4 +7,5 @@ export { TimeStep } from './TimeStep';
 export { CustomerStep } from './CustomerStep';
 export { ReviewStep } from './ReviewStep';
 export { BookPageView } from './BookPageView';
+export { BookingPausedOverlay } from './BookingPausedOverlay';
 export { ConfirmationPageView } from './ConfirmationPageView';

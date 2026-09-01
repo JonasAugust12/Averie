@@ -387,6 +387,8 @@
         "allowStaffSelectionHint": "Allow customers to choose their preferred technician. If turned off, all booking requests are default to 'Any Technician' automatically.",
         "allowGuestLanguageSwitch": "Guest language switcher",
         "allowGuestLanguageSwitchHint": "When enabled, visitors can switch between English and Vietnamese on the landing page and booking flow. Admin and staff areas are not affected.",
+        "bookingEnabled": "Accept online bookings",
+        "bookingEnabledDesc": "When off, guests see a closed message on /book. Admins can still create bookings manually.",
         "confirmSaveTitle": "Save settings",
         "confirmSaveMsg": "Are you sure you want to save these changes?",
         "confirmSaveBtn": "Save",

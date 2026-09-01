@@ -22,6 +22,7 @@ export interface ScheduleSettingsDto {
     id: string;
     allowStaffSelection: boolean;
     allowGuestLanguageSwitch: boolean;
+    bookingEnabled: boolean;
     weekdaySchedules: WeekdayScheduleDto[];
     dayOffs: DayOffDto[];
     updatedAt: string;

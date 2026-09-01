@@ -1,4 +1,4 @@
-import { getAvailableSlotsForDateServer } from '@server/schedule.server';
+import { getAvailableSlotsForDateServer, isPublicBookingEnabled } from '@server/schedule.server';
 import { bookingSlotsQuerySchema } from '@validations/booking.schema';
 import { apiError, apiSuccess } from '../../_lib/http';
 
@@ -27,6 +27,10 @@ export async function GET(request: Request) {
 
         if (!parsed.success) {
             return apiError(parsed.error.issues[0]?.message ?? 'Validation failed', 400);
+        }
+
+        if (!(await isPublicBookingEnabled())) {
+            return apiError('Online booking is temporarily unavailable', 403);
         }
 
         const { date, staffPreference, staffId } = parsed.data;

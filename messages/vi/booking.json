@@ -101,6 +101,11 @@
         "confirmation": "Đã hoàn tất",
         "complete": "Hoàn tất bước 7"
     },
+    "paused": {
+        "title": "Tạm ngưng đặt lịch online",
+        "body": "Hiện chúng tôi chưa nhận đặt lịch trực tuyến. Vui lòng gọi điện hoặc quay lại sau.",
+        "ctaHome": "Về trang chủ"
+    },
     "cta": {
         "toEmployee": "Bước tiếp",
         "toDate": "Tiếp tục",

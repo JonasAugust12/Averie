@@ -12,9 +12,10 @@ import {
 } from '@utils/booking.util';
 import { validateBookingSchedule } from '@utils/booking-schedule.util';
 import { requireAdmin } from '@guard/auth-guard';
+import { auth } from '@libs/auth';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeBooking } from '@mappers';
-import { getAvailableSlotsForDateServer } from '@server/schedule.server';
+import { getAvailableSlotsForDateServer, isPublicBookingEnabled } from '@server/schedule.server';
 import { Booking } from '@models/booking.model';
 import type { ApiResponse } from '@typings/api.type';
 import type { BookingDto } from '@typings/booking.type';
@@ -35,6 +36,13 @@ export async function createBookingAction(
     const data = parsed.data;
 
     try {
+        const session = await auth();
+        const isAdmin = session?.user?.role === 'admin';
+
+        if (!(await isPublicBookingEnabled()) && !isAdmin) {
+            return apiErrorResult<BookingDto>('Online booking is temporarily unavailable', 403);
+        }
+
         if (data.staffPreference === 'specific' && data.staffId) {
             await validateStaffForBooking(data.staffId);
         }

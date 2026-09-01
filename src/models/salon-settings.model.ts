@@ -58,6 +58,10 @@ const SalonSettingsSchema = new Schema(
             type: Boolean,
             default: true,
         },
+        bookingEnabled: {
+            type: Boolean,
+            default: true,
+        },
         weekdaySchedules: {
             type: [WeekdayScheduleSchema],
             default: [],

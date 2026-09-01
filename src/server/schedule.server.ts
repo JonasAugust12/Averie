@@ -50,6 +50,11 @@ export async function getScheduleSettingsDto(): Promise<ScheduleSettingsDto> {
     return serializeScheduleSettings(settings);
 }
 
+export async function isPublicBookingEnabled(): Promise<boolean> {
+    const settings = await getSalonSettingsDocument();
+    return settings.bookingEnabled !== false;
+}
+
 export async function getAvailableSlotsForDateServer(
     date: string,
     options?: {

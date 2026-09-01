@@ -24,6 +24,7 @@ export const scheduleSettingsDtoSchema = z.object({
     id: objectIdSchema,
     allowStaffSelection: z.boolean(),
     allowGuestLanguageSwitch: z.boolean(),
+    bookingEnabled: z.boolean(),
     weekdaySchedules: z.array(weekdayScheduleDtoSchema).length(7),
     dayOffs: z.array(dayOffDtoSchema),
     updatedAt: z.string(),

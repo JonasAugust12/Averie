@@ -171,6 +171,7 @@ export default function ScheduleSettingsPage() {
                     await saveSettings.mutateAsync({
                         allowStaffSelection: form.allowStaffSelection,
                         allowGuestLanguageSwitch: form.allowGuestLanguageSwitch,
+                        bookingEnabled: form.bookingEnabled,
                         weekdaySchedules: form.weekdaySchedules.map((day) => ({
                             ...day,
                             periodSlots: normalizePeriodSlots(day.periodSlots),
@@ -215,6 +216,42 @@ export default function ScheduleSettingsPage() {
                     )}
                 </Button>
             </div>
+
+            {/* Online booking master toggle */}
+            <section className="rounded-3xl border border-stone-200/80 bg-white/90 p-6 shadow-2xs backdrop-blur-xs transition-all duration-300">
+                <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                        <h2 className="font-display text-base font-bold text-stone-900">
+                            {t('schedule.bookingEnabled')}
+                        </h2>
+                        <p className="font-sans text-xs text-stone-500 leading-relaxed">
+                            {t('schedule.bookingEnabledDesc')}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setForm((prev) => {
+                                if (!prev) return prev;
+                                return { ...prev, bookingEnabled: !prev.bookingEnabled };
+                            })
+                        }
+                        className={cn(
+                            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden active:scale-95',
+                            form.bookingEnabled ? 'bg-emerald-600' : 'bg-stone-200',
+                        )}
+                        role="switch"
+                        aria-checked={form.bookingEnabled}
+                    >
+                        <span
+                            className={cn(
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out mt-0.5',
+                                form.bookingEnabled ? 'translate-x-5.5' : 'translate-x-0.5',
+                            )}
+                        />
+                    </button>
+                </div>
+            </section>
 
             {/* General Toggles */}
             <div className="grid gap-4 sm:grid-cols-2">

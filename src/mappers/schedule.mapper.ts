@@ -32,6 +32,7 @@ export function serializeScheduleSettings(doc: {
     _id: IdLike;
     allowStaffSelection: boolean;
     allowGuestLanguageSwitch?: boolean;
+    bookingEnabled?: boolean;
     weekdaySchedules?: WeekdayScheduleDoc[];
     workingWeekdays?: number[];
     periodSlots?: PeriodSlotsDoc;
@@ -42,6 +43,7 @@ export function serializeScheduleSettings(doc: {
         id: toId(doc._id),
         allowStaffSelection: doc.allowStaffSelection,
         allowGuestLanguageSwitch: doc.allowGuestLanguageSwitch ?? true,
+        bookingEnabled: doc.bookingEnabled !== false,
         weekdaySchedules: serializeWeekdaySchedules(doc.weekdaySchedules, {
             workingWeekdays: doc.workingWeekdays,
             periodSlots: doc.periodSlots,

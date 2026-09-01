@@ -22,6 +22,7 @@ const weekdayScheduleSchema = z.object({
 export const updateScheduleSettingsSchema = z.object({
     allowStaffSelection: z.boolean().optional(),
     allowGuestLanguageSwitch: z.boolean().optional(),
+    bookingEnabled: z.boolean().optional(),
     weekdaySchedules: z
         .array(weekdayScheduleSchema)
         .length(7)
