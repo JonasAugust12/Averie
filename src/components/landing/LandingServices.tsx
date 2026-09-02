@@ -62,6 +62,7 @@ export function LandingServices() {
                                     sizes="(max-width: 768px) 85vw, 300px"
                                     className={`object-cover ${landingImage}`}
                                 />
+                                <div className="pointer-events-none absolute inset-0 z-10 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/35 to-transparent" />
                                 <div
                                     className={`absolute top-3 left-3 rounded-full border border-white/80 bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-third shadow-xs backdrop-blur-md ${landingStaticText}`}
                                 >
@@ -111,6 +112,7 @@ export function LandingServices() {
                                     sizes="(max-width: 768px) 100vw, 33vw"
                                     className={`object-cover transition-transform duration-700 group-hover:scale-105 ${landingImage}`}
                                 />
+                                <div className="pointer-events-none absolute inset-0 z-10 -translate-x-full animate-shine bg-linear-to-r from-transparent via-white/35 to-transparent" />
                                 <div
                                     className={`absolute top-3.5 left-3.5 rounded-full border border-white/80 bg-white/90 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-third shadow-xs backdrop-blur-md ${landingStaticText}`}
                                 >

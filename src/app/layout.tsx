@@ -7,50 +7,9 @@ import { I18nProvider } from '@providers/I18nProvider';
 import { AuthProvider } from '@providers/AuthProvider';
 import { AppShell } from '@providers/AppShell';
 import { ToastProvider } from '@providers/ToastProvider';
+import { buildRootMetadata } from '@libs/site-seo';
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-
-export const metadata: Metadata = {
-    metadataBase: new URL(siteUrl),
-    title: {
-        default: 'Averie | Nails • Facials • Beauty',
-        template: '%s | Averie',
-    },
-    description:
-        'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
-    openGraph: {
-        title: 'Averie | Nails • Facials • Beauty',
-        description:
-            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
-        url: '/',
-        siteName: 'Averie Salon',
-        images: [
-            {
-                url: '/salon/logo.jpg',
-                width: 1200,
-                height: 630,
-                alt: 'Averie Luxury Salon',
-            },
-        ],
-        locale: 'en_US',
-        type: 'website',
-    },
-    icons: {
-        icon: [
-            { url: '/icons/icon.png', sizes: '192x192', type: 'image/png' },
-            { url: '/icons/logo_round.png', sizes: '512x512', type: 'image/png' },
-        ],
-        shortcut: '/icons/icon.png',
-        apple: '/icons/icon.png',
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Averie | Nails • Facials • Beauty',
-        description:
-            'Averie luxury nail salon in Cohasset, MA. Book manicures, gel, enhancements, waxing, and facials online.',
-        images: ['/salon/logo.jpg'],
-    },
-};
+export const metadata: Metadata = buildRootMetadata();
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const locale = await getLocale();
