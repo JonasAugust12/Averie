@@ -8,7 +8,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:30
 export const SEO = {
     title: 'Averie | Nail Salon & Facials in Cohasset, MA',
     description:
-        'Top-rated nail salon & beauty spa in Cohasset, MA. Premium manicures, pedicures, gel nails, Dermalogica facials & waxing. Book your Averie appointment online.',
+        'Averie nail salon at 132 Chief Justice Cushing Hwy, Cohasset, MA 02025. Manicures, pedicures, Dermalogica facials & waxing. Call 781-923-1955 or book online.',
     keywords:
         'nail salon Cohasset MA, nails Cohasset Massachusetts, nail spa Cohasset, manicure pedicure Cohasset MA, Dermalogica facials Cohasset, beauty salon Cohasset MA, South Shore nail salon',
     ogImage: '/og.jpg',
@@ -85,11 +85,11 @@ export function buildRootMetadata(overrides: Metadata = {}): Metadata {
         },
         icons: {
             icon: [
-                { url: '/icons/icon.png', sizes: '192x192', type: 'image/png' },
+                { url: '/favicon.ico', sizes: '48x48' },
                 { url: '/icons/logo_round.png', sizes: '512x512', type: 'image/png' },
             ],
-            shortcut: '/icons/icon.png',
-            apple: '/icons/icon.png',
+            shortcut: '/favicon.ico',
+            apple: '/icons/logo_round.png',
         },
         themeColor: SEO.themeColor,
         robots: {
