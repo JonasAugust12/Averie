@@ -30,7 +30,7 @@ export const SEO = {
     },
     social: {
         instagram: 'https://www.instagram.com/averienailspa',
-        facebook: 'https://www.facebook.com/minh.vinh.14',
+        facebook: 'https://www.facebook.com/averiespa',
     },
     maps: 'https://maps.app.goo.gl/YCtZW533i3x6BB5QA',
     googleSiteVerification: 'google990ff0b977e8aa15',

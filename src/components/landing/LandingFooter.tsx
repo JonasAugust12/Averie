@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useSalonTranslations } from '@i18n/use-app-translations';
+import { SEO } from '@libs/site-seo';
 import { cn } from '@utils/cn.util';
 import {
     landingBleedSecondary600,
@@ -62,7 +63,7 @@ export function LandingFooter() {
                     {/* Social */}
                     <div className="mt-5 flex justify-center gap-4 md:mt-6 md:justify-start">
                         <a
-                            href="https://www.instagram.com/averienailspa"
+                            href={SEO.social.instagram}
                             className={`group flex size-14 items-center justify-center rounded-2xl bg-linear-to-b from-white to-cream/60 p-2.5 shadow-[0_4px_16px_rgba(192,149,127,0.18)] ring-1 ring-stone-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(192,149,127,0.28)] hover:ring-nude/35 active:scale-95 md:size-16 md:rounded-[18px] md:p-3 ${landingInteractive}`}
                             aria-label="Instagram"
                         >
@@ -76,7 +77,7 @@ export function LandingFooter() {
                             />
                         </a>
                         <a
-                            href="https://www.facebook.com/minh.vinh.14#"
+                            href={SEO.social.facebook}
                             className={`group flex size-14 items-center justify-center rounded-2xl bg-linear-to-b from-white to-cream/60 p-2.5 shadow-[0_4px_16px_rgba(192,149,127,0.18)] ring-1 ring-stone-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(192,149,127,0.28)] hover:ring-nude/35 active:scale-95 md:size-16 md:rounded-[18px] md:p-3 ${landingInteractive}`}
                             aria-label="Facebook"
                         >

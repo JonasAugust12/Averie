@@ -1,3 +1,5 @@
+import type { EmailColorTheme, EmailDesignVariant } from '@email/themes';
+
 export interface BookingEmailServiceLine {
     name: string;
     estimatedMinutes: number;
@@ -15,3 +17,9 @@ export interface EnrichedBookingEmailContext {
     };
     services: BookingEmailServiceLine[];
 }
+
+export type BookingEmailRenderOptions = {
+    introMessage?: string;
+    design?: EmailDesignVariant;
+    theme?: EmailColorTheme;
+};

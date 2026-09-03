@@ -41,7 +41,7 @@ interface ConfirmationPageViewProps {
 export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = {}) {
     const t = useBookingTranslations();
     const router = useRouter();
-    const { reference, reset } = useBookingStore();
+    const { reference, reset, customer: storeCustomer } = useBookingStore();
 
     // In-session flow: reference is in the store right after booking — use it as primary source.
     // Browser history revisit: no reference in store, so fetch by bookingId via public API.
@@ -72,6 +72,7 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
               : '—'
         : '—';
     const employeeInitials = booking?.staff ? deriveInitials(formatUserName(booking.staff)) : '★';
+    const customerEmail = booking?.customer?.email?.trim() || storeCustomer?.email?.trim() || '';
 
     function handleCopyReference() {
         if (!activeReference) return;
@@ -122,6 +123,17 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
                     <p className="mt-2 max-w-md sm:max-w-xl font-sans text-xs sm:text-sm text-stone-600 leading-relaxed">
                         {t('confirmation.subtitle')}
                     </p>
+                    {customerEmail ? (
+                        <p className="mt-3 max-w-md sm:max-w-xl rounded-2xl border border-amber-200/70 bg-amber-50/80 px-4 py-3 font-sans text-[11px] sm:text-xs text-amber-950 leading-relaxed text-left sm:text-center">
+                            <span className="inline-flex items-start gap-2 sm:items-center sm:justify-center">
+                                <Mail
+                                    className="size-4 shrink-0 text-amber-800 mt-0.5 sm:mt-0"
+                                    aria-hidden
+                                />
+                                <span>{t('confirmation.emailSpamNote')}</span>
+                            </span>
+                        </p>
+                    ) : null}
                 </div>
 
                 {/* 2-Column Bento Grid */}

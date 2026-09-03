@@ -238,8 +238,27 @@
             "template": "Template",
             "templateConfirmation": "Confirmation",
             "templateReminder": "Reminder",
+            "previewTitle": "Email preview",
+            "previewSubject": "Subject",
+            "previewHeading": "Email heading",
+            "previewHeadingConfirmation": "Your appointment is confirmed",
+            "previewHeadingReminder": "Reminder: your appointment is coming up",
+            "previewIncludes": "The sent email also includes the booking summary (reference, date, time, services) and salon contact details.",
+            "customMessage": "Message body",
+            "customMessageHint": "Edit the greeting paragraph. Booking details and footer are added automatically from the template.",
+            "resetTemplate": "Reset to template",
             "submit": "Send",
-            "success": "Email sent successfully"
+            "success": "Email sent successfully",
+            "designLabel": "Layout style",
+            "themeLabel": "Color palette",
+            "designClassic": "Classic",
+            "designElegant": "Elegant",
+            "designModern": "Modern",
+            "themeAverie": "Averie",
+            "themeRose": "Rose",
+            "themeSage": "Sage",
+            "themeMidnight": "Midnight",
+            "livePreview": "Live preview"
         }
     },
     "services": {

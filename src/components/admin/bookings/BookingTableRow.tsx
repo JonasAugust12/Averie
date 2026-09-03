@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import { CalendarX, RotateCcw, ChevronDown } from 'lucide-react';
+import { CalendarX, Mail, RotateCcw, ChevronDown } from 'lucide-react';
 import { useAdminTranslations } from '@i18n/use-app-translations';
 import { BookingStatusBadge, BookingTicketCard } from '@components/admin/bookings';
 import { formatDisplayDate, formatUsd } from '@utils/format.util';
@@ -20,6 +20,7 @@ interface BookingTableRowProps {
         status: BookingStatus,
         e: React.MouseEvent,
     ) => void;
+    onSendEmail: (booking: BookingListItemDto, e: React.MouseEvent) => void;
 }
 
 /** Format createdAt as dd/MM/yyyy HH:mm */
@@ -41,6 +42,7 @@ export function BookingTableRow({
     isExpanded,
     onToggle,
     onUpdateStatus,
+    onSendEmail,
 }: BookingTableRowProps) {
     const t = useAdminTranslations();
 
@@ -134,6 +136,14 @@ export function BookingTableRow({
                         className="flex items-center justify-center gap-2"
                         onClick={(e) => e.stopPropagation()}
                     >
+                        <button
+                            onClick={(e) => onSendEmail(b, e)}
+                            className="border border-stone-200/90 bg-[#F5EFEA]/80 hover:bg-[#F5EFEA] active:scale-95 transition-all duration-200 h-8 rounded-xl px-3 flex items-center gap-1.5 font-sans text-xs font-bold text-stone-800 shadow-3xs cursor-pointer"
+                            title={t('bookings.sendEmail.button')}
+                        >
+                            <Mail className="h-3.5 w-3.5" strokeWidth={2} />
+                            {t('bookings.sendEmail.button')}
+                        </button>
                         {b.status === 'upcoming' && (
                             <button
                                 onClick={(e) => onUpdateStatus(b, 'cancelled', e)}

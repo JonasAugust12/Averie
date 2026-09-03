@@ -40,6 +40,9 @@ export async function sendBookingEmailAction(
             to: parsed.data.to,
             template: parsed.data.template,
             booking: emailContext,
+            customMessage: parsed.data.customMessage,
+            emailDesign: parsed.data.emailDesign,
+            emailTheme: parsed.data.emailTheme,
         });
 
         if (!sent) {

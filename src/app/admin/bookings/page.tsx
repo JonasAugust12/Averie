@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
     Calendar,
     CheckCircle2,
+    Mail,
     Plus,
     RefreshCw,
     RotateCcw,
@@ -29,6 +30,7 @@ import {
     BookingStatusBadge,
     BookingTicketCard,
     AdminNewBookingModal,
+    SendBookingEmailModal,
 } from '@components/admin/bookings';
 import { toastSuccess } from '@utils/toast.util';
 
@@ -41,6 +43,7 @@ export default function AdminBookingsPage() {
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
+    const [emailBooking, setEmailBooking] = useState<BookingListItemDto | null>(null);
     const limit = 8;
 
     const listFilters = {
@@ -73,6 +76,11 @@ export default function AdminBookingsPage() {
         } finally {
             setIsRefreshing(false);
         }
+    };
+
+    const handleSendEmail = (booking: BookingListItemDto, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setEmailBooking(booking);
     };
 
     const handleUpdateStatus = (
@@ -235,6 +243,7 @@ export default function AdminBookingsPage() {
                                             setExpandedId(expandedId === b.id ? null : b.id)
                                         }
                                         onUpdateStatus={handleUpdateStatus}
+                                        onSendEmail={handleSendEmail}
                                     />
                                 );
                             })}
@@ -333,6 +342,14 @@ export default function AdminBookingsPage() {
                                 </button>
 
                                 <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={(e) => handleSendEmail(b, e)}
+                                        className="border border-stone-200/90 bg-[#F5EFEA]/80 hover:bg-[#F5EFEA] active:scale-95 transition-all duration-200 h-8 rounded-xl px-3 flex items-center gap-1.5 font-sans text-xs font-bold text-stone-800 shadow-3xs cursor-pointer"
+                                        title={t('bookings.sendEmail.button')}
+                                    >
+                                        <Mail className="h-3.5 w-3.5" strokeWidth={2} />
+                                        {t('bookings.sendEmail.button')}
+                                    </button>
                                     {b.status === 'upcoming' && (
                                         <button
                                             onClick={(e) => handleUpdateStatus(b, 'cancelled', e)}
@@ -433,6 +450,14 @@ export default function AdminBookingsPage() {
                 isOpen={isNewBookingOpen}
                 onClose={() => setIsNewBookingOpen(false)}
             />
+
+            {emailBooking ? (
+                <SendBookingEmailModal
+                    booking={emailBooking}
+                    isOpen
+                    onClose={() => setEmailBooking(null)}
+                />
+            ) : null}
         </div>
     );
 }
