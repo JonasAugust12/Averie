@@ -6,9 +6,4 @@ export {
     type EmailPalette,
 } from './types';
 export { EMAIL_PALETTES, getEmailPalette } from './palettes';
-export {
-    EmailThemeProvider,
-    useEmailPalette,
-    useEmailStyles,
-    useEmailTheme,
-} from './EmailThemeContext';
+export { resolveEmailTheme, type ResolvedEmailTheme } from './resolve-theme';

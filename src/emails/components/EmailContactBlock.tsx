@@ -1,10 +1,14 @@
 import { Link, Section, Text } from '@react-email/components';
-import { useEmailStyles, useEmailTheme } from '@email/themes';
+import type { ResolvedEmailTheme } from '@email/themes';
 import { EMAIL_SALON_CONTACT } from '@email/salon-contact';
 
-export function EmailContactBlock() {
-    const emailStyles = useEmailStyles();
-    const { palette } = useEmailTheme();
+type EmailContactBlockProps = {
+    resolved: ResolvedEmailTheme;
+};
+
+export function EmailContactBlock({ resolved }: EmailContactBlockProps) {
+    const emailStyles = resolved.styles;
+    const { palette } = resolved;
 
     return (
         <Section
@@ -15,7 +19,6 @@ export function EmailContactBlock() {
                 backgroundColor: palette.card,
             }}
         >
-            {/* Need to modify guide */}
             <Text
                 style={{
                     ...emailStyles.label,
@@ -36,7 +39,6 @@ export function EmailContactBlock() {
                 {EMAIL_SALON_CONTACT.modifyGuide}
             </Text>
 
-            {/* Location & Contact info */}
             <table width="100%" cellPadding="0" cellSpacing="0">
                 <tbody>
                     <tr>

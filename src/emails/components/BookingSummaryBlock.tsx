@@ -1,22 +1,22 @@
 import { Hr, Section, Text } from '@react-email/components';
-import { useEmailStyles, useEmailTheme } from '@email/themes';
+import type { ResolvedEmailTheme } from '@email/themes';
 import type { EnrichedBookingEmailContext } from '@email/types';
 
 type BookingSummaryBlockProps = {
     booking: EnrichedBookingEmailContext;
+    resolved: ResolvedEmailTheme;
 };
 
 function formatPrice(amount: number) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 }
 
-export function BookingSummaryBlock({ booking }: BookingSummaryBlockProps) {
-    const emailStyles = useEmailStyles();
-    const { palette } = useEmailTheme();
+export function BookingSummaryBlock({ booking, resolved }: BookingSummaryBlockProps) {
+    const emailStyles = resolved.styles;
+    const { palette } = resolved;
 
     return (
         <Section style={emailStyles.card}>
-            {/* Header row with Title and Reference Badge */}
             <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '16px' }}>
                 <tbody>
                     <tr>
@@ -55,7 +55,6 @@ export function BookingSummaryBlock({ booking }: BookingSummaryBlockProps) {
                 </tbody>
             </table>
 
-            {/* Prominent Date & Time Card */}
             <Section style={emailStyles.highlightCard}>
                 <Text style={{ ...emailStyles.label, marginBottom: '4px', color: palette.accent }}>
                     Date &amp; Time
@@ -85,7 +84,6 @@ export function BookingSummaryBlock({ booking }: BookingSummaryBlockProps) {
                 </Text>
             </Section>
 
-            {/* Services breakdown */}
             <Text style={{ ...emailStyles.label, marginTop: '20px', marginBottom: '8px' }}>
                 Services Reserved ({booking.services.length})
             </Text>
@@ -142,7 +140,6 @@ export function BookingSummaryBlock({ booking }: BookingSummaryBlockProps) {
 
             <Hr style={{ borderColor: palette.secondary, margin: '16px 0' }} />
 
-            {/* Duration and Total Price row */}
             <table width="100%" cellPadding="0" cellSpacing="0">
                 <tbody>
                     <tr>

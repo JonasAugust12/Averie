@@ -1,6 +1,6 @@
 import { Heading, Text } from '@react-email/components';
 import { BookingSummaryBlock, EmailContactBlock, EmailLayout } from '@email/components';
-import { useEmailStyles, useEmailTheme } from '@email/themes';
+import { resolveEmailTheme, type ResolvedEmailTheme } from '@email/themes';
 import type { BookingEmailRenderOptions, EnrichedBookingEmailContext } from '@email/types';
 
 type BookingReminderEmailProps = BookingEmailRenderOptions & {
@@ -10,12 +10,14 @@ type BookingReminderEmailProps = BookingEmailRenderOptions & {
 function ReminderBody({
     booking,
     introMessage,
+    resolved,
 }: {
     booking: EnrichedBookingEmailContext;
     introMessage?: string;
+    resolved: ResolvedEmailTheme;
 }) {
-    const emailStyles = useEmailStyles();
-    const { palette } = useEmailTheme();
+    const emailStyles = resolved.styles;
+    const { palette } = resolved;
     const intro =
         introMessage?.trim() ||
         `Hi ${booking.customer.firstName}, this is a friendly reminder that your appointment at Averie is scheduled for tomorrow.`;
@@ -35,8 +37,8 @@ function ReminderBody({
             >
                 {intro}
             </Text>
-            <BookingSummaryBlock booking={booking} />
-            <EmailContactBlock />
+            <BookingSummaryBlock booking={booking} resolved={resolved} />
+            <EmailContactBlock resolved={resolved} />
             <Text
                 style={{
                     ...emailStyles.subText,
@@ -58,13 +60,11 @@ export function BookingReminderEmail({
     design = 'classic',
     theme = 'averie',
 }: BookingReminderEmailProps) {
+    const resolved = resolveEmailTheme(design, theme);
+
     return (
-        <EmailLayout
-            preview={`Appointment reminder — ${booking.reference}`}
-            design={design}
-            theme={theme}
-        >
-            <ReminderBody booking={booking} introMessage={introMessage} />
+        <EmailLayout preview={`Appointment reminder — ${booking.reference}`} resolved={resolved}>
+            <ReminderBody booking={booking} introMessage={introMessage} resolved={resolved} />
         </EmailLayout>
     );
 }

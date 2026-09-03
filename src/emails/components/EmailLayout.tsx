@@ -12,130 +12,107 @@ import {
 } from '@react-email/components';
 import type { ReactNode } from 'react';
 import { EMAIL_SALON_CONTACT } from '@email/salon-contact';
-import {
-    EmailThemeProvider,
-    useEmailPalette,
-    useEmailStyles,
-    useEmailTheme,
-    type EmailColorTheme,
-    type EmailDesignVariant,
-} from '@email/themes';
+import type { EmailDesignVariant, EmailPalette, ResolvedEmailTheme } from '@email/themes';
 
 const salonAddress = `${EMAIL_SALON_CONTACT.addressLine1}, ${EMAIL_SALON_CONTACT.addressLine2}`;
 
 type EmailLayoutProps = {
     preview: string;
     children: ReactNode;
-    design?: EmailDesignVariant;
-    theme?: EmailColorTheme;
+    resolved: ResolvedEmailTheme;
 };
 
-export function EmailLayout({
-    preview,
-    children,
-    design = 'classic',
-    theme = 'averie',
-}: EmailLayoutProps) {
-    return (
-        <EmailThemeProvider design={design} theme={theme}>
-            <Html lang="en">
-                <Head />
-                <Preview>{preview}</Preview>
-                <EmailLayoutBody preview={preview}>{children}</EmailLayoutBody>
-            </Html>
-        </EmailThemeProvider>
-    );
-}
-
-function EmailLayoutBody({ children }: { preview: string; children: ReactNode }) {
-    const { design, palette } = useEmailTheme();
-    const styles = useEmailStyles();
+export function EmailLayout({ preview, children, resolved }: EmailLayoutProps) {
+    const { design, palette, styles } = resolved;
 
     return (
-        <Body
-            style={{
-                backgroundColor: palette.background,
-                margin: 0,
-                padding: design === 'elegant' ? '36px 16px' : '28px 16px',
-            }}
-        >
-            <Container
+        <Html lang="en">
+            <Head />
+            <Preview>{preview}</Preview>
+            <Body
                 style={{
-                    maxWidth: '560px',
-                    margin: '0 auto',
-                    backgroundColor: design === 'modern' ? '#FFFFFF' : palette.card,
-                    borderRadius: design === 'modern' ? '20px' : '16px',
-                    border: `1px solid ${palette.secondary}`,
-                    overflow: 'hidden',
-                    borderLeft: design === 'modern' ? `5px solid ${palette.primary}` : undefined,
-                    boxShadow:
-                        design === 'elegant'
-                            ? `0 8px 30px ${palette.secondary}60`
-                            : `0 4px 20px rgba(0,0,0,0.03)`,
+                    backgroundColor: palette.background,
+                    margin: 0,
+                    padding: design === 'elegant' ? '36px 16px' : '28px 16px',
                 }}
             >
-                <EmailHeader design={design} palette={palette} />
-                <Section style={{ padding: design === 'elegant' ? '40px 36px 32px' : '32px 28px' }}>
-                    {children}
-                </Section>
-                <Hr style={{ borderColor: palette.secondary, margin: 0 }} />
-                <Section
+                <Container
                     style={{
-                        padding: '24px 28px',
-                        backgroundColor: palette.background,
+                        maxWidth: '560px',
+                        margin: '0 auto',
+                        backgroundColor: design === 'modern' ? '#FFFFFF' : palette.card,
+                        borderRadius: design === 'modern' ? '20px' : '16px',
+                        border: `1px solid ${palette.secondary}`,
+                        overflow: 'hidden',
+                        borderLeft:
+                            design === 'modern' ? `5px solid ${palette.primary}` : undefined,
+                        boxShadow:
+                            design === 'elegant'
+                                ? `0 8px 30px ${palette.secondary}60`
+                                : `0 4px 20px rgba(0,0,0,0.03)`,
                     }}
                 >
-                    <Text
+                    <EmailHeader design={design} palette={palette} />
+                    <Section
                         style={{
-                            ...styles.subText,
-                            color: palette.muted,
-                            fontSize: '12px',
-                            lineHeight: '20px',
-                            margin: 0,
-                            textAlign: design === 'elegant' ? 'center' : 'left',
+                            padding: design === 'elegant' ? '40px 36px 32px' : '32px 28px',
                         }}
                     >
-                        <strong style={{ color: palette.primary, fontWeight: 600 }}>
-                            Averie Nail Salon &amp; Facials
-                        </strong>
-                        <br />
-                        {salonAddress}
-                        <br />
-                        Phone:{' '}
-                        <Link
-                            href={`tel:${EMAIL_SALON_CONTACT.phoneTel}`}
-                            style={{ ...styles.link, fontSize: '12px' }}
+                        {children}
+                    </Section>
+                    <Hr style={{ borderColor: palette.secondary, margin: 0 }} />
+                    <Section
+                        style={{
+                            padding: '24px 28px',
+                            backgroundColor: palette.background,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                ...styles.subText,
+                                color: palette.muted,
+                                fontSize: '12px',
+                                lineHeight: '20px',
+                                margin: 0,
+                                textAlign: design === 'elegant' ? 'center' : 'left',
+                            }}
                         >
-                            {EMAIL_SALON_CONTACT.phone}
-                        </Link>
-                    </Text>
-                    <Text
-                        style={{
-                            fontFamily: 'Inter, Arial, sans-serif',
-                            color: palette.muted,
-                            fontSize: '11px',
-                            lineHeight: '16px',
-                            marginTop: '12px',
-                            marginBottom: 0,
-                            textAlign: design === 'elegant' ? 'center' : 'left',
-                            opacity: 0.8,
-                        }}
-                    >
-                        {EMAIL_SALON_CONTACT.noreplyNotice}
-                    </Text>
-                </Section>
-            </Container>
-        </Body>
+                            <strong style={{ color: palette.primary, fontWeight: 600 }}>
+                                Averie Nail Salon &amp; Facials
+                            </strong>
+                            <br />
+                            {salonAddress}
+                            <br />
+                            Phone:{' '}
+                            <Link
+                                href={`tel:${EMAIL_SALON_CONTACT.phoneTel}`}
+                                style={{ ...styles.link, fontSize: '12px' }}
+                            >
+                                {EMAIL_SALON_CONTACT.phone}
+                            </Link>
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'Inter, Arial, sans-serif',
+                                color: palette.muted,
+                                fontSize: '11px',
+                                lineHeight: '16px',
+                                marginTop: '12px',
+                                marginBottom: 0,
+                                textAlign: design === 'elegant' ? 'center' : 'left',
+                                opacity: 0.8,
+                            }}
+                        >
+                            {EMAIL_SALON_CONTACT.noreplyNotice}
+                        </Text>
+                    </Section>
+                </Container>
+            </Body>
+        </Html>
     );
 }
 
-function EmailHeader({
-    design,
-    palette,
-}: {
-    design: EmailDesignVariant;
-    palette: ReturnType<typeof useEmailPalette>;
-}) {
+function EmailHeader({ design, palette }: { design: EmailDesignVariant; palette: EmailPalette }) {
     if (design === 'elegant') {
         return (
             <Section
@@ -248,7 +225,7 @@ function EmailHeader({
     );
 }
 
-/** @deprecated Use useEmailStyles() inside themed email components */
+/** @deprecated Use resolved.styles from resolveEmailTheme() in themed email components */
 export const emailStyles = {
     heading: {
         color: '#2B2623',
