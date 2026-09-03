@@ -38,8 +38,11 @@ export async function sendBookingEmailAction(
         const emailContext = await buildBookingEmailContextFromLean(booking);
         const sent = await sendBookingEmailToRecipient({
             to: parsed.data.to,
-            template: parsed.data.template,
+            purpose: parsed.data.purpose,
             booking: emailContext,
+            emailSubject: parsed.data.emailSubject,
+            emailHeading: parsed.data.emailHeading,
+            emailBadge: parsed.data.emailBadge,
             customMessage: parsed.data.customMessage,
             emailDesign: parsed.data.emailDesign,
             emailTheme: parsed.data.emailTheme,

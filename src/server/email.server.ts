@@ -1,14 +1,23 @@
 import { createElement } from 'react';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
+import { AdminComposeEmail } from '@email/AdminComposeEmail';
+import { DEFAULT_EMAIL_FROM } from '@email/constants';
 import { BookingConfirmationEmail } from '@email/BookingConfirmationEmail';
+import { BookingNotificationEmail } from '@email/BookingNotificationEmail';
 import { BookingReminderEmail } from '@email/BookingReminderEmail';
 import type { BookingEmailRenderOptions, EnrichedBookingEmailContext } from '@email/types';
+import { getBookingEmailPreset, type BookingEmailPurpose } from '@utils/booking-email-preset.util';
+import type { SendAdminComposeEmailInput } from '@validations/admin-compose-email.schema';
 
-const DEFAULT_FROM = 'Averie <noreply@averienails.com>';
+const DEFAULT_FROM = DEFAULT_EMAIL_FROM;
 
 function getFromAddress() {
     return process.env.EMAIL_FROM?.trim() || DEFAULT_FROM;
+}
+
+export function getEmailFromAddress() {
+    return getFromAddress();
 }
 
 function getResendClient() {
@@ -49,9 +58,14 @@ export async function sendBookingConfirmation(
     booking: EnrichedBookingEmailContext,
     options: BookingEmailRenderOptions = {},
 ): Promise<boolean> {
+    const preset = getBookingEmailPreset('confirmation', {
+        firstName: booking.customer.firstName,
+        reference: booking.reference,
+    });
+
     return sendRendered({
         to,
-        subject: `Averie — Booking confirmed (${booking.reference})`,
+        subject: preset.subject,
         react: createElement(BookingConfirmationEmail, {
             booking,
             introMessage: options.introMessage,
@@ -66,9 +80,14 @@ export async function sendBookingReminder(
     booking: EnrichedBookingEmailContext,
     options: BookingEmailRenderOptions = {},
 ): Promise<boolean> {
+    const preset = getBookingEmailPreset('reminder', {
+        firstName: booking.customer.firstName,
+        reference: booking.reference,
+    });
+
     return sendRendered({
         to,
-        subject: `Averie — Appointment reminder (${booking.reference})`,
+        subject: preset.subject,
         react: createElement(BookingReminderEmail, {
             booking,
             introMessage: options.introMessage,
@@ -80,19 +99,51 @@ export async function sendBookingReminder(
 
 export async function sendBookingEmailToRecipient(params: {
     to: string;
-    template: 'confirmation' | 'reminder';
+    purpose: BookingEmailPurpose;
     booking: EnrichedBookingEmailContext;
+    emailSubject: string;
+    emailHeading: string;
+    emailBadge?: string;
     customMessage?: string;
     emailDesign?: BookingEmailRenderOptions['design'];
     emailTheme?: BookingEmailRenderOptions['theme'];
 }): Promise<boolean> {
+    const preset = getBookingEmailPreset(params.purpose, {
+        firstName: params.booking.customer.firstName,
+        reference: params.booking.reference,
+    });
     const renderOptions: BookingEmailRenderOptions = {
-        introMessage: params.customMessage?.trim() || undefined,
         design: params.emailDesign ?? 'classic',
         theme: params.emailTheme ?? 'averie',
     };
-    if (params.template === 'reminder') {
-        return sendBookingReminder(params.to, params.booking, renderOptions);
-    }
-    return sendBookingConfirmation(params.to, params.booking, renderOptions);
+    const introMessage = params.customMessage?.trim() || preset.introMessage;
+
+    return sendRendered({
+        to: params.to,
+        subject: params.emailSubject.trim(),
+        react: createElement(BookingNotificationEmail, {
+            booking: params.booking,
+            subject: params.emailSubject.trim(),
+            heading: params.emailHeading.trim(),
+            badge: params.emailBadge?.trim() || undefined,
+            introMessage,
+            preview: preset.preview,
+            footerNote: params.purpose === 'reminder' ? preset.footerNote : undefined,
+            ...renderOptions,
+        }),
+    });
+}
+
+export async function sendAdminComposeEmail(input: SendAdminComposeEmailInput): Promise<boolean> {
+    return sendRendered({
+        to: input.to,
+        subject: input.subject.trim(),
+        react: createElement(AdminComposeEmail, {
+            subject: input.subject.trim(),
+            heading: input.heading?.trim() || input.subject.trim(),
+            body: input.body.trim(),
+            design: input.emailDesign,
+            theme: input.emailTheme,
+        }),
+    });
 }

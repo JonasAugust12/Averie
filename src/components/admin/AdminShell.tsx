@@ -21,6 +21,7 @@ import { LanguageSwitcher, AdminRouteTransitionLoader } from '@components/shared
 import { useLogout, signOut } from '@services/auth.service';
 import { Button } from '@components/common';
 import { AdminNewBookingModal } from '@components/admin/bookings';
+import { AdminEmailFloatButton } from '@components/admin';
 import { useUIStore } from '@stores/ui.store';
 import { cn } from '@utils/cn.util';
 import { toastSuccess } from '@utils/toast.util';
@@ -303,6 +304,7 @@ export function AdminShell({ children }: AdminShellProps) {
                         isOpen={isNewBookingOpen}
                         onClose={() => setIsNewBookingOpen(false)}
                     />
+                    <AdminEmailFloatButton />
                 </main>
             </div>
         </div>
