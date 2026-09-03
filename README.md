@@ -39,7 +39,7 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
 - **Technician & Schedule Coordination**: Dedicated visual staff schedule calendar powered by FullCalendar with color-coded technician profiles and availability tracking.
 - **Administrative Operations**: Full-fledged admin dashboard for managing bookings, staff members, service catalogs, operating weekday schedules, and holiday day-offs.
 - **Promotional Showcase**: Dynamic promotional banners and salon marketing assets managed via Cloudinary integration.
-- **Transactional Email**: Branded booking confirmation and reminder emails via Resend and React Email; optional guest email on booking; Vercel Cron for ~1-hour-before reminders; admin manual resend from booking detail.
+- **Transactional Email**: Branded booking confirmation and reminder emails via Resend and React Email; optional guest email on booking; Vercel Cron for night-before reminders (~10 PM); admin manual resend from booking detail.
 - **Serverless Architecture**: Single Next.js repository serving both rich React client interfaces and backend endpoints/mutations directly on MongoDB Atlas with connection caching.
 
 ## Highlight Features
@@ -53,7 +53,7 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
 - **Transactional Email (Resend)**:
     - Branded React Email templates (confirmation + reminder) with Averie theme and salon contact details for noreply sends.
     - Confirmation on successful booking create when `customer.email` is set; booking still succeeds if send fails.
-    - Vercel Cron (`/api/cron/booking-reminders`, every 2 hours) for reminders ~1 hour before appointment (salon timezone window).
+    - Vercel Cron (`/api/cron/booking-reminders`, once daily ~10 PM ET) for reminders the evening before the appointment.
     - Admin **Send email** on booking detail — confirmation or reminder to any recipient address.
 - **Boarding-Pass Style Booking Lookup**:
     - Reference code and phone number search card displaying comprehensive booking information (technician, date/time, total duration, price, and live status).
@@ -402,7 +402,7 @@ CRON_SECRET=your-random-secret          # openssl rand -base64 32
 SALON_TIMEZONE=America/New_York         # Reminder window uses salon-local time
 ```
 
-On Vercel, enable **Cron Jobs** (Pro plan) — `vercel.json` invokes `/api/cron/booking-reminders` every 2 hours. Without `RESEND_API_KEY`, sends are skipped gracefully (booking create still succeeds).
+On Vercel, cron runs **once per day** (`0 3 * * *` UTC ≈ 10 PM US Eastern) — compatible with **Hobby** plan. Without `RESEND_API_KEY`, sends are skipped gracefully (booking create still succeeds).
 
 For **local** or **Bizfly Docker**, set `BOOKING_REMINDER_CRON_MODE=internal` to run an in-process scheduler on `pnpm start` / container boot, or keep the default and use system cron + curl. See [docs/email-resend-setup.md](docs/email-resend-setup.md).
 

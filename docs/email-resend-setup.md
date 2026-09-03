@@ -6,7 +6,7 @@ This guide covers Resend configuration for booking confirmation emails, appointm
 
 - Resend account: https://resend.com
 - Verified sending domain: `averienails.com`
-- Vercel project with **Cron Jobs** enabled (Pro plan)
+- Vercel project (Cron Jobs work on **all plans**; Hobby allows **once per day** only)
 
 ## 1. Resend API key
 
@@ -47,22 +47,26 @@ When `RESEND_API_KEY` is missing, sends are skipped with a console warning — b
 
 ## 4. Vercel Cron
 
-`vercel.json` schedules reminder processing every 2 hours:
+`vercel.json` schedules reminder processing **once per day** (Hobby-compatible):
 
 ```json
 {
     "crons": [
         {
             "path": "/api/cron/booking-reminders",
-            "schedule": "0 */2 * * *"
+            "schedule": "0 3 * * *"
         }
     ]
 }
 ```
 
+`0 3 * * *` runs at **03:00 UTC** daily — approximately **10 PM US Eastern** the evening before the appointment (±1 hour during daylight saving).
+
 Vercel sends `Authorization: Bearer <CRON_SECRET>` when invoking the route. Set the same value in project env vars.
 
-Reminder window: upcoming bookings whose salon-local start is **45–135 minutes** ahead, with `customer.email` set and `reminderSentAt` unset.
+**Selection rule:** upcoming bookings whose **appointment date is tomorrow** (salon timezone), with `customer.email` set and `reminderSentAt` unset. Sends only during the evening window (default: salon-local hour ≥ 21).
+
+Optional: `BOOKING_REMINDER_SEND_AFTER_HOUR=21` (default) — earliest salon-local hour to send night-before reminders.
 
 ## 5. Local and Bizfly (non-Vercel)
 
@@ -77,8 +81,9 @@ BOOKING_REMINDER_CRON_MODE=internal
 RESEND_API_KEY=re_xxxxxxxx
 CRON_SECRET=your-secret          # still used if you curl the HTTP route
 # Optional:
-# BOOKING_REMINDER_CRON_INTERVAL_MS=7200000   # default 2 hours
+# BOOKING_REMINDER_CRON_INTERVAL_MS=86400000  # default 2h; use 24h for night-before on Bizfly
 # BOOKING_REMINDER_CRON_RUN_ON_START=true     # run once on server boot
+# BOOKING_REMINDER_SEND_AFTER_HOUR=21         # evening send window (salon local)
 ```
 
 The app starts an in-process timer via `src/instrumentation.ts` when the Node server boots (`pnpm start` or Docker). **Do not** enable on Vercel — use external cron there instead.
@@ -88,10 +93,10 @@ The app starts an in-process timer via `src/instrumentation.ts` when the Node se
 Keep the default (omit `BOOKING_REMINDER_CRON_MODE` or set `external`). Schedule something to call the route:
 
 ```bash
-0 */2 * * * curl -sf -H "Authorization: Bearer $CRON_SECRET" https://your-domain.com/api/cron/booking-reminders
+0 3 * * * curl -sf -H "Authorization: Bearer $CRON_SECRET" https://your-domain.com/api/cron/booking-reminders
 ```
 
-On Bizfly, add the line above to the server crontab or a systemd timer.
+Schedule near **10 PM salon-local** (adjust UTC for `America/New_York`). On Bizfly, add the line above to the server crontab or a systemd timer.
 
 ## 6. Smoke tests
 
@@ -131,12 +136,12 @@ curl -i -H "Authorization: Bearer YOUR_CRON_SECRET" http://localhost:3000/api/cr
 
 ## 7. Troubleshooting
 
-| Symptom           | Check                                                                               |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| No emails in dev  | `RESEND_API_KEY` set? Check server logs for `[email]` warnings                      |
-| Cron returns 401  | `CRON_SECRET` matches Authorization header                                          |
-| Reminder not sent | Booking within 45–135 min window? `customer.email` present? `reminderSentAt` unset? |
-| Resend 403        | Domain not verified or from address not on verified domain                          |
+| Symptom           | Check                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------- |
+| No emails in dev  | `RESEND_API_KEY` set? Check server logs for `[email]` warnings                                                       |
+| Cron returns 401  | `CRON_SECRET` matches Authorization header                                                                           |
+| Reminder not sent | Booking **tomorrow** in salon TZ? `customer.email` present? `reminderSentAt` unset? Cron ran after 9 PM salon-local? |
+| Resend 403        | Domain not verified or from address not on verified domain                                                           |
 
 ## Related code
 

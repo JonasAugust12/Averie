@@ -1,6 +1,6 @@
 import { runBookingReminderBatch } from '@server/booking-reminder-batch.server';
 
-const DEFAULT_INTERVAL_MS = 2 * 60 * 60 * 1000;
+const DEFAULT_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const GLOBAL_STARTED_KEY = '__averieBookingReminderCronStarted';
 
 function isInternalCronMode(): boolean {

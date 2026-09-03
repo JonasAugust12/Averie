@@ -1,37 +1,35 @@
-import { getSalonLocalDateTime } from '@utils/booking-schedule.util';
-import { minuteOf } from '@utils/schedule.util';
+import { addDaysIso, getSalonLocalDateTime } from '@utils/booking-schedule.util';
 
-export function bookingStartToUtc(isoDate: string, time: string): Date {
-    const targetMinutes = minuteOf(time);
-    const dayStart = new Date(`${isoDate}T00:00:00.000Z`).getTime();
+const DEFAULT_SEND_AFTER_HOUR = 21;
 
-    for (let offsetMin = -12 * 60; offsetMin <= 36 * 60; offsetMin += 1) {
-        const candidate = new Date(dayStart + offsetMin * 60_000);
-        const local = getSalonLocalDateTime(candidate);
-        if (local.isoDate === isoDate && local.minutes === targetMinutes) {
-            return candidate;
-        }
+function parseSendAfterHour(): number {
+    const raw = process.env.BOOKING_REMINDER_SEND_AFTER_HOUR?.trim();
+    if (!raw) return DEFAULT_SEND_AFTER_HOUR;
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || parsed < 0 || parsed > 23) return DEFAULT_SEND_AFTER_HOUR;
+    return parsed;
+}
+
+/** Salon-local calendar date for the day after `now`. */
+export function getSalonTomorrowIsoDate(now = new Date()): string {
+    const { isoDate: today } = getSalonLocalDateTime(now);
+    return addDaysIso(today, 1);
+}
+
+/** True when salon-local clock is at or after the configured evening send hour (default 21:00). */
+export function isReminderSendTime(now = new Date()): boolean {
+    const { minutes } = getSalonLocalDateTime(now);
+    const hour = Math.floor(minutes / 60);
+    return hour >= parseSendAfterHour();
+}
+
+/**
+ * True when the booking should receive an automatic night-before reminder:
+ * appointment date is tomorrow (salon timezone) and current time is in the evening send window.
+ */
+export function isBookingDueNightBeforeReminder(isoDate: string, now = new Date()): boolean {
+    if (!isReminderSendTime(now)) {
+        return false;
     }
-
-    throw new Error(`Unable to resolve salon-local start for ${isoDate} ${time}`);
-}
-
-export function getReminderWindow(now = new Date()) {
-    const minAheadMs = 45 * 60 * 1000;
-    const maxAheadMs = 135 * 60 * 1000;
-
-    return {
-        windowStart: new Date(now.getTime() + minAheadMs),
-        windowEnd: new Date(now.getTime() + maxAheadMs),
-    };
-}
-
-export function isBookingInReminderWindow(
-    isoDate: string,
-    time: string,
-    now = new Date(),
-): boolean {
-    const { windowStart, windowEnd } = getReminderWindow(now);
-    const startUtc = bookingStartToUtc(isoDate, time);
-    return startUtc >= windowStart && startUtc <= windowEnd;
+    return isoDate === getSalonTomorrowIsoDate(now);
 }

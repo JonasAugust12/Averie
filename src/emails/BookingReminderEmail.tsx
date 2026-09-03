@@ -17,7 +17,7 @@ export function BookingReminderEmail({ booking }: BookingReminderEmailProps) {
             <Heading style={emailStyles.heading}>Reminder: your appointment is coming up</Heading>
             <Text style={emailStyles.text}>
                 Hi {booking.customer.firstName}, this is a friendly reminder that your appointment
-                at Averie is scheduled in about one hour.
+                at Averie is scheduled for tomorrow.
             </Text>
             <BookingSummaryBlock booking={booking} />
             <EmailContactBlock />

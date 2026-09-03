@@ -12,7 +12,8 @@ function isAuthorized(request: Request) {
 }
 
 /**
- * Vercel Cron — sends booking reminder emails for upcoming appointments ~1 hour ahead.
+ * Vercel Cron — sends night-before booking reminder emails (Hobby: once daily).
+ * Schedule `0 3 * * *` UTC ≈ 10 PM US Eastern the evening before the appointment day.
  * Requires `Authorization: Bearer ${CRON_SECRET}` (not a public endpoint).
  * @response bookingReminderBatchApiResponseSchema
  * @responseSet common

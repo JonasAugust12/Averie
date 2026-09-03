@@ -393,7 +393,7 @@
         "/cron/booking-reminders": {
             "get": {
                 "operationId": "get-cron-booking-reminders",
-                "summary": "Vercel Cron — sends booking reminder emails for upcoming appointments ~1 hour ahead.",
+                "summary": "Vercel Cron — sends night-before booking reminder emails (Hobby: once daily).",
                 "description": "",
                 "tags": ["Cron"],
                 "parameters": [],

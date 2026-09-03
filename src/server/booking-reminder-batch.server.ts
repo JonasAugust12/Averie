@@ -2,14 +2,14 @@ import { connectToDatabase } from '@libs/mongodb';
 import { Booking } from '@models/booking.model';
 import { sendBookingReminder } from '@server/email.server';
 import { buildBookingEmailContextFromLean } from '@utils/booking-email.util';
-import { isBookingInReminderWindow } from '@utils/booking-reminder.util';
+import { isBookingDueNightBeforeReminder } from '@utils/booking-reminder.util';
 
 export type BookingReminderBatchResult = {
     sent: number;
     skipped: number;
 };
 
-/** Process upcoming bookings in the reminder window and send reminder emails. */
+/** Process upcoming bookings due for a night-before reminder and send reminder emails. */
 export async function runBookingReminderBatch(
     now = new Date(),
 ): Promise<BookingReminderBatchResult> {
@@ -34,7 +34,7 @@ export async function runBookingReminderBatch(
             continue;
         }
 
-        if (!isBookingInReminderWindow(doc.date, doc.time, now)) {
+        if (!isBookingDueNightBeforeReminder(doc.date, now)) {
             skipped += 1;
             continue;
         }
