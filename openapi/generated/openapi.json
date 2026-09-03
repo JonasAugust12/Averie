@@ -390,6 +390,46 @@
                 }
             }
         },
+        "/cron/booking-reminders": {
+            "get": {
+                "operationId": "get-cron-booking-reminders",
+                "summary": "Vercel Cron — sends booking reminder emails for upcoming appointments ~1 hour ahead.",
+                "description": "",
+                "tags": ["Cron"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/bookingReminderBatchApiResponseSchema"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/apiErrorResponseSchema"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
         "/docs": {
             "get": {
                 "operationId": "get-docs",
@@ -726,6 +766,9 @@
             "name": "Bookings"
         },
         {
+            "name": "Cron"
+        },
+        {
             "name": "Docs"
         },
         {
@@ -1028,6 +1071,17 @@
                         "type": "string",
                         "enum": ["upcoming", "completed", "cancelled"]
                     },
+                    "emailNotifications": {
+                        "type": "object",
+                        "properties": {
+                            "confirmationSentAt": {
+                                "type": "string"
+                            },
+                            "reminderSentAt": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "cancelledAt": {
                         "type": "string"
                     },
@@ -1114,6 +1168,17 @@
                         "type": "string",
                         "enum": ["upcoming", "completed", "cancelled"]
                     },
+                    "emailNotifications": {
+                        "type": "object",
+                        "properties": {
+                            "confirmationSentAt": {
+                                "type": "string"
+                            },
+                            "reminderSentAt": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "cancelledAt": {
                         "type": "string"
                     },
@@ -1179,6 +1244,36 @@
                     }
                 },
                 "required": ["reference"]
+            },
+            "bookingReminderBatchApiResponseSchema": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code (mirrored in body)"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/bookingReminderBatchDataSchema"
+                    }
+                },
+                "required": ["status", "message", "data"]
+            },
+            "bookingReminderBatchDataSchema": {
+                "type": "object",
+                "properties": {
+                    "sent": {
+                        "type": "integer",
+                        "description": "Reminders sent in this batch"
+                    },
+                    "skipped": {
+                        "type": "integer",
+                        "description": "Bookings skipped (no email, outside window, or send failed)"
+                    }
+                },
+                "required": ["sent", "skipped"]
             },
             "bookingServiceSummarySchema": {
                 "type": "object",
@@ -1843,6 +1938,24 @@
                     "dayOffs",
                     "updatedAt"
                 ]
+            },
+            "sendBookingEmailSchema": {
+                "type": "object",
+                "properties": {
+                    "bookingId": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "to": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "template": {
+                        "type": "string",
+                        "enum": ["confirmation", "reminder"]
+                    }
+                },
+                "required": ["bookingId", "to", "template"]
             },
             "serviceCategoriesApiResponseSchema": {
                 "type": "object",

@@ -1,4 +1,5 @@
 export { AdminNewBookingModal } from './AdminNewBookingModal';
+export { SendBookingEmailModal } from './SendBookingEmailModal';
 export { BookingStatusBadge } from './BookingStatusBadge';
 export { BookingTicketCard } from './BookingTicketCard';
 export { BookingServiceStep } from './BookingServiceStep';

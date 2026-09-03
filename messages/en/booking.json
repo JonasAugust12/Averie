@@ -136,6 +136,7 @@
         "phonePlaceholder": "(781) 000-0000",
         "email": "Email address",
         "emailPlaceholder": "sarah.jenkins@example.com",
+        "emailHelper": "Optional — enter your email to receive automatic confirmation and a reminder before your appointment.",
         "optional": "Optional",
         "note": "Special requests & preferences",
         "notePlaceholder": "Preferred polish shade, nail length, sensitivities, or anything we should know…",

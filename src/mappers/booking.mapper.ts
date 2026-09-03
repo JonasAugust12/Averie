@@ -27,6 +27,10 @@ export function serializeBooking(doc: {
     };
     status: 'upcoming' | 'cancelled';
     cancelledAt?: Date | string | null;
+    emailNotifications?: {
+        confirmationSentAt?: Date | string | null;
+        reminderSentAt?: Date | string | null;
+    } | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }): BookingDto {
@@ -49,6 +53,12 @@ export function serializeBooking(doc: {
         },
         status: doc.status,
         displayStatus: getBookingDisplayStatus(doc),
+        emailNotifications: doc.emailNotifications
+            ? {
+                  confirmationSentAt: toOptionalIso(doc.emailNotifications.confirmationSentAt),
+                  reminderSentAt: toOptionalIso(doc.emailNotifications.reminderSentAt),
+              }
+            : undefined,
         cancelledAt: toOptionalIso(doc.cancelledAt),
         createdAt: toIso(doc.createdAt),
         updatedAt: toIso(doc.updatedAt),

@@ -230,6 +230,16 @@
             "placedAt": "Placed at:",
             "time": "Appointment Time",
             "totalPrice": "Total Price"
+        },
+        "sendEmail": {
+            "button": "Send email",
+            "title": "Send booking email",
+            "recipient": "Recipient email",
+            "template": "Template",
+            "templateConfirmation": "Confirmation",
+            "templateReminder": "Reminder",
+            "submit": "Send",
+            "success": "Email sent successfully"
         }
     },
     "services": {

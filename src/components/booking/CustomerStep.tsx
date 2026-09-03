@@ -233,6 +233,9 @@ export function CustomerStep() {
                                 {errors.email.message}
                             </p>
                         )}
+                        <p className="font-sans text-xs leading-relaxed text-stone-500 pl-1">
+                            {t('customer.emailHelper')}
+                        </p>
                     </div>
                 </div>
 

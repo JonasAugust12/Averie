@@ -40,7 +40,8 @@
             "@stores/*": ["./src/stores/*"],
             "@typings/*": ["./src/types/*"],
             "@utils/*": ["./src/utils/*"],
-            "@validations/*": ["./src/validations/*"]
+            "@validations/*": ["./src/validations/*"],
+            "@email/*": ["./src/emails/*"]
         }
     },
     "include": [

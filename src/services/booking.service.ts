@@ -4,6 +4,7 @@ import {
     createBookingAction,
     restoreBookingAction,
 } from '@actions/booking.action';
+import { sendBookingEmailAction } from '@actions/booking-email.action';
 import { apiClient } from '@libs/api-client';
 import { unwrapApiResponse } from '@libs/action.util';
 import { toastApiError } from '@utils/toast.util';
@@ -11,6 +12,7 @@ import type { ApiResponse } from '@typings/api.type';
 import type { BookingListItemDto, PaginatedBookingsDto, TimeSlotDto } from '@typings/booking.type';
 import { useAppMutation } from '@hooks/useAppMutation';
 import type { BookingsListQuery, CreateBookingInput } from '@validations/booking.schema';
+import type { SendBookingEmailInput } from '@validations/booking-email.schema';
 
 /** Minimum overlay duration when creating a booking (avoids flash on fast networks). */
 export const CREATE_BOOKING_MIN_LOADING_MS = 2000;
@@ -129,6 +131,18 @@ export function useRestoreBooking() {
         mutationFn: async (id: string) => unwrapApiResponse(await restoreBookingAction(id)),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['bookings'] });
+        },
+        onError: toastApiError,
+    });
+}
+
+export function useSendBookingEmail() {
+    const queryClient = useQueryClient();
+    return useAppMutation({
+        mutationFn: async (input: SendBookingEmailInput) =>
+            unwrapApiResponse(await sendBookingEmailAction(input)),
+        onSuccess: async (_data, variables) => {
+            await queryClient.invalidateQueries({ queryKey: ['bookings', variables.bookingId] });
         },
         onError: toastApiError,
     });

@@ -27,6 +27,12 @@ export const bookingDtoSchema = z.object({
     customer: bookingCustomerDtoSchema,
     status: z.enum(['upcoming', 'cancelled']),
     displayStatus: z.enum(['upcoming', 'completed', 'cancelled']),
+    emailNotifications: z
+        .object({
+            confirmationSentAt: z.string().optional(),
+            reminderSentAt: z.string().optional(),
+        })
+        .optional(),
     cancelledAt: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -114,3 +120,17 @@ export const staffBookingsApiResponseSchema = z
         data: z.array(bookingListItemDtoSchema),
     })
     .meta({ examples: [{ status: 200, message: 'OK', data: [bookingExample] }] });
+
+export const bookingReminderBatchDataSchema = z.object({
+    sent: z.number().int().describe('Reminders sent in this batch'),
+    skipped: z
+        .number()
+        .int()
+        .describe('Bookings skipped (no email, outside window, or send failed)'),
+});
+
+export const bookingReminderBatchApiResponseSchema = z.object({
+    status: z.number().int().describe('HTTP status code (mirrored in body)'),
+    message: z.string(),
+    data: bookingReminderBatchDataSchema,
+});

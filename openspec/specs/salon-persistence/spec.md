@@ -12,6 +12,8 @@ The system SHALL define Mongoose 8 schemas for `ServiceCategory`, `Service`, `Us
 
 The `SalonSettings` schema MUST include `bookingEnabled` (boolean, default `true`) at the document root to control whether public online booking is accepted.
 
+The `Booking` schema MUST include optional `emailNotifications` with `confirmationSentAt` and `reminderSentAt` Date fields to record transactional email send timestamps.
+
 #### Scenario: Collections use canonical names
 
 - **WHEN** models are registered with Mongoose
@@ -27,6 +29,22 @@ The `SalonSettings` schema MUST include `bookingEnabled` (boolean, default `true
 
 - **WHEN** a new `salon_settings` document is created without explicit `bookingEnabled`
 - **THEN** `bookingEnabled` MUST default to `true`
+
+#### Scenario: Booking email notification timestamps
+
+- **WHEN** a booking document is created without prior email sends
+- **THEN** `emailNotifications.confirmationSentAt` and `emailNotifications.reminderSentAt` MAY be unset
+- **AND** existing bookings without these fields MUST remain valid without migration
+
+#### Scenario: Confirmation timestamp persisted
+
+- **WHEN** a confirmation email is successfully sent for a booking
+- **THEN** the booking document MUST persist `emailNotifications.confirmationSentAt`
+
+#### Scenario: Reminder timestamp persisted
+
+- **WHEN** a reminder email is successfully sent for a booking via cron
+- **THEN** the booking document MUST persist `emailNotifications.reminderSentAt`
 
 ### Requirement: Zod validation mirrors
 

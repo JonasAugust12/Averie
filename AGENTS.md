@@ -44,7 +44,7 @@ Client data layer: `@services/*` (TanStack Query) calls either `apiClient` (GET)
 
 ## Aliases
 
-Use `@actions`, `@services`, `@validations`, `@components`, `@hooks`, `@i18n`, `@libs`, `@mappers`, `@messages`, `@models`, `@openapi`, `@providers`, `@stores`, `@typings`, `@utils`.  
+Use `@actions`, `@services`, `@validations`, `@components`, `@hooks`, `@i18n`, `@libs`, `@mappers`, `@messages`, `@models`, `@openapi`, `@providers`, `@stores`, `@typings`, `@utils`, `@email`.  
 Do **not** use `@types` (reserved by TypeScript).
 
 ## Workflow

@@ -229,6 +229,16 @@
             "placedAt": "Lịch gửi lúc:",
             "time": "Thời gian hẹn",
             "totalPrice": "Tổng chi phí"
+        },
+        "sendEmail": {
+            "button": "Gửi email",
+            "title": "Gửi email đặt lịch",
+            "recipient": "Email người nhận",
+            "template": "Mẫu email",
+            "templateConfirmation": "Xác nhận",
+            "templateReminder": "Nhắc lịch",
+            "submit": "Gửi",
+            "success": "Đã gửi email thành công"
         }
     },
     "services_old_removed": {},

@@ -7,9 +7,10 @@ import { I18nProvider } from '@providers/I18nProvider';
 import { AuthProvider } from '@providers/AuthProvider';
 import { AppShell } from '@providers/AppShell';
 import { ToastProvider } from '@providers/ToastProvider';
-import { buildRootMetadata } from '@libs/site-seo';
+import { buildRootMetadata, buildRootViewport } from '@libs/site-seo';
 
 export const metadata: Metadata = buildRootMetadata();
+export const viewport = buildRootViewport();
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const locale = await getLocale();

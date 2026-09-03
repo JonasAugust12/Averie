@@ -68,6 +68,10 @@ const BookingSchema = new Schema(
         cancelledAt: {
             type: Date,
         },
+        emailNotifications: {
+            confirmationSentAt: { type: Date },
+            reminderSentAt: { type: Date },
+        },
     },
     {
         timestamps: true,

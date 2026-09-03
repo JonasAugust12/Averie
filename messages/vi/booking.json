@@ -136,6 +136,7 @@
         "phonePlaceholder": "0912 345 678",
         "email": "Địa chỉ email",
         "emailPlaceholder": "mai.nguyen@example.com",
+        "emailHelper": "Không bắt buộc — nhập email để nhận xác nhận và nhắc lịch tự động trước giờ hẹn.",
         "optional": "Không bắt buộc",
         "note": "Ghi chú & yêu cầu đặc biệt",
         "notePlaceholder": "Màu sơn yêu thích, độ dài móng, da nhạy cảm hoặc bất kỳ lưu ý nào cho thợ…",

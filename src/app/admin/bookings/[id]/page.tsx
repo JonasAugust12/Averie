@@ -1,10 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, CalendarX, RotateCcw } from 'lucide-react';
+import { ArrowLeft, CalendarX, Mail, RotateCcw } from 'lucide-react';
 import { useBooking, useCancelBooking, useRestoreBooking } from '@services/booking.service';
 import { useAdminTranslations, useCommonTranslations } from '@i18n/use-app-translations';
-import { BookingStatusBadge, BookingTicketCard } from '@components/admin/bookings';
+import {
+    BookingStatusBadge,
+    BookingTicketCard,
+    SendBookingEmailModal,
+} from '@components/admin/bookings';
 import { Button } from '@components/common';
 import { EmptyState } from '@components/ui';
 import { BookingDetailSkeleton } from '@components/skeletons';
@@ -24,6 +29,7 @@ export default function AdminBookingDetailPage() {
     const { showConfirm, hideConfirm } = useUIStore();
     const cancelBooking = useCancelBooking();
     const restoreBooking = useRestoreBooking();
+    const [isSendEmailOpen, setIsSendEmailOpen] = useState(false);
 
     const handleGoBack = () => {
         if (typeof window !== 'undefined' && window.history.length > 1) {
@@ -135,6 +141,15 @@ export default function AdminBookingDetailPage() {
             </div>
 
             <div className="flex w-full flex-wrap items-center justify-center gap-3 pb-2">
+                <Button
+                    variant="outlined"
+                    size="sm"
+                    onClick={() => setIsSendEmailOpen(true)}
+                    className="gap-2 border-stone-300 bg-[#F5EFEA]/80 text-stone-800 hover:bg-[#F5EFEA]"
+                >
+                    <Mail className="h-4 w-4" />
+                    {t('bookings.sendEmail.button')}
+                </Button>
                 {booking.status === 'upcoming' ? (
                     <Button
                         variant="outlined"
@@ -159,6 +174,12 @@ export default function AdminBookingDetailPage() {
                     </Button>
                 )}
             </div>
+
+            <SendBookingEmailModal
+                booking={booking}
+                isOpen={isSendEmailOpen}
+                onClose={() => setIsSendEmailOpen(false)}
+            />
         </div>
     );
 }

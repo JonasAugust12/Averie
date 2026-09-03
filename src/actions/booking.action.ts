@@ -16,6 +16,7 @@ import { auth } from '@libs/auth';
 import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action.util';
 import { serializeBooking } from '@mappers';
 import { getAvailableSlotsForDateServer, isPublicBookingEnabled } from '@server/schedule.server';
+import { sendBookingConfirmation } from '@server/email.server';
 import { Booking } from '@models/booking.model';
 import type { ApiResponse } from '@typings/api.type';
 import type { BookingDto } from '@typings/booking.type';
@@ -24,6 +25,7 @@ import {
     createBookingSchema,
     type CreateBookingInput,
 } from '@validations/booking.schema';
+import { buildBookingEmailContext } from '@utils/booking-email.util';
 
 export async function createBookingAction(
     input: CreateBookingInput,
@@ -97,7 +99,27 @@ export async function createBookingAction(
             status: 'upcoming',
         });
 
-        return apiSuccessResult(serializeBooking(created.toObject()), 'Booking created', 201);
+        const dto = serializeBooking(created.toObject());
+
+        if (data.customer.email) {
+            try {
+                const emailContext = await buildBookingEmailContext(created.toObject());
+                const sent = await sendBookingConfirmation(data.customer.email, emailContext);
+                if (sent) {
+                    const sentAt = new Date();
+                    await Booking.findByIdAndUpdate(created._id, {
+                        'emailNotifications.confirmationSentAt': sentAt,
+                    });
+                    dto.emailNotifications = {
+                        confirmationSentAt: sentAt.toISOString(),
+                    };
+                }
+            } catch (emailError) {
+                console.error('[createBookingAction] confirmation email failed', emailError);
+            }
+        }
+
+        return apiSuccessResult(dto, 'Booking created', 201);
     } catch (error) {
         console.error('[createBookingAction catch]', error);
         if (isDuplicateKeyError(error)) {

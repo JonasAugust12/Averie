@@ -3,7 +3,10 @@ paths:
         post:
             tags: [Server Actions]
             summary: createBookingAction
-            description: Invoked via Next.js Server Action — not a public HTTP endpoint.
+            description: |
+                Invoked via Next.js Server Action — not a public HTTP endpoint.
+                When `customer.email` is present, sends a booking confirmation email after persist (via Resend).
+                Email send failure does not roll back the booking; response remains 201.
             requestBody:
                 required: true
                 content:
@@ -68,6 +71,45 @@ paths:
             responses:
                 '200':
                     description: Booking restored
+
+    /actions/sendBookingEmail:
+        post:
+            tags: [Server Actions]
+            summary: sendBookingEmailAction
+            description: |
+                Admin only. Invoked via Server Action — not a public HTTP endpoint.
+                Sends a booking confirmation or reminder email to the given recipient via Resend.
+                Used from admin booking detail (Send email modal).
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [bookingId, to, template]
+                            properties:
+                                bookingId:
+                                    type: string
+                                    description: Booking MongoDB id
+                                to:
+                                    type: string
+                                    format: email
+                                    description: Recipient email address
+                                template:
+                                    type: string
+                                    enum: [confirmation, reminder]
+                                    description: Email template to render and send
+            responses:
+                '200':
+                    description: Email sent
+                '400':
+                    description: Validation failed or invalid booking id
+                '401':
+                    description: Unauthorized
+                '404':
+                    description: Booking not found
+                '502':
+                    description: Resend send failed (missing API key or provider error)
 
     /actions/login:
         post:

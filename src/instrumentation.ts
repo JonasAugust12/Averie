@@ -30,4 +30,8 @@ export async function register() {
     if (process.platform === 'win32' && fallback) {
         dns.setServers(fallback);
     }
+
+    const { startInternalBookingReminderCron } =
+        await import('@server/booking-reminder-cron.server');
+    startInternalBookingReminderCron();
 }

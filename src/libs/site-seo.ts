@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000').replace(
     /\/$/,
@@ -91,7 +91,6 @@ export function buildRootMetadata(overrides: Metadata = {}): Metadata {
             shortcut: '/favicon.ico',
             apple: '/icons/logo_round.png',
         },
-        themeColor: SEO.themeColor,
         robots: {
             index: true,
             follow: true,
@@ -126,5 +125,13 @@ export function buildRootMetadata(overrides: Metadata = {}): Metadata {
                 ? overrides.twitter
                 : {}),
         },
+    };
+}
+
+/** Root viewport shared across public marketing pages. */
+export function buildRootViewport(overrides: Viewport = {}): Viewport {
+    return {
+        themeColor: SEO.themeColor,
+        ...overrides,
     };
 }

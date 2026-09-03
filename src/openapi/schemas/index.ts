@@ -5,6 +5,7 @@ export {
     bookingsListApiResponseSchema,
     bookingSlotsApiResponseSchema,
     staffBookingsApiResponseSchema,
+    bookingReminderBatchApiResponseSchema,
 } from '@openapi/schemas/booking.schema';
 export {
     serviceCategoriesApiResponseSchema,

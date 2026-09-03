@@ -6,7 +6,7 @@
 
 Averie is a quiet-luxury nail salon and beauty care platform built on Next.js App Router. It is designed as a unified fullstack monolith where both the rich client experience (customer booking, staff schedule calendar, and administrative control center) and the serverless backend API / Server Actions coexist within a single cohesive project. It deploys either to Vercel or, self-hosted, to a single Bizfly Cloud server driven entirely from GitHub Actions.
 
-This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
+This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Resend-powered transactional email (confirmation, reminders, admin send), Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
 
 ## Stack Snapshot
 
@@ -20,6 +20,7 @@ This repository contains the interactive customer booking engine, real-time staf
 ![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
 ![Zustand](https://img.shields.io/badge/Zustand-4B2E1F?style=for-the-badge&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-0B1220?style=for-the-badge&logo=cloudinary&logoColor=3448C5)
+![Resend](https://img.shields.io/badge/Resend-000000?style=for-the-badge&logo=resend&logoColor=white)
 ![Scalar](https://img.shields.io/badge/Scalar-0F172A?style=for-the-badge&logo=swagger&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Bizfly Cloud](https://img.shields.io/badge/Bizfly_Cloud-0066CC?style=for-the-badge&logoColor=white)
@@ -38,6 +39,7 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
 - **Technician & Schedule Coordination**: Dedicated visual staff schedule calendar powered by FullCalendar with color-coded technician profiles and availability tracking.
 - **Administrative Operations**: Full-fledged admin dashboard for managing bookings, staff members, service catalogs, operating weekday schedules, and holiday day-offs.
 - **Promotional Showcase**: Dynamic promotional banners and salon marketing assets managed via Cloudinary integration.
+- **Transactional Email**: Branded booking confirmation and reminder emails via Resend and React Email; optional guest email on booking; Vercel Cron for ~1-hour-before reminders; admin manual resend from booking detail.
 - **Serverless Architecture**: Single Next.js repository serving both rich React client interfaces and backend endpoints/mutations directly on MongoDB Atlas with connection caching.
 
 ## Highlight Features
@@ -47,6 +49,12 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
     - Staff preference selector allowing clients to choose any available specialist or a specific technician.
     - Smart time slot picker generated from weekday operational hours, period slots (morning/afternoon/evening), and holiday exceptions.
     - Form validation with Zod and React Hook Form, generating unique reference codes.
+    - Optional email field with helper text; confirmation email sent automatically when provided.
+- **Transactional Email (Resend)**:
+    - Branded React Email templates (confirmation + reminder) with Averie theme and salon contact details for noreply sends.
+    - Confirmation on successful booking create when `customer.email` is set; booking still succeeds if send fails.
+    - Vercel Cron (`/api/cron/booking-reminders`, every 2 hours) for reminders ~1 hour before appointment (salon timezone window).
+    - Admin **Send email** on booking detail — confirmation or reminder to any recipient address.
 - **Boarding-Pass Style Booking Lookup**:
     - Reference code and phone number search card displaying comprehensive booking information (technician, date/time, total duration, price, and live status).
     - Copy-to-clipboard for reference codes and responsive bento-grid card layout.
@@ -138,9 +146,11 @@ All Route Handlers and Server Actions return a standardized response shape:
 - **ODM**: Mongoose v8
 - **Authentication**: Auth.js (`next-auth` v5 beta) with credentials provider & bcryptjs password hashing
 
-### Media & Integrations
+### Media, Email & Integrations
 
 - **Media Storage**: Cloudinary SDK (promotional asset management)
+- **Transactional Email**: Resend SDK + React Email (`@react-email/components`) — templates under `src/emails/`, send helpers in `src/server/email.server.ts`
+- **Scheduled Jobs (Vercel)**: `vercel.json` cron → `GET /api/cron/booking-reminders` (requires `CRON_SECRET`)
 - **API Documentation**: Scalar (`@scalar/nextjs-api-reference`) & OpenAPI (`next-openapi-gen`)
 - **Internationalization**: `next-intl` (English & Vietnamese)
 
@@ -181,6 +191,7 @@ The application routes are organized under [`src/app`](./src/app):
     - `/api/staff` — Staff directory queries
     - `/api/settings` — Operating hours and salon settings queries
     - `/api/admin` — Administrative metrics queries
+    - `/api/cron/booking-reminders` — Vercel Cron reminder batch (Bearer `CRON_SECRET`; not public)
     - `/api/auth/[...nextauth]` — Auth.js protocol handling
     - `/api/docs` & `/api/openapi.json` — Scalar interactive documentation and OpenAPI spec
 
@@ -193,6 +204,7 @@ The application routes are organized under [`src/app`](./src/app):
 | `@guard/*`       | `src/guard/*`       | Client/route guard helpers & security detection       |
 | `@hooks/*`       | `src/hooks/*`       | Custom React hooks                                    |
 | `@i18n/*`        | `src/i18n/*`        | next-intl routing and helpers                         |
+| `@email/*`       | `src/emails/*`      | React Email templates and email-specific components   |
 | `@libs/*`        | `src/libs/*`        | MongoDB, Auth.js, Cloudinary, Axios, Query Client     |
 | `@mappers/*`     | `src/mappers/*`     | Domain DTO mappers and transformers                   |
 | `@messages/*`    | `messages/*`        | Translation JSON dictionaries                         |
@@ -238,6 +250,7 @@ The application routes are organized under [`src/app`](./src/app):
 │   │   ├── common/           # Buttons, inputs, modals, shells, badges
 │   │   ├── landing/          # Hero, services, philosophy, testimonials
 │   │   └── staff/            # Staff calendar and appointment views
+│   ├── emails/               # React Email templates (confirmation, reminder)
 │   ├── guard/                # Client & auth guards (e.g. devtools detector)
 │   ├── hooks/                # Custom React hooks
 │   ├── i18n/                 # next-intl configuration and routing
@@ -256,6 +269,7 @@ The application routes are organized under [`src/app`](./src/app):
 │   ├── middleware.ts         # Edge RBAC route protection
 │   └── next.config.ts        # Next.js configuration
 ├── Dockerfile                # Multi-stage build to a Next.js standalone runtime
+├── vercel.json               # Vercel Cron schedule for booking reminder emails
 ├── next-openapi-gen.config.json # OpenAPI generation config
 └── package.json              # Dependencies and scripts
 ```
@@ -377,6 +391,21 @@ CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 ```
 
+### Transactional Email (Resend)
+
+Used on **Vercel** for confirmation emails, appointment reminders, and admin manual send. See [docs/email-resend-setup.md](docs/email-resend-setup.md).
+
+```env
+RESEND_API_KEY=re_xxxxxxxx
+EMAIL_FROM=Averie <noreply@averienails.com>
+CRON_SECRET=your-random-secret          # openssl rand -base64 32
+SALON_TIMEZONE=America/New_York         # Reminder window uses salon-local time
+```
+
+On Vercel, enable **Cron Jobs** (Pro plan) — `vercel.json` invokes `/api/cron/booking-reminders` every 2 hours. Without `RESEND_API_KEY`, sends are skipped gracefully (booking create still succeeds).
+
+For **local** or **Bizfly Docker**, set `BOOKING_REMINDER_CRON_MODE=internal` to run an in-process scheduler on `pnpm start` / container boot, or keep the default and use system cron + curl. See [docs/email-resend-setup.md](docs/email-resend-setup.md).
+
 ### Security & Production Protection
 
 ```env
@@ -437,7 +466,9 @@ can never apply at once.
 Averie runs on either of two targets from the same codebase.
 
 **Vercel** — the default serverless path. Nothing extra is required beyond the
-environment variables in [`.env.example`](./.env.example). Its apex and `www`
+environment variables in [`.env.example`](./.env.example). Set `RESEND_API_KEY`,
+`EMAIL_FROM`, and `CRON_SECRET` for transactional email and reminder cron (see
+[docs/email-resend-setup.md](docs/email-resend-setup.md)). Its apex and `www`
 DNS records are managed by `update-dns.yml`, which is kept separate from
 `update-bizfly-dns.yml` so the two targets can never edit each other's records.
 
@@ -514,6 +545,7 @@ For deeper details on architectural guidelines, design system tokens, and agent 
 - [Advanced Workflow & Design System](docs/advanced-workflow.md)
 - [Working with Stitch MCP](docs/working-with-stitch.md)
 - [Deploying on Bizfly Cloud](docs/deployment-bizfly.md)
+- [Resend email setup (Vercel)](docs/email-resend-setup.md)
 - [What the Ansible playbooks put on the server](ansible/README.md)
 
 ## Summary
