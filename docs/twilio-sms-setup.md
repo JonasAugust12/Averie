@@ -12,19 +12,30 @@ Averie sends a **Vietnam-only** confirmation SMS after a successful online booki
 
 - Trial accounts can only send SMS to **verified recipient numbers**.
 - In Console → **Phone Numbers → Verified Caller IDs**, add each Vietnam test number (e.g. your `+84` mobile) before smoke testing.
+- Trial accounts **cannot send custom SMS text**. Set `TWILIO_SMS_TEMPLATE` to a predefined slug (recommended: `sms_appointment_reminders`). The message content is Twilio’s generic template, not your booking reference/date.
+
+Predefined template slugs (use exactly as `TWILIO_SMS_TEMPLATE` / API `body`):
+
+- `sms_appointment_reminders` (booking confirmation testing)
+- `sms_2fa`, `sms_order_confirmation`, `sms_delivery_updates`, `sms_customer_support`, `sms_marketing_promotions`, `sms_event_notifications`, `sms_account_alerts`, `sms_feedback_surveys`, `sms_internal_alerts`
+
+After upgrading to a paid Twilio account, **unset** `TWILIO_SMS_TEMPLATE` to send the custom Vietnamese confirmation body built by the app.
 
 ## 2. Environment variables
 
 Add to `.env.local` (local) or Vercel **Project → Environment Variables** (production):
 
-| Variable             | Required      | Description                             |
-| -------------------- | ------------- | --------------------------------------- |
-| `TWILIO_ACCOUNT_SID` | Yes (to send) | Account SID from Twilio Console         |
-| `TWILIO_AUTH_TOKEN`  | Yes (to send) | Auth token from Twilio Console          |
-| `TWILIO_SMS_FROM`    | Yes (to send) | Twilio sender number (E.164)            |
-| `SMS_ENABLED`        | No            | Set to `false` to disable all SMS sends |
+| Variable              | Required      | Description                                                |
+| --------------------- | ------------- | ---------------------------------------------------------- |
+| `TWILIO_ACCOUNT_SID`  | Yes (to send) | Account SID from Twilio Console                            |
+| `TWILIO_AUTH_TOKEN`   | Yes (to send) | Auth token from Twilio Console                             |
+| `TWILIO_SMS_FROM`     | Yes (to send) | Twilio sender number (E.164)                               |
+| `TWILIO_SMS_TEMPLATE` | Trial         | Predefined template slug, e.g. `sms_appointment_reminders` |
+| `SMS_ENABLED`         | No            | Set to `false` to disable all SMS sends                    |
 
-When any Twilio variable is missing, the app logs a warning and skips SMS — the booking still returns `201`.
+When any Twilio credential is missing, the app logs a warning and skips SMS — the booking still returns `201`.
+
+**Twilio trial:** custom SMS body is not allowed. Set `TWILIO_SMS_TEMPLATE` to an exact predefined slug (Try out SMS → template list). Leave `TWILIO_SMS_TEMPLATE` unset on a **paid** account to send the custom Vietnamese confirmation body.
 
 See also `.env.example`.
 

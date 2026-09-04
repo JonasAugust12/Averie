@@ -28,6 +28,22 @@ function getTwilioConfig(): { client: Twilio.Twilio; from: string } | null {
     };
 }
 
+/** Twilio trial predefined template slugs (body must be exact slug, not custom text). */
+export const TWILIO_PREDEFINED_SMS_TEMPLATES = [
+    'sms_2fa',
+    'sms_appointment_reminders',
+    'sms_order_confirmation',
+    'sms_delivery_updates',
+    'sms_customer_support',
+    'sms_marketing_promotions',
+    'sms_event_notifications',
+    'sms_account_alerts',
+    'sms_feedback_surveys',
+    'sms_internal_alerts',
+] as const;
+
+export type TwilioPredefinedSmsTemplate = (typeof TWILIO_PREDEFINED_SMS_TEMPLATES)[number];
+
 export function buildBookingConfirmationSmsBody(booking: EnrichedBookingEmailContext): string {
     const serviceLine =
         booking.services.length > 0
@@ -44,6 +60,14 @@ export function buildBookingConfirmationSmsBody(booking: EnrichedBookingEmailCon
     ].join(' ');
 }
 
+function resolveSmsBody(booking: EnrichedBookingEmailContext): string {
+    const template = process.env.TWILIO_SMS_TEMPLATE?.trim();
+    if (template) {
+        return template;
+    }
+    return buildBookingConfirmationSmsBody(booking);
+}
+
 export async function sendBookingConfirmationSms(
     toE164: string,
     booking: EnrichedBookingEmailContext,
@@ -55,7 +79,7 @@ export async function sendBookingConfirmationSms(
         await config.client.messages.create({
             from: config.from,
             to: toE164,
-            body: buildBookingConfirmationSmsBody(booking),
+            body: resolveSmsBody(booking),
         });
         return true;
     } catch (error) {

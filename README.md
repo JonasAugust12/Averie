@@ -6,7 +6,7 @@
 
 Averie is a quiet-luxury nail salon and beauty care platform built on Next.js App Router. It is designed as a unified fullstack monolith where both the rich client experience (customer booking, staff schedule calendar, and administrative control center) and the serverless backend API / Server Actions coexist within a single cohesive project. It deploys either to Vercel or, self-hosted, to a single Bizfly Cloud server driven entirely from GitHub Actions.
 
-This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Resend-powered transactional email (confirmation, reminders, admin send), Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
+This repository contains the interactive customer booking engine, real-time staff scheduling calendar powered by FullCalendar, appointment management dashboard, service catalog administration, salon operating hours engine, Resend-powered transactional email (confirmation, reminders, admin send), Twilio-powered booking confirmation SMS for Vietnam mobile numbers, Cloudinary-backed promotional banner manager, multi-language localization (`next-intl`), and automated OpenAPI documentation with Scalar.
 
 ## Stack Snapshot
 
@@ -21,6 +21,7 @@ This repository contains the interactive customer booking engine, real-time staf
 ![Zustand](https://img.shields.io/badge/Zustand-4B2E1F?style=for-the-badge&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-0B1220?style=for-the-badge&logo=cloudinary&logoColor=3448C5)
 ![Resend](https://img.shields.io/badge/Resend-000000?style=for-the-badge&logo=resend&logoColor=white)
+![Twilio](https://img.shields.io/badge/Twilio-F22F46?style=for-the-badge&logo=twilio&logoColor=white)
 ![Scalar](https://img.shields.io/badge/Scalar-0F172A?style=for-the-badge&logo=swagger&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Bizfly Cloud](https://img.shields.io/badge/Bizfly_Cloud-0066CC?style=for-the-badge&logoColor=white)
@@ -40,6 +41,7 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
 - **Administrative Operations**: Full-fledged admin dashboard for managing bookings, staff members, service catalogs, operating weekday schedules, and holiday day-offs.
 - **Promotional Showcase**: Dynamic promotional banners and salon marketing assets managed via Cloudinary integration.
 - **Transactional Email**: Branded booking confirmation and reminder emails via Resend and React Email; optional guest email on booking; Vercel Cron for night-before reminders (~10 PM); admin manual resend from booking detail.
+- **Transactional SMS (Vietnam)**: Booking confirmation SMS via Twilio when the customer's phone normalizes to a Vietnam mobile E.164 number (`+84…`); graceful skip for non-VN numbers or missing credentials; booking create always succeeds.
 - **Serverless Architecture**: Single Next.js repository serving both rich React client interfaces and backend endpoints/mutations directly on MongoDB Atlas with connection caching.
 
 ## Highlight Features
@@ -50,11 +52,17 @@ Averie transforms traditional salon operations into a modern, aesthetic, and aut
     - Smart time slot picker generated from weekday operational hours, period slots (morning/afternoon/evening), and holiday exceptions.
     - Form validation with Zod and React Hook Form, generating unique reference codes.
     - Optional email field with helper text; confirmation email sent automatically when provided.
+    - Phone field helper text for Vietnam mobile numbers; confirmation SMS sent automatically when the number normalizes to `+84`.
 - **Transactional Email (Resend)**:
     - Branded React Email templates (confirmation + reminder) with Averie theme and salon contact details for noreply sends.
     - Confirmation on successful booking create when `customer.email` is set; booking still succeeds if send fails.
     - Vercel Cron (`/api/cron/booking-reminders`, once daily ~10 PM ET) for reminders the evening before the appointment.
     - Admin **Send email** on booking detail — confirmation or reminder to any recipient address.
+- **Transactional SMS (Twilio, Vietnam v1)**:
+    - Plain-text Vietnamese confirmation SMS after successful booking create when `customer.phone` is a valid VN mobile number.
+    - Server helpers in `src/server/sms.server.ts`; E.164 normalization in `src/utils/phone-vn.util.ts`.
+    - Non-VN phones and missing Twilio env vars skip send with a server log; booking still returns `201`.
+    - Trial accounts must verify recipient numbers in Twilio Console before smoke testing.
 - **Boarding-Pass Style Booking Lookup**:
     - Reference code and phone number search card displaying comprehensive booking information (technician, date/time, total duration, price, and live status).
     - Copy-to-clipboard for reference codes and responsive bento-grid card layout.
@@ -146,10 +154,11 @@ All Route Handlers and Server Actions return a standardized response shape:
 - **ODM**: Mongoose v8
 - **Authentication**: Auth.js (`next-auth` v5 beta) with credentials provider & bcryptjs password hashing
 
-### Media, Email & Integrations
+### Media, Email, SMS & Integrations
 
 - **Media Storage**: Cloudinary SDK (promotional asset management)
 - **Transactional Email**: Resend SDK + React Email (`@react-email/components`) — templates under `src/emails/`, send helpers in `src/server/email.server.ts`
+- **Transactional SMS**: Twilio Node SDK — send helpers in `src/server/sms.server.ts`, VN phone normalization in `src/utils/phone-vn.util.ts`
 - **Scheduled Jobs (Vercel)**: `vercel.json` cron → `GET /api/cron/booking-reminders` (requires `CRON_SECRET`)
 - **API Documentation**: Scalar (`@scalar/nextjs-api-reference`) & OpenAPI (`next-openapi-gen`)
 - **Internationalization**: `next-intl` (English & Vietnamese)
@@ -406,6 +415,22 @@ On Vercel, cron runs **once per day** (`0 3 * * *` UTC ≈ 10 PM US Eastern) —
 
 For **local** or **Bizfly Docker**, set `BOOKING_REMINDER_CRON_MODE=internal` to run an in-process scheduler on `pnpm start` / container boot, or keep the default and use system cron + curl. See [docs/email-resend-setup.md](docs/email-resend-setup.md).
 
+### Transactional SMS (Twilio)
+
+Sends a **Vietnam-only** booking confirmation SMS after successful create when Twilio credentials are configured. See [docs/twilio-sms-setup.md](docs/twilio-sms-setup.md).
+
+```env
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_SMS_FROM=+15551234567          # Twilio number with SMS (E.164)
+TWILIO_SMS_TEMPLATE=sms_appointment_reminders  # Required on trial — predefined slug only
+# SMS_ENABLED=false                   # Optional — disable all SMS sends
+```
+
+Without the Twilio variables, SMS is skipped gracefully (booking create still succeeds). Accepts local VN formats such as `0912345678`, `84912345678`, or `+84912345678`. US and other non-VN numbers are skipped.
+
+On **Twilio trial**, verify each test recipient number in the Console (Try out SMS → add recipient, or Verified Caller IDs in legacy Console) before testing.
+
 ### Security & Production Protection
 
 ```env
@@ -468,7 +493,9 @@ Averie runs on either of two targets from the same codebase.
 **Vercel** — the default serverless path. Nothing extra is required beyond the
 environment variables in [`.env.example`](./.env.example). Set `RESEND_API_KEY`,
 `EMAIL_FROM`, and `CRON_SECRET` for transactional email and reminder cron (see
-[docs/email-resend-setup.md](docs/email-resend-setup.md)). Its apex and `www`
+[docs/email-resend-setup.md](docs/email-resend-setup.md)). Set `TWILIO_ACCOUNT_SID`,
+`TWILIO_AUTH_TOKEN`, and `TWILIO_SMS_FROM` for Vietnam booking confirmation SMS (see
+[docs/twilio-sms-setup.md](docs/twilio-sms-setup.md)). Its apex and `www`
 DNS records are managed by `update-dns.yml`, which is kept separate from
 `update-bizfly-dns.yml` so the two targets can never edit each other's records.
 
@@ -546,6 +573,7 @@ For deeper details on architectural guidelines, design system tokens, and agent 
 - [Working with Stitch MCP](docs/working-with-stitch.md)
 - [Deploying on Bizfly Cloud](docs/deployment-bizfly.md)
 - [Resend email setup (Vercel)](docs/email-resend-setup.md)
+- [Twilio SMS setup (Vietnam confirmation)](docs/twilio-sms-setup.md)
 - [What the Ansible playbooks put on the server](ansible/README.md)
 
 ## Summary
