@@ -33,6 +33,11 @@ export const bookingDtoSchema = z.object({
             reminderSentAt: z.string().optional(),
         })
         .optional(),
+    smsNotifications: z
+        .object({
+            confirmationSentAt: z.string().optional(),
+        })
+        .optional(),
     cancelledAt: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),

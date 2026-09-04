@@ -31,6 +31,9 @@ export function serializeBooking(doc: {
         confirmationSentAt?: Date | string | null;
         reminderSentAt?: Date | string | null;
     } | null;
+    smsNotifications?: {
+        confirmationSentAt?: Date | string | null;
+    } | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }): BookingDto {
@@ -57,6 +60,11 @@ export function serializeBooking(doc: {
             ? {
                   confirmationSentAt: toOptionalIso(doc.emailNotifications.confirmationSentAt),
                   reminderSentAt: toOptionalIso(doc.emailNotifications.reminderSentAt),
+              }
+            : undefined,
+        smsNotifications: doc.smsNotifications
+            ? {
+                  confirmationSentAt: toOptionalIso(doc.smsNotifications.confirmationSentAt),
               }
             : undefined,
         cancelledAt: toOptionalIso(doc.cancelledAt),

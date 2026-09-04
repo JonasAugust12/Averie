@@ -72,6 +72,9 @@ const BookingSchema = new Schema(
             confirmationSentAt: { type: Date },
             reminderSentAt: { type: Date },
         },
+        smsNotifications: {
+            confirmationSentAt: { type: Date },
+        },
     },
     {
         timestamps: true,

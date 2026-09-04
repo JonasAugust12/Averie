@@ -73,6 +73,7 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
         : '—';
     const employeeInitials = booking?.staff ? deriveInitials(formatUserName(booking.staff)) : '★';
     const customerEmail = booking?.customer?.email?.trim() || storeCustomer?.email?.trim() || '';
+    const smsConfirmationSent = Boolean(booking?.smsNotifications?.confirmationSentAt);
 
     function handleCopyReference() {
         if (!activeReference) return;
@@ -131,6 +132,17 @@ export function ConfirmationPageView({ bookingId }: ConfirmationPageViewProps = 
                                     aria-hidden
                                 />
                                 <span>{t('confirmation.emailSpamNote')}</span>
+                            </span>
+                        </p>
+                    ) : null}
+                    {smsConfirmationSent ? (
+                        <p className="mt-3 max-w-md sm:max-w-xl rounded-2xl border border-emerald-200/70 bg-emerald-50/80 px-4 py-3 font-sans text-[11px] sm:text-xs text-emerald-950 leading-relaxed text-left sm:text-center">
+                            <span className="inline-flex items-start gap-2 sm:items-center sm:justify-center">
+                                <Phone
+                                    className="size-4 shrink-0 text-emerald-800 mt-0.5 sm:mt-0"
+                                    aria-hidden
+                                />
+                                <span>{t('confirmation.smsSentNote')}</span>
                             </span>
                         </p>
                     ) : null}

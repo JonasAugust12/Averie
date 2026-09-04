@@ -17,6 +17,10 @@ export interface BookingEmailNotificationsDto {
     reminderSentAt?: string;
 }
 
+export interface BookingSmsNotificationsDto {
+    confirmationSentAt?: string;
+}
+
 export interface BookingDto {
     id: string;
     reference: string;
@@ -31,6 +35,7 @@ export interface BookingDto {
     status: BookingStatus;
     displayStatus: BookingDisplayStatus;
     emailNotifications?: BookingEmailNotificationsDto;
+    smsNotifications?: BookingSmsNotificationsDto;
     cancelledAt?: string;
     createdAt: string;
     updatedAt: string;

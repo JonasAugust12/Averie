@@ -1082,6 +1082,14 @@
                             }
                         }
                     },
+                    "smsNotifications": {
+                        "type": "object",
+                        "properties": {
+                            "confirmationSentAt": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "cancelledAt": {
                         "type": "string"
                     },
@@ -1175,6 +1183,14 @@
                                 "type": "string"
                             },
                             "reminderSentAt": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "smsNotifications": {
+                        "type": "object",
+                        "properties": {
+                            "confirmationSentAt": {
                                 "type": "string"
                             }
                         }
@@ -1939,6 +1955,36 @@
                     "updatedAt"
                 ]
             },
+            "sendAdminComposeEmailSchema": {
+                "type": "object",
+                "properties": {
+                    "to": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "subject": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                    },
+                    "heading": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "body": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 5000
+                    },
+                    "emailDesign": {
+                        "type": "string"
+                    },
+                    "emailTheme": {
+                        "type": "string"
+                    }
+                },
+                "required": ["to", "subject", "body", "emailDesign", "emailTheme"]
+            },
             "sendBookingEmailSchema": {
                 "type": "object",
                 "properties": {
@@ -1950,12 +1996,43 @@
                         "type": "string",
                         "format": "email"
                     },
-                    "template": {
+                    "purpose": {
+                        "type": "string"
+                    },
+                    "emailSubject": {
                         "type": "string",
-                        "enum": ["confirmation", "reminder"]
+                        "minLength": 1,
+                        "maxLength": 200
+                    },
+                    "emailHeading": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                    },
+                    "emailBadge": {
+                        "type": "string",
+                        "maxLength": 80
+                    },
+                    "customMessage": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "emailDesign": {
+                        "type": "string"
+                    },
+                    "emailTheme": {
+                        "type": "string"
                     }
                 },
-                "required": ["bookingId", "to", "template"]
+                "required": [
+                    "bookingId",
+                    "to",
+                    "purpose",
+                    "emailSubject",
+                    "emailHeading",
+                    "emailDesign",
+                    "emailTheme"
+                ]
             },
             "serviceCategoriesApiResponseSchema": {
                 "type": "object",

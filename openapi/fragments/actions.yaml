@@ -7,6 +7,9 @@ paths:
                 Invoked via Next.js Server Action — not a public HTTP endpoint.
                 When `customer.email` is present, sends a booking confirmation email after persist (via Resend).
                 Email send failure does not roll back the booking; response remains 201.
+                When `customer.phone` normalizes to a Vietnam mobile E.164 number (`+84…`), sends a confirmation SMS after persist (via Twilio).
+                Non-Vietnam phones skip SMS with a server log; SMS send failure does not roll back the booking; response remains 201.
+                On success, `data.emailNotifications.confirmationSentAt` and/or `data.smsNotifications.confirmationSentAt` may be set on the returned booking DTO.
             requestBody:
                 required: true
                 content:

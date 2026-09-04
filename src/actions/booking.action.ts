@@ -17,6 +17,7 @@ import { apiErrorResult, apiSuccessResult, parseActionInput } from '@libs/action
 import { serializeBooking } from '@mappers';
 import { getAvailableSlotsForDateServer, isPublicBookingEnabled } from '@server/schedule.server';
 import { sendBookingConfirmation } from '@server/email.server';
+import { sendBookingConfirmationSms } from '@server/sms.server';
 import { Booking } from '@models/booking.model';
 import type { ApiResponse } from '@typings/api.type';
 import type { BookingDto } from '@typings/booking.type';
@@ -26,6 +27,7 @@ import {
     type CreateBookingInput,
 } from '@validations/booking.schema';
 import { buildBookingEmailContext } from '@utils/booking-email.util';
+import { toVietnamE164 } from '@utils/phone-vn.util';
 
 export async function createBookingAction(
     input: CreateBookingInput,
@@ -116,6 +118,32 @@ export async function createBookingAction(
                 }
             } catch (emailError) {
                 console.error('[createBookingAction] confirmation email failed', emailError);
+            }
+        }
+
+        if (data.customer.phone) {
+            const vnE164 = toVietnamE164(data.customer.phone);
+            if (!vnE164) {
+                console.warn(
+                    '[createBookingAction] SMS skipped — phone is not a valid Vietnam mobile number',
+                    { phone: data.customer.phone },
+                );
+            } else {
+                try {
+                    const smsContext = await buildBookingEmailContext(created.toObject());
+                    const sent = await sendBookingConfirmationSms(vnE164, smsContext);
+                    if (sent) {
+                        const sentAt = new Date();
+                        await Booking.findByIdAndUpdate(created._id, {
+                            'smsNotifications.confirmationSentAt': sentAt,
+                        });
+                        dto.smsNotifications = {
+                            confirmationSentAt: sentAt.toISOString(),
+                        };
+                    }
+                } catch (smsError) {
+                    console.error('[createBookingAction] confirmation SMS failed', smsError);
+                }
             }
         }
 

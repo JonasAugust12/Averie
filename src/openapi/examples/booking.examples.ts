@@ -51,6 +51,12 @@ export const bookingExample = {
     customer: bookingCustomerExample,
     status: 'upcoming' as const,
     displayStatus: 'upcoming' as const,
+    emailNotifications: {
+        confirmationSentAt: EXAMPLE_TIMESTAMP,
+    },
+    smsNotifications: {
+        confirmationSentAt: EXAMPLE_TIMESTAMP,
+    },
     createdAt: EXAMPLE_TIMESTAMP,
     updatedAt: EXAMPLE_TIMESTAMP,
 };

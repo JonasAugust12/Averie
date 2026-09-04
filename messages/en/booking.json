@@ -134,6 +134,7 @@
         "lastNamePlaceholder": "e.g. Jenkins",
         "phone": "Phone number",
         "phonePlaceholder": "(781) 000-0000",
+        "phoneSmsHint": "Vietnam mobile numbers (+84) receive an automatic confirmation SMS after booking.",
         "email": "Email address",
         "emailPlaceholder": "sarah.jenkins@example.com",
         "emailHelper": "Optional - enter your email to receive automatic confirmation and a reminder before your appointment.",
@@ -201,7 +202,8 @@
         "needChanges": "Need to reschedule or modify?",
         "callAnytime": "Please call our front desk directly at (781) 923-1955 at least 2 hours in advance.",
         "arrivalTip": "Please arrive 5-10 minutes prior to your scheduled time to check in and enjoy our relaxing atmosphere.",
-        "emailSpamNote": "If you provided an email, we sent a confirmation message. It may land in your spam or junk folder - please check there if you don't see it in your inbox."
+        "emailSpamNote": "If you provided an email, we sent a confirmation message. It may land in your spam or junk folder - please check there if you don't see it in your inbox.",
+        "smsSentNote": "We also sent a confirmation text message to your phone."
     },
     "categories": {
         "manicurePedicure": "Manicure & Pedicure",

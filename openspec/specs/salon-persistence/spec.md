@@ -14,6 +14,8 @@ The `SalonSettings` schema MUST include `bookingEnabled` (boolean, default `true
 
 The `Booking` schema MUST include optional `emailNotifications` with `confirmationSentAt` and `reminderSentAt` Date fields to record transactional email send timestamps.
 
+The `Booking` schema MUST include optional `smsNotifications` with `confirmationSentAt` Date field to record transactional SMS send timestamps.
+
 #### Scenario: Collections use canonical names
 
 - **WHEN** models are registered with Mongoose
@@ -45,6 +47,17 @@ The `Booking` schema MUST include optional `emailNotifications` with `confirmati
 
 - **WHEN** a reminder email is successfully sent for a booking via cron
 - **THEN** the booking document MUST persist `emailNotifications.reminderSentAt`
+
+#### Scenario: Booking SMS notification timestamps
+
+- **WHEN** a booking document is created without prior SMS sends
+- **THEN** `smsNotifications.confirmationSentAt` MAY be unset
+- **AND** existing bookings without this field MUST remain valid without migration
+
+#### Scenario: SMS confirmation timestamp persisted
+
+- **WHEN** a confirmation SMS is successfully sent for a booking
+- **THEN** the booking document MUST persist `smsNotifications.confirmationSentAt`
 
 ### Requirement: Zod validation mirrors
 
