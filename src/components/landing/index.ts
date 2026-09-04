@@ -4,7 +4,7 @@ export { LandingHero } from './LandingHero';
 export { LandingPromotion } from './LandingPromotion';
 export { LandingPhilosophy } from './LandingPhilosophy';
 export { LandingServices } from './LandingServices';
-export { LandingPricing } from './LandingPricing';
+export { LandingPriceList } from './LandingPriceList';
 export { LandingProducts } from './LandingProducts';
 export { LandingTestimonials } from './LandingTestimonials';
 export { LandingHoursCta } from './LandingHoursCta';

@@ -7,13 +7,19 @@ import {
     LandingPromotion,
     LandingPhilosophy,
     LandingServices,
+    LandingPriceList,
     LandingTestimonials,
     LandingSearchBooking,
     LandingHoursCta,
     LandingFooter,
 } from '@components/landing';
+import type { ServiceCategoryWithServicesDto } from '@services/service-catalog.service';
 
-export function LandingPageView() {
+interface LandingPageViewProps {
+    catalog: ServiceCategoryWithServicesDto[];
+}
+
+export function LandingPageView({ catalog }: LandingPageViewProps) {
     return (
         <AppShell maxWidth="landing" className="bg-cream pb-0" contentClassName="pt-0">
             <LandingHeader />
@@ -22,6 +28,7 @@ export function LandingPageView() {
                 <LandingPromotion />
                 <LandingPhilosophy />
                 <LandingServices />
+                <LandingPriceList categories={catalog} />
                 <LandingTestimonials />
                 <LandingSearchBooking />
                 <LandingHoursCta />

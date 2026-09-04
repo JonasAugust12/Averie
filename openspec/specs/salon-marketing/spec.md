@@ -10,7 +10,7 @@ Public marketing surfaces for the Averie salon brand, including the landing page
 
 The system SHALL provide a public landing page at `/` that presents the Averie salon brand, primary Book CTA, and marketing sections derived from the **Figma landing frame** (`jSdpkpektLCG50Gr4xe2vU`, node `13:576`) within the Averie AppShell (max-width 1280px) and Averie theme tokens.
 
-The landing page MUST include, in order, the following section groups matching the Figma design intent: header navigation, hero, **optional promotion section (when visible per salon-promotion rules)**, philosophy, curated services (three cards), treatments and prices, nail products showcase, client testimonials, working hours with appointment call-to-action, and footer with menu, services, social links, and legal links.
+The landing page MUST include, in order, the following section groups matching the Figma design intent: header navigation, hero, **optional promotion section (when visible per salon-promotion rules)**, philosophy, curated services (three cards), **service menu and price list (API-driven)**, nail products showcase, client testimonials, working hours with appointment call-to-action, and footer with menu, services, social links, and legal links.
 
 #### Scenario: Visitor opens home
 
@@ -38,6 +38,52 @@ The landing page MUST include, in order, the following section groups matching t
 
 - **WHEN** promotion is not visible OR `imageUrl` is missing
 - **THEN** the Promotion section MUST NOT render and section order MUST proceed from Hero to Philosophy
+
+### Requirement: API-driven landing price list
+
+The landing page SHALL render a **Price List** section (`LandingPriceList`) that displays all visible service categories and their services from the salon catalog, fetched **server-side** on initial page load (RSC or server helper — not client-only fetch for first paint).
+
+The section MUST support category filter tabs (All, Hands & Feet, Gel & Dip, Enhancements, Facials & Waxing, Add-ons) using the same grouping rules as the Astro reference implementation, derived from category `slug`.
+
+Each category card MUST display: Lucide icon (from category `icon`), title (`name`), optional `subtitle`, optional `description`, priced service items (`name`, formatted `price`, optional `description`), and optional category `note` footer.
+
+A category with `featured: true` MUST display a "Popular" badge.
+
+Section chrome (eyebrow, title, intro, filter labels, book CTA) MUST resolve from next-intl keys in `messages/{locale}/salon.json` under `landing.priceList.*`. Service names, descriptions, and prices MUST come from the catalog DTO — not static i18n rows.
+
+The section MUST include a bottom booking call-to-action linking to `/book`.
+
+#### Scenario: Price list renders from server catalog
+
+- **WHEN** a visitor opens `/` without JavaScript
+- **THEN** the price list section MUST render category and service data present in the server-fetched catalog payload
+
+#### Scenario: Filter tabs reduce visible categories
+
+- **WHEN** a visitor selects a filter tab other than "All"
+- **THEN** only categories belonging to that filter group MUST be visible
+- **AND** the active tab MUST update `aria-selected` for accessibility
+
+#### Scenario: Featured category badge
+
+- **WHEN** a category has `featured: true` in the catalog
+- **THEN** its card MUST display a visible "Popular" badge
+
+#### Scenario: Price list uses Lucide icons
+
+- **WHEN** a category card renders its icon
+- **THEN** it MUST use the Lucide React component resolved from the category `icon` field
+- **AND** MUST NOT use custom inline SVG icon components
+
+### Requirement: Landing pricing section replaces static summary
+
+The static `LandingPricing` component with five hardcoded i18n price rows MUST be superseded by `LandingPriceList`. Obsolete `landing.pricing.rows.*` message keys MAY be removed when no component references them.
+
+#### Scenario: Landing page view mounts price list
+
+- **WHEN** `LandingPageView` renders on `/`
+- **THEN** it MUST include `LandingPriceList` after curated services and before testimonials (or products, matching agreed section order)
+- **AND** MUST NOT import the legacy static `LandingPricing` component
 
 ### Requirement: Promotion contextual copy i18n
 

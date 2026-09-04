@@ -75,33 +75,26 @@
         },
         "pricing": {
             "title": "Liệu trình & Giá",
-            "cta": "Xem liệu trình",
-            "rows": {
-                "mani": {
-                    "name": "Manicure & Pedicure",
-                    "desc": "Chăm sóc tay chân chuyên nghiệp, dịu dàng",
-                    "price": "từ $25.00"
-                },
-                "gel": {
-                    "name": "Gel Polish",
-                    "desc": "Màu bền lâu, bề mặt bóng mịn",
-                    "price": "từ $35.00"
-                },
-                "enhance": {
-                    "name": "Nối móng",
-                    "desc": "Móng chắc, đẹp và đúng phong cách",
-                    "price": "từ $50.00"
-                },
-                "wax": {
-                    "name": "Waxing",
-                    "desc": "Da mịn với waxing nhẹ nhàng",
-                    "price": "từ $10.00"
-                },
-                "facial": {
-                    "name": "Dermalogica Facials",
-                    "desc": "Làm mới và phục hồi da chuyên nghiệp",
-                    "price": "từ $75.00"
-                }
+            "cta": "Xem liệu trình"
+        },
+        "priceList": {
+            "eyebrow": "Thực đơn & Bảng giá",
+            "title": "Bảng giá",
+            "subtitle": "Trải nghiệm chăm sóc cá nhân cho làn da khỏe, móng đẹp và thư giãn trọn vẹn.",
+            "filterAria": "Lọc nhóm dịch vụ",
+            "popular": "Phổ biến",
+            "free": "Miễn phí",
+            "ctaEyebrow": "Sẵn sàng được nuông chiều?",
+            "ctaTitle": "Đặt lịch trực tuyến",
+            "ctaBody": "Chọn liệu trình yêu thích, chọn kỹ thuật viên và tận hưởng trải nghiệm salon đáng nhớ.",
+            "ctaButton": "Đặt dịch vụ ngay",
+            "filters": {
+                "all": "Toàn bộ menu",
+                "handsFeet": "Tay & Chân",
+                "gelDip": "Gel & Dip",
+                "enhancements": "Nối móng",
+                "skincare": "Facial & Wax",
+                "addons": "Add-On"
             }
         },
         "products": {

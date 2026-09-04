@@ -21,8 +21,13 @@ export const serviceDtoSchema = z.object({
 export const serviceCategoryDtoSchema = z.object({
     id: objectIdSchema,
     name: z.string(),
+    slug: z.string(),
     sortOrder: z.number().int(),
     icon: z.string().nullable(),
+    subtitle: z.string(),
+    description: z.string(),
+    note: z.string(),
+    featured: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });

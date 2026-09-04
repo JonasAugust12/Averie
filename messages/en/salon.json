@@ -75,33 +75,26 @@
         },
         "pricing": {
             "title": "Treatments & Prices",
-            "cta": "View treatments",
-            "rows": {
-                "mani": {
-                    "name": "Manicure & Pedicure",
-                    "desc": "Pamper your hands and feet with expert care",
-                    "price": "from $25.00"
-                },
-                "gel": {
-                    "name": "Gel Polish",
-                    "desc": "Enjoy long-lasting shine and flawless color",
-                    "price": "from $35.00"
-                },
-                "enhance": {
-                    "name": "Nail Enhancements",
-                    "desc": "Create beautiful, strong, and stylish nails",
-                    "price": "from $50.00"
-                },
-                "wax": {
-                    "name": "Waxing",
-                    "desc": "Achieve smooth, silky skin with gentle waxing",
-                    "price": "from $10.00"
-                },
-                "facial": {
-                    "name": "Dermalogica Facials",
-                    "desc": "Refresh and rejuvenate your skin with professional care",
-                    "price": "from $75.00"
-                }
+            "cta": "View treatments"
+        },
+        "priceList": {
+            "eyebrow": "Service Menu & Pricing",
+            "title": "Price List",
+            "subtitle": "Tailored self-care experiences for healthy skin, beautiful nails, and timeless relaxation.",
+            "filterAria": "Pricing Categories Filter",
+            "popular": "Popular",
+            "free": "Free",
+            "ctaEyebrow": "Ready for Pure Pampering?",
+            "ctaTitle": "Reserve Your Appointment Online",
+            "ctaBody": "Select your favorite treatments, pick your preferred specialist, and enjoy an unforgettable salon experience.",
+            "ctaButton": "Book Service Now",
+            "filters": {
+                "all": "All Menu",
+                "handsFeet": "Hands & Feet",
+                "gelDip": "Gel & Dip",
+                "enhancements": "Enhancements",
+                "skincare": "Facials & Waxing",
+                "addons": "Add-Ons"
             }
         },
         "products": {

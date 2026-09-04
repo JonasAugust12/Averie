@@ -8,6 +8,7 @@ import './mongo-dns.mjs';
 import bcrypt from 'bcryptjs';
 import mongoose, { Schema } from 'mongoose';
 import { mongoClientOptions } from './mongo-client-options.mjs';
+import { SALON_MENU, getMenuCategorySlugs, serviceSeedKey } from './data/salon-menu.mjs';
 
 const uri = process.env.MONGODB_URI;
 const DEFAULT_ADMIN_EMAIL = 'admin@averie.local';
@@ -21,8 +22,13 @@ const ServiceCategory = mongoose.models.ServiceCategorySeed
           new Schema(
               {
                   name: { type: String, required: true, trim: true },
+                  slug: { type: String, required: true, trim: true, lowercase: true },
                   sortOrder: { type: Number, default: 0 },
                   icon: { type: String, trim: true, default: null },
+                  subtitle: { type: String, trim: true, default: '' },
+                  description: { type: String, trim: true, default: '' },
+                  note: { type: String, trim: true, default: '' },
+                  featured: { type: Boolean, default: false },
               },
               { timestamps: true, collection: 'service_categories' },
           ),
@@ -149,14 +155,28 @@ const SalonSettings = mongoose.models.SalonSettingsSeed
           ),
       );
 
-const CATEGORIES = [
-    { name: 'Manicure & Pedicure', sortOrder: 0, icon: 'Sparkles' },
-    { name: 'Gel Polish', sortOrder: 1, icon: 'Palette' },
-    { name: 'Nail Enhancements', sortOrder: 2, icon: 'Gem' },
-    { name: 'Add-ons', sortOrder: 3, icon: 'Plus' },
-    { name: 'Waxing', sortOrder: 4, icon: 'Flame' },
-    { name: 'Facials', sortOrder: 5, icon: 'Smile' },
-];
+const CATEGORIES = SALON_MENU.map(
+    ({ slug, name, sortOrder, icon, subtitle, description, note, featured }) => ({
+        slug,
+        name,
+        sortOrder,
+        icon,
+        subtitle: subtitle ?? '',
+        description: description ?? '',
+        note: note ?? '',
+        featured: featured ?? false,
+    }),
+);
+
+const SAMPLE_SERVICES = SALON_MENU.flatMap((category) =>
+    category.services.map((service) => ({
+        categorySlug: category.slug,
+        name: service.name,
+        description: service.description ?? '',
+        price: service.price,
+        estimatedMinutes: service.estimatedMinutes,
+    })),
+);
 
 const MORNING_WEEKDAY = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'];
 const AFTERNOON_STANDARD = [
@@ -264,51 +284,42 @@ const STAFF = [
     },
 ];
 
-const SAMPLE_SERVICES = [
-    {
-        categoryName: 'Manicure & Pedicure',
-        name: 'Classic Manicure',
-        description: 'Shape, cuticle care, and polish of choice.',
-        price: 35,
-        estimatedMinutes: 45,
-    },
-    {
-        categoryName: 'Manicure & Pedicure',
-        name: 'Spa Pedicure',
-        description: 'Soak, exfoliation, massage, and polish.',
-        price: 55,
-        estimatedMinutes: 60,
-    },
-    {
-        categoryName: 'Gel Polish',
-        name: 'Gel Color',
-        description: 'Long-wear gel polish application.',
-        price: 45,
-        estimatedMinutes: 50,
-    },
-    {
-        categoryName: 'Facials',
-        name: 'Signature Facial',
-        description: 'Full facial protocol tailored to skin needs.',
-        price: 120,
-        estimatedMinutes: 60,
-    },
-];
+async function upsertCategory(category) {
+    const existing = await ServiceCategory.findOne({
+        $or: [{ slug: category.slug }, { name: category.name }],
+    }).lean();
 
-function dateOffsetDays(days) {
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    return date.toISOString().slice(0, 10);
+    if (existing) {
+        await ServiceCategory.updateOne(
+            { _id: existing._id },
+            {
+                $set: {
+                    name: category.name,
+                    slug: category.slug,
+                    sortOrder: category.sortOrder,
+                    icon: category.icon,
+                    subtitle: category.subtitle,
+                    description: category.description,
+                    note: category.note,
+                    featured: category.featured,
+                },
+            },
+        );
+    } else {
+        await ServiceCategory.create(category);
+    }
+
+    return ServiceCategory.findOne({ slug: category.slug }).lean();
 }
 
-async function upsertService(categoryByName, service) {
-    const category = categoryByName.get(service.categoryName);
+async function upsertService(categoryBySlug, service) {
+    const category = categoryBySlug.get(service.categorySlug);
     if (!category) return null;
 
     await Service.updateOne(
-        { name: service.name, categoryId: category._id },
+        { categoryId: category._id, name: service.name },
         {
-            $setOnInsert: {
+            $set: {
                 categoryId: category._id,
                 name: service.name,
                 description: service.description,
@@ -320,7 +331,23 @@ async function upsertService(categoryByName, service) {
         { upsert: true },
     );
 
-    return Service.findOne({ name: service.name, categoryId: category._id }).lean();
+    return Service.findOne({ categoryId: category._id, name: service.name }).lean();
+}
+
+async function pruneObsoleteCatalog(menuSlugs) {
+    const obsoleteCategories = await ServiceCategory.find({ slug: { $nin: menuSlugs } }).lean();
+    if (obsoleteCategories.length === 0) return;
+
+    const obsoleteIds = obsoleteCategories.map((category) => category._id);
+    await Service.deleteMany({ categoryId: { $in: obsoleteIds } });
+    await ServiceCategory.deleteMany({ _id: { $in: obsoleteIds } });
+    console.log(`Removed ${obsoleteCategories.length} obsolete categor(ies) and their services`);
+}
+
+function dateOffsetDays(days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString().slice(0, 10);
 }
 
 async function seedStaff(passwordHash) {
@@ -358,14 +385,15 @@ async function seedStaff(passwordHash) {
     );
 }
 
-async function seedBookings(serviceByName, staffByEmail) {
+async function seedBookings(serviceByKey, staffByEmail) {
     const dayOne = dateOffsetDays(1);
     const dayTwo = dateOffsetDays(2);
 
     const bookings = [
         {
             reference: 'AVR-24001',
-            serviceName: 'Signature Facial',
+            categorySlug: 'facials',
+            serviceName: 'MicroZone Treatment',
             staffEmail: 'elena@averie.local',
             date: dayOne,
             time: '09:00 AM',
@@ -378,7 +406,8 @@ async function seedBookings(serviceByName, staffByEmail) {
         },
         {
             reference: 'AVR-24002',
-            serviceName: 'Gel Color',
+            categorySlug: 'gel-polish',
+            serviceName: 'Gel Polish Manicure',
             staffEmail: 'mia@averie.local',
             date: dayOne,
             time: '10:30 AM',
@@ -390,7 +419,8 @@ async function seedBookings(serviceByName, staffByEmail) {
         },
         {
             reference: 'AVR-24003',
-            serviceName: 'Spa Pedicure',
+            categorySlug: 'signature',
+            serviceName: 'Pedicure',
             staffEmail: 'jordan@averie.local',
             date: dayOne,
             time: '01:00 PM',
@@ -403,7 +433,8 @@ async function seedBookings(serviceByName, staffByEmail) {
         },
         {
             reference: 'AVR-24004',
-            serviceName: 'Classic Manicure',
+            categorySlug: 'signature',
+            serviceName: 'Manicure',
             staffEmail: 'sofia@averie.local',
             date: dayTwo,
             time: '11:00 AM',
@@ -419,7 +450,7 @@ async function seedBookings(serviceByName, staffByEmail) {
     let skipped = 0;
 
     for (const booking of bookings) {
-        const service = serviceByName.get(booking.serviceName);
+        const service = serviceByKey.get(serviceSeedKey(booking.categorySlug, booking.serviceName));
         const staff = staffByEmail.get(booking.staffEmail);
 
         if (!service || !staff) {
@@ -506,22 +537,28 @@ async function seed() {
     );
 
     for (const category of CATEGORIES) {
-        await ServiceCategory.updateOne(
-            { name: category.name },
-            { $setOnInsert: category },
-            { upsert: true },
-        );
+        await upsertCategory(category);
     }
 
     const categories = await ServiceCategory.find().lean();
-    const categoryByName = new Map(categories.map((category) => [category.name, category]));
+    const categoryBySlug = new Map(categories.map((category) => [category.slug, category]));
 
     for (const service of SAMPLE_SERVICES) {
-        await upsertService(categoryByName, service);
+        await upsertService(categoryBySlug, service);
     }
 
+    await pruneObsoleteCatalog(getMenuCategorySlugs());
+
     const services = await Service.find().lean();
-    const serviceByName = new Map(services.map((service) => [service.name, service]));
+    const serviceByKey = new Map(
+        services.map((service) => {
+            const category = categories.find(
+                (item) => String(item._id) === String(service.categoryId),
+            );
+            const slug = category?.slug ?? 'unknown';
+            return [serviceSeedKey(slug, service.name), service];
+        }),
+    );
 
     const staffPasswordHash = await bcrypt.hash(DEFAULT_STAFF_PASSWORD, 10);
     await seedStaff(staffPasswordHash);
@@ -529,7 +566,7 @@ async function seed() {
     const staffUsers = await User.find({ role: 'staff' }).lean();
     const staffByEmail = new Map(staffUsers.map((user) => [user.email, user]));
 
-    await seedBookings(serviceByName, staffByEmail);
+    await seedBookings(serviceByKey, staffByEmail);
 
     console.log('Seed complete');
     await mongoose.disconnect();

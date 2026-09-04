@@ -10,32 +10,9 @@ import { formatUsd } from '@utils/format.util';
 import { cn } from '@utils/cn.util';
 import { resolveLucideIconWithFallback } from '@utils/lucide-icon.util';
 
-/** Gradient colour per category (warm neutrals for quiet luxury) */
-const CAT_META: Record<string, { gradient: string; accent: string }> = {
-    'manicure-pedicure': {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
-    'gel-polish': {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
-    'nail-enhancements': {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
-    'add-ons': {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
-    waxing: {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
-    facials: {
-        gradient: 'from-secondary-50 to-tertiary-100/50',
-        accent: 'text-primary/75',
-    },
+const DEFAULT_CAT_STYLE = {
+    gradient: 'from-secondary-50 to-tertiary-100/50',
+    accent: 'text-primary/75',
 };
 
 export function ServiceStep() {
@@ -69,11 +46,6 @@ export function ServiceStep() {
 
         return (categories ?? [])
             .map((cat) => {
-                const meta = CAT_META[cat.id] ?? {
-                    gradient: 'from-neutral-50 to-stone-50',
-                    accent: 'text-stone-400',
-                };
-
                 let items = (services ?? []).filter((s) => s.categoryId === cat.id);
 
                 if (query) {
@@ -89,7 +61,7 @@ export function ServiceStep() {
                     label: cat.name,
                     items,
                     meta: {
-                        ...meta,
+                        ...DEFAULT_CAT_STYLE,
                         icon: resolveLucideIconWithFallback(cat.icon, Sparkles),
                     },
                 };

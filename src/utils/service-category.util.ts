@@ -9,3 +9,6 @@ export function slugifyCategoryId(name: string): string {
 
     return slug || `cat-${Date.now()}`;
 }
+
+/** Kebab-case slug for ServiceCategory.slug (same rules as legacy slugifyCategoryId). */
+export const slugifyCategoryName = slugifyCategoryId;

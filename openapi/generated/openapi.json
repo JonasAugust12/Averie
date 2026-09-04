@@ -1445,6 +1445,12 @@
                 },
                 "required": ["id", "firstName", "lastName"]
             },
+            "categorySlugSchema": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
             "changePasswordSchema": {
                 "type": "object",
                 "properties": {
@@ -1506,6 +1512,9 @@
                         "minLength": 1,
                         "maxLength": 100
                     },
+                    "slug": {
+                        "$ref": "#/components/schemas/categorySlugSchema"
+                    },
                     "sortOrder": {
                         "type": "integer",
                         "minimum": 0
@@ -1516,9 +1525,24 @@
                                 "$ref": "#/components/schemas/lucideIconNameSchema"
                             }
                         ]
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "featured": {
+                        "type": "boolean"
                     }
                 },
-                "required": ["name"]
+                "required": ["name", "slug"]
             },
             "createServiceSchema": {
                 "type": "object",
@@ -2062,12 +2086,27 @@
                     "name": {
                         "type": "string"
                     },
+                    "slug": {
+                        "type": "string"
+                    },
                     "sortOrder": {
                         "type": "integer"
                     },
                     "icon": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "subtitle": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "note": {
+                        "type": "string"
+                    },
+                    "featured": {
+                        "type": "boolean"
                     },
                     "createdAt": {
                         "type": "string"
@@ -2076,7 +2115,19 @@
                         "type": "string"
                     }
                 },
-                "required": ["id", "name", "sortOrder", "icon", "createdAt", "updatedAt"]
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "sortOrder",
+                    "icon",
+                    "subtitle",
+                    "description",
+                    "note",
+                    "featured",
+                    "createdAt",
+                    "updatedAt"
+                ]
             },
             "serviceCategoryIdSchema": {
                 "type": "object",
@@ -2096,12 +2147,27 @@
                     "name": {
                         "type": "string"
                     },
+                    "slug": {
+                        "type": "string"
+                    },
                     "sortOrder": {
                         "type": "integer"
                     },
                     "icon": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "subtitle": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "note": {
+                        "type": "string"
+                    },
+                    "featured": {
+                        "type": "boolean"
                     },
                     "createdAt": {
                         "type": "string"
@@ -2119,8 +2185,13 @@
                 "required": [
                     "id",
                     "name",
+                    "slug",
                     "sortOrder",
                     "icon",
+                    "subtitle",
+                    "description",
+                    "note",
+                    "featured",
                     "createdAt",
                     "updatedAt",
                     "services"
@@ -2474,6 +2545,21 @@
                     "icon": {
                         "$ref": "#/components/schemas/lucideIconNameSchema",
                         "nullable": true
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "featured": {
+                        "type": "boolean"
                     }
                 }
             },

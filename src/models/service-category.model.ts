@@ -18,6 +18,32 @@ const ServiceCategorySchema = new Schema(
             maxlength: 64,
             default: null,
         },
+        slug: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            maxlength: 64,
+        },
+        subtitle: {
+            type: String,
+            trim: true,
+            default: '',
+        },
+        description: {
+            type: String,
+            trim: true,
+            default: '',
+        },
+        note: {
+            type: String,
+            trim: true,
+            default: '',
+        },
+        featured: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,
@@ -26,6 +52,7 @@ const ServiceCategorySchema = new Schema(
 );
 
 ServiceCategorySchema.index({ sortOrder: 1 });
+ServiceCategorySchema.index({ slug: 1 }, { unique: true });
 ServiceCategorySchema.index(
     { name: 1 },
     { unique: true, collation: { locale: 'en', strength: 2 } },

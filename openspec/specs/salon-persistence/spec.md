@@ -16,11 +16,19 @@ The `Booking` schema MUST include optional `emailNotifications` with `confirmati
 
 The `Booking` schema MUST include optional `smsNotifications` with `confirmationSentAt` Date field to record transactional SMS send timestamps.
 
+The `ServiceCategory` schema MUST include the following fields in addition to existing `name`, `sortOrder`, and `icon`:
+
+- `slug` (string, required, trim, lowercase kebab-case, unique index)
+- `subtitle` (string, optional, trim, default empty)
+- `description` (string, optional, trim, default empty)
+- `note` (string, optional, trim, default empty)
+- `featured` (boolean, default false)
+
 #### Scenario: Collections use canonical names
 
 - **WHEN** models are registered with Mongoose
 - **THEN** collection names MUST be `service_categories`, `services`, `users`, `bookings`, and `salon_settings`
-- **AND** business fields MUST use canonical names (`visible`, `estimatedMinutes`, `staffPreference`, `bookingEnabled`, etc.) without mock aliases
+- **AND** business fields MUST use canonical names (`visible`, `estimatedMinutes`, `staffPreference`, `bookingEnabled`, `slug`, `featured`, etc.) without mock aliases
 
 #### Scenario: User document excludes password in API paths
 
@@ -59,6 +67,11 @@ The `Booking` schema MUST include optional `smsNotifications` with `confirmation
 - **WHEN** a confirmation SMS is successfully sent for a booking
 - **THEN** the booking document MUST persist `smsNotifications.confirmationSentAt`
 
+#### Scenario: Service category slug uniqueness
+
+- **WHEN** two service categories are created with the same `slug`
+- **THEN** the second create MUST fail with a conflict error
+
 ### Requirement: Zod validation mirrors
 
 The system SHALL provide Zod 4 schemas in `@validations/*` that mirror each entity's create/update inputs with the same field names as Mongoose models.
@@ -79,18 +92,43 @@ The system SHALL create indexes defined in `docs/system-design/02-domain-models.
 
 ### Requirement: Salon seed data
 
-The system SHALL provide a seed script that creates a default admin user, a singleton `salon_settings` document, and six default service categories aligned with mock catalog names.
+The system SHALL provide a seed script that creates a default admin user, a singleton `salon_settings` document, and **twelve** service categories aligned with the salon PDF menu (Signature, Dessert, Me Time, Gentlemen, Little Diva, Gel Polish, Add-ons, Waxing, Acrylic, Dip, Builder, Facials).
+
+The seed script MUST load category and service definitions from `scripts/data/salon-menu.mjs` and upsert categories by `slug` and services by `(categorySlug, name)`.
+
+The seed script MUST insert approximately **fifty-five** services with `name`, `description`, `price`, and `estimatedMinutes` derived from the PDF menu, estimating duration when the PDF omits it.
+
+After upserting the canonical menu, the seed script MUST remove service categories whose `slug` is not present in `salon-menu.mjs` and MUST delete services belonging to removed categories.
+
+Sample bookings in the seed script MUST reference service names that exist in the seeded catalog.
 
 #### Scenario: Seed on empty database
 
 - **WHEN** the seed script runs against an empty salon database
-- **THEN** it MUST insert one admin user, one settings document, and six categories idempotently or skip if already present
+- **THEN** it MUST insert one admin user, one settings document, twelve categories, and the full service menu idempotently or skip if already present
+
+#### Scenario: Re-seed replaces obsolete placeholder categories
+
+- **WHEN** the seed script runs against a database containing legacy six-category placeholder data
+- **THEN** it MUST upsert all twelve PDF categories and MUST remove categories not defined in `salon-menu.mjs`
+
+#### Scenario: Service seed includes estimated minutes
+
+- **WHEN** the seed script inserts a service from `salon-menu.mjs`
+- **THEN** the service document MUST include `estimatedMinutes` ≥ 1
 
 ### Requirement: Salon mapper serialization
 
 The system SHALL implement serializers under `src/mappers/` (`@mappers`) to map `_id` to `id`, optional Date fields to ISO strings, and omit secrets — without renaming business fields.
 
+The `ServiceCategory` DTO MUST expose `slug`, `subtitle`, `description`, `note`, and `featured` in addition to existing fields.
+
 #### Scenario: Service DTO field names
 
 - **WHEN** a Service document is mapped for API output
 - **THEN** the DTO MUST expose `visible` and `estimatedMinutes` (not `active` or `durationMin`)
+
+#### Scenario: Service category DTO includes marketing fields
+
+- **WHEN** a ServiceCategory document is mapped for API output
+- **THEN** the DTO MUST expose `slug`, `subtitle`, `description`, `note`, and `featured`

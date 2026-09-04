@@ -113,8 +113,13 @@ export default function AdminServicesPage() {
         if (categoryModal === 'new' || !category.id) {
             await createCategory.mutateAsync({
                 name: category.name,
+                slug: category.slug,
                 sortOrder: category.sortOrder,
                 icon: category.icon ?? undefined,
+                subtitle: category.subtitle || undefined,
+                description: category.description || undefined,
+                note: category.note || undefined,
+                featured: category.featured,
             });
             toastSuccess(t('toasts.categoryCreated'));
         } else {
@@ -124,6 +129,10 @@ export default function AdminServicesPage() {
                     name: category.name,
                     sortOrder: category.sortOrder,
                     icon: category.icon,
+                    subtitle: category.subtitle,
+                    description: category.description,
+                    note: category.note,
+                    featured: category.featured,
                 },
             });
             toastSuccess(t('toasts.categoryUpdated'));

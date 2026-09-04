@@ -3,6 +3,7 @@ import { LandingPageView } from '@components/landing';
 import { JsonLd } from '@components/seo';
 import { buildRootMetadata, SEO } from '@libs/site-seo';
 import { landingJsonLd } from '@libs/json-ld';
+import { getPublicServiceCatalog } from '@/server/service-catalog.server';
 
 export const metadata: Metadata = buildRootMetadata({
     title: { absolute: SEO.title },
@@ -11,11 +12,13 @@ export const metadata: Metadata = buildRootMetadata({
     twitter: { title: SEO.title, description: SEO.description },
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+    const catalog = await getPublicServiceCatalog();
+
     return (
         <>
             <JsonLd data={landingJsonLd} />
-            <LandingPageView />
+            <LandingPageView catalog={catalog} />
         </>
     );
 }
