@@ -106,7 +106,6 @@ export function getSlotBookedLockReason(
     for (const b of dayBookings) {
         if (b.status === 'cancelled') continue;
 
-        // ONLY match bookings specifically assigned to this staff member
         const isSameStaff = b.staffPreference === 'specific' && b.staffId === staffId;
         if (!isSameStaff) continue;
 

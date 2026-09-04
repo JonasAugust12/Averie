@@ -17,6 +17,7 @@
         "db:check": "node --env-file=.env.local scripts/check-mongodb.mjs",
         "db:diagnose": "node --env-file=.env.local scripts/diagnose-mongodb.mjs",
         "db:seed": "node --env-file=.env.local scripts/seed-salon.mjs",
+        "db:fix-booking-indexes": "node --env-file=.env.local scripts/fix-booking-indexes.mjs",
         "openapi:gen": "openapi-gen generate",
         "prepare": "husky"
     },

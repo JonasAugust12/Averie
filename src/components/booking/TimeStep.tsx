@@ -32,7 +32,7 @@ export function TimeStep() {
     }, [slots, weekday]);
 
     const firstOpenSlotTime = useMemo(() => {
-        return displaySlots.find((s) => !s.isClosedDisplay && s.available)?.time ?? null;
+        return displaySlots.find((s) => !s.isClosedDisplay)?.time ?? null;
     }, [displaySlots]);
 
     const periods = useMemo(() => {
@@ -134,12 +134,20 @@ export function TimeStep() {
                                             : slot.lockReason === 'booked'
                                               ? 'bg-stone-700/90 text-white'
                                               : 'bg-stone-400/90 text-white';
+                                    const isOpeningTime = slot.time === firstOpenSlotTime;
                                     return (
                                         <div
                                             key={slot.id}
                                             aria-disabled
                                             className="relative flex h-13 sm:h-14 cursor-not-allowed items-center justify-center rounded-2xl border-2 border-stone-200 bg-stone-50/60 px-3 font-sans text-stone-400 opacity-60 select-none overflow-hidden"
                                         >
+                                            {isOpeningTime ? (
+                                                <div className="pointer-events-none absolute top-0 right-0 z-10 h-10 w-10 overflow-hidden">
+                                                    <div className="absolute -right-3.5 top-1.5 w-13 rotate-45 bg-emerald-600 py-0.5 text-center text-[7.5px] font-black uppercase tracking-wider text-white shadow-2xs">
+                                                        {t('periods.open')}
+                                                    </div>
+                                                </div>
+                                            ) : null}
                                             {/* Full Diagonal Overlay Banner for Booked/In-Progress/Unavailable */}
                                             <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
                                                 <div

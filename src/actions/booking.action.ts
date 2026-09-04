@@ -159,6 +159,9 @@ export async function createBookingAction(
                     409,
                 );
             }
+            if (pattern && ('date' in pattern || 'time' in pattern)) {
+                console.warn('[createBookingAction] Slot duplicate key:', pattern);
+            }
             return apiErrorResult<BookingDto>('Selected time slot is already booked', 409);
         }
         const message = error instanceof Error ? error.message : 'Failed to create booking';
