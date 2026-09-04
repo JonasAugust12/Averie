@@ -21,10 +21,27 @@ env:
     REGISTRY_REPOSITORY: ${{ vars.BIZFLY_REGISTRY_REPOSITORY || 'averie-web' }}
 
 jobs:
+    # Set BIZFLY_DEPLOY_ENABLED=true in repo Variables when the Bizfly server is
+    # running. Any other value (or unset) skips build/deploy on push — use Vercel
+    # for production. Manual workflow_dispatch still runs when enabled is not true.
+    deploy-skipped:
+        if: vars.BIZFLY_DEPLOY_ENABLED != 'true' && github.event_name != 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Bizfly deploy disabled
+              run: |
+                  {
+                    echo "## Bizfly deploy skipped"
+                    echo ""
+                    echo "\`BIZFLY_DEPLOY_ENABLED\` is not \`true\` — build and deploy jobs were skipped."
+                    echo "Production deploys via **Vercel**. To re-enable Bizfly CI on push, set the repo variable to \`true\` (server must be up)."
+                  } >> $GITHUB_STEP_SUMMARY
+
     # =========================================================================
     # 1. Build the image and push it to Bizfly Container Registry
     # =========================================================================
     build-and-push:
+        if: vars.BIZFLY_DEPLOY_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
         runs-on: ubuntu-latest
         outputs:
             tag: ${{ steps.vars.outputs.tag }}
@@ -114,6 +131,7 @@ jobs:
     # 2. Deploy to the Bizfly server over SSH with Ansible
     # =========================================================================
     deploy:
+        if: vars.BIZFLY_DEPLOY_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
         needs: build-and-push
         runs-on: ubuntu-latest
         steps:

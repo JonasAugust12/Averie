@@ -23,6 +23,10 @@ Schema files: `openspec/schemas/superspec/` (từ [danielhanold/superspec](https
 
 ---
 
+**Global (mọi project):** xem [global-ai-workflow.md](./global-ai-workflow.md) — cài một lần, bootstrap repo mới ~2 phút.
+
+---
+
 ## 2. Đã cài gì trong Averie
 
 | Thành phần       | Trạng thái                           | Vị trí                                                              |

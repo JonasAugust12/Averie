@@ -306,6 +306,7 @@ has no permission scope for repository variables.
 
 | Name                                    | Example                            | Required |
 | --------------------------------------- | ---------------------------------- | -------- |
+| `BIZFLY_DEPLOY_ENABLED`                 | `true` / `false`                   | no       |
 | `SERVER_HOST`                           | `103.107.183.114`                  | **yes**  |
 | `BIZFLY_REGISTRY_NAMESPACE`             | `c9e4fdedcbe641cf90bb1f58c0e641a8` | **yes**  |
 | `BIZFLY_REGISTRY_HOST`                  | `cr-hn-1.bizflycloud.vn`           | no       |
@@ -342,6 +343,12 @@ The infra workflows need these as well — all plain configuration, none secret:
 
 `SERVER_HOST` is the one variable you do not have to maintain by hand when
 `GH_ADMIN_PAT` is set — `infra-create` and `infra-start` write it for you.
+
+**`BIZFLY_DEPLOY_ENABLED`:** Set to `false` (or leave unset) while the Bizfly
+server is stopped and production runs on Vercel — the `deploy` workflow on push
+will skip build/deploy and show green. Set to `true` when the server is up and
+you want automatic Docker deploy on every push to `main`. Manual **Run workflow**
+still works regardless of this flag.
 
 Everything marked "no" falls back to a sensible default inside the workflow.
 Each workflow fails before touching anything, naming the exact secret or
