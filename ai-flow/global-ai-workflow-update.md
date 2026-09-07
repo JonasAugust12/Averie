@@ -73,6 +73,9 @@ Copy-Item "f:\Averie\openspec\schemas\superspec\*" "$env:USERPROFILE\.local\shar
 # ── 9. UI/UX Pro Max global ──
 uipro update --global
 
+# ── 9b. Antigravity Global (IDE & CLI: sync all 51 skills + rules + slash commands) ──
+powershell -ExecutionPolicy Bypass -File "f:\Averie\scripts\sync-antigravity-global.ps1" -UpdateCache
+
 # ── 10. Superpowers plugin (nếu chưa cài) ──
 # /add-plugin superpowers   # Agent chat, một lần / máy
 

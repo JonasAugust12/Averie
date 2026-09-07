@@ -27,5 +27,7 @@
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "prettier.requireConfig": true,
-    "prettier.useEditorConfig": false
+    "prettier.useEditorConfig": false,
+    "http.proxyStrictSSL": false,
+    "http.systemCertificates": false
 }

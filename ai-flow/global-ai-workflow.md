@@ -6,6 +6,8 @@ Global đã cài trên máy dev → **mỗi repo chỉ bootstrap một lần**, 
 
 Flow hay dùng (cheat sheet): **[superspec-my-flow.md](./superspec-my-flow.md)** — explore → propose → apply → verify → sync → archive.
 
+Dành cho **Antigravity (IDE & CLI)**: **[antigravity-ai-workflow.md](./antigravity-ai-workflow.md)**.
+
 Chi tiết Averie: [advanced-workflow.md](./advanced-workflow.md) · [openspec-workflows.md](./openspec-workflows.md)
 
 ---
