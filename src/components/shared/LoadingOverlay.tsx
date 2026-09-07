@@ -16,7 +16,7 @@ export function LoadingOverlay() {
 
     return (
         <div
-            className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-100000 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             role="alert"
             aria-busy="true"
             aria-live="assertive"

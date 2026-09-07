@@ -10,8 +10,9 @@
 
 OpenSpec handles **"WHAT"** — governance, validation, and archival of markdown artifacts like proposal / specs / design / tasks.
 Superpowers handles **"HOW"** — execution skills such as brainstorming conversations, TDD discipline, subagent dispatch, code review, etc.
+**Ponytail** handles **"HOW LITTLE"** — YAGNI ladder during implementation and diff review for over-engineering ([ponytail-workflow.md](../../../docs/ponytail-workflow.md)).
 
-The two are integrated through a custom schema [schema.yaml](./schema.yaml). The integration is not at the code level — instead, OpenSpec artifact instructions contain directives like "at this step, use the Skill tool to invoke `superpowers:xxx`." **No superpowers skill files are modified**, nor is the OpenSpec CLI — the integration is purely at the instruction layer.
+The integration is through a custom schema [schema.yaml](./schema.yaml). OpenSpec artifact instructions reference Superpowers and Ponytail skills at apply time. **No upstream skill files are modified** — integration is purely at the instruction layer.
 
 ---
 
@@ -30,6 +31,19 @@ The two are integrated through a custom schema [schema.yaml](./schema.yaml). The
 There is also one **fallback**:
 
 - `superpowers:executing-plans` (apply step 2b) — only used when the current platform lacks subagent support. On Claude Code, always use 2a. Per `superpowers:executing-plans` SKILL.md L14: "If subagents are available, use `superpowers:subagent-driven-development` instead of this skill."
+
+---
+
+## 2b. Ponytail touch points (apply)
+
+| #   | Ponytail skill / rule   | Where it hooks in                         | Trigger method                 |
+| --- | ----------------------- | ----------------------------------------- | ------------------------------ |
+| 8   | `ponytail` (rule/skill) | apply step 2 — during every micro-task    | Direct + always-on global rule |
+| 9   | `ponytail-review`       | apply step 2c — before `apply.md` receipt | Direct                         |
+
+Ponytail complements Superpowers: TDD ensures correctness; Ponytail keeps the diff small. `ponytail-review` runs **after** implementation, **before** the apply receipt — it hunts over-engineering, not spec compliance (that remains `requesting-code-review`).
+
+Optional manual use: `/ponytail-audit`, `/ponytail-debt` outside the DAG.
 
 ---
 

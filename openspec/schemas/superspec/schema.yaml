@@ -16,8 +16,10 @@ description: >
     onboarding comment on the PR if one exists) and records the outcome
     in finalize.md.
     Apply uses git worktrees + subagent-driven-development (brings TDD and
-    code-review transitively). executing-plans is documented only as a
-    fallback for platforms without subagent support. v3 (historical):
+    code-review transitively) plus Ponytail (minimal-code ladder and
+    ponytail-review on the diff before apply.md). executing-plans is
+    documented only as a fallback for platforms without subagent support.
+    v3 (historical):
     finalize was promoted from a manual post-verify step to a real DAG
     artifact, with its instruction invoking
     superpowers:finishing-a-development-branch. v4 (current): finalize's
@@ -720,6 +722,14 @@ apply:
              runs for the entire implementation before apply
              concludes.
 
+           **Ponytail (minimal code)** — during every task, follow the
+           global ponytail ruleset (YAGNI ladder: reuse → stdlib →
+           native → one line → minimum). Read the **ponytail** skill
+           when choosing libraries, new files, or abstractions. Prefer
+           deletion over addition; no dependency unless the task or
+           spec requires it. Safety rails (validation, security, a11y)
+           are never skipped.
+
            **2b. Fallback — executing-plans** (use ONLY when subagent
            support is unavailable):
 
@@ -738,7 +748,19 @@ apply:
            - Following TDD discipline manually (the executor will
              not enforce it)
            - Invoking **superpowers:requesting-code-review** yourself
-             after completing the plan, before proceeding to step 3
+             after completing the plan, before proceeding to step 2c
+           - Following the **Ponytail (minimal code)** block above
+             manually (the executor will not enforce it)
+
+        2c. **Ponytail review (diff)** — before writing apply.md:
+
+           Invoke **ponytail-review** on the worktree diff (`git diff`
+           from the feature baseline). Apply obvious simplifications
+           (stdlib/native replacements, dead code, unrequested
+           abstractions) when they do not conflict with specs/TDD tests.
+           If nothing to cut, note "ponytail-review: clean" in apply.md;
+           otherwise summarize cuts in one bullet under Implementation
+           notes.
 
         3. **Receipt**: Write `apply.md` per `templates/apply.md`. If a
            previous `apply.md` exists in the change directory, read its

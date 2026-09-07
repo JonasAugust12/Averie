@@ -1,9 +1,9 @@
 # Bootstrap OpenSpec + Superspec for a new project (Windows).
 # Prerequisites: global OpenSpec CLI + config already set (see docs/global-ai-workflow.md).
 #
-# Usage (from repo root):
-#   pwsh -File scripts/bootstrap-openspec-superspec.ps1
-#   pwsh -File scripts/bootstrap-openspec-superspec.ps1 -ProjectName "My App" -Stack "Next.js 15 + Tailwind"
+# Usage (from repo root; Windows PowerShell 5.x or pwsh):
+#   & "f:\Averie\scripts\bootstrap-openspec-superspec.ps1" -SkipInit -ProjectName "My App" -Stack "Next.js 15 + Tailwind"
+#   & "f:\Averie\scripts\bootstrap-openspec-superspec.ps1" -ProjectName "My App" -Stack "Next.js 15 + Tailwind"
 
 param(
     [string]$ProjectName = "",
@@ -35,9 +35,13 @@ Write-Host ">> Copied superspec schema to $SchemaDest"
 
 $ConfigPath = Join-Path $RepoRoot "openspec\config.yaml"
 if (-not (Test-Path $ConfigPath)) {
-    $context = "Project: $ProjectName`nStack: $Stack"
-    if (-not $ProjectName) { $context = "Project: (edit openspec/config.yaml — add stack, rules, context)" }
-    @"
+    if ($ProjectName) {
+        $context = "Project: $ProjectName`nStack: $Stack"
+    } else {
+        $context = "Project: (edit openspec/config.yaml - add stack, rules, context)"
+    }
+
+    $configYaml = @"
 schema: superspec
 
 context: |
@@ -51,13 +55,15 @@ rules:
     specs:
         - Requirements MUST use SHALL/MUST and include at least one scenario
     plan:
-        - Micro-steps suitable for TDD (2–5 minutes each)
-"@ | Set-Content -Path $ConfigPath -Encoding UTF8
+        - Micro-steps suitable for TDD (2-5 minutes each)
+"@
+
+    Set-Content -Path $ConfigPath -Value $configYaml -Encoding UTF8
     Write-Host ">> Created openspec/config.yaml (edit context for this project)"
 } else {
     $content = Get-Content $ConfigPath -Raw
     if ($content -notmatch "schema:\s*superspec") {
-        Write-Warning "openspec/config.yaml exists but schema is not superspec — set schema: superspec manually."
+        Write-Warning "openspec/config.yaml exists but schema is not superspec - set schema: superspec manually."
     }
 }
 
