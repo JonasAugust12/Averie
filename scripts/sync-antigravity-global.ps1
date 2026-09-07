@@ -44,6 +44,17 @@ foreach ($dir in $targetDirs) {
     }
 }
 
+# Ensure drive-root Junction F:\.agents exists pointing to ~/.agents so all repos on F:\ inherit global skills/workflows
+$driveFAgents = "F:\.agents"
+if (Test-Path "F:\") {
+    if (-not (Test-Path $driveFAgents)) {
+        try {
+            cmd /c mklink /J "$driveFAgents" "$globalAgentsWorkflows\.." | Out-Null
+            Write-Host "   [+] Created Drive Junction: $driveFAgents -> $globalAgentsSkills\.." -ForegroundColor Green
+        } catch {}
+    }
+}
+
 # Helper to deploy a skill directory to all targets
 function Deploy-Skill {
     param(
@@ -255,23 +266,87 @@ if (-not $SkipWorkspace) {
     }
 }
 
-# ── 5. Antigravity Global skills.json Configuration ──
-Write-Host "`n[5/5] Generating Antigravity Global skills.json..." -ForegroundColor Yellow
+# ── 5. Antigravity Global Workflows & skills.json Configuration ──
+Write-Host "`n[5/5] Generating Antigravity Global Workflows & skills.json..." -ForegroundColor Yellow
+
+# Deploy Workflows to ~/.agents/workflows, ~/.gemini/config/workflows, ~/.gemini/workflows, and workspace .agents/workflows for IDE Slash Command Autocomplete
+$globalAgentsWorkflows = Join-Path $env:USERPROFILE ".agents\workflows"
+$globalGeminiConfigWorkflows = Join-Path $globalGeminiConfig "workflows"
+$globalGeminiWorkflows = Join-Path $env:USERPROFILE ".gemini\workflows"
+
+$globalWfDirs = @($globalAgentsWorkflows, $globalGeminiConfigWorkflows, $globalGeminiWorkflows)
+foreach ($dir in $globalWfDirs) {
+    if (-not (Test-Path $dir)) {
+        New-Item -ItemType Directory -Force -Path $dir | Out-Null
+    }
+}
+
+$wsAgentsWorkflows = Join-Path $workspaceRoot ".agents\workflows"
+if (-not $SkipWorkspace) {
+    if (-not (Test-Path $wsAgentsWorkflows)) {
+        New-Item -ItemType Directory -Force -Path $wsAgentsWorkflows | Out-Null
+    }
+}
+
+# Collect all skills and convert them into workflow .md files for Slash Commands autocomplete
+$allSkillsFolders = Get-ChildItem $globalGeminiSkills -Directory
+foreach ($sFolder in $allSkillsFolders) {
+    $skillMdPath = Join-Path $sFolder.FullName "SKILL.md"
+    if (Test-Path $skillMdPath) {
+        $cmdName = $sFolder.Name
+        $raw = Get-Content $skillMdPath -Raw
+
+        # Extract description
+        $desc = "$cmdName workflow"
+        if ($raw -match '(?ms)description:\s*[\x27"]?([^\r\n\x27"]+)') {
+            $desc = $Matches[1].Trim()
+        }
+
+        # Format clean workflow markdown
+        $body = $raw
+        if ($raw -match '(?ms)^---\r?\n.*?\r?\n---\r?\n(.*)$') {
+            $body = $Matches[1].Trim()
+        }
+
+        $wfContent = @"
+---
+description: $desc
+---
+
+# $cmdName
+
+$body
+"@
+
+        # Write to all global workflows directories
+        foreach ($gWfDir in $globalWfDirs) {
+            Set-Content -Path (Join-Path $gWfDir "$cmdName.md") -Value $wfContent -Encoding UTF8
+        }
+
+        # Write to workspace workflows if applicable
+        if (-not $SkipWorkspace) {
+            Set-Content -Path (Join-Path $wsAgentsWorkflows "$cmdName.md") -Value $wfContent -Encoding UTF8
+        }
+    }
+}
+Write-Host "   [+] Workflows generated & deployed to global ~/.agents/workflows and workspace .agents/workflows" -ForegroundColor Green
+
+# Generate skills.json using home-relative paths (~/...)
 $skillsJsonPath = Join-Path $globalGeminiConfig "skills.json"
 $skillsJsonContent = @"
 {
   "entries": [
     {
-      "path": "$($globalGeminiSkills -replace '\\', '/')"
+      "path": "~/.gemini/config/skills"
     },
     {
-      "path": "$($globalAgentsSkills -replace '\\', '/')"
+      "path": "~/.agents/skills"
     }
   ]
 }
 "@
 Set-Content -Path $skillsJsonPath -Value $skillsJsonContent -Encoding UTF8
-Write-Host "   [+] skills.json written: $skillsJsonPath" -ForegroundColor Green
+Write-Host "   [+] skills.json written with home-relative paths: $skillsJsonPath" -ForegroundColor Green
 
 Write-Host "`n==================================================" -ForegroundColor Cyan
 Write-Host "Sync completed successfully!" -ForegroundColor Green

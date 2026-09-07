@@ -43,6 +43,8 @@ Chi tiết: [global-ai-workflow.md](./global-ai-workflow.md) · [global-ai-workf
 /opsx-explore <câu hỏi>
 ```
 
+Tuỳ chọn tiết kiệm token: `/caveman full` (tắt trước khi propose).
+
 **Nhắc:**
 
 ```text
@@ -57,6 +59,8 @@ Dùng brainstorming — 2–3 hướng + trade-off. Chưa tạo change trừ khi
 ```text
 /opsx-propose ten-change
 ```
+
+Trước propose: `stop caveman` hoặc `/caveman off` — artifacts cần prose đầy đủ.
 
 **Nhắc:**
 

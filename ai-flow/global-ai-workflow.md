@@ -1,6 +1,6 @@
 # Global AI workflow
 
-OpenSpec + Superspec + Superpowers + Ponytail + UI/UX Pro Max — **cách dùng hàng ngày**.
+OpenSpec + Superspec + Superpowers + Ponytail + Caveman + UI/UX Pro Max — **cách dùng hàng ngày**.
 
 Global đã cài trên máy dev → **mỗi repo chỉ bootstrap một lần**, rồi làm việc bình thường.
 
@@ -18,6 +18,7 @@ Chi tiết Averie: [advanced-workflow.md](./advanced-workflow.md) · [openspec-w
 WHAT  = OpenSpec (/opsx-*)     → spec, tasks, verify
 HOW   = Superpowers            → TDD, subagent (tự chạy trong /opsx-apply)
 LEAN  = Ponytail               → ít code, YAGNI ladder (apply + /ponytail-review)
+TALK  = Caveman (/caveman)     → ít token khi agent trả lời (không đụng code)
 LOOK  = UI/UX Pro Max           → design system trước khi code UI
 ```
 
@@ -57,6 +58,16 @@ Cài **một lần** để mọi repo đều gợi ý `/opsx-*` và `/brainstorm
 | OpenSpec    | Copy từ Averie sau `openspec update` (xem [update doc](./global-ai-workflow-update.md)) | `/opsx-propose`, `/opsx-apply`                                 |
 | Superpowers | `& "f:\Averie\scripts\sync-superpowers-cursor-global.ps1"`                              | `/brainstorming`, `/writing-plans`, `/test-driven-development` |
 | Ponytail    | `& "f:\Averie\scripts\sync-ponytail-cursor-global.ps1" -UpdateCache`                    | `/ponytail`, `/ponytail-review`, `/ponytail-audit`             |
+| Caveman     | `& "f:\Averie\scripts\sync-caveman-cursor-global.ps1" -UpdateCache`                     | `/caveman`, `/caveman-help`, `/caveman-review`                 |
+
+**Caveman — lần đầu:**
+
+```powershell
+& "f:\Averie\scripts\sync-caveman-cursor-global.ps1" -UpdateCache
+# Restart Cursor — per-session: /caveman full (tắt khi viết OpenSpec artifacts)
+```
+
+Chi tiết: [caveman-workflow.md](./caveman-workflow.md). Update: chạy lại script với `-UpdateCache`.
 
 **Ponytail — lần đầu:**
 
@@ -355,6 +366,26 @@ Chi tiết cài/update: [ponytail-workflow.md](./ponytail-workflow.md) · block 
 
 ---
 
+### Caveman — slash (ít token khi chat)
+
+**Per-session** — gõ `/caveman full` khi muốn agent trả lời ngắn. **Tắt** khi viết OpenSpec artifacts.
+
+| Lệnh                                  | Khi dùng            | Nhắc nếu agent quên                           |
+| ------------------------------------- | ------------------- | --------------------------------------------- |
+| `/caveman` `[lite\|full\|ultra\|off]` | Bật/tắt terse prose | Agent verbose trong explore → `/caveman full` |
+| `/caveman-help`                       | Quick reference     | —                                             |
+| `/caveman-review`                     | Review ngắn         | —                                             |
+
+```text
+stop caveman
+
+Đang viết proposal/specs/plan — prose đầy đủ, không rút gọn artifact files.
+```
+
+Chi tiết: [caveman-workflow.md](./caveman-workflow.md).
+
+---
+
 ### Các lệnh khác (ít dùng)
 
 | Lệnh                 | Khi dùng                                    | Nhắc nếu cần                                            |
@@ -411,6 +442,7 @@ npm install -g @fission-ai/openspec@latest ui-ux-pro-max-cli@latest
 # → openspec update ở repo mẫu → sync global /opsx-* (xem file update)
 & "f:\Averie\scripts\sync-superpowers-cursor-global.ps1"
 & "f:\Averie\scripts\sync-ponytail-cursor-global.ps1" -UpdateCache
+& "f:\Averie\scripts\sync-caveman-cursor-global.ps1" -UpdateCache
 uipro update --global
 # /plugin-update superpowers → restart Cursor
 ```
@@ -429,6 +461,7 @@ uipro init --ai cursor --global
 # Cache superspec: xem scripts/bootstrap-openspec-superspec.ps1
 # Cursor Agent: /add-plugin superpowers
 # Ponytail: sync-ponytail-cursor-global.ps1 -UpdateCache
+# Caveman: sync-caveman-cursor-global.ps1 -UpdateCache
 ```
 
 </details>
@@ -442,7 +475,9 @@ uipro init --ai cursor --global
 | **Cập nhật (checklist)**                           | [global-ai-workflow-update.md](./global-ai-workflow-update.md)                              |
 | **Flow cheat sheet**                               | [superspec-my-flow.md](./superspec-my-flow.md)                                              |
 | **Ponytail**                                       | [ponytail-workflow.md](./ponytail-workflow.md)                                              |
+| **Caveman**                                        | [caveman-workflow.md](./caveman-workflow.md)                                                |
 | Sync Ponytail global                               | [`scripts/sync-ponytail-cursor-global.ps1`](../scripts/sync-ponytail-cursor-global.ps1)     |
+| Sync Caveman global                                | [`scripts/sync-caveman-cursor-global.ps1`](../scripts/sync-caveman-cursor-global.ps1)       |
 | Bootstrap                                          | [`scripts/bootstrap-openspec-superspec.ps1`](../scripts/bootstrap-openspec-superspec.ps1)   |
 | Superspec chi tiết                                 | [`openspec/schemas/superspec/INTEGRATION.md`](../openspec/schemas/superspec/INTEGRATION.md) |
 | OpenSpec · Superspec · Superpowers · UI/UX Pro Max | [GitHub links](https://github.com/Fission-AI/OpenSpec)                                      |

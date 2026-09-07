@@ -1,6 +1,6 @@
 # Cập nhật Global AI workflow
 
-Checklist khi nâng cấp **OpenSpec · Superspec · Superpowers · Ponytail · UI/UX Pro Max** — bổ sung cho [global-ai-workflow.md](./global-ai-workflow.md).
+Checklist khi nâng cấp **OpenSpec · Superspec · Superpowers · Ponytail · Caveman · UI/UX Pro Max** — bổ sung cho [global-ai-workflow.md](./global-ai-workflow.md).
 
 ---
 
@@ -15,13 +15,14 @@ Checklist khi nâng cấp **OpenSpec · Superspec · Superpowers · Ponytail · 
 | UI/UX Pro Max CLI + skill             | Global        | `uipro update --global` → `%USERPROFILE%\.cursor\skills\ui-ux-pro-max\` |
 | Superpowers plugin                    | Global Cursor | Agent chat: `/add-plugin superpowers`, `/plugin-update superpowers`     |
 | Ponytail rule + skills + commands     | Global Cursor | `sync-ponytail-cursor-global.ps1`                                       |
+| Caveman skills + commands (+ rule)    | Global Cursor | `sync-caveman-cursor-global.ps1`                                        |
 | `openspec/` (config, schema, changes) | **Từng repo** | `openspec update` trong root repo                                       |
 
 ---
 
 ## Khi nào cần chạy?
 
-- Thông báo bản mới OpenSpec / Superspec / Superpowers / **Ponytail** / UI/UX Pro Max
+- Thông báo bản mới OpenSpec / Superspec / Superpowers / **Ponytail** / **Caveman** / UI/UX Pro Max
 - Slash command `/opsx-*` thiếu hoặc hành vi lệch so với docs
 - Sau khi clone Averie mới và muốn đồng bộ máy dev với repo mẫu
 - Máy mới (xem [Máy mới](#máy-mới) — dùng bootstrap, không phải update)
@@ -66,6 +67,9 @@ Copy-Item "f:\Averie\.cursor\skills\openspec-*" "$dest\skills\" -Recurse -Force
 
 # ── 7. Ponytail global (rule + skills + commands) ──
 & "f:\Averie\scripts\sync-ponytail-cursor-global.ps1" -UpdateCache
+
+# ── 7b. Caveman global (skills + commands; rule per-session by default) ──
+& "f:\Averie\scripts\sync-caveman-cursor-global.ps1" -UpdateCache
 
 # ── 8. Superspec cache (if schema changed in Averie) ──
 Copy-Item "f:\Averie\openspec\schemas\superspec\*" "$env:USERPROFILE\.local\share\superspec\" -Recurse -Force
@@ -250,6 +254,28 @@ Superspec **apply** gọi ponytail trong step 2 (implement) và **ponytail-revie
 
 ---
 
+### 7b. Caveman (global slash commands)
+
+Caveman nén **prose** agent (ít token) — **không** rút gọn code/commit. Bổ sung Ponytail (LEAN = code).
+
+**Lần đầu / update:**
+
+```powershell
+& "f:\Averie\scripts\sync-caveman-cursor-global.ps1" -UpdateCache
+```
+
+Cài:
+
+- 13+ skills + slash: `/caveman`, `/caveman-help`, `/caveman-review`, …
+- `%USERPROFILE%\.cursor\rules\caveman.mdc` — **alwaysApply: false** (mặc định); bật bằng `/caveman full` mỗi session
+- Tuỳ chọn always-on: `-AlwaysOnRule`
+
+Chi tiết: [caveman-workflow.md](./caveman-workflow.md).
+
+**Khi nào dùng:** explore/chat (`/caveman full`); **tắt** khi viết OpenSpec artifacts (`stop caveman` hoặc `/caveman off`).
+
+---
+
 ## Ponytail trong workflow — kết hợp bước nào, nhắc gì khi agent quên
 
 Ponytail = **LEAN** (ít code, YAGNI). Rule `ponytail.mdc` **always-on** — agent đáng lẽ luôn leo ladder; slash chỉ dùng khi cần **ép mạnh** hoặc **review diff**.
@@ -384,16 +410,16 @@ Remove-Item ".cursor\skills\openspec-*" -Recurse -Force -ErrorAction SilentlyCon
 
 ## Verify sau update
 
-| Kiểm tra    | Lệnh / hành vi                                                             |
-| ----------- | -------------------------------------------------------------------------- |
-| CLI         | `openspec --version`                                                       |
-| Config      | `openspec config list` → 12 workflows                                      |
-| Schema      | `openspec schemas` (trong repo) → có `superspec (project)`                 |
-| Validate    | `openspec validate` → pass                                                 |
-| Slash menu  | Agent chat → `/opsx`, `/brainstorming`, `/ponytail-review` hiện ở mọi repo |
-| Superpowers | Agent vẫn tuân TDD khi `/opsx-apply`                                       |
-| Ponytail    | Rule always-on; apply chạy `ponytail-review` trước `apply.md` (schema 2c)  |
-| UI skill    | Agent nhận `ui-ux-pro-max` khi nhắc design system                          |
+| Kiểm tra    | Lệnh / hành vi                                                                         |
+| ----------- | -------------------------------------------------------------------------------------- |
+| CLI         | `openspec --version`                                                                   |
+| Config      | `openspec config list` → 12 workflows                                                  |
+| Schema      | `openspec schemas` (trong repo) → có `superspec (project)`                             |
+| Validate    | `openspec validate` → pass                                                             |
+| Slash menu  | Agent chat → `/opsx`, `/brainstorming`, `/ponytail-review`, `/caveman` hiện ở mọi repo |
+| Superpowers | Agent vẫn tuân TDD khi `/opsx-apply`                                                   |
+| Ponytail    | Rule always-on; apply chạy `ponytail-review` trước `apply.md` (schema 2c)              |
+| UI skill    | Agent nhận `ui-ux-pro-max` khi nhắc design system                                      |
 
 ---
 
@@ -406,7 +432,7 @@ Không dùng checklist update — dùng bootstrap trong [global-ai-workflow.md](
 3. `uipro init --ai cursor --global`
 4. `/add-plugin superpowers` trong Cursor
 5. Copy global `/opsx-*` từ Averie (bước 4 ở trên)
-6. `sync-superpowers-cursor-global.ps1` + `sync-ponytail-cursor-global.ps1 -UpdateCache`
+6. `sync-superpowers-cursor-global.ps1` + `sync-ponytail-cursor-global.ps1 -UpdateCache` + `sync-caveman-cursor-global.ps1 -UpdateCache`
 7. Bootstrap từng repo: `bootstrap-openspec-superspec.ps1 -SkipInit`
 
 ---
@@ -446,6 +472,7 @@ powershell -File "f:\Averie\scripts\bootstrap-openspec-superspec.ps1" -SkipInit 
 | Global `/opsx-*` | Sau mỗi lần `openspec update` ở repo mẫu                        |
 | Superpowers      | `/plugin-update` + `sync-superpowers-cursor-global.ps1`         |
 | Ponytail         | `sync-ponytail-cursor-global.ps1 -UpdateCache` khi upstream đổi |
+| Caveman          | `sync-caveman-cursor-global.ps1 -UpdateCache` khi upstream đổi  |
 | UI/UX Pro Max    | `uipro update --global` cùng chu kỳ OpenSpec                    |
 | Repo đang làm    | `openspec update` + copy schema khi đổi superspec               |
 
@@ -460,6 +487,8 @@ powershell -File "f:\Averie\scripts\bootstrap-openspec-superspec.ps1" -SkipInit 
 | Bootstrap repo mới      | [`scripts/bootstrap-openspec-superspec.ps1`](../scripts/bootstrap-openspec-superspec.ps1)     |
 | Sync Superpowers global | [`scripts/sync-superpowers-cursor-global.ps1`](../scripts/sync-superpowers-cursor-global.ps1) |
 | Sync Ponytail global    | [`scripts/sync-ponytail-cursor-global.ps1`](../scripts/sync-ponytail-cursor-global.ps1)       |
+| Sync Caveman global     | [`scripts/sync-caveman-cursor-global.ps1`](../scripts/sync-caveman-cursor-global.ps1)         |
 | Ponytail usage          | [ponytail-workflow.md](./ponytail-workflow.md)                                                |
+| Caveman usage           | [caveman-workflow.md](./caveman-workflow.md)                                                  |
 | Superspec chi tiết      | [`openspec/schemas/superspec/INTEGRATION.md`](../openspec/schemas/superspec/INTEGRATION.md)   |
 | OpenSpec workflows      | [openspec-workflows.md](./openspec-workflows.md)                                              |
